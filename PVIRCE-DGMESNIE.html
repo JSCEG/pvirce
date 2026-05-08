@@ -505,11 +505,19 @@ Highcharts.setOptions({
         titleKey: 'viewFullscreen',
         symbol: 'url(data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239B2247%22 stroke-width=%222.5%22><path d=%22M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5%22/></svg>)',
         symbolSize: 12,
-        symbolX: 9, symbolY: 9,
-        x: -2, y: 2,
-        width: 18, height: 18,
+        symbolX: 8, symbolY: 8,
+        align: 'right', verticalAlign: 'top',
+        x: -6, y: 6,
+        width: 16, height: 16,
         onclick: function() { this.fullscreen.toggle(); },
-        theme: { fill: 'transparent', states: { hover: { fill: 'rgba(155,34,71,.1)' } } }
+        theme: {
+          fill: 'rgba(255,255,255,0.85)',
+          stroke: '#E5E5E5',
+          'stroke-width': 1,
+          r: 3,
+          padding: 2,
+          states: { hover: { fill: 'rgba(155,34,71,.12)', stroke: '#9B2247' } }
+        }
       }
     }
   }
