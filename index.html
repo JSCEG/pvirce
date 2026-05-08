@@ -355,18 +355,20 @@ table.proyectos thead th, table.tech thead th {
   text-transform: uppercase;
   border-bottom: 1.5px solid var(--gris);
 }
-table.proyectos tbody td, table.tech tbody td {
+table.proyectos td, table.tech td {
   padding: 4px 8px;
   border-bottom: 1px solid #f0f0f0;
 }
-table.tech tbody td { padding: 3px 8px; font-size: 9.5px; }
-table.tech thead th { padding: 4px 8px; }
+table.tech td { padding: 3px 8px; font-size: 9.5px; }
+table.tech thead th { padding: 4px 8px; font-size: 9.5px; }
 table.proyectos tbody tr:hover, table.tech tbody tr:hover { background: rgba(155,34,71,.04); }
-table.proyectos tbody td.mw, table.tech tbody td.mw {
+table.proyectos tbody tr:hover, table.tech tbody tr:hover { background: rgba(155,34,71,.04); }
+table.proyectos td.mw, table.tech td.mw {
   text-align: right; font-weight: 700; color: var(--guinda);
   font-variant-numeric: tabular-nums;
 }
 table.tech tbody td:first-child { font-weight: 600; color: var(--verde); }
+table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; background: #faf3f5; font-weight: 700; }
 
 .content .footer {
   background: var(--guinda);
