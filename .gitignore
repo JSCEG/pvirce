@@ -1,0 +1,21 @@
+# Archivos pesados (>25MB GitHub warns, 100MB hard limit)
+Fuentes/Ejemplo.pdf
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node (por si en futuro)
+node_modules/
+dist/
+
+# Backups
+*.backup
+*.bak

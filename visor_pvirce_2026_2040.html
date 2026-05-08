@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visor PVIRCE 2026-2040 | DGMESNIE</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="visor_pvirce_assets/css/visor.css">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México">
+        <div class="brand-divider"></div>
+        <img src="Estilos Institucionales/img/logo_sener.png" alt="Secretaría de Energía">
+      </div>
+      <div class="unit">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Tablero institucional de consulta</div>
+      <h1>Programa Vinculante para la Instalación y Retiro de Centrales Eléctricas 2026-2040</h1>
+      <p>Consulta segmentada de proyectos PVIRCE y GAT Mixtos con filtros por entidad federativa, año, tecnología, fuente y participación. La estructura replica el enfoque de la presentación de Baja California y mantiene separadas las fuentes hasta identificar campos confiables de unión.</p>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="filters">
+      <h2>Filtros</h2>
+      <div class="field">
+        <label for="filtroEntidad">Entidad Federativa</label>
+        <select id="filtroEntidad"></select>
+      </div>
+      <div class="field">
+        <label for="filtroFuente">Fuente</label>
+        <select id="filtroFuente"></select>
+      </div>
+      <div class="field">
+        <label for="filtroAnio">Año</label>
+        <select id="filtroAnio"></select>
+      </div>
+      <div class="field">
+        <label for="filtroTecnologia">Tecnología</label>
+        <select id="filtroTecnologia"></select>
+      </div>
+      <div class="field">
+        <label for="filtroParticipacion">Participación / estatus</label>
+        <select id="filtroParticipacion"></select>
+      </div>
+      <div class="field">
+        <label for="desgloseGraficas">Desglose de gráficas</label>
+        <select id="desgloseGraficas">
+          <option value="total">Solo total</option>
+          <option value="tipo">Por tipo de tecnología</option>
+          <option value="participacion">Por participación</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="limiteEntidades">Entidades en gráficas EF</label>
+        <select id="limiteEntidades">
+          <option value="10">Top 10</option>
+          <option value="20">Top 20</option>
+          <option value="all">Todas</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="busqueda">Buscar proyecto, municipio, región o propietario</label>
+        <input id="busqueda" type="search" placeholder="Ej. Baja California, FV, CFE">
+      </div>
+      <div class="button-row">
+        <button class="btn-primary" type="button" onclick="window.print()">Imprimir</button>
+        <button class="btn-secondary" type="button" id="limpiar">Limpiar</button>
+      </div>
+      <p class="note" style="margin-top:14px;">Los datos se cargan desde los Markdown convertidos con MarkItDown. Las cifras de RNT/RGD se muestran como contexto cuando están disponibles en el texto convertido.</p>
+    </aside>
+
+    <section class="content">
+      <section class="section">
+        <div class="section-title">
+          <h2>Resumen Ejecutivo</h2>
+          <span>Fuentes separadas</span>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-value" id="kpiPvirceMw">0 MW</div><div class="kpi-label">PVIRCE · capacidad</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiPvirceReg">0</div><div class="kpi-label">PVIRCE · proyectos</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiGatMw">0 MW</div><div class="kpi-label">GAT Mixtos · capacidad</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiGatReg">0</div><div class="kpi-label">GAT Mixtos · proyectos</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiParticipacionNacional">100%</div><div class="kpi-label">Participación nacional EF</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiEntidades">0</div><div class="kpi-label">Entidades con proyectos</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiPeriodo">0</div><div class="kpi-label">Horizonte</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiRenovable">0 MW</div><div class="kpi-label">PVIRCE renovable / baterías</div></div>
+          <div class="kpi"><div class="kpi-value" id="kpiCfe">0 MW</div><div class="kpi-label">Capacidad CFE en PVIRCE</div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Generación Eléctrica</h2>
+          <span>Inversión privada, público-privada y demanda</span>
+        </div>
+        <div class="source-grid" id="narrativaGeneracion"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Gráficos</h2>
+          <span>Se actualizan con los filtros</span>
+        </div>
+        <div class="panel-grid">
+          <div class="panel chart-panel"><div class="chart-toolbar"><button data-chart="chartPvirceEntidad" data-action="png">PNG</button><button data-chart="chartPvirceEntidad" data-action="fullscreen">Pantalla completa</button></div><div id="chartPvirceEntidad" class="chart"></div><div id="tableChartPvirceEntidad" class="chart-data-table"></div></div>
+          <div class="panel chart-panel"><div class="chart-toolbar"><button data-chart="chartGatEntidad" data-action="png">PNG</button><button data-chart="chartGatEntidad" data-action="fullscreen">Pantalla completa</button></div><div id="chartGatEntidad" class="chart"></div><div id="tableChartGatEntidad" class="chart-data-table"></div></div>
+          <div class="panel chart-panel"><div class="chart-toolbar"><button data-chart="chartPvirceParticipacion" data-action="png">PNG</button><button data-chart="chartPvirceParticipacion" data-action="fullscreen">Pantalla completa</button></div><div id="chartPvirceParticipacion" class="chart"></div><div id="tableChartPvirceParticipacion" class="chart-data-table"></div></div>
+          <div class="panel chart-panel"><div class="chart-toolbar"><button data-chart="chartGatCapital" data-action="png">PNG</button><button data-chart="chartGatCapital" data-action="fullscreen">Pantalla completa</button></div><div id="chartGatCapital" class="chart"></div><div id="tableChartGatCapital" class="chart-data-table"></div></div>
+          <div class="panel chart-panel"><div class="chart-toolbar"><button data-chart="chartPvirceAnio" data-action="png">PNG</button><button data-chart="chartPvirceAnio" data-action="fullscreen">Pantalla completa</button></div><div id="chartPvirceAnio" class="chart"></div><div id="tableChartPvirceAnio" class="chart-data-table"></div></div>
+          <div class="panel chart-panel"><div class="chart-toolbar"><button data-chart="chartGatAnio" data-action="png">PNG</button><button data-chart="chartGatAnio" data-action="fullscreen">Pantalla completa</button></div><div id="chartGatAnio" class="chart"></div><div id="tableChartGatAnio" class="chart-data-table"></div></div>
+          <div class="panel">
+            <h3>Lectura de la entidad</h3>
+            <p id="narrativaEntidad"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Infraestructura Eléctrica</h2>
+          <span>RNT, RGD, transmisión, transformación y distribución</span>
+        </div>
+        <div class="source-grid" id="rntContexto"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Todas las Entidades Federativas</h2>
+          <span>Resumen por MW</span>
+        </div>
+        <div class="table-wrap">
+          <div class="table-tools">
+            <input id="buscarEntidades" type="search" placeholder="Filtrar entidades">
+            <button class="btn-secondary" type="button" data-export="entidades">Bajar Excel</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Entidad Federativa</th>
+                <th>Proyectos total</th>
+                <th>MW PVIRCE</th>
+                <th>MW GAT</th>
+              </tr>
+            </thead>
+            <tbody id="tablaEntidades"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="pagerEntidades"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>PVIRCE · Proyectos Vinculantes</h2>
+          <span id="tableCountPvirce">0 proyectos</span>
+        </div>
+        <div class="table-wrap">
+          <div class="table-tools">
+            <input id="buscarPvirce" type="search" placeholder="Filtrar PVIRCE">
+            <button class="btn-secondary" type="button" data-export="pvirce">Bajar Excel</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Fuente</th>
+                <th>Proyecto</th>
+                <th>Entidad</th>
+                <th>Municipio</th>
+                <th>Año</th>
+                <th>Tecnología</th>
+                <th>MW</th>
+                <th>Participación</th>
+                <th>Estatus</th>
+                <th>Región</th>
+                <th>Propietario / GIE</th>
+                <th>Origen capital</th>
+                <th>País capital</th>
+              </tr>
+            </thead>
+            <tbody id="tablaPvirce"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="pagerPvirce"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>GAT Mixtos · Proyectos Privados</h2>
+          <span id="tableCountGat">0 proyectos</span>
+        </div>
+        <div class="table-wrap">
+          <div class="table-tools">
+            <input id="buscarGat" type="search" placeholder="Filtrar GAT Mixtos">
+            <button class="btn-secondary" type="button" data-export="gat">Bajar Excel</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Proyecto</th>
+                <th>Entidad</th>
+                <th>Año EOC</th>
+                <th>Tecnología</th>
+                <th>MW</th>
+                <th>Estatus</th>
+                <th>Región</th>
+                <th>GIE</th>
+                <th>Origen capital</th>
+                <th>País capital</th>
+                <th>FEOC</th>
+                <th>RTB</th>
+              </tr>
+            </thead>
+            <tbody id="tablaGat"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="pagerGat"></div>
+      </section>
+    </section>
+  </main>
+
+  <div class="chart-modal" id="chartModal" aria-hidden="true">
+    <div class="chart-modal-content">
+      <div class="modal-actions">
+        <button type="button" id="descargarModalPng">PNG</button>
+        <button class="modal-close" type="button" id="cerrarModal">Cerrar</button>
+      </div>
+      <div id="chartFullscreen" class="chart-fullscreen"></div>
+    </div>
+  </div>
+
+  <script src="visor_pvirce_assets/data/visor-data.js"></script>
+  <script src="visor_pvirce_assets/js/visor.js"></script>
+</body>
+</html>

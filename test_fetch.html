@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Test fetch CSV</title>
+<style>
+  body { font-family: monospace; padding: 20px; }
+  pre { background: #f4f4f4; padding: 10px; max-height: 300px; overflow: auto; font-size: 11px; }
+  .row { margin-bottom: 18px; padding: 10px; border-left: 4px solid #9B2247; background: #fff; }
+  .ok { border-color: #1E5B4F; }
+  .err { border-color: #c00; }
+  h2 { margin: 0 0 6px; font-size: 14px; }
+  button { padding: 8px 14px; background: #9B2247; color: white; border: 0; cursor: pointer; margin-right: 8px; }
+</style>
+</head>
+<body>
+<h1>Test lectura CSV — PVIRCE</h1>
+<p>Pruebo 4 vías para traer el sheet. Cada bloque muestra estado, tiempo, primeros bytes.</p>
+<button onclick="runAll()">Re-ejecutar pruebas</button>
+<button onclick="window.open('https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pub?gid=388978604&single=true&output=csv','_blank')">Abrir CSV en pestaña</button>
+
+<div id="out"></div>
+
+<script>
+const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pub?gid=388978604&single=true&output=csv';
+
+const sources = [
+  { name: 'Directo Google Docs',         url: CSV },
+  { name: 'corsproxy.io',                url: 'https://corsproxy.io/?' + encodeURIComponent(CSV) },
+  { name: 'allorigins.win/raw',          url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV) },
+  { name: 'thingproxy.freeboard.io',     url: 'https://thingproxy.freeboard.io/fetch/' + CSV }
+];
+
+async function test(src) {
+  const t0 = performance.now();
+  const div = document.createElement('div');
+  div.className = 'row';
+  div.innerHTML = `<h2>${src.name}</h2><div class="status">Probando…</div><pre></pre>`;
+  document.getElementById('out').appendChild(div);
+  try {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort('timeout 12s'), 12000);
+    const r = await fetch(src.url, { signal: ctl.signal });
+    clearTimeout(timer);
+    const txt = await r.text();
+    const ms = (performance.now() - t0).toFixed(0);
+    const lines = txt.split(/\r?\n/);
+    div.classList.add('ok');
+    div.querySelector('.status').textContent = `OK · HTTP ${r.status} · ${txt.length} bytes · ${lines.length} líneas · ${ms} ms`;
+    div.querySelector('pre').textContent = txt.slice(0, 800);
+  } catch (e) {
+    const ms = (performance.now() - t0).toFixed(0);
+    div.classList.add('err');
+    div.querySelector('.status').textContent = `ERROR · ${ms} ms · ${e.name}: ${e.message || e}`;
+  }
+}
+
+async function runAll() {
+  document.getElementById('out').innerHTML = '';
+  for (const s of sources) await test(s);
+}
+runAll();
+</script>
+</body>
+</html>
