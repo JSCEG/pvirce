@@ -14,6 +14,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@v3.12.0/dist/pptxgen.bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mapbox/togeojson@0.16.2/togeojson.js"></script>
 <style>
 @font-face {
   font-family: 'Patria';
@@ -661,6 +663,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       <div id="mapToolbarEf" style="display:none;flex:1;align-items:center;gap:10px;font-size:12px;color:var(--text)">
         <span style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle EF</span>
         <span id="mapEfBadge" style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
+        <button id="mapKmzBtn" style="padding:4px 10px;background:var(--verde);color:white;border:0;border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">📍 Cargar KMZs</button>
         <button id="mapClearEf" style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">← Volver a Nacional</button>
       </div>
     </div>
@@ -1312,6 +1315,104 @@ document.getElementById('mapClearEf').addEventListener('click', () => {
   render();
 });
 
+// =================== KMZ EN MAPA ===================
+let kmzLayer = null;
+const _kmzCache = {};
+
+async function fetchKmzAsGeoJSON(url) {
+  if (_kmzCache[url]) return _kmzCache[url];
+  // intentar via Pages Function /kmz, fallback directo
+  const proxied = '/kmz?url=' + encodeURIComponent(url);
+  let res;
+  try {
+    res = await fetch(proxied);
+    if (!res.ok) throw new Error('proxy ' + res.status);
+  } catch(e) {
+    res = await fetch(url);
+  }
+  const buf = await res.arrayBuffer();
+  // detectar si es KMZ (zip) o KML plano
+  const head = new Uint8Array(buf.slice(0, 4));
+  const isZip = head[0] === 0x50 && head[1] === 0x4B;
+  let kmlText;
+  if (isZip) {
+    const zip = await JSZip.loadAsync(buf);
+    const kmlFile = Object.keys(zip.files).find(n => n.toLowerCase().endsWith('.kml'));
+    if (!kmlFile) throw new Error('KMZ sin archivo .kml');
+    kmlText = await zip.files[kmlFile].async('string');
+  } else {
+    kmlText = new TextDecoder().decode(buf);
+  }
+  const xml = new DOMParser().parseFromString(kmlText, 'text/xml');
+  const gj = toGeoJSON.kml(xml);
+  return _kmzCache[url] = gj;
+}
+
+async function loadKmzsForCurrentEf() {
+  const btn = document.getElementById('mapKmzBtn');
+  if (!btn) return;
+  if (kmzLayer) {
+    mapInstance.removeLayer(kmzLayer);
+    kmzLayer = null;
+    btn.textContent = '📍 Cargar KMZs';
+    btn.style.background = 'var(--verde)';
+    return;
+  }
+  if (!Object.keys(CNE_INDEX).length) {
+    alert('Datos CNE no disponibles. Verifica conexión.');
+    return;
+  }
+  const efVal = document.getElementById('efSelect').value;
+  const isAll = efVal === '__ALL__';
+  const projects = isAll ? DATA : DATA.filter(r => r.ef === efVal);
+  const withKmz = projects.filter(p => {
+    const c = p.folio && CNE_INDEX[p.folio];
+    return c && c['Archivo KMZ'] && /^https?:\/\//.test(c['Archivo KMZ']);
+  });
+  if (!withKmz.length) {
+    alert('No hay KMZs disponibles para esta selección.');
+    return;
+  }
+  btn.textContent = `Cargando 0/${withKmz.length}…`;
+  btn.disabled = true;
+  const features = [];
+  for (let i = 0; i < withKmz.length; i++) {
+    const p = withKmz[i];
+    const url = CNE_INDEX[p.folio]['Archivo KMZ'];
+    btn.textContent = `Cargando ${i+1}/${withKmz.length}…`;
+    try {
+      const gj = await fetchKmzAsGeoJSON(url);
+      gj.features.forEach(f => {
+        f.properties = f.properties || {};
+        f.properties._proj = p.nombre;
+        f.properties._folio = p.folio;
+        f.properties._tipo = p.tipo;
+        f.properties._ef = p.ef;
+        features.push(f);
+      });
+    } catch(e) { console.warn('KMZ fail', p.nombre, e.message); }
+  }
+  if (!features.length) {
+    btn.textContent = '📍 Sin KMZs leídos';
+    btn.disabled = false;
+    return;
+  }
+  kmzLayer = L.geoJSON({ type: 'FeatureCollection', features }, {
+    style: () => ({ color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.35 }),
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.85, weight: 1.5 }),
+    onEachFeature: (f, lyr) => {
+      const p = f.properties || {};
+      lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
+    }
+  }).addTo(mapInstance);
+  btn.textContent = `✓ KMZs cargados (${features.length}) — click para ocultar`;
+  btn.style.background = 'var(--guinda)';
+  btn.disabled = false;
+  try { mapInstance.fitBounds(kmzLayer.getBounds().pad(0.2)); } catch(e) {}
+}
+
+document.getElementById('mapKmzBtn').addEventListener('click', loadKmzsForCurrentEf);
+
 // =================== FICHA DE PROYECTO ===================
 function pillForFoco(val) {
   const v = String(val || '').toLowerCase();
@@ -1547,14 +1648,59 @@ function buildFichaCardsPart1(p) {
       ${row('Capacidad permiso', p.capacidadPermiso)}
       ${row('Refuerzos MMUSD', p.refuerzosMMUSD ? fmt(p.refuerzosMMUSD,2) : '—')}
       ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 100)}</div>` : ''}
-      ${p.motivosRechazo ? `<div style="font-size:9.5px;color:#9B2247;margin-top:3px"><span style="font-weight:700">Motivos rechazo:</span> ${trunc(p.motivosRechazo, 100)}</div>` : ''}
     </div>
-    ${cneCard}
+  `;
+}
+
+// CNE card extraída para reutilizar en slide B
+function buildCneCard(p) {
+  const cne = (p.folio && CNE_INDEX[p.folio]) ? CNE_INDEX[p.folio] : null;
+  if (!cne) return '';
+  const cneRow = (lbl, key) => {
+    const v = cne[key];
+    return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(v && String(v).trim() && v !== '-') ? trunc(v, 50) : '—'}</span></div>`;
+  };
+  return `
+    <div class="ficha-card span4" style="border-left:3px solid var(--verde)">
+      <h5 style="color:var(--verde);border-bottom-color:var(--verde)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 14px">
+        <div>
+          ${cneRow('Permiso Generación', 'Permiso Generación')}
+          ${cneRow('Estatus Permiso', 'Estatus Permiso')}
+          ${cneRow('Cuenta Registro OPE', 'Cuenta Registro OPE')}
+          ${cneRow('Fecha Inicio Registro', 'Fecha Inicio Registro')}
+          ${cneRow('Fecha Firma', 'Fecha Firma Proyecto')}
+        </div>
+        <div>
+          ${cneRow('EVIS / MISSE', 'Has EVIS / MISSE')}
+          ${cneRow('Estatus EVIS', 'Estatus EVIS / MISSE')}
+          ${cneRow('Folio EVIS', 'Folio EVIS / MISSE')}
+          ${cneRow('MIA', 'Has MIA')}
+          ${cneRow('Estatus MIA', 'Estatus MIA')}
+        </div>
+        <div>
+          ${cneRow('Estudios Interconexión', 'Has Estudios Interconexión')}
+          ${cneRow('Estatus Indicativo', 'Estatus Indicativo')}
+          ${cneRow('Estatus Impacto', 'Estatus Impacto')}
+          ${cneRow('Estatus Instalaciones', 'Estatus Instalaciones')}
+          ${cneRow('Restricción uso suelo', 'Restricción de uso de suelo')}
+        </div>
+        <div>
+          ${cneRow('Estatus Pago', 'Estatus de Pago')}
+          ${cneRow('Solicitud permiso', 'Estatus de la solicitud de permiso (Sin información / Presentada)')}
+          ${cneRow('Resultados estudios', 'Resultados de los estudios (Sin información / Terminados)')}
+          ${cneRow('Carta aceptación', 'Carta de aceptación de las obras de refuerzo (Sin información / Firmada / No firmada)')}
+          ${cneRow('Sentido resolución', 'Sentido de la resolución')}
+        </div>
+      </div>
+      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:10px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--verde);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
+    </div>
   `;
 }
 
 function buildFichaCardsPart2(p) {
   return `
+    ${buildCneCard(p)}
     <div class="ficha-card span4">
       <h5>Foco rojo y priorización</h5>
       <div class="ficha-foco" style="font-size:11px">
