@@ -333,7 +333,7 @@ body {
 .panel.accent-verde h3::before { background: var(--verde); }
 .panel.accent-dorado h3 { color: var(--dorado); border-bottom-color: var(--dorado); }
 .panel.accent-dorado h3::before { background: var(--dorado); }
-.panel .chart { flex: 1; min-height: 0; padding: 4px; }
+.panel .chart { flex: 1; min-height: 0; padding: 8px 6px 4px; }
 .panel > div:not(.chart) { flex: 1; min-height: 0; }
 
 .col-stack { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
@@ -509,7 +509,7 @@ Highcharts.setOptions({
         symbolSize: 12,
         symbolX: 8, symbolY: 8,
         align: 'right', verticalAlign: 'top',
-        x: -6, y: 6,
+        x: -10, y: 4,
         width: 16, height: 16,
         onclick: function() { this.fullscreen.toggle(); },
         theme: {
