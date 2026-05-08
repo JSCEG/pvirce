@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>PVIRCE 2026-2040 · DGMESNIE</title>
+<title>GAT-Mixto · Proyectos en desarrollo · DGMESNIE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Merriweather:wght@400;700;900&display=swap" rel="stylesheet">
@@ -432,6 +432,71 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .leaflet-tooltip.ef-tip strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .leaflet-tooltip.ef-tip::before { display: none; }
 
+/* ============ FICHA DE PROYECTO ============ */
+.ficha-slide { display: grid; grid-template-rows: auto auto 1fr auto; padding: 0; }
+.ficha-slide .ficha-toolbar {
+  padding: 8px 28px;
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+  border-bottom: 1px solid var(--gris-claro);
+}
+.ficha-slide .ficha-toolbar label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.ficha-slide .ficha-toolbar select { padding: 5px 10px; border: 1px solid var(--gris); border-radius: 4px; font-family: var(--font-b); font-size: 12px; min-width: 320px; max-width: 460px; background: white; }
+.ficha-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--guinda); color: white; letter-spacing: .04em; }
+
+.ficha-body {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
+  gap: 8px;
+  padding: 10px 28px 14px;
+  align-content: start;
+  overflow: hidden;
+  font-size: 10px;
+}
+.ficha-card {
+  background: white;
+  border: 1px solid var(--gris-claro);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex; flex-direction: column; gap: 3px;
+  break-inside: avoid;
+}
+.ficha-card.span2 { grid-column: span 2; }
+.ficha-card.span3 { grid-column: span 3; }
+.ficha-card.span4 { grid-column: span 4; }
+.ficha-card h5 {
+  font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--guinda); font-weight: 700;
+  border-bottom: 1.5px solid var(--guinda);
+  padding-bottom: 3px; margin-bottom: 3px;
+  display: flex; align-items: center; gap: 6px;
+}
+.ficha-card h5::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--guinda);
+}
+.ficha-card.accent-verde h5 { color: var(--verde); border-bottom-color: var(--verde); }
+.ficha-card.accent-verde h5::before { background: var(--verde); }
+.ficha-card.accent-dorado h5 { color: var(--dorado); border-bottom-color: var(--dorado); }
+.ficha-card.accent-dorado h5::before { background: var(--dorado); }
+
+.ficha-row { display: flex; justify-content: space-between; gap: 6px; padding: 1.5px 0; align-items: baseline; border-bottom: 1px dotted #eee; }
+.ficha-row:last-child { border-bottom: none; }
+.ficha-row .lbl { font-size: 9px; color: var(--gris); font-weight: 600; flex: 0 0 auto; max-width: 50%; line-height: 1.2; }
+.ficha-row .val { font-size: 10.5px; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; line-height: 1.2; word-break: break-word; }
+
+.ficha-foco {
+  display: flex; gap: 4px; flex-wrap: wrap;
+}
+.ficha-foco .pill {
+  font-size: 9px; padding: 2px 6px; border-radius: 8px;
+  font-weight: 700; letter-spacing: .03em;
+  background: #eef0f2; color: var(--text); border: 1px solid var(--gris-claro);
+}
+.ficha-foco .pill.alto { background: #f8d4dd; color: #6a172f; border-color: #d99cb1; }
+.ficha-foco .pill.medio { background: #fdebc8; color: #6b4d18; border-color: #e6cc8c; }
+.ficha-foco .pill.bajo { background: #d4ecdf; color: #1f4a3c; border-color: #9bd1b6; }
+
 /* ============ PRELOADER ============ */
 .preloader {
   position: fixed; inset: 0; z-index: 9999;
@@ -480,8 +545,8 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 </div>
 
 <div class="toolbar">
-  <h1 style="line-height:1.2"><span style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">PVIRCE · Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</h1>
-  <a href="GAT-MIXTO-DGMESNIE.html" style="font-size:12px;text-decoration:none;color:var(--guinda);font-weight:700;border:1px solid var(--guinda);padding:6px 10px;border-radius:4px">GAT-Mixto →</a>
+  <h1 style="line-height:1.2"><span style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">GAT-Mixto · Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</h1>
+  <a href="index.html" style="font-size:12px;text-decoration:none;color:var(--guinda);font-weight:700;border:1px solid var(--guinda);padding:6px 10px;border-radius:4px">← PVIRCE</a>
   <label style="font-size:13px;">EF:
     <select id="efSelect"><option>Cargando…</option></select>
   </label>
@@ -505,8 +570,8 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     </div>
 
     <div class="body">
-      <div class="eyebrow">Programa Vinculante 2026 — 2040</div>
-      <h1>Instalación y Retiro de Centrales Eléctricas</h1>
+      <div class="eyebrow">Reporte GAT-Mixto</div>
+      <h1>Proyectos en desarrollo · GAT-Mixto</h1>
       <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
       <div class="subtitle" id="coverEf">Entidad Federativa: <strong>Yucatán</strong></div>
       <div class="meta">
@@ -522,7 +587,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   <!-- ============ SLIDE 2: CONTENIDO ============ -->
   <section class="slide content">
     <div class="header">
-      <div class="brand-left">PVIRCE 2026-2040</div>
+      <div class="brand-left">GAT-Mixto</div>
       <div class="ef-title" id="contEf">Yucatán</div>
       <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
     </div>
@@ -530,36 +595,36 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     <div class="narrative" id="narrative">Cargando datos…</div>
 
     <div class="kpi-row">
-      <div class="kpi"><div class="value" id="kpiMW">—</div><div class="label">MW capacidad<br>instalada</div></div>
+      <div class="kpi"><div class="value" id="kpiMW">—</div><div class="label">MW capacidad<br>neta</div></div>
       <div class="kpi"><div class="value" id="kpiProj">—</div><div class="label">Total de<br>proyectos</div></div>
-      <div class="kpi"><div class="value" id="kpiPct">—</div><div class="label">Participación<br>nacional</div></div>
-      <div class="kpi"><div class="value" id="kpiHorizon">—</div><div class="label">Horizonte</div></div>
+      <div class="kpi"><div class="value" id="kpiPct">—</div><div class="label">Inversión total<br>MMUSD</div></div>
+      <div class="kpi"><div class="value" id="kpiHorizon">—</div><div class="label">Horizonte<br>EOC</div></div>
     </div>
 
     <div class="body">
       <div class="col-stack">
         <div class="panel">
-          <h3>Trayectoria anual por tecnología</h3>
+          <h3>Capacidad por año EOC y tecnología</h3>
           <div class="chart" id="chartTrayectoria"></div>
         </div>
         <div class="panel accent-dorado">
-          <h3>Capacidad instalada por tecnología</h3>
+          <h3>Capacidad por tecnología</h3>
           <div id="techTable"></div>
         </div>
       </div>
 
       <div class="panel accent-verde">
-        <h3>Top 10 proyectos por capacidad instalada</h3>
+        <h3>Top 10 proyectos por capacidad</h3>
         <div id="topTable" style="overflow:auto"></div>
       </div>
 
       <div class="col-stack">
         <div class="panel accent-verde">
-          <h3>Generación por participación</h3>
+          <h3>Estatus de permiso</h3>
           <div class="chart" id="chartDonut"></div>
         </div>
         <div class="panel accent-dorado">
-          <h3>Capacidad instalada acumulada</h3>
+          <h3>Inversión por tecnología (MMUSD)</h3>
           <div class="chart" id="chartBar"></div>
         </div>
       </div>
@@ -571,7 +636,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   <!-- ============ SLIDE 3: MAPA NACIONAL ============ -->
   <section class="slide content map-slide">
     <div class="header">
-      <div class="brand-left">PVIRCE 2026-2040</div>
+      <div class="brand-left">GAT-Mixto</div>
       <div class="ef-title" id="mapSlideTitle">Mapa nacional</div>
       <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
     </div>
@@ -580,10 +645,10 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1">
         <label for="mapMetric">Métrica:</label>
         <select id="mapMetric">
-          <option value="capacidad">Capacidad instalada MW</option>
+          <option value="capacidad">Capacidad neta MW</option>
           <option value="proyectos">Número de proyectos</option>
-          <option value="firmesMW">MW firmes</option>
-          <option value="renovableMW">MW renovable</option>
+          <option value="inversion">Inversión MMUSD</option>
+          <option value="avance">% Avance promedio</option>
         </select>
         <label for="mapTipo" style="margin-left:14px">Tecnología:</label>
         <select id="mapTipo"><option value="__ALL__">Todas</option></select>
@@ -608,6 +673,27 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
         <div id="mapStats"></div>
       </div>
     </div>
+
+    <div class="footer"></div>
+  </section>
+
+  <!-- ============ SLIDE 4: FICHA DE PROYECTO ============ -->
+  <section class="slide content ficha-slide">
+    <div class="header">
+      <div class="brand-left">GAT-Mixto</div>
+      <div class="ef-title" id="fichaTitle">Ficha de proyecto</div>
+      <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+    </div>
+
+    <div class="ficha-toolbar">
+      <label>Proyecto:
+        <select id="fichaSelect"><option>Cargando…</option></select>
+      </label>
+      <span id="fichaStatusBadge" class="ficha-badge"></span>
+      <span id="fichaFolio" style="font-size:11px;color:var(--gris);margin-left:auto"></span>
+    </div>
+
+    <div class="ficha-body" id="fichaBody"></div>
 
     <div class="footer"></div>
   </section>
@@ -653,8 +739,9 @@ Highcharts.setOptions({
   }
 });
 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pub?gid=388978604&single=true&output=csv';
-const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pubhtml?gid=388978604&single=true';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1612312561&single=true&output=csv';
+const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pubhtml?gid=1612312561&single=true';
+const DATA_ENDPOINT = '/data-gat';
 
 let DATA = [];
 
@@ -685,7 +772,7 @@ async function loadData() {
   let text;
   const cb = '?_=' + Date.now();
   const proxies = [
-    '/data' + cb,
+    DATA_ENDPOINT + cb,
     CSV_URL,
     'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(CSV_URL),
     'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL)
@@ -706,16 +793,60 @@ async function loadData() {
   const csv = lines.slice(1).join('\n');
   const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
   DATA = parsed.data.map(r => ({
-    status: r['Status_VF'] || '',
-    nombre: r['Nombre real'] || '',
-    anio: parseInt(r['Año']) || null,
-    tipo: r['Tipo_VF'] || r['Tipo'] || '',
-    renovable: r['Renovable'] || '',
-    mw: num(r['MW']),
-    municipio: r['Municipio'] || '',
-    ef: (r['Entidad Federativa'] || '').trim(),
-    firme: (r['Firmes'] || '').trim() === '*'
-  })).filter(r => r.ef && r.anio);
+    status: r['Estatus'] || '',
+    folio: r['Folio Proyecto'] || r['Pre Folio'] || '',
+    nombre: r['Nombre del proyecto'] || r['Nombre'] || '',
+    marca: r['Marca'] || '',
+    cluster: r['Clúster'] || '',
+    subgrupo: r['Subgrupo ok'] || r['Subgrupo'] || '',
+    convocatoria: r['Convocatoria'] || '',
+    pvirce: r['PVIRCE'] || '',
+    tipo: r['Tipo Tecnología'] || '',
+    gie: r['GIE general'] || '',
+    gieLimpio: r['GIE limpio'] || '',
+    paisCapital: r['País de origen del capital'] || '',
+    origenCap: r['Origen Cap'] || '',
+    activosGestion: r['Activos bajo gestión, y en su caso capitalización bursátil'] || '',
+    fuenteFondos: r['Fuente de los fondos'] || '',
+    region: r['Región ok'] || r['Región'] || '',
+    ef: (r['Estado'] || '').trim(),
+    municipio: r['Municipio/Alcaldía'] || '',
+    domicilio: r['Domicilio'] || '',
+    interconexion: r['Punto de interconexión ok'] || r['Punto de interconexión SENER-CENACE'] || '',
+    nivelTension: r['Nivel de tensión ok'] || r['Nivel de tensión SENER-CENACE'] || '',
+    capacidadMW: num(r['Capacidad neta MW']) || num(r['Capacidad original MW']),
+    capacidadOriginal: num(r['Capacidad original MW']),
+    generacionGWh: num(r['Generación anual estimada en GWh']),
+    fp: num(r['FP(%)']),
+    numEquipos: num(r['Número de equipos de generación']),
+    feoc: r['FEOC'] || '',
+    anioEOC: parseInt(r['Año EOC']) || null,
+    anioRTB: parseInt(r['Año RTB']) || parseInt(r['Año RTB Eól']) || null,
+    invMMUSD: num(r['Inv MMUSD']) || num(r[' Monto de inversión total del proyecto']) || num(r['Monto de inversión total del proyecto']),
+    costoMMUSDperMW: num(r['Costo MMUSD/MW']),
+    capexTotal: num(r[' CapEx total del proyecto']) || num(r['CapEx total del proyecto']),
+    capexSAE: num(r[' CapEx total del SAE']) || num(r['CapEx total del SAE']),
+    opex: num(r[' OpEx']) || num(r['OpEx']),
+    sga: num(r[' SG&A']) || num(r['SG&A']),
+    invSocial: num(r['Monto de Inversión Social']),
+    avancePct: num(r['% Avance Fecha']) || num(r['Porcentaje Implementación']),
+    permisoGen: r['Permiso Generación'] || '',
+    estatusPermiso: r['Estatus Permiso'] || '',
+    hasEvis: r['Has EVIS / MISSE'] || '',
+    estatusEvis: r['Estatus EVIS / MISSE'] || '',
+    folioEvis: r['Folio EVIS / MISSE'] || '',
+    hasMia: r['Has MIA'] || '',
+    estatusMia: r['Estatus MIA'] || '',
+    folioMia: r['Folio MIA'] || '',
+    hasInter: r['Has Estudios Interconexión'] || '',
+    focoSocial: r['Foco rojo Social'] || '',
+    focoTerritorial: r['Foco rojo territorial'] || '',
+    focoAmbiental: r['Foco rojo ambiental'] || '',
+    focoGeneral: r['Foco rojo general'] || '',
+    priorizacion: r['Priorización'] || '',
+    focoTSA: r['Foco rojo TSA'] || '',
+    descripcion: r['Descripción Proyecto'] || ''
+  })).filter(r => r.nombre && r.ef);
 
   populateEFSelect();
   render();
@@ -742,37 +873,36 @@ function render() {
   const all = DATA;
   const rows = isAll ? DATA : DATA.filter(r => r.ef === efVal);
 
-  const totalMW = rows.reduce((s,r) => s + r.mw, 0);
+  const totalMW = rows.reduce((s,r) => s + r.capacidadMW, 0);
   const totalProj = rows.length;
-  const nacionalMW = all.reduce((s,r) => s + r.mw, 0);
-  const pct = nacionalMW ? (totalMW / nacionalMW * 100) : 0;
-  const years = rows.map(r => r.anio).filter(Boolean);
-  const yMin = Math.min(...years), yMax = Math.max(...years);
+  const totalInv = rows.reduce((s,r) => s + r.invMMUSD, 0);
+  const avgAvance = totalProj ? rows.reduce((s,r) => s + r.avancePct, 0) / totalProj : 0;
+  const focoRojo = rows.filter(r => /si|alto|rojo/i.test(r.focoGeneral || '')).length;
+  const yearsEoc = rows.map(r => r.anioEOC).filter(Boolean);
+  const yMin = Math.min(...yearsEoc), yMax = Math.max(...yearsEoc);
 
   document.getElementById('kpiMW').textContent = fmt(totalMW, 1);
   document.getElementById('kpiProj').textContent = totalProj;
-  document.getElementById('kpiPct').textContent = fmt(pct, 2) + '%';
+  document.getElementById('kpiPct').textContent = fmt(totalInv, 1);
   document.getElementById('kpiHorizon').textContent = isFinite(yMin) ? `${yMin}-${yMax}` : '—';
 
   // Narrative
   const tipos = {};
-  rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo]||0) + r.mw; });
+  rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo]||0) + r.capacidadMW; });
   const topTipo = Object.entries(tipos).sort((a,b) => b[1]-a[1])[0];
   const stats = {};
-  rows.forEach(r => { stats[r.status] = (stats[r.status]||0) + r.mw; });
+  rows.forEach(r => { const k = r.estatusPermiso || r.status || 'Sin info'; stats[k] = (stats[k]||0) + r.capacidadMW; });
   const topStatus = Object.entries(stats).sort((a,b) => b[1]-a[1])[0];
-  const firmes = rows.filter(r => r.firme);
-  const firmesMW = firmes.reduce((s,r) => s + r.mw, 0);
   document.getElementById('narrative').innerHTML = topTipo && topStatus ?
-    `En <strong>${ef}</strong>, la capacidad instalada suma <strong>${fmt(totalMW,1)} MW distribuidos en ${totalProj} proyectos</strong>, de los cuales <strong>${firmes.length} son firmes (${fmt(firmesMW,0)} MW)</strong>. La tecnología de mayor peso es <strong>${topTipo[0]}, con ${fmt(topTipo[1],0)} MW</strong>. El estatus dominante por capacidad instalada es <strong>${topStatus[0]}, con ${fmt(topStatus[1],0)} MW</strong>.` :
+    `En <strong>${ef}</strong>, el portafolio GAT-Mixto considera <strong>${totalProj} proyectos</strong> con <strong>${fmt(totalMW,1)} MW</strong> de capacidad instalada y una inversión total de <strong>${fmt(totalInv,1)} MMUSD</strong>. Avance promedio: <strong>${fmt(avgAvance,1)}%</strong>. Focos rojos identificados: <strong>${focoRojo}</strong>. Tecnología líder: <strong>${topTipo[0]} (${fmt(topTipo[1],0)} MW)</strong>. Estatus dominante: <strong>${topStatus[0]} (${fmt(topStatus[1],0)} MW)</strong>.` :
     `Sin datos para ${ef}.`;
 
-  // Trayectoria anual stacked col
-  const allYears = [...new Set(rows.map(r => r.anio))].sort();
-  const allTipos = [...new Set(rows.map(r => r.tipo))].sort();
+  // Trayectoria anual stacked col por Año EOC
+  const allYears = [...new Set(rows.map(r => r.anioEOC).filter(Boolean))].sort();
+  const allTipos = [...new Set(rows.map(r => r.tipo).filter(Boolean))].sort();
   const series = allTipos.map(t => ({
     name: t,
-    data: allYears.map(y => +rows.filter(r => r.anio===y && r.tipo===t).reduce((s,r)=>s+r.mw,0).toFixed(1))
+    data: allYears.map(y => +rows.filter(r => r.anioEOC===y && r.tipo===t).reduce((s,r)=>s+r.capacidadMW,0).toFixed(1))
   }));
 
   Highcharts.chart('chartTrayectoria', {
@@ -780,41 +910,40 @@ function render() {
     xAxis: { categories: allYears, lineColor: '#E5E5E5', labels: { style: { fontSize: '10px' } } },
     yAxis: { title: { text: 'MW', style: { fontSize: '10px' } }, gridLineColor: '#f0f0f0', labels: { style: { fontSize: '9px' } } },
     legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
-    plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 30 ? this.y + ' MW' : ''; } } } },
+    plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 30 ? Math.round(this.y) + ' MW' : ''; } } } },
     series: series,
     tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.1f} MW<br>' }
   });
 
-  // Tech table con % participación estatal
+  // Tech table con % participación
   const techRows = Object.entries(tipos).sort((a,b) => b[1]-a[1])
     .map(([t,m]) => {
       const pctEf = totalMW ? (m/totalMW*100) : 0;
       return `<tr><td>${t}</td><td class="mw">${fmt(m,1)}</td><td class="mw">${fmt(pctEf,1)}%</td></tr>`;
     }).join('');
-  const totalPct = '100.0%';
   document.getElementById('techTable').innerHTML = `<table class="tech">
-    <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% EF</th></tr></thead>
+    <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% ${isAll?'Nal':'EF'}</th></tr></thead>
     <tbody>${techRows}</tbody>
     <tfoot><tr style="border-top:2px solid var(--guinda);font-weight:700;background:#faf3f5">
-      <td>TOTAL</td><td class="mw">${fmt(totalMW,1)}</td><td class="mw">${totalPct}</td>
+      <td>TOTAL</td><td class="mw">${fmt(totalMW,1)}</td><td class="mw">100.0%</td>
     </tr></tfoot>
   </table>`;
 
-  // Top N (10 + caption con total)
-  const sorted = [...rows].sort((a,b) => b.mw-a.mw);
+  // Top 10 proyectos por capacidad (incluye Inv y Estatus)
+  const sorted = [...rows].sort((a,b) => b.capacidadMW - a.capacidadMW);
   const top = sorted.slice(0,10);
   const remaining = sorted.length - top.length;
-  const remainingMW = sorted.slice(10).reduce((s,r)=>s+r.mw,0);
+  const remainingMW = sorted.slice(10).reduce((s,r)=>s+r.capacidadMW,0);
   const extraRow = remaining > 0
     ? `<tr style="background:#f7f7f8;font-style:italic"><td colspan="4">+ ${remaining} proyectos restantes</td><td class="mw">${fmt(remainingMW,0)}</td><td>—</td></tr>`
     : '';
   document.getElementById('topTable').innerHTML = `<table class="proyectos">
-    <thead><tr><th>Proyecto</th><th>Año</th><th>Municipio</th><th>Tipo</th><th class="mw">MW</th><th>Estatus</th></tr></thead>
-    <tbody>${top.map(r => `<tr><td>${r.nombre}</td><td>${r.anio}</td><td>${r.municipio||'—'}</td><td>${r.tipo}</td><td class="mw">${fmt(r.mw,0)}</td><td>${r.status}</td></tr>`).join('')}${extraRow}</tbody>
+    <thead><tr><th>Proyecto</th><th>EOC</th><th>Estado</th><th>Tipo</th><th class="mw">MW</th><th class="mw">MMUSD</th></tr></thead>
+    <tbody>${top.map(r => `<tr><td>${r.nombre}</td><td>${r.anioEOC||'—'}</td><td>${r.ef||'—'}</td><td>${r.tipo||'—'}</td><td class="mw">${fmt(r.capacidadMW,0)}</td><td class="mw">${fmt(r.invMMUSD,1)}</td></tr>`).join('')}${extraRow}</tbody>
   </table>`;
 
-  // Donut by status
-  const donutData = Object.entries(stats).map(([k,v]) => ({ name: k, y: +v.toFixed(1) }));
+  // Donut por Estatus Permiso
+  const donutData = Object.entries(stats).map(([k,v]) => ({ name: k || 'Sin info', y: +v.toFixed(1) }));
   Highcharts.chart('chartDonut', {
     chart: { type: 'pie', backgroundColor: 'transparent' },
     plotOptions: { pie: { innerSize: '60%', borderWidth: 1, dataLabels: { enabled: true, style: { fontSize: '9px' }, format: '<b>{point.name}</b><br>{point.percentage:.1f}% · {point.y:.0f} MW' } } },
@@ -822,15 +951,20 @@ function render() {
     tooltip: { pointFormat: '<b>{point.y:.1f} MW</b> ({point.percentage:.1f}%)' }
   });
 
-  // Horizontal bar capacity stacked
+  // Bar Inversión MMUSD por tecnología
+  const invByTipo = {};
+  rows.forEach(r => { invByTipo[r.tipo] = (invByTipo[r.tipo]||0) + r.invMMUSD; });
   Highcharts.chart('chartBar', {
     chart: { type: 'bar', backgroundColor: 'transparent' },
     xAxis: { categories: [ef], labels: { style: { fontSize: '9px' } } },
-    yAxis: { title: { text: 'MW', style: { fontSize: '9px' } }, labels: { style: { fontSize: '9px' } } },
+    yAxis: { title: { text: 'MMUSD', style: { fontSize: '9px' } }, labels: { style: { fontSize: '9px' } } },
     legend: { itemStyle: { fontSize: '9px' } },
-    plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 50 ? Math.round(this.y) : ''; } } } },
-    series: allTipos.map(t => ({ name: t, data: [+rows.filter(r=>r.tipo===t).reduce((s,r)=>s+r.mw,0).toFixed(1)] }))
+    plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 5 ? Math.round(this.y) : ''; } } } },
+    series: Object.entries(invByTipo).filter(([_,v]) => v > 0).map(([t,v]) => ({ name: t, data: [+v.toFixed(1)] }))
   });
+
+  // Render ficha proyecto select
+  if (typeof renderProjectFicha === 'function') renderProjectFicha();
 }
 
 // =================== MAPA ===================
@@ -892,10 +1026,10 @@ function metricForEf(ef, metric, tipo) {
   if (tipo && tipo !== '__ALL__') rows = rows.filter(r => r.tipo === tipo);
   switch(metric) {
     case 'proyectos': return rows.length;
-    case 'firmesMW': return rows.filter(r => r.firme).reduce((s,r)=>s+r.mw, 0);
-    case 'renovableMW': return rows.filter(r => /renov/i.test(r.renovable)).reduce((s,r)=>s+r.mw, 0);
+    case 'inversion': return rows.reduce((s,r)=>s+r.invMMUSD, 0);
+    case 'avance': return rows.length ? rows.reduce((s,r)=>s+r.avancePct, 0)/rows.length : 0;
     case 'capacidad':
-    default: return rows.reduce((s,r) => s + r.mw, 0);
+    default: return rows.reduce((s,r) => s + r.capacidadMW, 0);
   }
 }
 
@@ -1026,17 +1160,23 @@ function showNacionalSummary(metric, tipo, min, max, values) {
   const ranked = Object.values(values).filter(v => v.value > 0).sort((a,b) => b.value - a.value);
   const top5 = ranked.slice(0, 5);
   const tipoLbl = tipo === '__ALL__' ? 'todas las tecnologías' : tipo;
-  const metricLbl = { capacidad:'MW capacidad instalada', proyectos:'proyectos', firmesMW:'MW firmes', renovableMW:'MW renovables' }[metric];
+  const metricLbl = { capacidad:'MW capacidad neta', proyectos:'proyectos', inversion:'MMUSD inversión', avance:'% avance promedio' }[metric];
   document.getElementById('mapEfTitle').textContent = 'Vista nacional';
   document.getElementById('mapHint').style.display = '';
   document.getElementById('mapHint').textContent = `Métrica: ${metricLbl} · ${tipoLbl}. Click una entidad para detalle.`;
+  const fmtVal = v => {
+    if (metric === 'proyectos') return Math.round(v);
+    if (metric === 'inversion') return fmt(v,1)+' MMUSD';
+    if (metric === 'avance') return fmt(v,1)+'%';
+    return fmt(v,1)+' MW';
+  };
   document.getElementById('mapStats').innerHTML = `
-    <div class="stat"><span>Total nacional</span><strong>${metric==='proyectos'? total : fmt(total,1)+' MW'}</strong></div>
+    <div class="stat"><span>Total nacional</span><strong>${fmtVal(total)}</strong></div>
     <div class="stat"><span>Entidades con datos</span><strong>${ranked.length}</strong></div>
     <div class="stat"><span>Máximo</span><strong>${ranked[0]?.ef||'—'}</strong></div>
     <div class="stat"><span>Mínimo (>0)</span><strong>${ranked[ranked.length-1]?.ef||'—'}</strong></div>
     <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.1em;text-transform:uppercase">Top 5</div>
-    ${top5.map((v,i) => `<div class="stat"><span>${i+1}. ${v.ef}</span><strong>${metric==='proyectos'? v.value : fmt(v.value,0)+' MW'}</strong></div>`).join('')}
+    ${top5.map((v,i) => `<div class="stat"><span>${i+1}. ${v.ef}</span><strong>${fmtVal(v.value)}</strong></div>`).join('')}
   `;
 }
 
@@ -1049,43 +1189,42 @@ function showEfDetail(ef) {
     document.getElementById('mapStats').innerHTML = '';
     return;
   }
-  const totalMW = rows.reduce((s,r)=>s+r.mw, 0);
-  const firmes = rows.filter(r => r.firme);
-  const firmesMW = firmes.reduce((s,r)=>s+r.mw,0);
-  const ren = rows.filter(r => /renov/i.test(r.renovable)).reduce((s,r)=>s+r.mw, 0);
-  const noRen = totalMW - ren;
+  const totalMW = rows.reduce((s,r)=>s+r.capacidadMW, 0);
+  const totalInv = rows.reduce((s,r)=>s+r.invMMUSD, 0);
+  const avgAvance = rows.length ? rows.reduce((s,r)=>s+r.avancePct,0)/rows.length : 0;
+  const focoRojo = rows.filter(r => /si|alto|rojo/i.test(r.focoGeneral||'')).length;
 
-  const nacionalMW = DATA.reduce((s,r) => s + r.mw, 0);
+  const nacionalMW = DATA.reduce((s,r) => s + r.capacidadMW, 0);
   const pctNal = nacionalMW ? (totalMW/nacionalMW*100) : 0;
 
   const tipos = {};
-  rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo]||0) + r.mw; });
+  rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo]||0) + r.capacidadMW; });
   const tiposSorted = Object.entries(tipos).sort((a,b)=>b[1]-a[1]);
   const maxTipoMW = tiposSorted[0]?.[1] || 1;
 
   const stats = {};
-  rows.forEach(r => { stats[r.status] = (stats[r.status]||0) + r.mw; });
+  rows.forEach(r => { const k = r.estatusPermiso || r.status || 'Sin info'; stats[k] = (stats[k]||0) + r.capacidadMW; });
   const statsSorted = Object.entries(stats).sort((a,b)=>b[1]-a[1]);
 
   const munis = {};
-  rows.forEach(r => { if (r.municipio) munis[r.municipio] = (munis[r.municipio]||0) + r.mw; });
+  rows.forEach(r => { if (r.municipio) munis[r.municipio] = (munis[r.municipio]||0) + r.capacidadMW; });
   const munisSorted = Object.entries(munis).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
-  const years = rows.map(r=>r.anio).filter(Boolean);
-  const horizonte = `${Math.min(...years)}–${Math.max(...years)}`;
+  const years = rows.map(r=>r.anioEOC).filter(Boolean);
+  const horizonte = years.length ? `${Math.min(...years)}–${Math.max(...years)}` : '—';
 
   const byYear = {};
-  rows.forEach(r => { byYear[r.anio] = (byYear[r.anio]||0) + r.mw; });
+  rows.forEach(r => { if (r.anioEOC) byYear[r.anioEOC] = (byYear[r.anioEOC]||0) + r.capacidadMW; });
   const yearsSorted = Object.keys(byYear).sort();
   const maxYearMW = Math.max(...Object.values(byYear), 1);
 
   document.getElementById('mapHint').style.display = 'none';
   document.getElementById('mapStats').innerHTML = `
     <div class="ef-detail-grid">
-      <div class="ef-mini-card"><div class="lbl">Capacidad instalada</div><div class="val">${fmt(totalMW,1)}</div><div class="sub">MW · ${fmt(pctNal,2)}% nacional</div></div>
-      <div class="ef-mini-card"><div class="lbl">Proyectos</div><div class="val">${rows.length}</div><div class="sub">${firmes.length} firmes</div></div>
-      <div class="ef-mini-card"><div class="lbl">Renovable</div><div class="val">${fmt(ren/totalMW*100,1)}%</div><div class="sub">${fmt(ren,0)} MW</div></div>
-      <div class="ef-mini-card"><div class="lbl">Horizonte</div><div class="val" style="font-size:14px">${horizonte}</div><div class="sub">${yearsSorted.length} años</div></div>
+      <div class="ef-mini-card"><div class="lbl">Capacidad neta</div><div class="val">${fmt(totalMW,1)}</div><div class="sub">MW · ${fmt(pctNal,2)}% nal.</div></div>
+      <div class="ef-mini-card"><div class="lbl">Proyectos</div><div class="val">${rows.length}</div><div class="sub">${focoRojo} con foco rojo</div></div>
+      <div class="ef-mini-card"><div class="lbl">Inversión</div><div class="val">${fmt(totalInv,1)}</div><div class="sub">MMUSD</div></div>
+      <div class="ef-mini-card"><div class="lbl">Avance prom.</div><div class="val">${fmt(avgAvance,1)}%</div><div class="sub">EOC ${horizonte}</div></div>
     </div>
 
     <div class="ef-section-title">Tecnologías</div>
@@ -1096,7 +1235,7 @@ function showEfDetail(ef) {
         <span class="num">${fmt(m,0)} MW</span>
       </div>`).join('')}
 
-    <div class="ef-section-title">Estatus / participación</div>
+    <div class="ef-section-title">Estatus permiso</div>
     ${statsSorted.map(([s,m]) => `
       <div class="ef-bar-row">
         <span class="name" style="width:auto;flex:0 0 auto;font-size:9.5px;letter-spacing:0">${s}</span>
@@ -1126,6 +1265,139 @@ document.getElementById('mapClearEf').addEventListener('click', () => {
   document.getElementById('efSelect').value = '__ALL__';
   render();
 });
+
+// =================== FICHA DE PROYECTO ===================
+function pillForFoco(val) {
+  const v = String(val || '').toLowerCase();
+  if (!val || v === '—' || v === 'sin info') return '<span class="pill">—</span>';
+  if (/alto|si|rojo/.test(v)) return `<span class="pill alto">${val}</span>`;
+  if (/medio|amarillo/.test(v)) return `<span class="pill medio">${val}</span>`;
+  if (/bajo|verde|no/.test(v)) return `<span class="pill bajo">${val}</span>`;
+  return `<span class="pill">${val}</span>`;
+}
+
+function renderProjectFicha() {
+  const sel = document.getElementById('fichaSelect');
+  if (!sel) return;
+  const efVal = document.getElementById('efSelect').value;
+  const isAll = efVal === '__ALL__';
+  const projects = isAll ? DATA : DATA.filter(r => r.ef === efVal);
+  // populate
+  const currentVal = sel.value;
+  sel.innerHTML = projects.map((p,i) => `<option value="${i}">${p.nombre}${p.ef && isAll ? ' · ' + p.ef : ''}</option>`).join('') || '<option>Sin proyectos</option>';
+  // restore selection if compatible
+  if (currentVal && currentVal !== 'Cargando…' && projects[+currentVal]) sel.value = currentVal;
+  paintFicha(projects);
+  sel.onchange = () => paintFicha(projects);
+}
+
+function paintFicha(projects) {
+  const sel = document.getElementById('fichaSelect');
+  const idx = parseInt(sel.value) || 0;
+  const p = projects[idx];
+  const body = document.getElementById('fichaBody');
+  if (!p) {
+    body.innerHTML = '<div class="ficha-card span4"><h5>Sin proyectos</h5><div>No hay proyectos para mostrar.</div></div>';
+    document.getElementById('fichaTitle').textContent = 'Ficha de proyecto';
+    document.getElementById('fichaStatusBadge').textContent = '';
+    document.getElementById('fichaFolio').textContent = '';
+    return;
+  }
+  document.getElementById('fichaTitle').textContent = p.nombre;
+  document.getElementById('fichaStatusBadge').textContent = p.status || '—';
+  document.getElementById('fichaFolio').textContent = p.folio ? `Folio: ${p.folio}` : '';
+
+  const row = (lbl, val) => `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${val ?? '—'}</span></div>`;
+
+  body.innerHTML = `
+    <div class="ficha-card">
+      <h5>Identidad</h5>
+      ${row('Marca', p.marca)}
+      ${row('Tipo tecnología', p.tipo)}
+      ${row('Clúster', p.cluster)}
+      ${row('Subgrupo', p.subgrupo)}
+      ${row('Convocatoria', p.convocatoria)}
+      ${row('PVIRCE', p.pvirce)}
+    </div>
+
+    <div class="ficha-card accent-verde">
+      <h5>Capital</h5>
+      ${row('GIE general', p.gie)}
+      ${row('GIE limpio', p.gieLimpio)}
+      ${row('País origen capital', p.paisCapital)}
+      ${row('Origen capital', p.origenCap)}
+      ${row('Activos bajo gestión', p.activosGestion ? (String(p.activosGestion).slice(0,40)+(String(p.activosGestion).length>40?'…':'')) : '—')}
+      ${row('Fuente fondos', p.fuenteFondos ? (String(p.fuenteFondos).slice(0,40)+(String(p.fuenteFondos).length>40?'…':'')) : '—')}
+    </div>
+
+    <div class="ficha-card accent-dorado">
+      <h5>Ubicación</h5>
+      ${row('Estado', p.ef)}
+      ${row('Municipio', p.municipio)}
+      ${row('Región CENACE', p.region)}
+      ${row('Punto interconexión', p.interconexion)}
+      ${row('Nivel de tensión', p.nivelTension)}
+    </div>
+
+    <div class="ficha-card">
+      <h5>Datos técnicos</h5>
+      ${row('Capacidad neta', p.capacidadMW ? fmt(p.capacidadMW,1)+' MW' : '—')}
+      ${row('Capacidad original', p.capacidadOriginal ? fmt(p.capacidadOriginal,1)+' MW' : '—')}
+      ${row('Generación anual', p.generacionGWh ? fmt(p.generacionGWh,1)+' GWh' : '—')}
+      ${row('Factor de planta', p.fp ? fmt(p.fp,1)+'%' : '—')}
+      ${row('# equipos', p.numEquipos || '—')}
+      ${row('Año EOC', p.anioEOC || '—')}
+      ${row('Año RTB', p.anioRTB || '—')}
+      ${row('FEOC', p.feoc)}
+    </div>
+
+    <div class="ficha-card accent-verde span2">
+      <h5>Características económicas</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+        <div>
+          ${row('Inversión total', p.invMMUSD ? fmt(p.invMMUSD,1)+' MMUSD' : '—')}
+          ${row('Costo MMUSD/MW', p.costoMMUSDperMW ? fmt(p.costoMMUSDperMW,3) : '—')}
+          ${row('CapEx total', p.capexTotal ? fmt(p.capexTotal,1)+' MMUSD' : '—')}
+        </div>
+        <div>
+          ${row('CapEx SAE', p.capexSAE ? fmt(p.capexSAE,1)+' MMUSD' : '—')}
+          ${row('OpEx', p.opex ? fmt(p.opex,1)+' MMUSD' : '—')}
+          ${row('Inv. Social', p.invSocial ? fmt(p.invSocial,2)+' MMUSD' : '—')}
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-card accent-dorado span2">
+      <h5>Permisos y avance</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+        <div>
+          ${row('Permiso Generación', p.permisoGen ? 'Sí' : '—')}
+          ${row('Estatus Permiso', p.estatusPermiso)}
+          ${row('EVIS / MISSE', p.hasEvis || '—')}
+          ${row('Estatus EVIS', p.estatusEvis)}
+        </div>
+        <div>
+          ${row('MIA', p.hasMia || '—')}
+          ${row('Estatus MIA', p.estatusMia)}
+          ${row('Estudios Interconexión', p.hasInter || '—')}
+          ${row('% Avance', p.avancePct ? fmt(p.avancePct,1)+'%' : '—')}
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-card span4">
+      <h5>Foco rojo y priorización</h5>
+      <div class="ficha-foco">
+        <span style="font-size:9px;color:var(--gris);font-weight:700;margin-right:4px">Social:</span> ${pillForFoco(p.focoSocial)}
+        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Territorial:</span> ${pillForFoco(p.focoTerritorial)}
+        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Ambiental:</span> ${pillForFoco(p.focoAmbiental)}
+        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">General:</span> ${pillForFoco(p.focoGeneral)}
+        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">TSA:</span> ${pillForFoco(p.focoTSA)}
+        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
+      </div>
+    </div>
+  `;
+}
 
 // =================== EXPORT PPT ===================
 const _imgCache = {};
