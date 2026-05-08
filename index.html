@@ -670,7 +670,7 @@ function hidePreloader() {
   if (p) { p.classList.add('hidden'); setTimeout(() => p.style.display = 'none', 400); }
 }
 
-async function tryFetch(url, ms=8000) {
+async function tryFetch(url, ms=20000) {
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), ms);
   try {
@@ -682,9 +682,11 @@ async function tryFetch(url, ms=8000) {
 
 async function loadData() {
   let text;
+  const cb = '?_=' + Date.now();
   const proxies = [
+    '/data' + cb,
     CSV_URL,
-    'https://corsproxy.io/?' + encodeURIComponent(CSV_URL),
+    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(CSV_URL),
     'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL)
   ];
   let lastErr;
