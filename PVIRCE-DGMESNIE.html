@@ -529,7 +529,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     <div class="narrative" id="narrative">Cargando datos…</div>
 
     <div class="kpi-row">
-      <div class="kpi"><div class="value" id="kpiMW">—</div><div class="label">MW capacidad<br>programada</div></div>
+      <div class="kpi"><div class="value" id="kpiMW">—</div><div class="label">MW capacidad<br>instalada</div></div>
       <div class="kpi"><div class="value" id="kpiProj">—</div><div class="label">Total de<br>proyectos</div></div>
       <div class="kpi"><div class="value" id="kpiPct">—</div><div class="label">Participación<br>nacional</div></div>
       <div class="kpi"><div class="value" id="kpiHorizon">—</div><div class="label">Horizonte</div></div>
@@ -542,13 +542,13 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
           <div class="chart" id="chartTrayectoria"></div>
         </div>
         <div class="panel accent-dorado">
-          <h3>Capacidad por tecnología</h3>
+          <h3>Capacidad instalada por tecnología</h3>
           <div id="techTable"></div>
         </div>
       </div>
 
       <div class="panel accent-verde">
-        <h3>Top 10 proyectos por capacidad</h3>
+        <h3>Top 10 proyectos por capacidad instalada</h3>
         <div id="topTable" style="overflow:auto"></div>
       </div>
 
@@ -558,7 +558,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
           <div class="chart" id="chartDonut"></div>
         </div>
         <div class="panel accent-dorado">
-          <h3>Capacidad acumulada</h3>
+          <h3>Capacidad instalada acumulada</h3>
           <div class="chart" id="chartBar"></div>
         </div>
       </div>
@@ -579,7 +579,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1">
         <label for="mapMetric">Métrica:</label>
         <select id="mapMetric">
-          <option value="capacidad">Capacidad MW</option>
+          <option value="capacidad">Capacidad instalada MW</option>
           <option value="proyectos">Número de proyectos</option>
           <option value="firmesMW">MW firmes</option>
           <option value="renovableMW">MW renovable</option>
@@ -761,7 +761,7 @@ function render() {
   const firmes = rows.filter(r => r.firme);
   const firmesMW = firmes.reduce((s,r) => s + r.mw, 0);
   document.getElementById('narrative').innerHTML = topTipo && topStatus ?
-    `En <strong>${ef}</strong>, la capacidad suma <strong>${fmt(totalMW,1)} MW distribuidos en ${totalProj} proyectos</strong>, de los cuales <strong>${firmes.length} son firmes (${fmt(firmesMW,0)} MW)</strong>. La tecnología de mayor peso es <strong>${topTipo[0]}, con ${fmt(topTipo[1],0)} MW</strong>. El estatus dominante por capacidad es <strong>${topStatus[0]}, con ${fmt(topStatus[1],0)} MW</strong>.` :
+    `En <strong>${ef}</strong>, la capacidad instalada suma <strong>${fmt(totalMW,1)} MW distribuidos en ${totalProj} proyectos</strong>, de los cuales <strong>${firmes.length} son firmes (${fmt(firmesMW,0)} MW)</strong>. La tecnología de mayor peso es <strong>${topTipo[0]}, con ${fmt(topTipo[1],0)} MW</strong>. El estatus dominante por capacidad instalada es <strong>${topStatus[0]}, con ${fmt(topStatus[1],0)} MW</strong>.` :
     `Sin datos para ${ef}.`;
 
   // Trayectoria anual stacked col
@@ -1023,7 +1023,7 @@ function showNacionalSummary(metric, tipo, min, max, values) {
   const ranked = Object.values(values).filter(v => v.value > 0).sort((a,b) => b.value - a.value);
   const top5 = ranked.slice(0, 5);
   const tipoLbl = tipo === '__ALL__' ? 'todas las tecnologías' : tipo;
-  const metricLbl = { capacidad:'MW capacidad', proyectos:'proyectos', firmesMW:'MW firmes', renovableMW:'MW renovables' }[metric];
+  const metricLbl = { capacidad:'MW capacidad instalada', proyectos:'proyectos', firmesMW:'MW firmes', renovableMW:'MW renovables' }[metric];
   document.getElementById('mapEfTitle').textContent = 'Vista nacional';
   document.getElementById('mapHint').style.display = '';
   document.getElementById('mapHint').textContent = `Métrica: ${metricLbl} · ${tipoLbl}. Click una entidad para detalle.`;
@@ -1079,7 +1079,7 @@ function showEfDetail(ef) {
   document.getElementById('mapHint').style.display = 'none';
   document.getElementById('mapStats').innerHTML = `
     <div class="ef-detail-grid">
-      <div class="ef-mini-card"><div class="lbl">Capacidad</div><div class="val">${fmt(totalMW,1)}</div><div class="sub">MW · ${fmt(pctNal,2)}% nacional</div></div>
+      <div class="ef-mini-card"><div class="lbl">Capacidad instalada</div><div class="val">${fmt(totalMW,1)}</div><div class="sub">MW · ${fmt(pctNal,2)}% nacional</div></div>
       <div class="ef-mini-card"><div class="lbl">Proyectos</div><div class="val">${rows.length}</div><div class="sub">${firmes.length} firmes</div></div>
       <div class="ef-mini-card"><div class="lbl">Renovable</div><div class="val">${fmt(ren/totalMW*100,1)}%</div><div class="sub">${fmt(ren,0)} MW</div></div>
       <div class="ef-mini-card"><div class="lbl">Horizonte</div><div class="val" style="font-size:14px">${horizonte}</div><div class="sub">${yearsSorted.length} años</div></div>
