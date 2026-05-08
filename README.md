@@ -16,8 +16,8 @@ Tablero web institucional SENER para consulta del **Programa Vinculante para la 
 
 ## Archivos
 
-- `index.html` — visor + slide generador (entrypoint)
-- `mockup_ppt.html` — mismo archivo (alias)
+- `index.html` — entrypoint Cloudflare (copia de PVIRCE-DGMESNIE.html)
+- `PVIRCE-DGMESNIE.html` — visor + slide generador
 - `Estilos Institucionales/` — guía estilos web, fuentes, CSS
 - `Fuentes/PVIRCE2026-2040.md` — fuente de datos local (fallback)
 - `visor_pvirce_2026_2040.html` — visor original previo
