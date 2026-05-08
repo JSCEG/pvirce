@@ -1047,8 +1047,45 @@ document.getElementById('mapClearEf').addEventListener('click', () => {
 });
 
 // =================== EXPORT PPT ===================
+const _imgCache = {};
+async function urlToDataURL(url) {
+  if (_imgCache[url]) return _imgCache[url];
+  const r = await fetch(url, { mode: 'cors' });
+  const blob = await r.blob();
+  return _imgCache[url] = await new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = rej;
+    fr.readAsDataURL(blob);
+  });
+}
+
+async function inlineRemoteAssets() {
+  const imgs = document.querySelectorAll('img[src^="http"]');
+  for (const img of imgs) {
+    if (img.src.startsWith('data:')) continue;
+    try {
+      const data = await urlToDataURL(img.src);
+      img.dataset.origSrc = img.src;
+      img.src = data;
+    } catch (e) { console.warn('inline img fail', img.src, e.message); }
+  }
+  // bg-image en .cover
+  const cover = document.querySelector('.slide.cover');
+  if (cover && !cover.dataset.bgInlined) {
+    const bg = getComputedStyle(cover).backgroundImage;
+    const m = bg.match(/url\(["']?(https?:[^"')]+)/);
+    if (m) {
+      try {
+        const data = await urlToDataURL(m[1]);
+        cover.style.backgroundImage = bg.replace(m[1], data);
+        cover.dataset.bgInlined = '1';
+      } catch (e) { console.warn('inline bg fail', e.message); }
+    }
+  }
+}
+
 async function captureSlide(slideEl) {
-  // ensure leaflet has rendered if present
   if (slideEl.querySelector('#mapa') && mapInstance) {
     mapInstance.invalidateSize();
     await new Promise(r => setTimeout(r, 400));
@@ -1071,6 +1108,9 @@ async function exportPPT() {
   btn.disabled = true;
   btn.textContent = 'Generando…';
   try {
+    btn.textContent = 'Preparando imágenes…';
+    await inlineRemoteAssets();
+
     const pptx = new PptxGenJS();
     pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5 in
     pptx.author = 'DGMESNIE — SENER';
