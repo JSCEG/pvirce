@@ -835,11 +835,48 @@ const GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojso
 let mapInstance = null, geoLayer = null, geoData = null;
 const RAMP = ['#f7e3ea', '#e6b8c9', '#d28aa6', '#b85979', '#9B2247', '#6a172f'];
 
+// Catálogo de aliases EF: clave normalizada (cualquier variante) -> nombre canónico CSV
+const EF_ALIAS = {
+  'mexico': 'Estado de México',
+  'estadodemexico': 'Estado de México',
+  'edomex': 'Estado de México',
+  'coahuila': 'Coahuila de Zaragoza',
+  'coahuiladezaragoza': 'Coahuila de Zaragoza',
+  'veracruz': 'Veracruz de Ignacio de la Llave',
+  'veracruzdeignaciodelallave': 'Veracruz de Ignacio de la Llave',
+  'michoacan': 'Michoacán de Ocampo',
+  'michoacandeocampo': 'Michoacán de Ocampo',
+  'cdmx': 'Ciudad de México',
+  'ciudaddemexico': 'Ciudad de México',
+  'distritofederal': 'Ciudad de México',
+  'df': 'Ciudad de México',
+  'bajacalifornia': 'Baja California',
+  'bajacaliforniasur': 'Baja California Sur',
+  'bcs': 'Baja California Sur',
+  'bc': 'Baja California',
+  'nuevoleon': 'Nuevo León',
+  'sanluispotosi': 'San Luis Potosí',
+  'slp': 'San Luis Potosí',
+  'quintanaroo': 'Quintana Roo'
+};
+
 function normEf(s) {
   return (s || '').toLowerCase()
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .replace(/de zaragoza|de ignacio de la llave|de la llave|de hidalgo|de arteaga|de juarez/g, '')
+    .replace(/^estado de /, '')
+    .replace(/ de zaragoza| de ignacio de la llave| de la llave| de hidalgo| de arteaga| de juarez| de ocampo/g, '')
     .replace(/[^a-z]/g, '').trim();
+}
+
+// Resuelve nombre del geo a EF canónico del CSV
+function resolveEf(geoName, csvIndex) {
+  const n = normEf(geoName);
+  // 1. match directo en index del CSV
+  if (csvIndex[n]) return csvIndex[n];
+  // 2. alias explícito
+  if (EF_ALIAS[n] && csvIndex[normEf(EF_ALIAS[n])]) return EF_ALIAS[n];
+  // 3. devuelve el nombre tal cual (no match)
+  return geoName;
 }
 
 function getEfNameFromFeature(f) {
@@ -899,7 +936,7 @@ function drawMap() {
   const values = {};
   geoData.features.forEach(f => {
     const geoName = getEfNameFromFeature(f);
-    const matchedEf = efIndex[normEf(geoName)] || geoName;
+    const matchedEf = resolveEf(geoName, efIndex);
     values[geoName] = { ef: matchedEf, value: metricForEf(matchedEf, metric, tipo) };
   });
   const allVals = Object.values(values).map(v => v.value).filter(v => v > 0);
