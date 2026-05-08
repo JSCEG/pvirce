@@ -1351,40 +1351,36 @@ function renderProjectFicha() {
           <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
         </div>
         <div class="ficha-toolbar">
-          <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length}</span>
+          <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 1 de 2</span>
           <span class="ficha-badge">${p.status||'—'}</span>
           <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}${p.rfc?' · RFC: '+p.rfc:''}</span>
         </div>
-        <div class="ficha-body">${buildFichaCards(p)}</div>
+        <div class="ficha-body">${buildFichaCardsPart1(p)}</div>
         <div class="footer"></div>
       `;
       deck.appendChild(clone);
 
-      // Si descripcion + cronograma muy largos, agregar slide continuación con texto completo
-      const longText = (String(p.descripcion||'').length + String(p.cronoDesarrollo||'').length) > 350;
-      if (longText) {
-        const cont = document.createElement('section');
-        cont.className = 'slide content ficha-slide ficha-clone';
-        cont.dataset.fichaClone = 'true';
-        cont.innerHTML = `
-          <div class="header">
-            <div class="brand-left">GAT-Mixto · ${efVal}</div>
-            <div class="ef-title">${p.nombre} — Descripción ampliada</div>
-            <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
-          </div>
-          <div class="ficha-toolbar">
-            <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · continuación</span>
-            <span class="ficha-badge">${p.status||'—'}</span>
-            <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
-          </div>
-          <div class="ficha-body" style="grid-template-columns:1fr;align-content:start">
-            ${p.descripcion ? `<div class="ficha-card span4"><h5>Descripción del proyecto</h5><div style="font-size:11px;line-height:1.55;color:var(--text);white-space:pre-wrap">${p.descripcion}</div></div>` : ''}
-            ${p.cronoDesarrollo ? `<div class="ficha-card accent-dorado span4"><h5>Cronograma de desarrollo</h5><div style="font-size:11px;line-height:1.55;color:var(--text);white-space:pre-wrap">${p.cronoDesarrollo}</div></div>` : ''}
-          </div>
-          <div class="footer"></div>
-        `;
-        deck.appendChild(cont);
-      }
+      // Slide B: foco rojo + descripcion + cronograma + observaciones (siempre, una por proyecto)
+      const slideB = document.createElement('section');
+      slideB.className = 'slide content ficha-slide ficha-clone';
+      slideB.dataset.fichaClone = 'true';
+      slideB.innerHTML = `
+        <div class="header">
+          <div class="brand-left">GAT-Mixto · ${efVal}</div>
+          <div class="ef-title">${p.nombre} — Foco rojo y observaciones</div>
+          <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="ficha-toolbar">
+          <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 2 de 2</span>
+          <span class="ficha-badge">${p.status||'—'}</span>
+          <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
+        </div>
+        <div class="ficha-body" style="grid-template-columns:1fr;align-content:start">
+          ${buildFichaCardsPart2(p)}
+        </div>
+        <div class="footer"></div>
+      `;
+      deck.appendChild(slideB);
     });
   }
 }
@@ -1413,8 +1409,181 @@ function paintFicha(projects) {
 
 function trunc(s, n=60) { s = String(s||''); return s.length > n ? s.slice(0,n)+'…' : s; }
 
+function _row(lbl, val) { return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(val !== undefined && val !== null && val !== '') ? val : '—'}</span></div>`; }
+
+function buildFichaCardsPart1(p) {
+  const row = _row;
+  const cne = (p.folio && CNE_INDEX[p.folio]) ? CNE_INDEX[p.folio] : null;
+  const cneRow = (lbl, key) => {
+    const v = cne ? cne[key] : null;
+    return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(v && String(v).trim() && v !== '-') ? trunc(v, 50) : '—'}</span></div>`;
+  };
+  const cneCard = cne ? `
+    <div class="ficha-card span4" style="border-left:3px solid var(--verde)">
+      <h5 style="color:var(--verde);border-bottom-color:var(--verde)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 14px">
+        <div>
+          ${cneRow('Permiso Generación', 'Permiso Generación')}
+          ${cneRow('Estatus Permiso', 'Estatus Permiso')}
+          ${cneRow('Cuenta Registro OPE', 'Cuenta Registro OPE')}
+          ${cneRow('Fecha Inicio Registro', 'Fecha Inicio Registro')}
+          ${cneRow('Fecha Firma', 'Fecha Firma Proyecto')}
+        </div>
+        <div>
+          ${cneRow('EVIS / MISSE', 'Has EVIS / MISSE')}
+          ${cneRow('Estatus EVIS', 'Estatus EVIS / MISSE')}
+          ${cneRow('Folio EVIS', 'Folio EVIS / MISSE')}
+          ${cneRow('MIA', 'Has MIA')}
+          ${cneRow('Estatus MIA', 'Estatus MIA')}
+        </div>
+        <div>
+          ${cneRow('Estudios Interconexión', 'Has Estudios Interconexión')}
+          ${cneRow('Estatus Indicativo', 'Estatus Indicativo')}
+          ${cneRow('Estatus Impacto', 'Estatus Impacto')}
+          ${cneRow('Estatus Instalaciones', 'Estatus Instalaciones')}
+          ${cneRow('Restricción uso suelo', 'Restricción de uso de suelo')}
+        </div>
+        <div>
+          ${cneRow('Estatus Pago', 'Estatus de Pago')}
+          ${cneRow('Solicitud permiso', 'Estatus de la solicitud de permiso (Sin información / Presentada)')}
+          ${cneRow('Resultados estudios', 'Resultados de los estudios (Sin información / Terminados)')}
+          ${cneRow('Carta aceptación', 'Carta de aceptación de las obras de refuerzo (Sin información / Firmada / No firmada)')}
+          ${cneRow('Sentido resolución', 'Sentido de la resolución')}
+        </div>
+      </div>
+      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:9px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--verde);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
+    </div>` : '';
+  return `
+    <div class="ficha-card">
+      <h5>Identidad</h5>
+      ${row('Marca', p.marca)}
+      ${row('Tipo tecnología', p.tipo)}
+      ${row('Clúster', p.cluster)}
+      ${row('Subgrupo', p.subgrupo)}
+      ${row('Convocatoria', p.convocatoria)}
+      ${row('PVIRCE', p.pvirce)}
+    </div>
+    <div class="ficha-card accent-verde">
+      <h5>Capital</h5>
+      ${row('GIE general', p.gie)}
+      ${row('GIE limpio', p.gieLimpio)}
+      ${row('País origen capital', p.paisCapital)}
+      ${row('Origen capital', p.origenCap)}
+      ${row('Activos bajo gestión', p.activosGestion ? trunc(p.activosGestion, 40) : '—')}
+      ${row('Fuente fondos', p.fuenteFondos ? trunc(p.fuenteFondos, 40) : '—')}
+    </div>
+    <div class="ficha-card accent-dorado">
+      <h5>Ubicación</h5>
+      ${row('Estado', p.ef)}
+      ${row('Municipio', p.municipio)}
+      ${row('Región CENACE', p.region)}
+      ${row('Punto interconexión', p.interconexion)}
+      ${row('Nivel de tensión', p.nivelTension)}
+    </div>
+    <div class="ficha-card">
+      <h5>Datos técnicos</h5>
+      ${row('Capacidad neta', p.capacidadMW ? fmt(p.capacidadMW,1)+' MW' : '—')}
+      ${row('Capacidad original', p.capacidadOriginal ? fmt(p.capacidadOriginal,1)+' MW' : '—')}
+      ${row('Generación anual', p.generacionGWh ? fmt(p.generacionGWh,1)+' GWh' : '—')}
+      ${row('Factor de planta', p.fp ? fmt(p.fp,1)+'%' : '—')}
+      ${row('# equipos', p.numEquipos || '—')}
+      ${row('Año EOC', p.anioEOC || '—')}
+      ${row('Año RTB', p.anioRTB || '—')}
+      ${row('FEOC', p.feoc)}
+    </div>
+    <div class="ficha-card accent-verde span2">
+      <h5>Características económicas</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+        <div>
+          ${row('Inversión total', p.invMMUSD ? fmt(p.invMMUSD,1)+' MMUSD' : '—')}
+          ${row('Costo MMUSD/MW', p.costoMMUSDperMW ? fmt(p.costoMMUSDperMW,3) : '—')}
+          ${row('CapEx total', p.capexTotal ? fmt(p.capexTotal,1)+' MMUSD' : '—')}
+        </div>
+        <div>
+          ${row('CapEx SAE', p.capexSAE ? fmt(p.capexSAE,1)+' MMUSD' : '—')}
+          ${row('OpEx', p.opex ? fmt(p.opex,1)+' MMUSD' : '—')}
+          ${row('Inv. Social', p.invSocial ? fmt(p.invSocial,2)+' MMUSD' : '—')}
+        </div>
+      </div>
+    </div>
+    <div class="ficha-card accent-dorado span2">
+      <h5>Permisos y avance</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+        <div>
+          ${row('Permiso Generación', p.permisoGen ? 'Sí' : '—')}
+          ${row('Estatus Permiso', p.estatusPermiso)}
+          ${row('EVIS / MISSE', p.hasEvis || '—')}
+          ${row('Estatus EVIS', p.estatusEvis)}
+        </div>
+        <div>
+          ${row('MIA', p.hasMia || '—')}
+          ${row('Estatus MIA', p.estatusMia)}
+          ${row('Estudios Interconexión', p.hasInter || '—')}
+          ${row('% Avance', p.avancePct ? fmt(p.avancePct,1)+'%' : '—')}
+        </div>
+      </div>
+    </div>
+    <div class="ficha-card span2">
+      <h5>Contacto y representación</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+        <div>
+          ${row('RFC', p.rfc)}
+          ${row('No. CFE', p.noCfe)}
+          ${row('Representante', p.representante)}
+          ${row('Capturista', trunc(p.capturista, 30))}
+        </div>
+        <div>
+          ${row('Email', p.email)}
+          ${row('Teléfono', p.telefono)}
+          ${row('Persona a escuchar', trunc(p.personaEscuchar, 30))}
+          ${row('Oír', trunc(p.oir, 30))}
+        </div>
+      </div>
+      ${p.domicilioFiscal ? `<div style="margin-top:4px;font-size:9.5px;color:var(--text)"><span style="color:var(--gris);font-weight:700">Dom. fiscal:</span> ${trunc(p.domicilioFiscal, 90)}</div>` : ''}
+    </div>
+    <div class="ficha-card accent-verde span2">
+      <h5>CENACE / Interconexión</h5>
+      ${row('Estatus Validación CENACE', p.estatusValCenace)}
+      ${row('Capacidad permiso', p.capacidadPermiso)}
+      ${row('Refuerzos MMUSD', p.refuerzosMMUSD ? fmt(p.refuerzosMMUSD,2) : '—')}
+      ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 100)}</div>` : ''}
+      ${p.motivosRechazo ? `<div style="font-size:9.5px;color:#9B2247;margin-top:3px"><span style="font-weight:700">Motivos rechazo:</span> ${trunc(p.motivosRechazo, 100)}</div>` : ''}
+    </div>
+    ${cneCard}
+  `;
+}
+
+function buildFichaCardsPart2(p) {
+  return `
+    <div class="ficha-card span4">
+      <h5>Foco rojo y priorización</h5>
+      <div class="ficha-foco" style="font-size:11px">
+        <span style="color:var(--gris);font-weight:700;margin-right:4px">Social:</span> ${pillForFoco(p.focoSocial)}
+        <span style="color:var(--gris);font-weight:700;margin:0 4px">Territorial:</span> ${pillForFoco(p.focoTerritorial)}
+        <span style="color:var(--gris);font-weight:700;margin:0 4px">Ambiental:</span> ${pillForFoco(p.focoAmbiental)}
+        <span style="color:var(--gris);font-weight:700;margin:0 4px">General:</span> ${pillForFoco(p.focoGeneral)}
+        <span style="color:var(--gris);font-weight:700;margin:0 4px">TSA:</span> ${pillForFoco(p.focoTSA)}
+        <span style="color:var(--gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
+      </div>
+    </div>
+    <div class="ficha-card span4">
+      <h5>Descripción del proyecto</h5>
+      <div style="font-size:11px;line-height:1.55;color:var(--text);white-space:pre-wrap">${p.descripcion || 'Sin descripción.'}</div>
+    </div>
+    ${p.cronoDesarrollo ? `<div class="ficha-card accent-dorado span4">
+      <h5>Cronograma de desarrollo</h5>
+      <div style="font-size:11px;line-height:1.55;color:var(--text);white-space:pre-wrap">${p.cronoDesarrollo}</div>
+    </div>` : ''}
+    ${p.motivosRechazo ? `<div class="ficha-card span4" style="border-left:3px solid #9B2247">
+      <h5 style="color:#9B2247;border-bottom-color:#9B2247">Motivos de rechazo / Observaciones</h5>
+      <div style="font-size:11px;line-height:1.5;color:#6a172f">${p.motivosRechazo}</div>
+    </div>` : ''}
+  `;
+}
+
+// compatibilidad con uso anterior (vista interactiva)
 function buildFichaCards(p) {
-  const row = (lbl, val) => `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(val !== undefined && val !== null && val !== '') ? val : '—'}</span></div>`;
+  const row = _row;
   const cne = (p.folio && CNE_INDEX[p.folio]) ? CNE_INDEX[p.folio] : null;
   const cneRow = (lbl, key) => {
     const v = cne ? cne[key] : null;
