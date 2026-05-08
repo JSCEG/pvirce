@@ -396,7 +396,7 @@ table.tech tbody td:first-child { font-weight: 600; color: var(--verde); }
 <body>
 
 <div class="toolbar">
-  <h1>Mockup — Diapositiva PVIRCE por Entidad Federativa</h1>
+  <h1 style="line-height:1.2"><span style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</h1>
   <label style="font-size:13px;">EF:
     <select id="efSelect"><option>Cargando…</option></select>
   </label>
@@ -487,7 +487,13 @@ table.tech tbody td:first-child { font-weight: 600; color: var(--verde); }
 <script>
 Highcharts.setOptions({
   colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
-  chart: { style: { fontFamily: "'Noto Sans', sans-serif" } },
+  chart: {
+    style: { fontFamily: "'Noto Sans', sans-serif" },
+    events: {
+      fullscreenOpen: function() { this.update({ chart: { backgroundColor: '#ffffff' } }, false); this.redraw(); },
+      fullscreenClose: function() { this.update({ chart: { backgroundColor: 'transparent' } }, false); this.redraw(); }
+    }
+  },
   credits: { enabled: false },
   title: { text: null },
   lang: { thousandsSep: ',', viewFullscreen: 'Pantalla completa' },
@@ -495,10 +501,14 @@ Highcharts.setOptions({
     enabled: true,
     buttons: {
       contextButton: {
-        menuItems: ['viewFullscreen'],
-        symbol: 'url(data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239B2247%22 stroke-width=%222.5%22><path d=%22M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5%22/></svg>)',
-        symbolSize: 14,
-        symbolX: 11, symbolY: 11,
+        menuItems: null,
+        titleKey: 'viewFullscreen',
+        symbol: 'url(data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239B2247%22 stroke-width=%222.5%22><path d=%22M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5%22/></svg>)',
+        symbolSize: 12,
+        symbolX: 9, symbolY: 9,
+        x: -2, y: 2,
+        width: 18, height: 18,
+        onclick: function() { this.fullscreen.toggle(); },
         theme: { fill: 'transparent', states: { hover: { fill: 'rgba(155,34,71,.1)' } } }
       }
     }
@@ -572,17 +582,19 @@ async function loadData() {
 function populateEFSelect() {
   const efs = [...new Set(DATA.map(r => r.ef))].sort();
   const sel = document.getElementById('efSelect');
-  sel.innerHTML = efs.map(e => `<option>${e}</option>`).join('');
+  sel.innerHTML = `<option value="__ALL__">Todos (Nacional)</option>` + efs.map(e => `<option>${e}</option>`).join('');
   if (efs.includes('Yucatán')) sel.value = 'Yucatán';
 }
 
 function render() {
-  const ef = document.getElementById('efSelect').value;
+  const efVal = document.getElementById('efSelect').value;
+  const isAll = efVal === '__ALL__';
+  const ef = isAll ? 'Nacional' : efVal;
   document.querySelector('#coverEf strong').textContent = ef;
   document.getElementById('contEf').textContent = ef;
 
   const all = DATA;
-  const rows = DATA.filter(r => r.ef === ef);
+  const rows = isAll ? DATA : DATA.filter(r => r.ef === efVal);
 
   const totalMW = rows.reduce((s,r) => s + r.mw, 0);
   const totalProj = rows.length;
