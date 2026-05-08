@@ -845,7 +845,23 @@ async function loadData() {
     focoGeneral: r['Foco rojo general'] || '',
     priorizacion: r['Priorización'] || '',
     focoTSA: r['Foco rojo TSA'] || '',
-    descripcion: r['Descripción Proyecto'] || ''
+    descripcion: r['Descripción Proyecto'] || '',
+    rfc: r['RFC'] || '',
+    noCfe: r['No. CFE'] || '',
+    representante: r['Representante'] || '',
+    oir: r['Oir'] || '',
+    capturista: r['Capturista'] || '',
+    email: r['Email'] || '',
+    telefono: r['Teléfono'] || '',
+    personaEscuchar: r['Persona Escuchar'] || '',
+    domicilioFiscal: r['Domicilio Fiscal'] || '',
+    domicilioNotif: r['Domicilio Notificaciones'] || '',
+    motivosRechazo: r['Motivos de rechazo'] || '',
+    estatusValCenace: r['Estatus de Validación CENACE'] || r['Estatus Validación CENACE'] || '',
+    obraInterconexion: r['Obras'] || '',
+    refuerzosMMUSD: num(r[' Refuerzos MM USD']) || num(r['Refuerzos MM USD']),
+    capacidadPermiso: r['Capacidad Generación Permiso'] || '',
+    cronoDesarrollo: r['Cronograma de desarrollo y construcción'] || ''
   })).filter(r => r.nombre && r.ef);
 
   populateEFSelect();
@@ -1282,13 +1298,43 @@ function renderProjectFicha() {
   const efVal = document.getElementById('efSelect').value;
   const isAll = efVal === '__ALL__';
   const projects = isAll ? DATA : DATA.filter(r => r.ef === efVal);
-  // populate
+  // populate selector
   const currentVal = sel.value;
   sel.innerHTML = projects.map((p,i) => `<option value="${i}">${p.nombre}${p.ef && isAll ? ' · ' + p.ef : ''}</option>`).join('') || '<option>Sin proyectos</option>';
-  // restore selection if compatible
   if (currentVal && currentVal !== 'Cargando…' && projects[+currentVal]) sel.value = currentVal;
   paintFicha(projects);
   sel.onchange = () => paintFicha(projects);
+
+  // Cuando EF está enfocada, generar slides extra (uno por proyecto) para que en PDF/PPT salgan todos
+  removeFichaClones();
+  if (!isAll && projects.length > 0) {
+    const masterSlide = document.querySelector('.ficha-slide');
+    const deck = document.querySelector('.deck');
+    projects.forEach((p, i) => {
+      const clone = document.createElement('section');
+      clone.className = 'slide content ficha-slide ficha-clone';
+      clone.dataset.fichaClone = 'true';
+      clone.innerHTML = `
+        <div class="header">
+          <div class="brand-left">GAT-Mixto · ${efVal}</div>
+          <div class="ef-title">${p.nombre}</div>
+          <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="ficha-toolbar">
+          <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length}</span>
+          <span class="ficha-badge">${p.status||'—'}</span>
+          <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}${p.rfc?' · RFC: '+p.rfc:''}</span>
+        </div>
+        <div class="ficha-body">${buildFichaCards(p)}</div>
+        <div class="footer"></div>
+      `;
+      deck.appendChild(clone);
+    });
+  }
+}
+
+function removeFichaClones() {
+  document.querySelectorAll('.ficha-clone').forEach(el => el.remove());
 }
 
 function paintFicha(projects) {
@@ -1305,11 +1351,15 @@ function paintFicha(projects) {
   }
   document.getElementById('fichaTitle').textContent = p.nombre;
   document.getElementById('fichaStatusBadge').textContent = p.status || '—';
-  document.getElementById('fichaFolio').textContent = p.folio ? `Folio: ${p.folio}` : '';
+  document.getElementById('fichaFolio').textContent = (p.folio ? `Folio: ${p.folio}` : '') + (p.rfc ? ` · RFC: ${p.rfc}` : '');
+  body.innerHTML = buildFichaCards(p);
+}
 
-  const row = (lbl, val) => `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${val ?? '—'}</span></div>`;
+function trunc(s, n=60) { s = String(s||''); return s.length > n ? s.slice(0,n)+'…' : s; }
 
-  body.innerHTML = `
+function buildFichaCards(p) {
+  const row = (lbl, val) => `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(val !== undefined && val !== null && val !== '') ? val : '—'}</span></div>`;
+  return `
     <div class="ficha-card">
       <h5>Identidad</h5>
       ${row('Marca', p.marca)}
@@ -1385,6 +1435,35 @@ function paintFicha(projects) {
       </div>
     </div>
 
+    <div class="ficha-card span2">
+      <h5>Contacto y representación</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+        <div>
+          ${row('RFC', p.rfc)}
+          ${row('No. CFE', p.noCfe)}
+          ${row('Representante', p.representante)}
+          ${row('Capturista', p.capturista)}
+        </div>
+        <div>
+          ${row('Email', p.email)}
+          ${row('Teléfono', p.telefono)}
+          ${row('Persona a escuchar', p.personaEscuchar)}
+          ${row('Oír', p.oir)}
+        </div>
+      </div>
+      ${p.domicilioFiscal ? `<div style="margin-top:4px;font-size:9.5px;color:var(--text)"><span style="color:var(--gris);font-weight:700">Dom. fiscal:</span> ${trunc(p.domicilioFiscal, 90)}</div>` : ''}
+      ${p.domicilioNotif ? `<div style="font-size:9.5px;color:var(--text)"><span style="color:var(--gris);font-weight:700">Dom. notif:</span> ${trunc(p.domicilioNotif, 90)}</div>` : ''}
+    </div>
+
+    <div class="ficha-card accent-verde span2">
+      <h5>CENACE / Interconexión</h5>
+      ${row('Estatus Validación CENACE', p.estatusValCenace)}
+      ${row('Capacidad permiso', p.capacidadPermiso)}
+      ${row('Refuerzos MMUSD', p.refuerzosMMUSD ? fmt(p.refuerzosMMUSD,2) : '—')}
+      ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 120)}</div>` : ''}
+      ${p.motivosRechazo ? `<div style="font-size:9.5px;color:#9B2247;margin-top:3px"><span style="font-weight:700">Motivos rechazo:</span> ${trunc(p.motivosRechazo, 120)}</div>` : ''}
+    </div>
+
     <div class="ficha-card span4">
       <h5>Foco rojo y priorización</h5>
       <div class="ficha-foco">
@@ -1396,6 +1475,12 @@ function paintFicha(projects) {
         <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
       </div>
     </div>
+
+    ${p.descripcion || p.cronoDesarrollo ? `<div class="ficha-card accent-dorado span4">
+      <h5>Descripción y observaciones</h5>
+      ${p.descripcion ? `<div style="font-size:10px;line-height:1.4;color:var(--text);margin-bottom:4px"><strong style="color:var(--guinda)">Descripción:</strong> ${trunc(p.descripcion, 400)}</div>` : ''}
+      ${p.cronoDesarrollo ? `<div style="font-size:10px;line-height:1.4;color:var(--text)"><strong style="color:var(--guinda)">Cronograma:</strong> ${trunc(p.cronoDesarrollo, 280)}</div>` : ''}
+    </div>` : ''}
   `;
 }
 
