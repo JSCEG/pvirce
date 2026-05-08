@@ -113,14 +113,24 @@ body {
 
 /* ============ PORTADA ============ */
 .slide.cover {
-  background:
-    linear-gradient(135deg, rgba(155,34,71,.35) 0%, rgba(30,91,79,.25) 60%, rgba(0,0,0,.45) 100%),
-    url('https://cdn.sassoapps.com/dgmesnie/portada_ppt.png') center/cover no-repeat;
+  background: #6a172f;
   color: white;
   display: grid;
   grid-template-rows: auto 1fr auto;
   padding: 0;
+  position: relative;
+  overflow: hidden;
 }
+.slide.cover .cover-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
+}
+.slide.cover .cover-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(155,34,71,.35) 0%, rgba(30,91,79,.25) 60%, rgba(0,0,0,.45) 100%);
+  z-index: 1;
+}
+.slide.cover .top-band, .slide.cover .body, .slide.cover .bottom-band { position: relative; z-index: 2; }
 
 .cover .top-band {
   background: rgba(255,255,255,.96);
@@ -422,11 +432,31 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .leaflet-tooltip.ef-tip strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .leaflet-tooltip.ef-tip::before { display: none; }
 
+/* ============ PRELOADER ============ */
+.preloader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, #9B2247 0%, #6a172f 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; color: white;
+  transition: opacity .35s ease;
+}
+.preloader.hidden { opacity: 0; pointer-events: none; }
+.preloader .spin {
+  width: 44px; height: 44px;
+  border: 3px solid rgba(255,255,255,.2);
+  border-top-color: var(--dorado);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.preloader h2 { font-family: var(--font-h); font-size: 20px; font-weight: 700; }
+.preloader .msg { font-size: 12px; color: rgba(255,255,255,.85); letter-spacing: .04em; }
+
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
   html, body { padding: 0; margin: 0; background: white; width: 13.333in; }
   body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .toolbar, .highcharts-contextbutton, .highcharts-exporting-group { display: none !important; }
+  .toolbar, .highcharts-contextbutton, .highcharts-exporting-group, .preloader { display: none !important; }
   .deck { gap: 0; max-width: none; margin: 0; }
   .slide {
     width: 13.333in;
@@ -443,12 +473,17 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 </head>
 <body>
 
+<div id="preloader" class="preloader">
+  <div class="spin"></div>
+  <h2>PVIRCE 2026-2040</h2>
+  <div class="msg" id="preloaderMsg">Cargando datos…</div>
+</div>
+
 <div class="toolbar">
   <h1 style="line-height:1.2"><span style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</h1>
   <label style="font-size:13px;">EF:
     <select id="efSelect"><option>Cargando…</option></select>
   </label>
-  <span id="status" style="font-size:11px;color:#666;"></span>
   <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
   <button class="secondary" onclick="loadData()">Recargar</button>
   <button class="secondary" onclick="window.print()">Vista PDF</button>
@@ -459,6 +494,8 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 
   <!-- ============ SLIDE 1: PORTADA ============ -->
   <section class="slide cover">
+    <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="" crossorigin="anonymous">
+    <div class="cover-overlay"></div>
     <div class="top-band">
       <img src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
       <div class="divider"></div>
@@ -624,11 +661,13 @@ function num(x) { const n = parseFloat(String(x).replace(/,/g,'')); return isNaN
 function fmt(n, d=1) { return n.toLocaleString('es-MX', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 
 function setStatus(msg) {
-  const el = document.getElementById('status');
+  const el = document.getElementById('preloaderMsg');
   if (el) el.textContent = msg;
-  const n = document.getElementById('narrative');
-  if (n) n.textContent = msg;
   console.log('[STATUS]', msg);
+}
+function hidePreloader() {
+  const p = document.getElementById('preloader');
+  if (p) { p.classList.add('hidden'); setTimeout(() => p.style.display = 'none', 400); }
 }
 
 async function tryFetch(url, ms=8000) {
@@ -678,6 +717,7 @@ async function loadData() {
   populateEFSelect();
   render();
   initMap().catch(e => console.warn('Mapa no cargo:', e));
+  hidePreloader();
 }
 
 function populateEFSelect() {
