@@ -683,7 +683,7 @@ function populateEFSelect() {
   const efs = [...new Set(DATA.map(r => r.ef))].sort();
   const sel = document.getElementById('efSelect');
   sel.innerHTML = `<option value="__ALL__">Todos (Nacional)</option>` + efs.map(e => `<option>${e}</option>`).join('');
-  if (efs.includes('Yucatán')) sel.value = 'Yucatán';
+  sel.value = '__ALL__';
 }
 
 function render() {
