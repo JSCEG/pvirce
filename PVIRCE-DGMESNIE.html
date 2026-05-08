@@ -671,6 +671,8 @@ function render() {
   const ef = isAll ? 'Nacional' : efVal;
   document.querySelector('#coverEf strong').textContent = ef;
   document.getElementById('contEf').textContent = ef;
+  CURRENT_FOCUS_EF = isAll ? null : ef;
+  if (geoData && mapInstance) drawMap();
 
   const all = DATA;
   const rows = isAll ? DATA : DATA.filter(r => r.ef === efVal);
@@ -824,13 +826,14 @@ async function initMap() {
   document.getElementById('mapTipo').addEventListener('change', drawMap);
 }
 
+let CURRENT_FOCUS_EF = null; // null = nacional
+
 function drawMap() {
   const metric = document.getElementById('mapMetric').value;
   const tipo = document.getElementById('mapTipo').value;
   const efIndex = {};
   [...new Set(DATA.map(r => r.ef))].forEach(ef => { efIndex[normEf(ef)] = ef; });
 
-  // compute values per geo feature
   const values = {};
   geoData.features.forEach(f => {
     const geoName = getEfNameFromFeature(f);
@@ -841,35 +844,81 @@ function drawMap() {
   const min = Math.min(...allVals, 0);
   const max = Math.max(...allVals, 1);
 
+  const focusNorm = CURRENT_FOCUS_EF ? normEf(CURRENT_FOCUS_EF) : null;
+
   if (geoLayer) mapInstance.removeLayer(geoLayer);
   geoLayer = L.geoJSON(geoData, {
     style: f => {
-      const v = values[getEfNameFromFeature(f)];
+      const geoName = getEfNameFromFeature(f);
+      const v = values[geoName];
+      const isFocus = focusNorm && normEf(geoName) === focusNorm;
+      if (focusNorm && !isFocus) {
+        return { fillColor: '#e8e8ea', weight: 0.4, color: '#bbb', fillOpacity: 0.25, opacity: 0.4 };
+      }
       return {
         fillColor: colorScale(v?.value || 0, min, max),
-        weight: 0.8,
-        color: '#666',
-        fillOpacity: 0.85
+        weight: isFocus ? 2.5 : 0.8,
+        color: isFocus ? '#9B2247' : '#666',
+        fillOpacity: 0.88,
+        opacity: 1
       };
     },
     onEachFeature: (f, lyr) => {
-      const v = values[getEfNameFromFeature(f)];
-      const ef = v?.ef || getEfNameFromFeature(f);
+      const geoName = getEfNameFromFeature(f);
+      const v = values[geoName];
+      const ef = v?.ef || geoName;
       const fmtV = metric === 'proyectos' ? (v?.value || 0) : fmt(v?.value || 0, 1) + ' MW';
       lyr.bindTooltip(`<strong>${ef}</strong>${fmtV}`, { className: 'ef-tip', sticky: true });
-      lyr.on('mouseover', () => lyr.setStyle({ weight: 2.2, color: '#9B2247' }));
+      lyr.on('mouseover', () => {
+        if (focusNorm && normEf(geoName) !== focusNorm) return;
+        lyr.setStyle({ weight: 2.5, color: '#9B2247' });
+      });
       lyr.on('mouseout', () => geoLayer.resetStyle(lyr));
       lyr.on('click', () => showEfDetail(ef));
       lyr.on('dblclick', () => {
         const sel = document.getElementById('efSelect');
         if ([...sel.options].some(o => o.value === ef || o.textContent === ef)) {
           sel.value = ef; render();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       });
     }
   }).addTo(mapInstance);
-  try { mapInstance.fitBounds(geoLayer.getBounds(), { padding: [10,10] }); } catch(e) {}
+
+  // zoom: focus → fit selected; nacional → full bounds
+  try {
+    if (focusNorm) {
+      const focusFeat = geoData.features.find(f => normEf(getEfNameFromFeature(f)) === focusNorm);
+      if (focusFeat) {
+        const tmp = L.geoJSON(focusFeat);
+        mapInstance.fitBounds(tmp.getBounds(), { padding: [20,20] });
+      }
+    } else {
+      mapInstance.fitBounds(geoLayer.getBounds(), { padding: [10,10] });
+    }
+  } catch(e) {}
+
+  // auto-show detail
+  if (CURRENT_FOCUS_EF) showEfDetail(CURRENT_FOCUS_EF);
+  else showNacionalSummary(metric, tipo, min, max, values);
+}
+
+function showNacionalSummary(metric, tipo, min, max, values) {
+  const total = Object.values(values).reduce((s,v) => s + (v.value||0), 0);
+  const ranked = Object.values(values).filter(v => v.value > 0).sort((a,b) => b.value - a.value);
+  const top5 = ranked.slice(0, 5);
+  const tipoLbl = tipo === '__ALL__' ? 'todas las tecnologías' : tipo;
+  const metricLbl = { capacidad:'MW capacidad', proyectos:'proyectos', firmesMW:'MW firmes', renovableMW:'MW renovables' }[metric];
+  document.getElementById('mapEfTitle').textContent = 'Vista nacional';
+  document.getElementById('mapHint').style.display = '';
+  document.getElementById('mapHint').textContent = `Métrica: ${metricLbl} · ${tipoLbl}. Click una entidad para detalle.`;
+  document.getElementById('mapStats').innerHTML = `
+    <div class="stat"><span>Total nacional</span><strong>${metric==='proyectos'? total : fmt(total,1)+' MW'}</strong></div>
+    <div class="stat"><span>Entidades con datos</span><strong>${ranked.length}</strong></div>
+    <div class="stat"><span>Máximo</span><strong>${ranked[0]?.ef||'—'}</strong></div>
+    <div class="stat"><span>Mínimo (>0)</span><strong>${ranked[ranked.length-1]?.ef||'—'}</strong></div>
+    <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.1em;text-transform:uppercase">Top 5</div>
+    ${top5.map((v,i) => `<div class="stat"><span>${i+1}. ${v.ef}</span><strong>${metric==='proyectos'? v.value : fmt(v.value,0)+' MW'}</strong></div>`).join('')}
+  `;
 }
 
 function showEfDetail(ef) {
