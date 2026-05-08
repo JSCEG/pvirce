@@ -10,6 +10,8 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/full-screen.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 @font-face {
   font-family: 'Patria';
@@ -376,6 +378,35 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 60%, var(--dorado) 60%, var(--dorado) 100%);
 }
 
+/* ============ SLIDE MAPA ============ */
+.slide.map-slide { display: grid; grid-template-rows: auto auto 1fr auto; padding: 0; }
+.map-slide .map-toolbar {
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+  border-bottom: 1px solid var(--gris-claro);
+}
+.map-slide .map-toolbar label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text); }
+.map-slide .map-toolbar select { padding: 6px 12px; border: 1px solid var(--gris); border-radius: 4px; font-family: var(--font-b); font-size: 13px; background: white; }
+.map-slide .map-toolbar .legend { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text); }
+.map-slide .map-toolbar .legend .ramp { display: inline-block; width: 160px; height: 10px; border-radius: 2px; background: linear-gradient(90deg, #f7e3ea 0%, #d99cb1 25%, #c46d8a 50%, #a83a5d 75%, #6a172f 100%); border: 1px solid #ccc; }
+.map-slide .map-body { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: 0; }
+.map-slide #mapa { height: 100%; min-height: 0; background: #f4f6f8; }
+.map-slide .side-panel {
+  background: #fafafa; border-left: 1px solid var(--gris-claro);
+  padding: 14px 18px; display: flex; flex-direction: column; gap: 12px;
+  overflow: auto;
+}
+.map-slide .side-panel h4 { font-family: var(--font-h); color: var(--guinda); font-size: 16px; font-weight: 700; }
+.map-slide .side-panel .stat { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 1px dashed var(--gris-claro); font-size: 12px; }
+.map-slide .side-panel .stat strong { font-family: var(--font-h); color: var(--guinda); font-size: 16px; font-variant-numeric: tabular-nums; }
+.map-slide .side-panel .hint { font-size: 11px; color: var(--gris); font-style: italic; }
+.leaflet-tooltip.ef-tip { background: rgba(155,34,71,.95); color: white; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.2); font-family: 'Noto Sans', sans-serif; font-size: 11px; padding: 6px 10px; border-radius: 4px; }
+.leaflet-tooltip.ef-tip strong { display: block; font-size: 13px; margin-bottom: 2px; }
+.leaflet-tooltip.ef-tip::before { display: none; }
+
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
   html, body { padding: 0; margin: 0; background: white; width: 13.333in; }
@@ -478,6 +509,43 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
           <h3>Capacidad acumulada</h3>
           <div class="chart" id="chartBar"></div>
         </div>
+      </div>
+    </div>
+
+    <div class="footer"></div>
+  </section>
+
+  <!-- ============ SLIDE 3: MAPA NACIONAL ============ -->
+  <section class="slide content map-slide">
+    <div class="header">
+      <div class="brand-left">PVIRCE 2026-2040</div>
+      <div class="ef-title">Mapa nacional</div>
+      <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+    </div>
+
+    <div class="map-toolbar">
+      <label for="mapMetric">Métrica:</label>
+      <select id="mapMetric">
+        <option value="capacidad">Capacidad MW</option>
+        <option value="proyectos">Número de proyectos</option>
+        <option value="firmesMW">MW firmes</option>
+        <option value="renovableMW">MW renovable</option>
+      </select>
+      <label for="mapTipo" style="margin-left:14px">Tecnología:</label>
+      <select id="mapTipo"><option value="__ALL__">Todas</option></select>
+      <div class="legend">
+        <span>Bajo</span>
+        <span class="ramp"></span>
+        <span>Alto</span>
+      </div>
+    </div>
+
+    <div class="map-body">
+      <div id="mapa"></div>
+      <div class="side-panel">
+        <h4 id="mapEfTitle">Selecciona un estado</h4>
+        <div class="hint" id="mapHint">Click en cualquier entidad federativa para ver su detalle. Doble click para fijarla en las otras láminas.</div>
+        <div id="mapStats"></div>
       </div>
     </div>
 
@@ -587,6 +655,7 @@ async function loadData() {
 
   populateEFSelect();
   render();
+  initMap().catch(e => console.warn('Mapa no cargo:', e));
 }
 
 function populateEFSelect() {
@@ -695,6 +764,139 @@ function render() {
     plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 50 ? Math.round(this.y) : ''; } } } },
     series: allTipos.map(t => ({ name: t, data: [+rows.filter(r=>r.tipo===t).reduce((s,r)=>s+r.mw,0).toFixed(1)] }))
   });
+}
+
+// =================== MAPA ===================
+const GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
+let mapInstance = null, geoLayer = null, geoData = null;
+const RAMP = ['#f7e3ea', '#e6b8c9', '#d28aa6', '#b85979', '#9B2247', '#6a172f'];
+
+function normEf(s) {
+  return (s || '').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/de zaragoza|de ignacio de la llave|de la llave|de hidalgo|de arteaga|de juarez/g, '')
+    .replace(/[^a-z]/g, '').trim();
+}
+
+function getEfNameFromFeature(f) {
+  const p = f.properties || {};
+  return p.NOM_ENT || p.NOMGEO || p.ENTIDAD || p.nom_ent || p.estado || p.name || p.NAME || '';
+}
+
+function metricForEf(ef, metric, tipo) {
+  let rows = DATA.filter(r => r.ef === ef);
+  if (tipo && tipo !== '__ALL__') rows = rows.filter(r => r.tipo === tipo);
+  switch(metric) {
+    case 'proyectos': return rows.length;
+    case 'firmesMW': return rows.filter(r => r.firme).reduce((s,r)=>s+r.mw, 0);
+    case 'renovableMW': return rows.filter(r => /renov/i.test(r.renovable)).reduce((s,r)=>s+r.mw, 0);
+    case 'capacidad':
+    default: return rows.reduce((s,r) => s + r.mw, 0);
+  }
+}
+
+function colorScale(value, min, max) {
+  if (max === min || value <= 0) return '#f4f6f8';
+  const t = (value - min) / (max - min);
+  const idx = Math.min(RAMP.length - 1, Math.floor(t * RAMP.length));
+  return RAMP[idx];
+}
+
+async function loadMap() {
+  if (geoData) return geoData;
+  const r = await fetch(GEOJSON_URL);
+  geoData = await r.json();
+  return geoData;
+}
+
+async function initMap() {
+  await loadMap();
+  if (!mapInstance) {
+    mapInstance = L.map('mapa', { zoomControl: true, attributionControl: false, preferCanvas: true });
+    mapInstance.setView([24, -102], 4.5);
+  }
+  // populate tipo dropdown
+  const tipos = [...new Set(DATA.map(r => r.tipo).filter(Boolean))].sort();
+  const selT = document.getElementById('mapTipo');
+  selT.innerHTML = '<option value="__ALL__">Todas</option>' + tipos.map(t => `<option>${t}</option>`).join('');
+  drawMap();
+  document.getElementById('mapMetric').addEventListener('change', drawMap);
+  document.getElementById('mapTipo').addEventListener('change', drawMap);
+}
+
+function drawMap() {
+  const metric = document.getElementById('mapMetric').value;
+  const tipo = document.getElementById('mapTipo').value;
+  const efIndex = {};
+  [...new Set(DATA.map(r => r.ef))].forEach(ef => { efIndex[normEf(ef)] = ef; });
+
+  // compute values per geo feature
+  const values = {};
+  geoData.features.forEach(f => {
+    const geoName = getEfNameFromFeature(f);
+    const matchedEf = efIndex[normEf(geoName)] || geoName;
+    values[geoName] = { ef: matchedEf, value: metricForEf(matchedEf, metric, tipo) };
+  });
+  const allVals = Object.values(values).map(v => v.value).filter(v => v > 0);
+  const min = Math.min(...allVals, 0);
+  const max = Math.max(...allVals, 1);
+
+  if (geoLayer) mapInstance.removeLayer(geoLayer);
+  geoLayer = L.geoJSON(geoData, {
+    style: f => {
+      const v = values[getEfNameFromFeature(f)];
+      return {
+        fillColor: colorScale(v?.value || 0, min, max),
+        weight: 0.8,
+        color: '#666',
+        fillOpacity: 0.85
+      };
+    },
+    onEachFeature: (f, lyr) => {
+      const v = values[getEfNameFromFeature(f)];
+      const ef = v?.ef || getEfNameFromFeature(f);
+      const fmtV = metric === 'proyectos' ? (v?.value || 0) : fmt(v?.value || 0, 1) + ' MW';
+      lyr.bindTooltip(`<strong>${ef}</strong>${fmtV}`, { className: 'ef-tip', sticky: true });
+      lyr.on('mouseover', () => lyr.setStyle({ weight: 2.2, color: '#9B2247' }));
+      lyr.on('mouseout', () => geoLayer.resetStyle(lyr));
+      lyr.on('click', () => showEfDetail(ef));
+      lyr.on('dblclick', () => {
+        const sel = document.getElementById('efSelect');
+        if ([...sel.options].some(o => o.value === ef || o.textContent === ef)) {
+          sel.value = ef; render();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+  }).addTo(mapInstance);
+  try { mapInstance.fitBounds(geoLayer.getBounds(), { padding: [10,10] }); } catch(e) {}
+}
+
+function showEfDetail(ef) {
+  const rows = DATA.filter(r => r.ef === ef);
+  if (!rows.length) {
+    document.getElementById('mapEfTitle').textContent = ef;
+    document.getElementById('mapStats').innerHTML = '<div class="hint">Sin proyectos en esta entidad.</div>';
+    return;
+  }
+  const totalMW = rows.reduce((s,r)=>s+r.mw, 0);
+  const firmes = rows.filter(r => r.firme);
+  const ren = rows.filter(r => /renov/i.test(r.renovable)).reduce((s,r)=>s+r.mw, 0);
+  const tipos = {};
+  rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo]||0) + r.mw; });
+  const topTipo = Object.entries(tipos).sort((a,b)=>b[1]-a[1])[0];
+  const years = rows.map(r=>r.anio).filter(Boolean);
+  document.getElementById('mapEfTitle').textContent = ef;
+  document.getElementById('mapHint').style.display = 'none';
+  document.getElementById('mapStats').innerHTML = `
+    <div class="stat"><span>Capacidad total</span><strong>${fmt(totalMW,1)} MW</strong></div>
+    <div class="stat"><span>Total proyectos</span><strong>${rows.length}</strong></div>
+    <div class="stat"><span>Firmes</span><strong>${firmes.length} · ${fmt(firmes.reduce((s,r)=>s+r.mw,0),0)} MW</strong></div>
+    <div class="stat"><span>Renovable</span><strong>${fmt(ren,1)} MW (${fmt(ren/totalMW*100,1)}%)</strong></div>
+    <div class="stat"><span>Tecnología líder</span><strong>${topTipo[0]} · ${fmt(topTipo[1],0)} MW</strong></div>
+    <div class="stat"><span>Horizonte</span><strong>${Math.min(...years)}-${Math.max(...years)}</strong></div>
+    <div class="hint" style="margin-top:8px">Doble click en el mapa para fijar esta entidad en las otras láminas.</div>
+  `;
 }
 
 document.getElementById('efSelect').addEventListener('change', render);
