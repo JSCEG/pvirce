@@ -12,6 +12,8 @@
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@v3.12.0/dist/pptxgen.bundle.js"></script>
 <style>
 @font-face {
   font-family: 'Patria';
@@ -449,7 +451,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
   <button class="secondary" onclick="loadData()">Recargar</button>
   <button class="secondary" onclick="window.print()">Vista PDF</button>
-  <button class="primary" onclick="alert('Pendiente: integrar pptxgenjs / backend python-pptx')">Descargar PPT</button>
+  <button class="primary" id="btnPpt">Descargar PPT</button>
 </div>
 
 <div class="deck">
@@ -1043,6 +1045,61 @@ document.getElementById('mapClearEf').addEventListener('click', () => {
   document.getElementById('efSelect').value = '__ALL__';
   render();
 });
+
+// =================== EXPORT PPT ===================
+async function captureSlide(slideEl) {
+  // ensure leaflet has rendered if present
+  if (slideEl.querySelector('#mapa') && mapInstance) {
+    mapInstance.invalidateSize();
+    await new Promise(r => setTimeout(r, 400));
+  }
+  const canvas = await html2canvas(slideEl, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: '#ffffff',
+    logging: false,
+    width: slideEl.offsetWidth,
+    height: slideEl.offsetHeight
+  });
+  return canvas.toDataURL('image/png');
+}
+
+async function exportPPT() {
+  const btn = document.getElementById('btnPpt');
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Generando…';
+  try {
+    const pptx = new PptxGenJS();
+    pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5 in
+    pptx.author = 'DGMESNIE — SENER';
+    pptx.company = 'Secretaría de Energía';
+    pptx.title = 'PVIRCE 2026-2040';
+
+    const slides = document.querySelectorAll('.deck > .slide');
+    for (let i = 0; i < slides.length; i++) {
+      btn.textContent = `Slide ${i+1}/${slides.length}…`;
+      const dataUrl = await captureSlide(slides[i]);
+      const slide = pptx.addSlide();
+      slide.background = { color: 'FFFFFF' };
+      slide.addImage({ data: dataUrl, x: 0, y: 0, w: 13.333, h: 7.5 });
+    }
+
+    const ef = document.getElementById('efSelect').value;
+    const fname = `PVIRCE-2026-2040_${ef === '__ALL__' ? 'Nacional' : ef.replace(/\s+/g,'-')}.pptx`;
+    await pptx.writeFile({ fileName: fname });
+    btn.textContent = '✓ Descargado';
+    setTimeout(() => { btn.textContent = originalLabel; btn.disabled = false; }, 2000);
+  } catch (e) {
+    console.error(e);
+    alert('Error generando PPT: ' + e.message);
+    btn.textContent = originalLabel;
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('btnPpt').addEventListener('click', exportPPT);
 setStatus('Iniciando…');
 if (typeof Papa === 'undefined') {
   setStatus('ERROR: PapaParse no cargó (sandbox iframe bloquea CDN). Abre el HTML directo en navegador.');
