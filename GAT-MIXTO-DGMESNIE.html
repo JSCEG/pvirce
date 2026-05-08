@@ -742,6 +742,9 @@ Highcharts.setOptions({
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1612312561&single=true&output=csv';
 const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pubhtml?gid=1612312561&single=true';
 const DATA_ENDPOINT = '/data-gat';
+const CNE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1589427724&single=true&output=csv';
+const CNE_ENDPOINT = '/data-cne';
+let CNE_INDEX = {};  // folio -> objeto CNE
 
 let DATA = [];
 
@@ -865,9 +868,36 @@ async function loadData() {
   })).filter(r => r.nombre && r.ef);
 
   populateEFSelect();
-  render();
-  initMap().catch(e => console.warn('Mapa no cargo:', e));
-  hidePreloader();
+  loadCneData().catch(e => console.warn('CNE no cargo:', e)).finally(() => {
+    render();
+    initMap().catch(e => console.warn('Mapa no cargo:', e));
+    hidePreloader();
+  });
+}
+
+async function loadCneData() {
+  setStatus('Cargando datos CNE…');
+  const cb = '?_=' + Date.now();
+  const sources = [
+    CNE_ENDPOINT + cb,
+    CNE_CSV_URL,
+    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(CNE_CSV_URL),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(CNE_CSV_URL)
+  ];
+  let text;
+  for (const url of sources) {
+    try { text = await tryFetch(url); break; } catch(e) { console.warn('CNE fail', e.message); }
+  }
+  if (!text) { console.warn('CNE no disponible'); return; }
+  const lines = text.split(/\r?\n/);
+  const csv = lines.slice(1).join('\n');
+  const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+  CNE_INDEX = {};
+  parsed.data.forEach(r => {
+    const f = (r['Folio Proyecto'] || '').trim();
+    if (f) CNE_INDEX[f] = r;
+  });
+  console.log('CNE cargado:', Object.keys(CNE_INDEX).length, 'proyectos');
 }
 
 function populateEFSelect() {
@@ -926,7 +956,7 @@ function render() {
     xAxis: { categories: allYears, lineColor: '#E5E5E5', labels: { style: { fontSize: '10px' } } },
     yAxis: { title: { text: 'MW', style: { fontSize: '10px' } }, gridLineColor: '#f0f0f0', labels: { style: { fontSize: '9px' } } },
     legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
-    plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 30 ? Math.round(this.y) + ' MW' : ''; } } } },
+    plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 30 ? Highcharts.numberFormat(this.y, 0, '.', ',') + ' MW' : ''; } } } },
     series: series,
     tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.1f} MW<br>' }
   });
@@ -975,7 +1005,7 @@ function render() {
     xAxis: { categories: [ef], labels: { style: { fontSize: '9px' } } },
     yAxis: { title: { text: 'MMUSD', style: { fontSize: '9px' } }, labels: { style: { fontSize: '9px' } } },
     legend: { itemStyle: { fontSize: '9px' } },
-    plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 5 ? Math.round(this.y) : ''; } } } },
+    plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function() { return this.y > 5 ? Highcharts.numberFormat(this.y, 0, '.', ',') : ''; } } } },
     series: Object.entries(invByTipo).filter(([_,v]) => v > 0).map(([t,v]) => ({ name: t, data: [+v.toFixed(1)] }))
   });
 
@@ -1329,6 +1359,32 @@ function renderProjectFicha() {
         <div class="footer"></div>
       `;
       deck.appendChild(clone);
+
+      // Si descripcion + cronograma muy largos, agregar slide continuación con texto completo
+      const longText = (String(p.descripcion||'').length + String(p.cronoDesarrollo||'').length) > 350;
+      if (longText) {
+        const cont = document.createElement('section');
+        cont.className = 'slide content ficha-slide ficha-clone';
+        cont.dataset.fichaClone = 'true';
+        cont.innerHTML = `
+          <div class="header">
+            <div class="brand-left">GAT-Mixto · ${efVal}</div>
+            <div class="ef-title">${p.nombre} — Descripción ampliada</div>
+            <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+          </div>
+          <div class="ficha-toolbar">
+            <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · continuación</span>
+            <span class="ficha-badge">${p.status||'—'}</span>
+            <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
+          </div>
+          <div class="ficha-body" style="grid-template-columns:1fr;align-content:start">
+            ${p.descripcion ? `<div class="ficha-card span4"><h5>Descripción del proyecto</h5><div style="font-size:11px;line-height:1.55;color:var(--text);white-space:pre-wrap">${p.descripcion}</div></div>` : ''}
+            ${p.cronoDesarrollo ? `<div class="ficha-card accent-dorado span4"><h5>Cronograma de desarrollo</h5><div style="font-size:11px;line-height:1.55;color:var(--text);white-space:pre-wrap">${p.cronoDesarrollo}</div></div>` : ''}
+          </div>
+          <div class="footer"></div>
+        `;
+        deck.appendChild(cont);
+      }
     });
   }
 }
@@ -1359,6 +1415,46 @@ function trunc(s, n=60) { s = String(s||''); return s.length > n ? s.slice(0,n)+
 
 function buildFichaCards(p) {
   const row = (lbl, val) => `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(val !== undefined && val !== null && val !== '') ? val : '—'}</span></div>`;
+  const cne = (p.folio && CNE_INDEX[p.folio]) ? CNE_INDEX[p.folio] : null;
+  const cneRow = (lbl, key) => {
+    const v = cne ? cne[key] : null;
+    return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(v && String(v).trim() && v !== '-') ? trunc(v, 50) : '—'}</span></div>`;
+  };
+  const cneCard = cne ? `
+    <div class="ficha-card span4" style="border-left:3px solid var(--verde)">
+      <h5 style="color:var(--verde);border-bottom-color:var(--verde)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 14px">
+        <div>
+          ${cneRow('Permiso Generación', 'Permiso Generación')}
+          ${cneRow('Estatus Permiso', 'Estatus Permiso')}
+          ${cneRow('Cuenta Registro OPE', 'Cuenta Registro OPE')}
+          ${cneRow('Fecha Inicio Registro', 'Fecha Inicio Registro')}
+          ${cneRow('Fecha Firma', 'Fecha Firma Proyecto')}
+        </div>
+        <div>
+          ${cneRow('EVIS / MISSE', 'Has EVIS / MISSE')}
+          ${cneRow('Estatus EVIS', 'Estatus EVIS / MISSE')}
+          ${cneRow('Folio EVIS', 'Folio EVIS / MISSE')}
+          ${cneRow('MIA', 'Has MIA')}
+          ${cneRow('Estatus MIA', 'Estatus MIA')}
+        </div>
+        <div>
+          ${cneRow('Estudios Interconexión', 'Has Estudios Interconexión')}
+          ${cneRow('Estatus Indicativo', 'Estatus Indicativo')}
+          ${cneRow('Estatus Impacto', 'Estatus Impacto')}
+          ${cneRow('Estatus Instalaciones', 'Estatus Instalaciones')}
+          ${cneRow('Restricción uso suelo', 'Restricción de uso de suelo')}
+        </div>
+        <div>
+          ${cneRow('Estatus Pago', 'Estatus de Pago')}
+          ${cneRow('Solicitud permiso', 'Estatus de la solicitud de permiso (Sin información / Presentada)')}
+          ${cneRow('Resultados estudios', 'Resultados de los estudios (Sin información / Terminados)')}
+          ${cneRow('Carta aceptación', 'Carta de aceptación de las obras de refuerzo (Sin información / Firmada / No firmada)')}
+          ${cneRow('Sentido resolución', 'Sentido de la resolución')}
+        </div>
+      </div>
+      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:9px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--verde);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
+    </div>` : '';
   return `
     <div class="ficha-card">
       <h5>Identidad</h5>
@@ -1463,6 +1559,8 @@ function buildFichaCards(p) {
       ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 120)}</div>` : ''}
       ${p.motivosRechazo ? `<div style="font-size:9.5px;color:#9B2247;margin-top:3px"><span style="font-weight:700">Motivos rechazo:</span> ${trunc(p.motivosRechazo, 120)}</div>` : ''}
     </div>
+
+    ${cneCard}
 
     <div class="ficha-card span4">
       <h5>Foco rojo y priorización</h5>
