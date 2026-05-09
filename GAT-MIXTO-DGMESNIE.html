@@ -800,7 +800,7 @@ async function loadData() {
   const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
   DATA = parsed.data.map(r => ({
     status: r['Estatus'] || '',
-    folio: r['Folio Proyecto'] || r['Pre Folio'] || '',
+    folio: ((r['Folio Proyecto'] || r['Pre Folio'] || '') + '').trim(),
     nombre: r['Nombre del proyecto'] || r['Nombre'] || '',
     marca: r['Marca'] || '',
     cluster: r['Clúster'] || '',
@@ -896,11 +896,21 @@ async function loadCneData() {
   const csv = lines.slice(1).join('\n');
   const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
   CNE_INDEX = {};
+  let withKmz = 0;
   parsed.data.forEach(r => {
-    const f = (r['Folio Proyecto'] || '').trim();
-    if (f) CNE_INDEX[f] = r;
+    const f = ((r['Folio Proyecto'] || '') + '').trim();
+    if (f) {
+      CNE_INDEX[f] = r;
+      if (r['Archivo KMZ'] && /^https?:\/\//.test(r['Archivo KMZ'])) withKmz++;
+    }
+    // index también por Pre Folio si difiere
+    const pf = ((r['Pre Folio'] || '') + '').trim();
+    if (pf && pf !== f) CNE_INDEX[pf] = r;
   });
-  console.log('CNE cargado:', Object.keys(CNE_INDEX).length, 'proyectos');
+  console.log('CNE cargado:', Object.keys(CNE_INDEX).length, 'proyectos.', withKmz, 'con KMZ.');
+  // debug: mostrar matches con GAT
+  const matched = DATA.filter(p => p.folio && CNE_INDEX[p.folio]).length;
+  console.log(`Cruce GAT↔CNE: ${matched} de ${DATA.length} proyectos GAT matcheados por Folio Proyecto.`);
 }
 
 function populateEFSelect() {
