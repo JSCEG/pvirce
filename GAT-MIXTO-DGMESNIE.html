@@ -685,7 +685,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       <div id="mapToolbarEf" style="display:none;flex:1;align-items:center;gap:10px;font-size:12px;color:var(--text)">
         <span style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle EF</span>
         <span id="mapEfBadge" style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
-        <button id="mapKmzBtn" style="padding:4px 10px;background:var(--verde);color:white;border:0;border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">📍 Cargar KMZs</button>
+        <button id="mapKmzBtn" style="padding:4px 10px;background:var(--verde);color:white;border:0;border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">📍 Cargar puntos</button>
         <button id="mapClearEf" style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">← Volver a Nacional</button>
       </div>
     </div>
@@ -770,6 +770,8 @@ const DATA_ENDPOINT = '/data-gat';
 const CNE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1589427724&single=true&output=csv';
 const CNE_ENDPOINT = '/data-cne';
 let CNE_INDEX = {};  // folio -> objeto CNE
+const MIXTOS_GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Mixtos/mixtos.geojson';
+let MIXTOS_INDEX = {}; // folio -> feature geojson (coordenada/punto)
 
 let DATA = [];
 
@@ -893,11 +895,27 @@ async function loadData() {
   })).filter(r => r.nombre && r.ef);
 
   populateEFSelect();
-  loadCneData().catch(e => console.warn('CNE no cargo:', e)).finally(() => {
+  Promise.all([
+    loadCneData().catch(e => console.warn('CNE no cargo:', e)),
+    loadMixtosGeoJSON().catch(e => console.warn('Mixtos geojson no cargo:', e))
+  ]).finally(() => {
     render();
     initMap().catch(e => console.warn('Mapa no cargo:', e));
     hidePreloader();
   });
+}
+
+async function loadMixtosGeoJSON() {
+  setStatus('Cargando coordenadas Mixtos…');
+  const r = await fetch(MIXTOS_GEOJSON_URL);
+  const gj = await r.json();
+  MIXTOS_INDEX = {};
+  (gj.features || []).forEach(f => {
+    const props = f.properties || {};
+    const folio = ((props.Folio || props.folio || props.clave || '') + '').trim();
+    if (folio) MIXTOS_INDEX[folio] = f;
+  });
+  console.log('Mixtos GeoJSON cargado:', Object.keys(MIXTOS_INDEX).length, 'proyectos georreferenciados');
 }
 
 async function loadCneData() {
@@ -1398,23 +1416,50 @@ async function loadKmzsForCurrentEf() {
   if (kmzLayer) {
     mapInstance.removeLayer(kmzLayer);
     kmzLayer = null;
-    btn.textContent = '📍 Cargar KMZs';
+    btn.textContent = '📍 Cargar puntos';
     btn.style.background = 'var(--verde)';
-    return;
-  }
-  if (!Object.keys(CNE_INDEX).length) {
-    alert('Datos CNE no disponibles. Verifica conexión.');
     return;
   }
   const efVal = document.getElementById('efSelect').value;
   const isAll = efVal === '__ALL__';
   const projects = isAll ? DATA : DATA.filter(r => r.ef === efVal);
+
+  // Camino rápido: usar mixtos.geojson cuando esté disponible (no necesita parse KMZ)
+  if (Object.keys(MIXTOS_INDEX).length) {
+    const feats = projects
+      .filter(p => p.folio && MIXTOS_INDEX[p.folio])
+      .map(p => {
+        const f = JSON.parse(JSON.stringify(MIXTOS_INDEX[p.folio]));
+        f.properties = Object.assign({}, f.properties, { _proj: p.nombre, _folio: p.folio, _tipo: p.tipo, _ef: p.ef });
+        return f;
+      });
+    if (feats.length) {
+      kmzLayer = L.geoJSON({ type: 'FeatureCollection', features: feats }, {
+        style: () => ({ color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.45 }),
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.9, weight: 1.5 }),
+        onEachFeature: (f, lyr) => {
+          const p = f.properties || {};
+          lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
+        }
+      }).addTo(mapInstance);
+      btn.textContent = `✓ ${feats.length} puntos — click para ocultar`;
+      btn.style.background = 'var(--guinda)';
+      try { mapInstance.fitBounds(kmzLayer.getBounds().pad(0.2)); } catch(e) {}
+      return;
+    }
+  }
+
+  // Fallback: KMZ por proyecto desde CNE
+  if (!Object.keys(CNE_INDEX).length) {
+    alert('Sin datos CNE ni geojson Mixtos.');
+    return;
+  }
   const withKmz = projects.filter(p => {
     const c = p.folio && CNE_INDEX[p.folio];
     return c && c['Archivo KMZ'] && /^https?:\/\//.test(c['Archivo KMZ']);
   });
   if (!withKmz.length) {
-    alert('No hay KMZs disponibles para esta selección.');
+    alert('No hay geometrías disponibles para esta selección.');
     return;
   }
   btn.textContent = `Cargando 0/${withKmz.length}…`;
@@ -1461,9 +1506,14 @@ document.getElementById('mapKmzBtn').addEventListener('click', loadKmzsForCurren
 // helper: HTML para mini-mapa de proyecto en ficha
 let _miniMapCounter = 0;
 function miniMapHtml(p) {
+  const id = 'mini-' + (++_miniMapCounter);
+  // 1) Preferir mixtos geojson (rápido, ya descargado)
+  if (p.folio && MIXTOS_INDEX[p.folio]) {
+    return `<div class="ficha-minimap" id="${id}" data-folio="${p.folio}" data-proj="${(p.nombre||'').replace(/"/g,'&quot;')}"></div>`;
+  }
+  // 2) Fallback KMZ desde CNE
   const c = (p.folio && CNE_INDEX[p.folio]) ? CNE_INDEX[p.folio] : null;
   const kmz = c && c['Archivo KMZ'] && /^https?:\/\//.test(c['Archivo KMZ']) ? c['Archivo KMZ'] : '';
-  const id = 'mini-' + (++_miniMapCounter);
   if (kmz) {
     return `<div class="ficha-minimap" id="${id}" data-kmz-url="${kmz}" data-proj="${(p.nombre||'').replace(/"/g,'&quot;')}"></div>`;
   }
@@ -1473,11 +1523,18 @@ function miniMapHtml(p) {
 async function initOneMiniMap(div) {
   if (div.dataset.init) return;
   div.dataset.init = '1';
+  const folio = div.dataset.folio;
   const url = div.dataset.kmzUrl;
-  // placeholder loading
-  div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--guinda);font-weight:700;gap:6px"><span class="mini-spin"></span>Cargando KMZ…</div>';
+  div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--guinda);font-weight:700;gap:6px"><span class="mini-spin"></span>Cargando…</div>';
   try {
-    const gj = await fetchKmzAsGeoJSON(url);
+    let gj;
+    if (folio && MIXTOS_INDEX[folio]) {
+      gj = { type: 'FeatureCollection', features: [MIXTOS_INDEX[folio]] };
+    } else if (url) {
+      gj = await fetchKmzAsGeoJSON(url);
+    } else {
+      throw new Error('sin geometría');
+    }
     div.innerHTML = ''; // limpiar placeholder
     const mini = L.map(div, {
       zoomControl: false, attributionControl: false,
