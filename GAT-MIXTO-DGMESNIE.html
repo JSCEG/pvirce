@@ -1067,7 +1067,8 @@ function render() {
   // Init mini-maps tras DOM listo
   setTimeout(() => initMiniMaps(), 50);
   // Auto-cargar KMZs en mapa principal cuando EF enfocada
-  if (CURRENT_FOCUS_EF && Object.keys(CNE_INDEX).length && !kmzLayer && typeof loadKmzsForCurrentEf === 'function') {
+  // Auto-cargar puntos en mapa principal (nacional o EF) si tenemos mixtos geojson o CNE
+  if (!kmzLayer && (Object.keys(MIXTOS_INDEX).length || Object.keys(CNE_INDEX).length) && typeof loadKmzsForCurrentEf === 'function') {
     setTimeout(() => loadKmzsForCurrentEf(), 300);
   }
 }
@@ -1546,8 +1547,24 @@ async function initOneMiniMap(div) {
       style: { color: '#9B2247', weight: 2, fillColor: '#9B2247', fillOpacity: 0.45 },
       pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#9B2247', fillColor: '#9B2247', fillOpacity: 0.85, weight: 1.5 })
     }).addTo(mini);
-    try { mini.fitBounds(layer.getBounds().pad(0.4)); } catch(e) {}
-    const center = layer.getBounds().getCenter();
+    // bounds + centro: maneja punto único o polígono
+    let center;
+    try {
+      const b = layer.getBounds();
+      if (b.isValid()) {
+        mini.fitBounds(b.pad(0.4));
+        center = b.getCenter();
+      }
+    } catch(e) {}
+    if (!center) {
+      const g = gj.features[0]?.geometry;
+      const c = g?.coordinates;
+      if (g?.type === 'Point' && c) {
+        center = L.latLng(c[1], c[0]);
+        mini.setView(center, 9);
+      }
+    }
+    if (!center) { div.dataset.loaded='1'; return; }
     const coordTag = document.createElement('div');
     coordTag.style.cssText = 'position:absolute;bottom:2px;right:4px;background:rgba(255,255,255,.85);font-size:9px;padding:1px 4px;border-radius:2px;color:var(--guinda);font-weight:700;font-variant-numeric:tabular-nums;z-index:1000;pointer-events:none';
     coordTag.textContent = `${center.lat.toFixed(3)}, ${center.lng.toFixed(3)}`;
