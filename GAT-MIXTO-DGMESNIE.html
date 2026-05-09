@@ -12,6 +12,9 @@
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@v3.12.0/dist/pptxgen.bundle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -1438,16 +1441,32 @@ async function loadKmzsForCurrentEf(silent=false) {
         return f;
       });
     if (feats.length) {
-      kmzLayer = L.geoJSON({ type: 'FeatureCollection', features: feats }, {
+      const cluster = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 45,
+        spiderfyOnMaxZoom: true,
+        iconCreateFunction: function(c) {
+          const n = c.getChildCount();
+          const size = n < 10 ? 32 : n < 50 ? 38 : 46;
+          return L.divIcon({
+            html: `<div style="background:rgba(155,34,71,.92);color:white;border:2px solid #fff;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Noto Sans',sans-serif;font-size:${n<10?12:13}px;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,
+            className: '', iconSize: [size, size]
+          });
+        }
+      });
+      const inner = L.geoJSON({ type: 'FeatureCollection', features: feats }, {
         style: () => ({ color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.45 }),
         pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.9, weight: 1.5 }),
         onEachFeature: (f, lyr) => {
           const p = f.properties || {};
           lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
         }
-      }).addTo(mapInstance);
+      });
+      cluster.addLayer(inner);
+      kmzLayer = cluster;
+      mapInstance.addLayer(kmzLayer);
       if (btn) { btn.textContent = `✓ ${feats.length} puntos — click para ocultar`; btn.style.background = 'var(--guinda)'; }
-      try { mapInstance.fitBounds(kmzLayer.getBounds().pad(0.2)); } catch(e) {}
+      try { mapInstance.fitBounds(inner.getBounds().pad(0.2)); } catch(e) {}
       return;
     }
   }
