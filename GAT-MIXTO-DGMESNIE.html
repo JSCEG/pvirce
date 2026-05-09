@@ -115,6 +115,7 @@ body {
   position: relative;
   overflow: hidden;
 }
+.slide.skip-export { display: none !important; }
 
 /* ============ PORTADA ============ */
 .slide.cover {
@@ -390,6 +391,23 @@ table.proyectos td.mw, table.tech td.mw { font-weight: 700; color: var(--guinda)
 table.tech tbody td:first-child { font-weight: 600; color: var(--verde); }
 table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; background: #faf3f5; font-weight: 700; }
 
+.tech-ef-slide .analysis-body {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  grid-template-rows: 1fr 190px;
+  gap: 12px;
+  padding: 12px 28px;
+  min-height: 0;
+}
+.tech-ef-slide .analysis-body .panel:first-child { grid-row: span 2; }
+.tech-ef-slide .chart { min-height: 0; }
+.tech-ef-slide .analysis-note {
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--gris);
+  padding: 0 28px 8px;
+}
+
 .content .footer {
   background: var(--guinda);
   height: 8px;
@@ -403,6 +421,8 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   display: flex;
   align-items: center;
   gap: 14px;
+  min-width: 0;
+  overflow: hidden;
   background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
   border-bottom: 1px solid var(--gris-claro);
 }
@@ -410,9 +430,41 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .map-slide .map-toolbar select { padding: 6px 12px; border: 1px solid var(--gris); border-radius: 4px; font-family: var(--font-b); font-size: 13px; background: white; }
 .map-slide .map-toolbar .legend { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text); }
 .map-slide .map-toolbar .legend .ramp { display: inline-block; width: 160px; height: 10px; border-radius: 2px; background: linear-gradient(90deg, #f7e3ea 0%, #d99cb1 25%, #c46d8a 50%, #a83a5d 75%, #6a172f 100%); border: 1px solid #ccc; }
-.map-slide .map-body { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: 0; }
-.map-slide.focused .map-body { grid-template-columns: 1fr 380px; }
+.map-slide.project-focused .map-toolbar .legend { display: none; }
+.map-slide.project-focused #mapToolbarNacional {
+  min-width: 0;
+  overflow: hidden;
+  justify-content: flex-end;
+}
+.map-slide.project-focused label[for="mapMetric"],
+.map-slide.project-focused #mapMetric,
+.map-slide.project-focused label[for="mapTipo"],
+.map-slide.project-focused #mapTipo {
+  display: none;
+}
+.map-slide.project-focused label[for="mapProjectSelect"] { margin-left: 0 !important; }
+.map-slide.project-focused #mapProjectSelect {
+  min-width: 0 !important;
+  width: 410px;
+  max-width: 410px !important;
+  flex: 0 1 410px;
+}
+.map-slide.project-focused #mapResetBtn {
+  flex: 0 0 98px;
+  line-height: 1.1;
+}
+.map-slide .map-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.map-slide.focused .map-body { grid-template-columns: minmax(0, 1fr) 380px; }
+.map-slide.project-focused .map-body { grid-template-columns: minmax(0, 1fr) 320px; }
 .map-slide .ef-detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.map-slide.project-focused .ef-detail-grid { grid-template-columns: repeat(2, 1fr); }
 .map-slide .ef-mini-card { background: white; border: 1px solid var(--gris-claro); border-radius: 4px; padding: 5px 7px; }
 .map-slide .ef-mini-card .lbl { font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gris); font-weight: 700; line-height: 1.1; }
 .map-slide .ef-mini-card .val { font-family: var(--font-h); font-size: 14px; font-weight: 700; color: var(--guinda); margin-top: 1px; line-height: 1; }
@@ -423,7 +475,39 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .map-slide .ef-bar-row .bar { flex: 1; height: 7px; background: #f0f0f0; border-radius: 2px; overflow: hidden; }
 .map-slide .ef-bar-row .bar > span { display: block; height: 100%; background: var(--guinda); }
 .map-slide .ef-bar-row .num { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--guinda); width: 58px; text-align: right; font-size: 9px; }
-.map-slide #mapa { height: 100%; min-height: 0; background: #f4f6f8; }
+.map-slide #mapa {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: #f4f6f8;
+}
+.mixtos-point-marker span,
+.mini-project-marker span {
+  width: 18px;
+  height: 18px;
+  display: block;
+  border-radius: 50%;
+  background: var(--dorado);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+.mini-project-marker span {
+  width: 16px;
+  height: 16px;
+  background: var(--guinda);
+}
+.selected-project-marker span {
+  width: 28px;
+  height: 28px;
+  display: block;
+  border-radius: 50%;
+  background: var(--guinda);
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 4px rgba(165,127,44,.45), 0 3px 12px rgba(0,0,0,.4);
+}
 .ficha-minimap {
   height: 130px;
   border: 1px solid var(--gris-claro);
@@ -449,12 +533,35 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .map-slide .side-panel {
   background: #fafafa; border-left: 1px solid var(--gris-claro);
   padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
-  overflow: auto;
+  width: 320px;
+  max-width: 320px;
+  box-sizing: border-box;
+  overflow: hidden auto; min-width: 0;
 }
+.map-slide.focused .side-panel { width: 380px; max-width: 380px; }
+.map-slide.project-focused .side-panel { width: 320px; max-width: 320px; }
 .map-slide .side-panel h4 { font-family: var(--font-h); color: var(--guinda); font-size: 14px; font-weight: 700; }
-.map-slide .side-panel .stat { display: flex; justify-content: space-between; align-items: baseline; padding: 3px 0; border-bottom: 1px dashed var(--gris-claro); font-size: 11px; }
-.map-slide .side-panel .stat strong { font-family: var(--font-h); color: var(--guinda); font-size: 13px; font-variant-numeric: tabular-nums; }
+.map-slide .side-panel .stat { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--gris-claro); font-size: 11px; min-width: 0; }
+.map-slide .side-panel .stat span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.map-slide .side-panel .stat strong { font-family: var(--font-h); color: var(--guinda); font-size: 13px; font-variant-numeric: tabular-nums; min-width: 0; max-width: 58%; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .map-slide .side-panel .hint { font-size: 10px; color: var(--gris); font-style: italic; }
+.map-slide.project-focused .side-panel .hint { line-height: 1.35; }
+.map-slide.project-focused .side-panel .stat {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+}
+.map-slide.project-focused .side-panel .stat strong {
+  display: block;
+  max-width: none;
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-b);
+  font-size: 10.5px;
+  line-height: 1.2;
+  text-align: right;
+}
 .leaflet-tooltip.ef-tip { background: rgba(155,34,71,.95); color: white; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.2); font-family: 'Noto Sans', sans-serif; font-size: 11px; padding: 6px 10px; border-radius: 4px; }
 .leaflet-tooltip.ef-tip strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .leaflet-tooltip.ef-tip::before { display: none; }
@@ -669,7 +776,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     </div>
 
     <div class="map-toolbar" id="mapToolbar">
-      <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1">
+      <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1;min-width:0;overflow:hidden">
         <label for="mapMetric">Métrica:</label>
         <select id="mapMetric">
           <option value="capacidad">Capacidad neta MW</option>
@@ -679,6 +786,9 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
         </select>
         <label for="mapTipo" style="margin-left:14px">Tecnología:</label>
         <select id="mapTipo"><option value="__ALL__">Todas</option></select>
+        <label for="mapProjectSelect" style="margin-left:14px">Proyecto:</label>
+        <select id="mapProjectSelect" style="min-width:260px;max-width:340px"><option value="">Seleccionar proyecto</option></select>
+        <button id="mapResetBtn" type="button" style="display:none;padding:5px 10px;background:transparent;border:1px solid var(--guinda);color:var(--guinda);border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">Restablecer mapa nacional</button>
         <div class="legend">
           <span>Bajo</span>
           <span class="ramp"></span>
@@ -705,8 +815,34 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     <div class="footer"></div>
   </section>
 
-  <!-- ============ SLIDE 4: FICHA DE PROYECTO ============ -->
-  <section class="slide content ficha-slide">
+  <!-- ============ SLIDE 4: ANALISIS TECNOLOGIA POR EF ============ -->
+  <section class="slide content tech-ef-slide">
+    <div class="header">
+      <div class="brand-left">GAT-Mixto</div>
+      <div class="ef-title" id="techEfTitle">Tecnología por Entidad Federativa</div>
+      <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+    </div>
+
+    <div class="analysis-body">
+      <div class="panel">
+        <h3 id="techEfBarTitle">Ranking EF por tecnología</h3>
+        <div class="chart" id="chartTechByEf"></div>
+      </div>
+      <div class="panel accent-verde">
+        <h3 id="techEfDonutTitle">Composición por tecnología</h3>
+        <div class="chart" id="chartTechMix"></div>
+      </div>
+      <div class="panel accent-dorado">
+        <h3>Resumen filtrado</h3>
+        <div id="techEfSummary"></div>
+      </div>
+    </div>
+    <div class="analysis-note" id="techEfNote">Los gráficos usan los mismos filtros de métrica y tecnología del mapa nacional.</div>
+    <div class="footer"></div>
+  </section>
+
+  <!-- ============ SLIDE 5: FICHA DE PROYECTO ============ -->
+  <section class="slide content ficha-slide skip-export">
     <div class="header">
       <div class="brand-left">GAT-Mixto</div>
       <div class="ef-title" id="fichaTitle">Ficha de proyecto</div>
@@ -774,12 +910,50 @@ const CNE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszm
 const CNE_ENDPOINT = '/data-cne';
 let CNE_INDEX = {};  // folio -> objeto CNE
 const MIXTOS_GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Mixtos/mixtos.geojson';
-let MIXTOS_INDEX = {}; // folio -> feature geojson (coordenada/punto)
+let MIXTOS_INDEX = {}; // folio normalizado -> feature geojson (coordenada/punto)
+let SELECTED_PROJECT_FOLIO = '';
 
 let DATA = [];
 
 function num(x) { const n = parseFloat(String(x).replace(/,/g,'')); return isNaN(n) ? 0 : n; }
 function fmt(n, d=1) { return n.toLocaleString('es-MX', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+function normFolio(v) { return String(v || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+function getMixtosFeatureByFolio(folio) {
+  return MIXTOS_INDEX[normFolio(folio)] || null;
+}
+function getProjectByFolio(folioKey) {
+  return DATA.find(p => normFolio(p.folio) === folioKey) || null;
+}
+function mixtosClusterIcon(cluster) {
+  const n = cluster.getChildCount();
+  const size = n < 10 ? 32 : n < 50 ? 38 : 46;
+  return L.divIcon({
+    html: `<div style="background:rgba(155,34,71,.92);color:white;border:2px solid #fff;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Noto Sans',sans-serif;font-size:${n<10?12:13}px;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,
+    className: '',
+    iconSize: [size, size]
+  });
+}
+function createMixtosPointLayer(features) {
+  return L.geoJSON({ type: 'FeatureCollection', features }, {
+    pane: 'mixtosPane',
+    style: () => ({ pane: 'mixtosPane', color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.45 }),
+    pointToLayer: (f, latlng) => L.marker(latlng, {
+      pane: 'mixtosPane',
+      zIndexOffset: 1000,
+      icon: L.divIcon({
+        className: 'mixtos-point-marker',
+        html: '<span></span>',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+      })
+    }),
+    onEachFeature: (f, lyr) => {
+      const p = f.properties || {};
+      lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
+      lyr.on('click', () => selectProjectForFicha(normFolio(p._folio)));
+    }
+  });
+}
 
 function setStatus(msg) {
   const el = document.getElementById('preloaderMsg');
@@ -915,8 +1089,9 @@ async function loadMixtosGeoJSON() {
   MIXTOS_INDEX = {};
   (gj.features || []).forEach(f => {
     const props = f.properties || {};
-    const folio = ((props.Folio || props.folio || props.clave || '') + '').trim();
-    if (folio) MIXTOS_INDEX[folio] = f;
+    const folio = ((props.Folio || props.folio || props['Folio Proyecto'] || props['Pre Folio'] || props.clave || props.CLAVE || '') + '').trim();
+    const key = normFolio(folio);
+    if (key) MIXTOS_INDEX[key] = f;
   });
   console.log('Mixtos GeoJSON cargado:', Object.keys(MIXTOS_INDEX).length, 'proyectos georreferenciados');
 }
@@ -961,6 +1136,84 @@ function populateEFSelect() {
   const sel = document.getElementById('efSelect');
   sel.innerHTML = `<option value="__ALL__">Todos (Nacional)</option>` + efs.map(e => `<option>${e}</option>`).join('');
   sel.value = '__ALL__';
+}
+
+function projectSelectLabel(p) {
+  const pieces = [p.nombre, p.ef, p.tipo].filter(Boolean);
+  return pieces.join(' · ');
+}
+
+function populateMapProjectSelect() {
+  const sel = document.getElementById('mapProjectSelect');
+  if (!sel) return;
+  const selected = SELECTED_PROJECT_FOLIO;
+  const rows = [...DATA]
+    .filter(p => normFolio(p.folio))
+    .sort((a,b) => String(a.nombre).localeCompare(String(b.nombre), 'es'));
+  sel.innerHTML = '<option value="">Seleccionar proyecto</option>' + rows.map(p => {
+    const value = normFolio(p.folio);
+    return `<option value="${value}">${projectSelectLabel(p)}</option>`;
+  }).join('');
+  if (selected && [...sel.options].some(o => o.value === selected)) sel.value = selected;
+}
+
+function setProjectMapMode(enabled) {
+  const slide = document.querySelector('.map-slide');
+  const metric = document.getElementById('mapMetric');
+  const tipo = document.getElementById('mapTipo');
+  const reset = document.getElementById('mapResetBtn');
+  if (slide) slide.classList.toggle('project-focused', enabled);
+  if (metric) metric.disabled = enabled;
+  if (tipo) tipo.disabled = enabled;
+  if (reset) reset.style.display = enabled ? 'inline-block' : 'none';
+  if (geoLayer && enabled) {
+    geoLayer.setStyle(() => ({
+      color: '#ffffff',
+      weight: 0.35,
+      fillOpacity: 0,
+      opacity: 0.25
+    }));
+  }
+}
+
+function resetNationalMap() {
+  SELECTED_PROJECT_FOLIO = '';
+  clearSelectedProjectLayer();
+  setTechEfSlideVisible(true);
+  const projectSelect = document.getElementById('mapProjectSelect');
+  if (projectSelect) projectSelect.value = '';
+  const efSelect = document.getElementById('efSelect');
+  if (efSelect) efSelect.value = '__ALL__';
+  setProjectMapMode(false);
+  render();
+}
+
+function selectProjectForFicha(folioKey) {
+  SELECTED_PROJECT_FOLIO = folioKey || '';
+  setTechEfSlideVisible(!SELECTED_PROJECT_FOLIO);
+  const mapSelect = document.getElementById('mapProjectSelect');
+  if (mapSelect && mapSelect.value !== SELECTED_PROJECT_FOLIO) mapSelect.value = SELECTED_PROJECT_FOLIO;
+  if (!SELECTED_PROJECT_FOLIO) return;
+
+  const efVal = document.getElementById('efSelect').value;
+  const projects = efVal === '__ALL__' ? DATA : DATA.filter(r => r.ef === efVal);
+  let idx = projects.findIndex(p => normFolio(p.folio) === SELECTED_PROJECT_FOLIO);
+  let rows = projects;
+
+  if (idx < 0) {
+    rows = DATA;
+    idx = rows.findIndex(p => normFolio(p.folio) === SELECTED_PROJECT_FOLIO);
+  }
+  if (idx < 0) return;
+
+  const fichaSelect = document.getElementById('fichaSelect');
+  if (fichaSelect) {
+    fichaSelect.innerHTML = rows.map((p,i) => `<option value="${i}">${p.nombre}${p.ef ? ' · ' + p.ef : ''}</option>`).join('');
+    fichaSelect.value = String(idx);
+  }
+  paintFicha(rows);
+  renderSelectedProjectSlides();
+  focusSelectedProjectOnMap();
 }
 
 function render() {
@@ -1067,6 +1320,9 @@ function render() {
 
   // Render ficha proyecto select
   if (typeof renderProjectFicha === 'function') renderProjectFicha();
+  populateMapProjectSelect();
+  renderTechEfSlide();
+  if (SELECTED_PROJECT_FOLIO) setTimeout(() => focusSelectedProjectOnMap(), 80);
   // Init mini-maps tras DOM listo
   setTimeout(() => initMiniMaps(), 50);
   // Auto-cargar KMZs en mapa principal cuando EF enfocada
@@ -1079,6 +1335,7 @@ function render() {
 // =================== MAPA ===================
 const GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
 let mapInstance = null, geoLayer = null, geoData = null;
+let satelliteBaseLayer = null;
 const RAMP = ['#f7e3ea', '#e6b8c9', '#d28aa6', '#b85979', '#9B2247', '#6a172f'];
 
 // Catálogo de aliases EF: clave normalizada (cualquier variante) -> nombre canónico CSV
@@ -1142,6 +1399,23 @@ function metricForEf(ef, metric, tipo) {
   }
 }
 
+function metricForRows(rows, metric) {
+  switch(metric) {
+    case 'proyectos': return rows.length;
+    case 'inversion': return rows.reduce((s,r)=>s+r.invMMUSD, 0);
+    case 'avance': return rows.length ? rows.reduce((s,r)=>s+r.avancePct, 0)/rows.length : 0;
+    case 'capacidad':
+    default: return rows.reduce((s,r) => s + r.capacidadMW, 0);
+  }
+}
+
+function formatMetricValue(value, metric, digits=1) {
+  if (metric === 'proyectos') return Math.round(value).toLocaleString('es-MX');
+  if (metric === 'inversion') return fmt(value, digits) + ' MMUSD';
+  if (metric === 'avance') return fmt(value, digits) + '%';
+  return fmt(value, digits) + ' MW';
+}
+
 function colorScale(value, min, max) {
   if (max === min || value <= 0) return '#f4f6f8';
   const t = (value - min) / (max - min);
@@ -1160,6 +1434,14 @@ async function initMap() {
   await loadMap();
   if (!mapInstance) {
     mapInstance = L.map('mapa', { zoomControl: true, attributionControl: false, preferCanvas: true, maxZoom: 18, minZoom: 3 });
+    satelliteBaseLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      maxNativeZoom: 19,
+      crossOrigin: true
+    }).addTo(mapInstance);
+    mapInstance.createPane('mixtosPane');
+    mapInstance.getPane('mixtosPane').style.zIndex = 750;
+    mapInstance.getPane('mixtosPane').style.pointerEvents = 'auto';
     mapInstance.setView([24, -102], 4.5);
   }
   // populate tipo dropdown
@@ -1198,7 +1480,7 @@ function drawMap() {
   if (geoLayer) mapInstance.removeLayer(geoLayer);
   if (kmzLayer) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
   const kmzBtn = document.getElementById('mapKmzBtn');
-  if (kmzBtn) { kmzBtn.textContent = '📍 Cargar KMZs'; kmzBtn.style.background = 'var(--verde)'; }
+  if (kmzBtn) { kmzBtn.textContent = '📍 Cargar puntos'; kmzBtn.style.background = 'var(--verde)'; kmzBtn.disabled = false; }
   geoLayer = L.geoJSON(geoData, {
     style: f => {
       const geoName = getEfNameFromFeature(f);
@@ -1376,15 +1658,161 @@ function showEfDetail(ef) {
   `;
 }
 
+function renderTechEfSlide() {
+  if (!DATA.length || typeof Highcharts === 'undefined') return;
+  const metric = document.getElementById('mapMetric')?.value || 'capacidad';
+  const tipo = document.getElementById('mapTipo')?.value || '__ALL__';
+  const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+  const isAllEf = efVal === '__ALL__';
+  const metricLabel = {
+    capacidad: 'capacidad neta',
+    proyectos: 'número de proyectos',
+    inversion: 'inversión',
+    avance: 'avance promedio'
+  }[metric] || 'capacidad neta';
+  const tipoLabel = tipo === '__ALL__' ? 'todas las tecnologías' : tipo;
+  const rows = DATA.filter(r => (isAllEf || r.ef === efVal) && (tipo === '__ALL__' || r.tipo === tipo));
+  const efGroups = {};
+  rows.forEach(r => { (efGroups[r.ef || 'Sin entidad'] ||= []).push(r); });
+  const ranked = Object.entries(efGroups)
+    .map(([ef, items]) => ({ ef, value: metricForRows(items, metric), items }))
+    .filter(x => x.value > 0)
+    .sort((a,b) => b.value - a.value)
+    .slice(0, 12);
+
+  document.getElementById('techEfTitle').textContent = isAllEf ? 'Tecnología por Entidad Federativa' : `${efVal} · tecnología`;
+  document.getElementById('techEfBarTitle').textContent = `Ranking EF por ${metricLabel}`;
+  document.getElementById('techEfDonutTitle').textContent = tipo === '__ALL__' ? 'Composición por tecnología' : `Distribución EF · ${tipo}`;
+  document.getElementById('techEfNote').textContent = `Filtro activo: ${metricLabel} · ${tipoLabel}${isAllEf ? '' : ' · ' + efVal}.`;
+
+  Highcharts.chart('chartTechByEf', {
+    chart: { type: 'bar', backgroundColor: 'transparent' },
+    xAxis: { categories: ranked.map(x => x.ef), labels: { style: { fontSize: '9px' } } },
+    yAxis: { title: { text: metric === 'proyectos' ? 'Proyectos' : metric === 'inversion' ? 'MMUSD' : metric === 'avance' ? '%' : 'MW' }, labels: { style: { fontSize: '9px' } } },
+    legend: { enabled: false },
+    tooltip: { pointFormatter: function() { return `<b>${formatMetricValue(this.y, metric)}</b>`; } },
+    plotOptions: {
+      bar: {
+        color: '#9B2247',
+        borderWidth: 0,
+        dataLabels: { enabled: true, style: { fontSize: '9px', fontWeight: '700' }, formatter: function() { return formatMetricValue(this.y, metric, metric === 'proyectos' ? 0 : 1); } }
+      }
+    },
+    series: [{ name: metricLabel, data: ranked.map(x => +x.value.toFixed(2)) }]
+  });
+
+  const techGroups = {};
+  rows.forEach(r => { (techGroups[r.tipo || 'Sin tecnología'] ||= []).push(r); });
+  const techData = Object.entries(techGroups)
+    .map(([name, items]) => ({ name, y: metric === 'avance' ? items.length : metricForRows(items, metric) }))
+    .filter(x => x.y > 0)
+    .sort((a,b) => b.y - a.y);
+  Highcharts.chart('chartTechMix', {
+    chart: { type: 'pie', backgroundColor: 'transparent' },
+    plotOptions: { pie: { innerSize: '58%', borderWidth: 1, dataLabels: { enabled: true, distance: 10, style: { fontSize: '8.5px' }, format: '<b>{point.name}</b><br>{point.percentage:.1f}%' } } },
+    tooltip: { pointFormatter: function() { return `<b>${formatMetricValue(this.y, metric === 'avance' ? 'proyectos' : metric)}</b>`; } },
+    series: [{ name: metricLabel, data: techData }]
+  });
+
+  const total = metricForRows(rows, metric);
+  const top = ranked[0];
+  document.getElementById('techEfSummary').innerHTML = `<table class="tech">
+    <tbody>
+      <tr><td>Filtro tecnología</td><td class="mw">${tipoLabel}</td></tr>
+      <tr><td>Entidades con datos</td><td class="mw">${ranked.length}</td></tr>
+      <tr><td>Total filtrado</td><td class="mw">${formatMetricValue(total, metric)}</td></tr>
+      <tr><td>EF líder</td><td class="mw">${top ? top.ef : '—'}</td></tr>
+      <tr><td>Valor líder</td><td class="mw">${top ? formatMetricValue(top.value, metric) : '—'}</td></tr>
+    </tbody>
+  </table>`;
+}
+
 document.getElementById('efSelect').addEventListener('change', render);
+document.getElementById('mapProjectSelect').addEventListener('change', e => {
+  selectProjectForFicha(e.target.value);
+});
+document.getElementById('mapResetBtn').addEventListener('click', resetNationalMap);
 document.getElementById('mapClearEf').addEventListener('click', () => {
   document.getElementById('efSelect').value = '__ALL__';
+  SELECTED_PROJECT_FOLIO = '';
+  clearSelectedProjectLayer();
+  setTechEfSlideVisible(true);
+  setProjectMapMode(false);
   render();
 });
 
 // =================== KMZ EN MAPA ===================
 let kmzLayer = null;
+let selectedProjectLayer = null;
 const _kmzCache = {};
+
+function clearSelectedProjectLayer() {
+  if (selectedProjectLayer && mapInstance) {
+    mapInstance.removeLayer(selectedProjectLayer);
+    selectedProjectLayer = null;
+  }
+}
+
+function showSelectedProjectInfo(project, feature) {
+  const props = feature?.properties || {};
+  const propRows = Object.entries(props)
+    .filter(([k, v]) => !String(k).startsWith('_') && v !== undefined && v !== null && String(v).trim() !== '')
+    .slice(0, 8)
+    .map(([k, v]) => `<div class="stat"><span>${trunc(k, 18)}</span><strong>${trunc(v, 22)}</strong></div>`)
+    .join('');
+  document.getElementById('mapEfTitle').textContent = project.nombre || 'Proyecto seleccionado';
+  document.getElementById('mapHint').style.display = '';
+  document.getElementById('mapHint').textContent = 'Proyecto seleccionado desde el buscador nacional. La ficha inferior está sincronizada con este folio.';
+  document.getElementById('mapStats').innerHTML = `
+    <div class="ef-detail-grid">
+      <div class="ef-mini-card"><div class="lbl">Capacidad</div><div class="val">${fmt(project.capacidadMW || 0,1)}</div><div class="sub">MW netos</div></div>
+      <div class="ef-mini-card"><div class="lbl">Inversión</div><div class="val">${fmt(project.invMMUSD || 0,1)}</div><div class="sub">MMUSD</div></div>
+      <div class="ef-mini-card"><div class="lbl">Avance</div><div class="val">${fmt(project.avancePct || 0,1)}%</div><div class="sub">fecha reporte</div></div>
+      <div class="ef-mini-card"><div class="lbl">EOC</div><div class="val">${project.anioEOC || '—'}</div><div class="sub">${project.tipo || 'Sin tipo'}</div></div>
+    </div>
+    <div class="ef-section-title">Proyecto</div>
+    <div class="stat"><span>Folio</span><strong>${trunc(project.folio || '—', 22)}</strong></div>
+    <div class="stat"><span>Estado</span><strong>${trunc(project.ef || '—', 22)}</strong></div>
+    <div class="stat"><span>Municipio</span><strong>${trunc(project.municipio || '—', 22)}</strong></div>
+    <div class="stat"><span>Estatus</span><strong>${trunc(project.status || project.estatusPermiso || '—', 22)}</strong></div>
+    ${propRows ? `<div class="ef-section-title">GeoJSON Mixtos</div>${propRows}` : ''}
+  `;
+}
+
+function focusSelectedProjectOnMap() {
+  if (!mapInstance || !SELECTED_PROJECT_FOLIO) return;
+  setProjectMapMode(true);
+  const project = getProjectByFolio(SELECTED_PROJECT_FOLIO);
+  const feature = getMixtosFeatureByFolio(SELECTED_PROJECT_FOLIO);
+  if (!project || !feature) {
+    if (project) showSelectedProjectInfo(project, null);
+    return;
+  }
+  clearSelectedProjectLayer();
+  selectedProjectLayer = L.geoJSON({ type: 'FeatureCollection', features: [feature] }, {
+    pane: 'mixtosPane',
+    style: { pane: 'mixtosPane', color: '#9B2247', weight: 4, fillColor: '#9B2247', fillOpacity: 0.25 },
+    pointToLayer: (f, latlng) => L.marker(latlng, {
+      pane: 'mixtosPane',
+      zIndexOffset: 2000,
+      icon: L.divIcon({
+        className: 'selected-project-marker',
+        html: '<span></span>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      })
+    })
+  }).addTo(mapInstance);
+  try {
+    const bounds = selectedProjectLayer.getBounds();
+    if (bounds.isValid()) {
+      const isPointOnly = feature.geometry?.type === 'Point';
+      if (isPointOnly) mapInstance.setView(bounds.getCenter(), 16);
+      else mapInstance.fitBounds(bounds.pad(0.2), { maxZoom: 16 });
+    }
+  } catch(e) {}
+  showSelectedProjectInfo(project, feature);
+}
 
 async function fetchKmzAsGeoJSON(url) {
   if (_kmzCache[url]) return _kmzCache[url];
@@ -1434,39 +1862,47 @@ async function loadKmzsForCurrentEf(silent=false) {
   // Camino rápido: usar mixtos.geojson cuando esté disponible (no necesita parse KMZ)
   if (Object.keys(MIXTOS_INDEX).length) {
     const feats = projects
-      .filter(p => p.folio && MIXTOS_INDEX[p.folio])
+      .filter(p => p.folio && getMixtosFeatureByFolio(p.folio))
       .map(p => {
-        const f = JSON.parse(JSON.stringify(MIXTOS_INDEX[p.folio]));
+        const f = JSON.parse(JSON.stringify(getMixtosFeatureByFolio(p.folio)));
         f.properties = Object.assign({}, f.properties, { _proj: p.nombre, _folio: p.folio, _tipo: p.tipo, _ef: p.ef });
         return f;
       });
     if (feats.length) {
-      const cluster = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        maxClusterRadius: 45,
-        spiderfyOnMaxZoom: true,
-        iconCreateFunction: function(c) {
-          const n = c.getChildCount();
-          const size = n < 10 ? 32 : n < 50 ? 38 : 46;
-          return L.divIcon({
-            html: `<div style="background:rgba(155,34,71,.92);color:white;border:2px solid #fff;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Noto Sans',sans-serif;font-size:${n<10?12:13}px;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,
-            className: '', iconSize: [size, size]
+      const boundsLayer = createMixtosPointLayer(feats);
+      if (isAll) {
+        const grouped = feats.reduce((acc, f) => {
+          const ef = f.properties?._ef || 'Sin entidad';
+          (acc[ef] ||= []).push(f);
+          return acc;
+        }, {});
+        const efClusters = Object.values(grouped).map(efFeatures => {
+          const cluster = L.markerClusterGroup({
+            showCoverageOnHover: false,
+            maxClusterRadius: 45,
+            spiderfyOnMaxZoom: true,
+            clusterPane: 'mixtosPane',
+            iconCreateFunction: mixtosClusterIcon
           });
-        }
-      });
-      const inner = L.geoJSON({ type: 'FeatureCollection', features: feats }, {
-        style: () => ({ color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.45 }),
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.9, weight: 1.5 }),
-        onEachFeature: (f, lyr) => {
-          const p = f.properties || {};
-          lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
-        }
-      });
-      cluster.addLayer(inner);
-      kmzLayer = cluster;
+          cluster.addLayer(createMixtosPointLayer(efFeatures));
+          return cluster;
+        });
+        kmzLayer = L.layerGroup(efClusters);
+      } else {
+        const cluster = L.markerClusterGroup({
+          showCoverageOnHover: false,
+          maxClusterRadius: 45,
+          spiderfyOnMaxZoom: true,
+          clusterPane: 'mixtosPane',
+          iconCreateFunction: mixtosClusterIcon
+        });
+        cluster.addLayer(boundsLayer);
+        kmzLayer = cluster;
+      }
       mapInstance.addLayer(kmzLayer);
+      if (kmzLayer.bringToFront) kmzLayer.bringToFront();
       if (btn) { btn.textContent = `✓ ${feats.length} puntos — click para ocultar`; btn.style.background = 'var(--guinda)'; }
-      try { mapInstance.fitBounds(inner.getBounds().pad(0.2)); } catch(e) {}
+      try { mapInstance.fitBounds(boundsLayer.getBounds().pad(0.2)); } catch(e) {}
       return;
     }
   }
@@ -1530,7 +1966,7 @@ let _miniMapCounter = 0;
 function miniMapHtml(p) {
   const id = 'mini-' + (++_miniMapCounter);
   // 1) Preferir mixtos geojson (rápido, ya descargado)
-  if (p.folio && MIXTOS_INDEX[p.folio]) {
+  if (p.folio && getMixtosFeatureByFolio(p.folio)) {
     return `<div class="ficha-minimap" id="${id}" data-folio="${p.folio}" data-proj="${(p.nombre||'').replace(/"/g,'&quot;')}"></div>`;
   }
   // 2) Fallback KMZ desde CNE
@@ -1550,8 +1986,9 @@ async function initOneMiniMap(div) {
   div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--guinda);font-weight:700;gap:6px"><span class="mini-spin"></span>Cargando…</div>';
   try {
     let gj;
-    if (folio && MIXTOS_INDEX[folio]) {
-      gj = { type: 'FeatureCollection', features: [MIXTOS_INDEX[folio]] };
+    const mixtosFeature = getMixtosFeatureByFolio(folio);
+    if (folio && mixtosFeature) {
+      gj = { type: 'FeatureCollection', features: [mixtosFeature] };
     } else if (url) {
       gj = await fetchKmzAsGeoJSON(url);
     } else {
@@ -1566,19 +2003,29 @@ async function initOneMiniMap(div) {
     mini.setView([24, -102], 4);
     // Basemap satélite Esri (sin API key)
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19, crossOrigin: true
+      maxZoom: 19, maxNativeZoom: 19, crossOrigin: true
     }).addTo(mini);
     const layer = L.geoJSON(gj, {
       style: { color: '#9B2247', weight: 2, fillColor: '#9B2247', fillOpacity: 0.45 },
-      pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#9B2247', fillColor: '#9B2247', fillOpacity: 0.85, weight: 1.5 })
+      pointToLayer: (f, latlng) => L.marker(latlng, {
+        zIndexOffset: 1000,
+        icon: L.divIcon({
+          className: 'mini-project-marker',
+          html: '<span></span>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8]
+        })
+      })
     }).addTo(mini);
     // bounds + centro: maneja punto único o polígono
     let center;
     try {
       const b = layer.getBounds();
       if (b.isValid()) {
-        mini.fitBounds(b.pad(0.4));
         center = b.getCenter();
+        const isPointOnly = gj.features.length === 1 && gj.features[0]?.geometry?.type === 'Point';
+        if (isPointOnly) mini.setView(center, 16);
+        else mini.fitBounds(b.pad(0.35), { maxZoom: 15 });
       }
     } catch(e) {}
     if (!center) {
@@ -1606,6 +2053,15 @@ async function initOneMiniMap(div) {
 // Cola serializada — UN mini-mapa a la vez con yield al UI thread
 const _miniQueue = [];
 let _miniRunning = false;
+function waitForMiniMapSlot() {
+  return new Promise(resolve => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(resolve, { timeout: 120 });
+    } else {
+      window.setTimeout(resolve, 80);
+    }
+  });
+}
 async function _processMiniQueue() {
   if (_miniRunning) return;
   _miniRunning = true;
@@ -1613,7 +2069,7 @@ async function _processMiniQueue() {
     const div = _miniQueue.shift();
     if (!div || !document.body.contains(div) || div.dataset.init) continue;
     // yield al browser antes de la operación pesada
-    await new Promise(r => (window.requestIdleCallback || window.setTimeout)(r, 80));
+    await waitForMiniMapSlot();
     try { await initOneMiniMap(div); } catch(e) {}
   }
   _miniRunning = false;
@@ -1635,7 +2091,7 @@ const _miniObserver = ('IntersectionObserver' in window) ? new IntersectionObser
 }, { rootMargin: '200px 0px', threshold: 0.01 }) : null;
 
 function initMiniMaps() {
-  const divs = document.querySelectorAll('.ficha-minimap[data-kmz-url]:not([data-init])');
+  const divs = document.querySelectorAll('.ficha-minimap[data-folio]:not([data-init]), .ficha-minimap[data-kmz-url]:not([data-init])');
   divs.forEach(div => {
     div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gris);font-style:italic">Esperando…</div>';
     if (_miniObserver) _miniObserver.observe(div);
@@ -1645,7 +2101,7 @@ function initMiniMaps() {
 
 // fuerza carga de todos los mini-mapas (para export PDF/PPT) — encola y espera vacío
 async function forceAllMiniMaps() {
-  document.querySelectorAll('.ficha-minimap[data-kmz-url]:not([data-loaded]):not([data-failed]):not([data-queued])').forEach(d => enqueueMiniMap(d));
+  document.querySelectorAll('.ficha-minimap[data-folio]:not([data-loaded]):not([data-failed]):not([data-queued]), .ficha-minimap[data-kmz-url]:not([data-loaded]):not([data-failed]):not([data-queued])').forEach(d => enqueueMiniMap(d));
   while (_miniRunning || _miniQueue.length) {
     await new Promise(r => setTimeout(r, 100));
   }
@@ -1660,6 +2116,70 @@ function pillForFoco(val) {
   return `<span class="pill">${val}</span>`;
 }
 
+function appendProjectFichaSlides(projects, label) {
+  const deck = document.querySelector('.deck');
+  projects.forEach((p, i) => {
+    const clone = document.createElement('section');
+    clone.className = 'slide content ficha-slide ficha-clone';
+    clone.dataset.fichaClone = 'true';
+    clone.innerHTML = `
+      <div class="header">
+        <div class="brand-left">GAT-Mixto · ${label}</div>
+        <div class="ef-title">${p.nombre}</div>
+        <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+      </div>
+      <div class="ficha-toolbar">
+        <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 1 de 2</span>
+        <span class="ficha-badge">${p.status||'—'}</span>
+        <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}${p.rfc?' · RFC: '+p.rfc:''}</span>
+      </div>
+      <div class="ficha-body">${buildFichaCardsPart1(p)}</div>
+      <div class="footer"></div>
+    `;
+    deck.appendChild(clone);
+
+    const slideB = document.createElement('section');
+    slideB.className = 'slide content ficha-slide ficha-clone';
+    slideB.dataset.fichaClone = 'true';
+    slideB.innerHTML = `
+      <div class="header">
+        <div class="brand-left">GAT-Mixto · ${label}</div>
+        <div class="ef-title">${p.nombre} — Foco rojo y observaciones</div>
+        <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+      </div>
+      <div class="ficha-toolbar">
+        <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 2 de 2</span>
+        <span class="ficha-badge">${p.status||'—'}</span>
+        <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
+      </div>
+      <div class="ficha-body" style="grid-template-columns:1fr;align-content:start">
+        ${buildFichaCardsPart2(p)}
+      </div>
+      <div class="footer"></div>
+    `;
+    deck.appendChild(slideB);
+  });
+}
+
+function renderSelectedProjectSlides() {
+  removeFichaClones();
+  if (!SELECTED_PROJECT_FOLIO) return;
+  setMasterFichaVisible(false);
+  const project = getProjectByFolio(SELECTED_PROJECT_FOLIO);
+  if (project) appendProjectFichaSlides([project], project.ef || 'Proyecto seleccionado');
+  setTimeout(() => initMiniMaps(), 50);
+}
+
+function setMasterFichaVisible(visible) {
+  const master = document.querySelector('.deck > .ficha-slide:not(.ficha-clone)');
+  if (master) master.classList.toggle('skip-export', !visible);
+}
+
+function setTechEfSlideVisible(visible) {
+  const slide = document.querySelector('.tech-ef-slide');
+  if (slide) slide.classList.toggle('skip-export', !visible);
+}
+
 function renderProjectFicha() {
   const sel = document.getElementById('fichaSelect');
   if (!sel) return;
@@ -1669,58 +2189,26 @@ function renderProjectFicha() {
   // populate selector
   const currentVal = sel.value;
   sel.innerHTML = projects.map((p,i) => `<option value="${i}">${p.nombre}${p.ef && isAll ? ' · ' + p.ef : ''}</option>`).join('') || '<option>Sin proyectos</option>';
-  if (currentVal && currentVal !== 'Cargando…' && projects[+currentVal]) sel.value = currentVal;
+  const selectedIdx = SELECTED_PROJECT_FOLIO
+    ? projects.findIndex(p => normFolio(p.folio) === SELECTED_PROJECT_FOLIO)
+    : -1;
+  if (selectedIdx >= 0) sel.value = String(selectedIdx);
+  else if (currentVal && currentVal !== 'Cargando…' && projects[+currentVal]) sel.value = currentVal;
   paintFicha(projects);
-  sel.onchange = () => paintFicha(projects);
+  sel.onchange = () => {
+    const p = projects[parseInt(sel.value) || 0];
+    SELECTED_PROJECT_FOLIO = p ? normFolio(p.folio) : '';
+    const mapSelect = document.getElementById('mapProjectSelect');
+    if (mapSelect && [...mapSelect.options].some(o => o.value === SELECTED_PROJECT_FOLIO)) mapSelect.value = SELECTED_PROJECT_FOLIO;
+    paintFicha(projects);
+  };
 
-  // Cuando EF está enfocada, generar slides extra (uno por proyecto) para que en PDF/PPT salgan todos
+  // Cuando EF está enfocada, generar slides extra (uno por proyecto) para que en PDF/PPT salgan todos.
+  // En vista nacional, si hay proyecto seleccionado, generar solo sus dos slides.
   removeFichaClones();
-  if (!isAll && projects.length > 0) {
-    const masterSlide = document.querySelector('.ficha-slide');
-    const deck = document.querySelector('.deck');
-    projects.forEach((p, i) => {
-      const clone = document.createElement('section');
-      clone.className = 'slide content ficha-slide ficha-clone';
-      clone.dataset.fichaClone = 'true';
-      clone.innerHTML = `
-        <div class="header">
-          <div class="brand-left">GAT-Mixto · ${efVal}</div>
-          <div class="ef-title">${p.nombre}</div>
-          <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
-        </div>
-        <div class="ficha-toolbar">
-          <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 1 de 2</span>
-          <span class="ficha-badge">${p.status||'—'}</span>
-          <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}${p.rfc?' · RFC: '+p.rfc:''}</span>
-        </div>
-        <div class="ficha-body">${buildFichaCardsPart1(p)}</div>
-        <div class="footer"></div>
-      `;
-      deck.appendChild(clone);
-
-      // Slide B: foco rojo + descripcion + cronograma + observaciones (siempre, una por proyecto)
-      const slideB = document.createElement('section');
-      slideB.className = 'slide content ficha-slide ficha-clone';
-      slideB.dataset.fichaClone = 'true';
-      slideB.innerHTML = `
-        <div class="header">
-          <div class="brand-left">GAT-Mixto · ${efVal}</div>
-          <div class="ef-title">${p.nombre} — Foco rojo y observaciones</div>
-          <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
-        </div>
-        <div class="ficha-toolbar">
-          <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 2 de 2</span>
-          <span class="ficha-badge">${p.status||'—'}</span>
-          <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
-        </div>
-        <div class="ficha-body" style="grid-template-columns:1fr;align-content:start">
-          ${buildFichaCardsPart2(p)}
-        </div>
-        <div class="footer"></div>
-      `;
-      deck.appendChild(slideB);
-    });
-  }
+  setMasterFichaVisible(false);
+  if (!isAll && projects.length > 0) appendProjectFichaSlides(projects, efVal);
+  else if (isAll && SELECTED_PROJECT_FOLIO) renderSelectedProjectSlides();
 }
 
 function removeFichaClones() {
@@ -2209,7 +2697,7 @@ async function exportPPT() {
     pptx.company = 'Secretaría de Energía';
     pptx.title = 'PVIRCE 2026-2040';
 
-    const slides = document.querySelectorAll('.deck > .slide');
+    const slides = document.querySelectorAll('.deck > .slide:not(.skip-export)');
     for (let i = 0; i < slides.length; i++) {
       btn.textContent = `Slide ${i+1}/${slides.length}…`;
       const dataUrl = await captureSlide(slides[i]);
