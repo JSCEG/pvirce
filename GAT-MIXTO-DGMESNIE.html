@@ -1384,7 +1384,10 @@ async function fetchKmzAsGeoJSON(url) {
   } else {
     kmlText = new TextDecoder().decode(buf);
   }
+  // yield antes de parse XML pesado
+  await new Promise(r => setTimeout(r, 0));
   const xml = new DOMParser().parseFromString(kmlText, 'text/xml');
+  await new Promise(r => setTimeout(r, 0));
   const gj = toGeoJSON.kml(xml);
   return _kmzCache[url] = gj;
 }
@@ -1501,36 +1504,52 @@ async function initOneMiniMap(div) {
   }
 }
 
+// Cola serializada — UN mini-mapa a la vez con yield al UI thread
+const _miniQueue = [];
+let _miniRunning = false;
+async function _processMiniQueue() {
+  if (_miniRunning) return;
+  _miniRunning = true;
+  while (_miniQueue.length) {
+    const div = _miniQueue.shift();
+    if (!div || !document.body.contains(div) || div.dataset.init) continue;
+    // yield al browser antes de la operación pesada
+    await new Promise(r => (window.requestIdleCallback || window.setTimeout)(r, 80));
+    try { await initOneMiniMap(div); } catch(e) {}
+  }
+  _miniRunning = false;
+}
+function enqueueMiniMap(div) {
+  if (div.dataset.queued || div.dataset.init) return;
+  div.dataset.queued = '1';
+  _miniQueue.push(div);
+  _processMiniQueue();
+}
+
 const _miniObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       _miniObserver.unobserve(entry.target);
-      initOneMiniMap(entry.target);
+      enqueueMiniMap(entry.target);
     }
   });
-}, { rootMargin: '300px 0px', threshold: 0.01 }) : null;
+}, { rootMargin: '200px 0px', threshold: 0.01 }) : null;
 
 function initMiniMaps() {
   const divs = document.querySelectorAll('.ficha-minimap[data-kmz-url]:not([data-init])');
   divs.forEach(div => {
     div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gris);font-style:italic">Esperando…</div>';
     if (_miniObserver) _miniObserver.observe(div);
-    else initOneMiniMap(div); // fallback browsers viejos
+    else enqueueMiniMap(div);
   });
 }
 
-// fuerza carga de todos los mini-mapas (para export PDF/PPT)
+// fuerza carga de todos los mini-mapas (para export PDF/PPT) — encola y espera vacío
 async function forceAllMiniMaps() {
-  const divs = document.querySelectorAll('.ficha-minimap[data-kmz-url]:not([data-loaded]):not([data-failed])');
-  // paralelo con throttle de 3
-  const queue = [...divs];
-  const workers = Array(Math.min(3, queue.length)).fill(null).map(async () => {
-    while (queue.length) {
-      const d = queue.shift();
-      if (d) await initOneMiniMap(d);
-    }
-  });
-  await Promise.all(workers);
+  document.querySelectorAll('.ficha-minimap[data-kmz-url]:not([data-loaded]):not([data-failed]):not([data-queued])').forEach(d => enqueueMiniMap(d));
+  while (_miniRunning || _miniQueue.length) {
+    await new Promise(r => setTimeout(r, 100));
+  }
 }
 
 function pillForFoco(val) {
