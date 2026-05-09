@@ -1166,6 +1166,10 @@ async function initMap() {
   drawMap();
   document.getElementById('mapMetric').addEventListener('change', drawMap);
   document.getElementById('mapTipo').addEventListener('change', drawMap);
+  // Auto-cargar puntos mixtos (nacional o EF) ahora que mapInstance existe
+  if (Object.keys(MIXTOS_INDEX).length || Object.keys(CNE_INDEX).length) {
+    setTimeout(() => loadKmzsForCurrentEf(true), 200);
+  }
 }
 
 let CURRENT_FOCUS_EF = null; // null = nacional
@@ -1411,14 +1415,13 @@ async function fetchKmzAsGeoJSON(url) {
   return _kmzCache[url] = gj;
 }
 
-async function loadKmzsForCurrentEf() {
+async function loadKmzsForCurrentEf(silent=false) {
   const btn = document.getElementById('mapKmzBtn');
-  if (!btn) return;
+  if (!mapInstance) return;
   if (kmzLayer) {
     mapInstance.removeLayer(kmzLayer);
     kmzLayer = null;
-    btn.textContent = '📍 Cargar puntos';
-    btn.style.background = 'var(--verde)';
+    if (btn) { btn.textContent = '📍 Cargar puntos'; btn.style.background = 'var(--verde)'; }
     return;
   }
   const efVal = document.getElementById('efSelect').value;
@@ -1443,8 +1446,7 @@ async function loadKmzsForCurrentEf() {
           lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
         }
       }).addTo(mapInstance);
-      btn.textContent = `✓ ${feats.length} puntos — click para ocultar`;
-      btn.style.background = 'var(--guinda)';
+      if (btn) { btn.textContent = `✓ ${feats.length} puntos — click para ocultar`; btn.style.background = 'var(--guinda)'; }
       try { mapInstance.fitBounds(kmzLayer.getBounds().pad(0.2)); } catch(e) {}
       return;
     }
@@ -1452,7 +1454,7 @@ async function loadKmzsForCurrentEf() {
 
   // Fallback: KMZ por proyecto desde CNE
   if (!Object.keys(CNE_INDEX).length) {
-    alert('Sin datos CNE ni geojson Mixtos.');
+    if (!silent) console.warn('Sin datos CNE ni geojson Mixtos');
     return;
   }
   const withKmz = projects.filter(p => {
@@ -1460,7 +1462,7 @@ async function loadKmzsForCurrentEf() {
     return c && c['Archivo KMZ'] && /^https?:\/\//.test(c['Archivo KMZ']);
   });
   if (!withKmz.length) {
-    alert('No hay geometrías disponibles para esta selección.');
+    if (!silent) console.warn('No hay geometrías KMZ para esta selección');
     return;
   }
   btn.textContent = `Cargando 0/${withKmz.length}…`;
