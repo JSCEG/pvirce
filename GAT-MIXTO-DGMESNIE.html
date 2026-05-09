@@ -1159,7 +1159,7 @@ async function loadMap() {
 async function initMap() {
   await loadMap();
   if (!mapInstance) {
-    mapInstance = L.map('mapa', { zoomControl: true, attributionControl: false, preferCanvas: true });
+    mapInstance = L.map('mapa', { zoomControl: true, attributionControl: false, preferCanvas: true, maxZoom: 18, minZoom: 3 });
     mapInstance.setView([24, -102], 4.5);
   }
   // populate tipo dropdown
