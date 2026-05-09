@@ -1545,6 +1545,10 @@ async function initOneMiniMap(div) {
       touchZoom: false, boxZoom: false, keyboard: false
     });
     mini.setView([24, -102], 4);
+    // Basemap satélite Esri (sin API key)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19, crossOrigin: true
+    }).addTo(mini);
     const layer = L.geoJSON(gj, {
       style: { color: '#9B2247', weight: 2, fillColor: '#9B2247', fillOpacity: 0.45 },
       pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#9B2247', fillColor: '#9B2247', fillOpacity: 0.85, weight: 1.5 })
