@@ -485,6 +485,12 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   <label style="font-size:13px;">EF:
     <select id="efSelect"><option>Cargando…</option></select>
   </label>
+  <label style="font-size:13px;">Estatus:
+    <select id="statusSelect"><option value="__ALL__">Todos</option></select>
+  </label>
+  <label style="font-size:13px;">Proyecto:
+    <select id="projectSelect"><option value="__ALL__">Todos</option></select>
+  </label>
   <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
   <button class="secondary" onclick="loadData()">Recargar</button>
   <button class="secondary" onclick="window.print()">Vista PDF</button>
@@ -508,7 +514,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       <div class="eyebrow">Programa Vinculante 2026 — 2040</div>
       <h1>Instalación y Retiro de Centrales Eléctricas</h1>
       <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
-      <div class="subtitle" id="coverEf">Entidad Federativa: <strong>Yucatán</strong></div>
+      <div class="subtitle" id="coverEf"><span id="coverScopeLabel">Entidad Federativa</span>: <strong>Yucatán</strong></div>
       <div class="meta">
         <div><strong>Versión</strong>2026 · v1.0</div>
         <div><strong>Fecha</strong>Mayo 2026</div>
@@ -549,7 +555,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       </div>
 
       <div class="panel accent-verde">
-        <h3>Top 10 proyectos por capacidad instalada</h3>
+        <h3 id="topPanelTitle">Top 10 proyectos por capacidad instalada</h3>
         <div id="topTable" style="overflow:auto"></div>
       </div>
 
@@ -660,6 +666,45 @@ let DATA = [];
 
 function num(x) { const n = parseFloat(String(x).replace(/,/g,'')); return isNaN(n) ? 0 : n; }
 function fmt(n, d=1) { return n.toLocaleString('es-MX', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+function cleanHeader(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
+function field(row, names) {
+  const keys = Object.keys(row || {});
+  for (const name of names) {
+    if (row[name] != null && String(row[name]).trim() !== '') return row[name];
+    const target = cleanHeader(name).toLowerCase();
+    const key = keys.find(k => cleanHeader(k).toLowerCase() === target);
+    if (key && String(row[key]).trim() !== '') return row[key];
+  }
+  return '';
+}
+function isMarked(value) {
+  const v = String(value || '').trim().toLowerCase();
+  return ['1', 'x', '*', 'si', 'sí', 'true', 'verdadero', 'no considerar'].includes(v);
+}
+function findHeaderOffset(text) {
+  const preview = Papa.parse(text, { skipEmptyLines: true }).data || [];
+  const idx = preview.findIndex(row => {
+    const headers = row.map(cleanHeader);
+    return headers.includes('Nombre real') && headers.includes('Entidad Federativa');
+  });
+  return idx >= 0 ? idx : 1;
+}
+function filteredData() {
+  const statusVal = document.getElementById('statusSelect')?.value || '__ALL__';
+  return statusVal === '__ALL__' ? DATA : DATA.filter(r => r.status === statusVal);
+}
+function filteredDataByEfAndStatus() {
+  const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+  const rows = filteredData();
+  return efVal === '__ALL__' ? rows : rows.filter(r => r.ef === efVal);
+}
+function selectedProjectRows() {
+  const projectVal = document.getElementById('projectSelect')?.value || '__ALL__';
+  return projectVal === '__ALL__' ? null : DATA.filter(r => String(r.id) === projectVal);
+}
+function activeDataForMap() {
+  return selectedProjectRows() || filteredData();
+}
 
 function setStatus(msg) {
   const el = document.getElementById('preloaderMsg');
@@ -701,23 +746,33 @@ async function loadData() {
     } catch (e) { lastErr = e; console.warn('Fail', i, e.message); }
   }
   if (!text) throw lastErr || new Error('No data — todas las fuentes fallaron');
-  // First row is title; second row headers
   const lines = text.split(/\r?\n/);
-  const csv = lines.slice(1).join('\n');
+  const csv = lines.slice(findHeaderOffset(text)).join('\n');
   const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-  DATA = parsed.data.map(r => ({
-    status: r['Status_VF'] || '',
-    nombre: r['Nombre real'] || '',
-    anio: parseInt(r['Año']) || null,
-    tipo: r['Tipo_VF'] || r['Tipo'] || '',
-    renovable: r['Renovable'] || '',
-    mw: num(r['MW']),
-    municipio: r['Municipio'] || '',
-    ef: (r['Entidad Federativa'] || '').trim(),
-    firme: (r['Firmes'] || '').trim() === '*'
-  })).filter(r => r.ef && r.anio);
+  DATA = parsed.data.map((r, idx) => ({
+    id: idx,
+    status: field(r, ['Status CMMV2', 'Status_CMMV2', 'Status VF', 'Status_VF', 'Status CMMV', 'Status_CMMV', 'Status']) || 'Sin estatus',
+    statusVf: field(r, ['Status VF', 'Status_VF']),
+    nombre: field(r, ['Nombre real']),
+    anio: parseInt(field(r, ['Año', 'Anio'])) || null,
+    adicion: field(r, ['Adiciones o sustituciones', 'Adiciones o sustituciones']),
+    contratoUnidad: field(r, ['Contrato o unidad', 'Contrato     o unidad', 'Contrato unidad']),
+    tipo: field(r, ['Tipo VF', 'Tipo_VF', 'Tipo']),
+    tipoBase: field(r, ['Tipo']),
+    renovable: field(r, ['Renovable']),
+    mw: num(field(r, ['MW'])),
+    mes: field(r, ['Mes']),
+    gerencia: field(r, ['Gerencia de control']),
+    region: field(r, ['Región de transmisión', 'Region de transmision']),
+    municipio: field(r, ['Municipio']),
+    ef: String(field(r, ['Entidad Federativa'])).trim(),
+    firme: String(field(r, ['Firmes'])).trim() === '*',
+    noConsiderar: isMarked(field(r, ['No considerar', 'No considerar C', 'No considerar CMMV', 'No considerar CMMV2']))
+  })).filter(r => r.ef && r.anio && !r.noConsiderar);
 
   populateEFSelect();
+  populateStatusSelect();
+  populateProjectSelect();
   render();
   initMap().catch(e => console.warn('Mapa no cargo:', e));
   hidePreloader();
@@ -730,17 +785,50 @@ function populateEFSelect() {
   sel.value = '__ALL__';
 }
 
+function populateStatusSelect() {
+  const statuses = [...new Set(DATA.map(r => r.status).filter(Boolean))].sort();
+  const sel = document.getElementById('statusSelect');
+  sel.innerHTML = `<option value="__ALL__">Todos</option>` + statuses.map(s => `<option>${s}</option>`).join('');
+  sel.value = '__ALL__';
+}
+
+function populateProjectSelect() {
+  const current = document.getElementById('projectSelect')?.value || '__ALL__';
+  const candidates = filteredDataByEfAndStatus();
+  const nameCounts = candidates.reduce((acc, r) => {
+    if (r.nombre) acc[r.nombre] = (acc[r.nombre] || 0) + 1;
+    return acc;
+  }, {});
+  const projects = candidates
+    .filter(r => r.nombre)
+    .sort((a,b) => a.nombre.localeCompare(b.nombre, 'es-MX'));
+  const sel = document.getElementById('projectSelect');
+  sel.innerHTML = `<option value="__ALL__">Todos</option>` + projects.map(p => {
+    const label = nameCounts[p.nombre] > 1
+      ? `${p.nombre} · ${p.ef || '—'} · ${p.tipo || '—'} · ${p.anio || '—'} · ${fmt(p.mw,1)} MW`
+      : p.nombre;
+    return `<option value="${p.id}">${label}</option>`;
+  }).join('');
+  sel.value = [...sel.options].some(o => o.value === current) ? current : '__ALL__';
+}
+
 function render() {
   const efVal = document.getElementById('efSelect').value;
-  const isAll = efVal === '__ALL__';
-  const ef = isAll ? 'Nacional' : efVal;
+  const projectRows = selectedProjectRows();
+  const isProject = !!projectRows;
+  const isAll = !isProject && efVal === '__ALL__';
+  const ef = isProject ? projectRows[0]?.nombre || 'Proyecto' : isAll ? 'Nacional' : efVal;
+  document.getElementById('coverScopeLabel').textContent = isProject ? 'Proyecto' : 'Entidad Federativa';
   document.querySelector('#coverEf strong').textContent = ef;
   document.getElementById('contEf').textContent = ef;
-  CURRENT_FOCUS_EF = isAll ? null : ef;
-  if (geoData && mapInstance) drawMap();
+  CURRENT_FOCUS_EF = isProject ? (projectRows[0]?.ef || null) : isAll ? null : ef;
+  if (geoData && mapInstance) {
+    populateMapTipoSelect();
+    drawMap();
+  }
 
-  const all = DATA;
-  const rows = isAll ? DATA : DATA.filter(r => r.ef === efVal);
+  const all = isProject ? DATA : filteredData();
+  const rows = isProject ? projectRows : filteredDataByEfAndStatus();
 
   const totalMW = rows.reduce((s,r) => s + r.mw, 0);
   const totalProj = rows.length;
@@ -750,7 +838,7 @@ function render() {
   const yMin = Math.min(...years), yMax = Math.max(...years);
 
   document.getElementById('kpiMW').textContent = fmt(totalMW, 1);
-  document.getElementById('kpiProj').textContent = totalProj;
+  document.getElementById('kpiProj').textContent = isProject ? 1 : totalProj;
   document.getElementById('kpiPct').textContent = fmt(pct, 2) + '%';
   document.getElementById('kpiHorizon').textContent = isFinite(yMin) ? `${yMin}-${yMax}` : '—';
 
@@ -763,7 +851,9 @@ function render() {
   const topStatus = Object.entries(stats).sort((a,b) => b[1]-a[1])[0];
   const firmes = rows.filter(r => r.firme);
   const firmesMW = firmes.reduce((s,r) => s + r.mw, 0);
-  document.getElementById('narrative').innerHTML = topTipo && topStatus ?
+  document.getElementById('narrative').innerHTML = isProject && rows.length ?
+    `El proyecto <strong>${ef}</strong> se ubica en <strong>${rows[0].municipio || '—'}, ${rows[0].ef || '—'}</strong>, con <strong>${fmt(totalMW,1)} MW</strong> registrados para <strong>${yMin || '—'}</strong>. Su estatus PVIRCE es <strong>${rows[0].status || '—'}</strong>; tecnología: <strong>${[...new Set(rows.map(r => r.tipo).filter(Boolean))].join(', ') || '—'}</strong>; condición firme: <strong>${firmes.length ? 'Sí' : 'No'}</strong>.` :
+    topTipo && topStatus ?
     `En <strong>${ef}</strong>, la capacidad instalada suma <strong>${fmt(totalMW,1)} MW distribuidos en ${totalProj} proyectos</strong>, de los cuales <strong>${firmes.length} son firmes (${fmt(firmesMW,0)} MW)</strong>. La tecnología de mayor peso es <strong>${topTipo[0]}, con ${fmt(topTipo[1],0)} MW</strong>. El estatus dominante por capacidad instalada es <strong>${topStatus[0]}, con ${fmt(topStatus[1],0)} MW</strong>.` :
     `Sin datos para ${ef}.`;
 
@@ -808,7 +898,20 @@ function render() {
   const extraRow = remaining > 0
     ? `<tr style="background:#f7f7f8;font-style:italic"><td colspan="4">+ ${remaining} proyectos restantes</td><td class="mw">${fmt(remainingMW,0)}</td><td>—</td></tr>`
     : '';
-  document.getElementById('topTable').innerHTML = `<table class="proyectos">
+  document.getElementById('topPanelTitle').textContent = isProject ? 'Ficha del proyecto seleccionado' : 'Top 10 proyectos por capacidad instalada';
+  const projectFicha = isProject && rows.length ? `
+    <table class="proyectos">
+      <tbody>
+        <tr><th>Nombre real</th><td>${rows[0].nombre || '—'}</td><th class="mw">MW</th><td class="mw">${fmt(totalMW,1)}</td></tr>
+        <tr><th>Entidad Federativa</th><td>${rows[0].ef || '—'}</td><th>Municipio</th><td>${rows[0].municipio || '—'}</td></tr>
+        <tr><th>Año</th><td>${yMin || '—'}</td><th>Mes</th><td>${rows[0].mes || '—'}</td></tr>
+        <tr><th>Estatus</th><td>${rows[0].status || '—'}</td><th>Firme</th><td>${firmes.length ? 'Sí' : 'No'}</td></tr>
+        <tr><th>Tipo</th><td>${[...new Set(rows.map(r => r.tipo).filter(Boolean))].join(', ') || '—'}</td><th>Renovable</th><td>${[...new Set(rows.map(r => r.renovable).filter(Boolean))].join(', ') || '—'}</td></tr>
+        <tr><th>Contrato/unidad</th><td>${[...new Set(rows.map(r => r.contratoUnidad).filter(Boolean))].join(', ') || '—'}</td><th>Adición/sustitución</th><td>${[...new Set(rows.map(r => r.adicion).filter(Boolean))].join(', ') || '—'}</td></tr>
+        <tr><th>Gerencia de control</th><td>${rows[0].gerencia || '—'}</td><th>Región de transmisión</th><td>${rows[0].region || '—'}</td></tr>
+      </tbody>
+    </table>` : '';
+  document.getElementById('topTable').innerHTML = projectFicha || `<table class="proyectos">
     <thead><tr><th>Proyecto</th><th>Año</th><th>Municipio</th><th>Tipo</th><th class="mw">MW</th><th>Estatus</th></tr></thead>
     <tbody>${top.map(r => `<tr><td>${r.nombre}</td><td>${r.anio}</td><td>${r.municipio||'—'}</td><td>${r.tipo}</td><td class="mw">${fmt(r.mw,0)}</td><td>${r.status}</td></tr>`).join('')}${extraRow}</tbody>
   </table>`;
@@ -888,7 +991,7 @@ function getEfNameFromFeature(f) {
 }
 
 function metricForEf(ef, metric, tipo) {
-  let rows = DATA.filter(r => r.ef === ef);
+  let rows = activeDataForMap().filter(r => r.ef === ef);
   if (tipo && tipo !== '__ALL__') rows = rows.filter(r => r.tipo === tipo);
   switch(metric) {
     case 'proyectos': return rows.length;
@@ -919,13 +1022,18 @@ async function initMap() {
     mapInstance = L.map('mapa', { zoomControl: true, attributionControl: false, preferCanvas: true });
     mapInstance.setView([24, -102], 4.5);
   }
-  // populate tipo dropdown
-  const tipos = [...new Set(DATA.map(r => r.tipo).filter(Boolean))].sort();
-  const selT = document.getElementById('mapTipo');
-  selT.innerHTML = '<option value="__ALL__">Todas</option>' + tipos.map(t => `<option>${t}</option>`).join('');
+  populateMapTipoSelect();
   drawMap();
   document.getElementById('mapMetric').addEventListener('change', drawMap);
   document.getElementById('mapTipo').addEventListener('change', drawMap);
+}
+
+function populateMapTipoSelect() {
+  const tipos = [...new Set(activeDataForMap().map(r => r.tipo).filter(Boolean))].sort();
+  const selT = document.getElementById('mapTipo');
+  const current = selT.value || '__ALL__';
+  selT.innerHTML = '<option value="__ALL__">Todas</option>' + tipos.map(t => `<option>${t}</option>`).join('');
+  selT.value = [...selT.options].some(o => o.value === current) ? current : '__ALL__';
 }
 
 let CURRENT_FOCUS_EF = null; // null = nacional
@@ -1041,7 +1149,7 @@ function showNacionalSummary(metric, tipo, min, max, values) {
 }
 
 function showEfDetail(ef) {
-  const rows = DATA.filter(r => r.ef === ef);
+  const rows = activeDataForMap().filter(r => r.ef === ef);
   document.getElementById('mapEfTitle').textContent = ef;
   if (!rows.length) {
     document.getElementById('mapHint').style.display = '';
@@ -1055,7 +1163,7 @@ function showEfDetail(ef) {
   const ren = rows.filter(r => /renov/i.test(r.renovable)).reduce((s,r)=>s+r.mw, 0);
   const noRen = totalMW - ren;
 
-  const nacionalMW = DATA.reduce((s,r) => s + r.mw, 0);
+  const nacionalMW = activeDataForMap().reduce((s,r) => s + r.mw, 0);
   const pctNal = nacionalMW ? (totalMW/nacionalMW*100) : 0;
 
   const tipos = {};
@@ -1121,9 +1229,23 @@ function showEfDetail(ef) {
   `;
 }
 
-document.getElementById('efSelect').addEventListener('change', render);
+document.getElementById('efSelect').addEventListener('change', () => {
+  populateProjectSelect();
+  render();
+});
+document.getElementById('statusSelect').addEventListener('change', () => {
+  populateProjectSelect();
+  render();
+});
+document.getElementById('projectSelect').addEventListener('change', () => {
+  const rows = selectedProjectRows();
+  if (rows?.length) document.getElementById('efSelect').value = rows[0].ef;
+  populateProjectSelect();
+  render();
+});
 document.getElementById('mapClearEf').addEventListener('click', () => {
   document.getElementById('efSelect').value = '__ALL__';
+  document.getElementById('projectSelect').value = '__ALL__';
   render();
 });
 
@@ -1208,7 +1330,12 @@ async function exportPPT() {
     }
 
     const ef = document.getElementById('efSelect').value;
-    const fname = `PVIRCE-2026-2040_${ef === '__ALL__' ? 'Nacional' : ef.replace(/\s+/g,'-')}.pptx`;
+    const status = document.getElementById('statusSelect').value;
+    const project = document.getElementById('projectSelect').value;
+    const projectRows = selectedProjectRows();
+    const statusPart = status === '__ALL__' ? '' : '_' + status.replace(/[^\w-]+/g, '-');
+    const scopePart = project === '__ALL__' ? (ef === '__ALL__' ? 'Nacional' : ef.replace(/\s+/g,'-')) : (projectRows?.[0]?.nombre || 'Proyecto').replace(/[^\w-]+/g, '-');
+    const fname = `PVIRCE-2026-2040_${scopePart}${project === '__ALL__' ? statusPart : ''}.pptx`;
     await pptx.writeFile({ fileName: fname });
     btn.textContent = '✓ Descargado';
     setTimeout(() => { btn.textContent = originalLabel; btn.disabled = false; }, 2000);
