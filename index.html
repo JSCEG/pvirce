@@ -493,7 +493,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   </label>
   <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
   <button class="secondary" onclick="loadData()">Recargar</button>
-  <button class="secondary" onclick="window.print()">Vista PDF</button>
+  <button class="secondary" onclick="printReport()">Vista PDF</button>
   <button class="primary" id="btnPpt">Descargar PPT</button>
 </div>
 
@@ -705,6 +705,33 @@ function selectedProjectRows() {
 function activeDataForMap() {
   return selectedProjectRows() || filteredData();
 }
+function fileSafe(value) {
+  return String(value || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 90) || 'Sin-nombre';
+}
+function getReportBaseName() {
+  const projectRows = selectedProjectRows();
+  if (projectRows?.length) {
+    return `PVIRCE-2026-2040_DGMESNIE_Proyecto_${fileSafe(projectRows[0].nombre)}`;
+  }
+
+  const ef = document.getElementById('efSelect')?.value || '__ALL__';
+  const status = document.getElementById('statusSelect')?.value || '__ALL__';
+  const parts = ['PVIRCE-2026-2040', 'DGMESNIE'];
+  parts.push(ef === '__ALL__' ? 'Nacional' : `EF_${fileSafe(ef)}`);
+  if (status !== '__ALL__') parts.push(`Estatus_${fileSafe(status)}`);
+  return parts.join('_');
+}
+function updateDocumentTitle() {
+  document.title = getReportBaseName();
+}
+function printReport() {
+  updateDocumentTitle();
+  window.print();
+}
 
 function setStatus(msg) {
   const el = document.getElementById('preloaderMsg');
@@ -818,6 +845,7 @@ function render() {
   const isProject = !!projectRows;
   const isAll = !isProject && efVal === '__ALL__';
   const ef = isProject ? projectRows[0]?.nombre || 'Proyecto' : isAll ? 'Nacional' : efVal;
+  updateDocumentTitle();
   document.getElementById('coverScopeLabel').textContent = isProject ? 'Proyecto' : 'Entidad Federativa';
   document.querySelector('#coverEf strong').textContent = ef;
   document.getElementById('contEf').textContent = ef;
@@ -1329,13 +1357,7 @@ async function exportPPT() {
       slide.addImage({ data: dataUrl, x: 0, y: 0, w: 13.333, h: 7.5 });
     }
 
-    const ef = document.getElementById('efSelect').value;
-    const status = document.getElementById('statusSelect').value;
-    const project = document.getElementById('projectSelect').value;
-    const projectRows = selectedProjectRows();
-    const statusPart = status === '__ALL__' ? '' : '_' + status.replace(/[^\w-]+/g, '-');
-    const scopePart = project === '__ALL__' ? (ef === '__ALL__' ? 'Nacional' : ef.replace(/\s+/g,'-')) : (projectRows?.[0]?.nombre || 'Proyecto').replace(/[^\w-]+/g, '-');
-    const fname = `PVIRCE-2026-2040_${scopePart}${project === '__ALL__' ? statusPart : ''}.pptx`;
+    const fname = `${getReportBaseName()}.pptx`;
     await pptx.writeFile({ fileName: fname });
     btn.textContent = '✓ Descargado';
     setTimeout(() => { btn.textContent = originalLabel; btn.disabled = false; }, 2000);
