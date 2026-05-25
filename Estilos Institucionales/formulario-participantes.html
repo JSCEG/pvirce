@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de Participantes | SENER</title>
+    <meta name="description"
+        content="Formulario institucional para registro de participantes con integración propuesta a Google Sheets y control de duplicados." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Merriweather:wght@400;700;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="css/base-theme.css" />
+    <link rel="stylesheet" href="css/shared-header.css" />
+    <style>
+        body {
+            background:
+                radial-gradient(circle at top right, rgba(165, 127, 44, 0.12), transparent 24%),
+                radial-gradient(circle at bottom left, rgba(30, 91, 79, 0.09), transparent 28%),
+                linear-gradient(180deg, #f7f4ef 0%, #f8f9fa 36%, #ffffff 100%);
+        }
+
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 0 1.5rem;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            width: 320px;
+            height: 320px;
+            top: -120px;
+            right: -80px;
+            background: rgba(155, 34, 71, 0.08);
+            filter: blur(10px);
+        }
+
+        .hero::after {
+            width: 280px;
+            height: 280px;
+            bottom: -140px;
+            left: -80px;
+            background: rgba(30, 91, 79, 0.08);
+            filter: blur(12px);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+
+        .hero-card,
+        .proposal-card,
+        .form-card,
+        .success-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(155, 34, 71, 0.08);
+            border-radius: 1.5rem;
+            box-shadow: 0 22px 50px -30px rgba(31, 41, 55, 0.35);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-card {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(155, 34, 71, 0.08);
+            color: var(--gobmx-guinda);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-title {
+            max-width: 12ch;
+            margin-bottom: 0.9rem;
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            line-height: 1.04;
+            color: var(--gobmx-guinda);
+        }
+
+        .hero-copy {
+            max-width: 62ch;
+            margin-bottom: 1.4rem;
+            font-size: 1rem;
+            color: var(--color-text-secondary);
+        }
+
+        .hero-points {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+        }
+
+        .hero-point {
+            display: flex;
+            gap: 0.8rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: linear-gradient(180deg, rgba(249, 250, 251, 0.96), rgba(255, 255, 255, 0.96));
+            border: 1px solid rgba(229, 231, 235, 0.9);
+        }
+
+        .hero-point i {
+            color: var(--gobmx-dorado);
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+        }
+
+        .hero-point strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--color-text-primary);
+            font-size: 0.94rem;
+        }
+
+        .hero-point span {
+            color: var(--color-text-secondary);
+            font-size: 0.87rem;
+            line-height: 1.45;
+        }
+
+        .proposal-card {
+            padding: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .proposal-card h2 {
+            font-size: 1.35rem;
+            color: var(--gobmx-verde);
+        }
+
+        .proposal-card p,
+        .proposal-card li {
+            font-size: 0.92rem;
+            color: var(--color-text-secondary);
+        }
+
+        .proposal-stack {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .proposal-item {
+            padding: 1rem;
+            border-radius: 1rem;
+            background: rgba(248, 249, 250, 0.9);
+            border-left: 4px solid var(--gobmx-dorado);
+        }
+
+        .proposal-item strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--color-text-primary);
+            font-size: 0.92rem;
+        }
+
+        .main-section {
+            padding: 0 0 3rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .form-card {
+            padding: 1.75rem;
+        }
+
+        .section-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--gobmx-verde);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .section-title {
+            margin-bottom: 0.4rem;
+            color: var(--gobmx-guinda);
+            font-size: 2rem;
+        }
+
+        .section-copy {
+            margin-bottom: 1.6rem;
+            color: var(--color-text-secondary);
+            font-size: 0.96rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem 1rem;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .field-note {
+            display: block;
+            margin-top: 0.45rem;
+            color: var(--color-text-muted);
+            font-size: 0.78rem;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .option-card {
+            position: relative;
+        }
+
+        .option-card input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .option-card label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 1rem;
+            border: 2px solid var(--color-border);
+            border-radius: 1rem;
+            background: #fff;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .option-card input:checked+label {
+            border-color: var(--gobmx-guinda);
+            box-shadow: 0 8px 22px -18px rgba(155, 34, 71, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .option-card strong {
+            color: var(--color-text-primary);
+            font-size: 0.92rem;
+        }
+
+        .option-card span {
+            color: var(--color-text-secondary);
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-top: 0.3rem;
+        }
+
+        .checkbox-row input {
+            margin-top: 0.28rem;
+            accent-color: var(--gobmx-guinda);
+        }
+
+        .checkbox-row label {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 1rem;
+            padding: 0.95rem 1rem;
+            border-radius: 0.9rem;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        .message-success {
+            background: #effaf5;
+            border: 1px solid rgba(30, 91, 79, 0.18);
+            color: var(--gobmx-verde);
+        }
+
+        .actions-row {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .submit-note {
+            color: var(--color-text-muted);
+            font-size: 0.82rem;
+        }
+
+        .btn-primary[disabled] {
+            cursor: wait;
+            opacity: 0.8;
+        }
+
+        .sidebar {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(31, 41, 55, 0.06);
+            border-radius: 1.35rem;
+            padding: 1.35rem;
+            box-shadow: 0 16px 40px -28px rgba(31, 41, 55, 0.35);
+        }
+
+        .sidebar-card h3 {
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            color: var(--gobmx-verde);
+        }
+
+        .sidebar-card p,
+        .sidebar-card li {
+            margin-bottom: 0.7rem;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+        }
+
+        .sidebar-card ul {
+            padding-left: 1.1rem;
+        }
+
+        .status-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(30, 91, 79, 0.08);
+            color: var(--gobmx-verde);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .success-card {
+            display: none;
+            padding: 1.75rem;
+            margin-top: 1.25rem;
+            border: 1px solid rgba(30, 91, 79, 0.12);
+        }
+
+        .success-card.show {
+            display: block;
+        }
+
+        .success-title {
+            margin-bottom: 0.45rem;
+            color: var(--gobmx-verde);
+            font-size: 1.6rem;
+        }
+
+        .success-folio {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin: 0.7rem 0 1rem;
+            padding: 0.5rem 0.8rem;
+            background: rgba(165, 127, 44, 0.12);
+            color: #785b1d;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .site-footer-lite {
+            margin-top: auto;
+            padding: 1.5rem 0 2.2rem;
+            color: var(--color-text-muted);
+            font-size: 0.82rem;
+            text-align: center;
+        }
+
+        .site-footer-lite strong {
+            color: var(--gobmx-guinda);
+        }
+
+        @media (max-width: 980px) {
+
+            .hero-grid,
+            .main-grid,
+            .hero-points,
+            .form-grid,
+            .option-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+
+            .hero-card,
+            .proposal-card,
+            .form-card,
+            .success-card,
+            .sidebar-card {
+                border-radius: 1.15rem;
+            }
+
+            .hero-card,
+            .form-card,
+            .success-card {
+                padding: 1.25rem;
+            }
+
+            .proposal-card,
+            .sidebar-card {
+                padding: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.55rem;
+            }
+
+            .site-header-content {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <div id="page-preloader" class="preloader-overlay active" aria-live="polite" aria-busy="true">
+            <div class="preloader-content">
+                <img src="img/logo_sener.png" alt="SENER" class="preloader-logo" />
+                <div class="preloader-spinner"></div>
+                <p class="preloader-text">Preparando formulario</p>
+                <p class="preloader-subtext">Validando configuraci&oacute;n y cargando interfaz institucional</p>
+                <div class="preloader-dots" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <header class="site-header">
+            <div class="site-container site-header-content">
+                <div class="site-logo-section">
+                    <img src="img/logo_gob.png" alt="Gobierno de M&eacute;xico" class="site-logo-gob" />
+                    <div class="site-logo-separator" aria-hidden="true"></div>
+                    <img src="img/logo_sener.png" alt="Secretar&iacute;a de Energ&iacute;a" class="site-logo-sener" />
+                </div>
+                <div class="site-user-section">
+                    <div class="site-user-info">
+                        <span class="site-user-name">Registro de Participantes</span>
+                        <span class="site-user-role">Propuesta de formulario institucional</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="site-container hero-grid">
+                <article class="hero-card">
+                    <span class="hero-badge">
+                        <i class="bi bi-envelope-paper"></i>
+                        Liga p&uacute;blica para env&iacute;o por correo
+                    </span>
+                    <h1 class="hero-title">Formulario institucional para participantes</h1>
+                    <p class="hero-copy">
+                        Esta propuesta est&aacute; pensada para distribuirse como una liga &uacute;nica por correo,
+                        conservar la identidad visual institucional y registrar las respuestas en Google Sheets con
+                        un control de duplicados desde origen.
+                    </p>
+
+                    <div class="hero-points">
+                        <div class="hero-point">
+                            <i class="bi bi-shield-check"></i>
+                            <div>
+                                <strong>Evita registros repetidos</strong>
+                                <span>Llave &uacute;nica por evento + correo electr&oacute;nico, con revisi&oacute;n
+                                    previa antes de guardar.</span>
+                            </div>
+                        </div>
+                        <div class="hero-point">
+                            <i class="bi bi-file-earmark-spreadsheet"></i>
+                            <div>
+                                <strong>Conectable a Google Sheets</strong>
+                                <span>Puede enviar a Apps Script o a un endpoint intermedio y escribir directo en una
+                                    hoja.</span>
+                            </div>
+                        </div>
+                        <div class="hero-point">
+                            <i class="bi bi-hourglass-split"></i>
+                            <div>
+                                <strong>Con preloader y estados</strong>
+                                <span>La pantalla de carga y los mensajes de confirmaci&oacute;n ya quedan
+                                    integrados.</span>
+                            </div>
+                        </div>
+                        <div class="hero-point">
+                            <i class="bi bi-phone"></i>
+                            <div>
+                                <strong>Listo para m&oacute;vil</strong>
+                                <span>El formulario est&aacute; preparado para abrirse bien desde tel&eacute;fonos y
+                                    correo.</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <aside class="proposal-card">
+                    <h2>Ruta propuesta</h2>
+                    <div class="proposal-stack">
+                        <div class="proposal-item">
+                            <strong>1. Liga p&uacute;blica</strong>
+                            <p>Una sola URL para compartir por correo, con branding SENER y mensaje de contexto.</p>
+                        </div>
+                        <div class="proposal-item">
+                            <strong>2. Validaci&oacute;n antes del guardado</strong>
+                            <p>El cliente env&iacute;a nombre, correo y una clave compuesta `evento + correo
+                                normalizado`.</p>
+                        </div>
+                        <div class="proposal-item">
+                            <strong>3. Escritura controlada en Sheets</strong>
+                            <p>Apps Script revisa si la llave ya existe; si existe rechaza, si no existe inserta y
+                                devuelve folio.</p>
+                        </div>
+                        <div class="proposal-item">
+                            <strong>4. Confirmaci&oacute;n rastreable</strong>
+                            <p>Se regresa un folio visible para el participante y queda guardado con marca de tiempo.
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <main class="main-section">
+            <div class="site-container main-grid">
+                <section>
+                    <article class="form-card">
+                        <span class="section-kicker">
+                            <i class="bi bi-ui-checks-grid"></i>
+                            Formulario base
+                        </span>
+                        <h2 class="section-title">Registro de asistencia</h2>
+                        <p class="section-copy">
+                            Ajusta los campos finales seg&uacute;n el evento y conecta la constante de env&iacute;o a la
+                            hoja
+                            correspondiente. Esta versi&oacute;n ya sirve como propuesta visual y funcional.
+                        </p>
+
+                        <div id="form-message" class="message" role="alert"></div>
+
+                        <form id="participant-form" novalidate>
+                            <input type="hidden" id="event-id" name="eventId" value="SENER-REGISTRO-2026" />
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="fullName">Nombre completo</label>
+                                    <input class="form-input" id="fullName" name="fullName" type="text"
+                                        placeholder="Nombre y apellidos" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="email">Correo electr&oacute;nico</label>
+                                    <input class="form-input" id="email" name="email" type="email"
+                                        placeholder="nombre@institucion.gob.mx" required />
+                                    <span class="field-note">Se propone usar este campo como identificador principal
+                                        para evitar duplicados.</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="institution">Instituci&oacute;n</label>
+                                    <input class="form-input" id="institution" name="institution" type="text"
+                                        placeholder="Dependencia, empresa u organizaci&oacute;n" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="position">Cargo</label>
+                                    <input class="form-input" id="position" name="position" type="text"
+                                        placeholder="Puesto o cargo" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="phone">Tel&eacute;fono de contacto</label>
+                                    <input class="form-input" id="phone" name="phone" type="tel"
+                                        placeholder="10 d&iacute;gitos" inputmode="tel" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="state">Entidad federativa</label>
+                                    <select class="form-select" id="state" name="state" required>
+                                        <option value="">Seleccione una opci&oacute;n</option>
+                                        <option>Aguascalientes</option>
+                                        <option>Baja California</option>
+                                        <option>Baja California Sur</option>
+                                        <option>Campeche</option>
+                                        <option>Chiapas</option>
+                                        <option>Chihuahua</option>
+                                        <option>Ciudad de M&eacute;xico</option>
+                                        <option>Coahuila</option>
+                                        <option>Colima</option>
+                                        <option>Durango</option>
+                                        <option>Estado de M&eacute;xico</option>
+                                        <option>Guanajuato</option>
+                                        <option>Guerrero</option>
+                                        <option>Hidalgo</option>
+                                        <option>Jalisco</option>
+                                        <option>Michoac&aacute;n</option>
+                                        <option>Morelos</option>
+                                        <option>Nayarit</option>
+                                        <option>Nuevo Le&oacute;n</option>
+                                        <option>Oaxaca</option>
+                                        <option>Puebla</option>
+                                        <option>Quer&eacute;taro</option>
+                                        <option>Quintana Roo</option>
+                                        <option>San Luis Potos&iacute;</option>
+                                        <option>Sinaloa</option>
+                                        <option>Sonora</option>
+                                        <option>Tabasco</option>
+                                        <option>Tamaulipas</option>
+                                        <option>Tlaxcala</option>
+                                        <option>Veracruz</option>
+                                        <option>Yucat&aacute;n</option>
+                                        <option>Zacatecas</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label">Modalidad de participaci&oacute;n</label>
+                                    <div class="option-grid">
+                                        <div class="option-card">
+                                            <input id="attendance-inperson" name="attendanceMode" type="radio"
+                                                value="Presencial" required />
+                                            <label for="attendance-inperson">
+                                                <strong>Presencial</strong>
+                                                <span>Para control de acceso y log&iacute;stica en sede.</span>
+                                            </label>
+                                        </div>
+                                        <div class="option-card">
+                                            <input id="attendance-virtual" name="attendanceMode" type="radio"
+                                                value="Virtual" required />
+                                            <label for="attendance-virtual">
+                                                <strong>Virtual</strong>
+                                                <span>Para seguimiento de aforo y comunicaciones previas.</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label" for="comments">Comentarios adicionales</label>
+                                    <textarea class="form-textarea" id="comments" name="comments"
+                                        placeholder="Requerimientos de accesibilidad, alimentaci&oacute;n u observaciones relevantes"></textarea>
+                                </div>
+
+                                <div class="form-group full">
+                                    <div class="checkbox-row">
+                                        <input id="privacy" name="privacy" type="checkbox" required />
+                                        <label for="privacy">Confirmo que la informaci&oacute;n proporcionada es
+                                            correcta y autorizo su uso para fines de control de participaci&oacute;n y
+                                            comunicaci&oacute;n del evento.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="actions-row">
+                                <button id="submit-button" class="btn btn-primary" type="submit">
+                                    <i class="bi bi-send"></i>
+                                    Enviar registro
+                                </button>
+                                <span class="submit-note">Propuesta t&eacute;cnica: escribir en Google Sheets mediante
+                                    Apps Script con revisi&oacute;n previa de llave &uacute;nica.</span>
+                            </div>
+                        </form>
+
+                        <div id="success-card" class="success-card" aria-live="polite">
+                            <h3 class="success-title">Registro enviado</h3>
+                            <p>La interfaz muestra una confirmaci&oacute;n clara y devuelve un folio que puede
+                                reutilizarse en el correo de confirmaci&oacute;n.</p>
+                            <div id="success-folio" class="success-folio">
+                                <i class="bi bi-patch-check"></i>
+                                <span>Folio:</span>
+                            </div>
+                            <p>Si el endpoint detecta que el correo ya fue registrado para el mismo evento, el
+                                formulario muestra un rechazo controlado y no inserta una fila nueva.</p>
+                        </div>
+                    </article>
+                </section>
+
+                <aside class="sidebar">
+                    <article class="sidebar-card">
+                        <h3>Control de duplicados</h3>
+                        <div class="status-chip-row">
+                            <span class="status-chip"><i class="bi bi-1-circle"></i> Llave por evento</span>
+                            <span class="status-chip"><i class="bi bi-2-circle"></i> Correo normalizado</span>
+                            <span class="status-chip"><i class="bi bi-3-circle"></i> Revisi&oacute;n en servidor</span>
+                        </div>
+                        <p>La mejor opci&oacute;n no es bloquear solo en navegador, sino generar una clave &uacute;nica
+                            con el formato `EVENTO|correo@dominio` y verificarla antes de escribir en la hoja.</p>
+                        <p>Adem&aacute;s de eso, esta propuesta agrega un bloqueo local para evitar doble clic o
+                            reenv&iacute;o inmediato desde el mismo navegador.</p>
+                    </article>
+
+                    <article class="sidebar-card">
+                        <h3>Estructura sugerida en Google Sheets</h3>
+                        <ul>
+                            <li>`timestamp` para marca de tiempo del alta.</li>
+                            <li>`folio` para referencia visible al participante.</li>
+                            <li>`eventId` para separar eventos o convocatorias.</li>
+                            <li>`dedupeKey` como campo de control no editable.</li>
+                            <li>Campos de negocio: nombre, instituci&oacute;n, cargo, correo, tel&eacute;fono, modalidad
+                                y comentarios.</li>
+                        </ul>
+                    </article>
+
+                    <article class="sidebar-card">
+                        <h3>Siguiente conexi&oacute;n</h3>
+                        <p>En cuanto compartas la liga del archivo de Google Sheets o la estructura de columnas, se
+                            puede amarrar el formulario a un Apps Script con respuesta JSON y dejarlo operando sobre la
+                            hoja real.</p>
+                        <p>La constante `APPS_SCRIPT_URL` en este archivo es el punto de conexi&oacute;n pensado para
+                            eso.</p>
+                    </article>
+                </aside>
+            </div>
+        </main>
+
+        <footer class="site-footer-lite">
+            <div class="site-container">
+                <p><strong>SENER</strong> · Propuesta de formulario institucional para distribuci&oacute;n por correo y
+                    captura en Google Sheets.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const APPS_SCRIPT_URL = "";
+        const LOCAL_STORAGE_PREFIX = "sener-form-dedupe";
+        const BOOT_DELAY_MS = 900;
+
+        const form = document.getElementById("participant-form");
+        const messageBox = document.getElementById("form-message");
+        const submitButton = document.getElementById("submit-button");
+        const preloader = document.getElementById("page-preloader");
+        const successCard = document.getElementById("success-card");
+        const successFolio = document.getElementById("success-folio");
+
+        window.addEventListener("load", () => {
+            window.setTimeout(() => {
+                preloader.classList.remove("active");
+                preloader.setAttribute("aria-busy", "false");
+            }, BOOT_DELAY_MS);
+        });
+
+        function normalizeEmail(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        function slugify(value) {
+            return String(value || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim()
+                .toUpperCase()
+                .replace(/[^A-Z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        }
+
+        function buildDedupeKey(eventId, email) {
+            return slugify(eventId) + "|" + normalizeEmail(email);
+        }
+
+        function buildFolio(eventId) {
+            const now = new Date();
+            const compactDate = now.toISOString().slice(0, 10).replace(/-/g, "");
+            const random = Math.random().toString(36).slice(2, 7).toUpperCase();
+            return slugify(eventId).slice(0, 10) + "-" + compactDate + "-" + random;
+        }
+
+        function showMessage(type, text) {
+            messageBox.className = "message show " + (type === "error" ? "message-error" : "message-success");
+            messageBox.textContent = text;
+        }
+
+        function clearMessage() {
+            messageBox.className = "message";
+            messageBox.textContent = "";
+        }
+
+        function setSubmitting(isSubmitting) {
+            submitButton.disabled = isSubmitting;
+            submitButton.innerHTML = isSubmitting
+                ? '<i class="bi bi-arrow-repeat"></i> Enviando...'
+                : '<i class="bi bi-send"></i> Enviar registro';
+        }
+
+        function getLocalRecordKey(dedupeKey) {
+            return LOCAL_STORAGE_PREFIX + ":" + dedupeKey;
+        }
+
+        function hasLocalDuplicate(dedupeKey) {
+            return Boolean(window.localStorage.getItem(getLocalRecordKey(dedupeKey)));
+        }
+
+        function persistLocalDuplicate(dedupeKey, folio) {
+            const payload = JSON.stringify({
+                folio,
+                createdAt: new Date().toISOString()
+            });
+            window.localStorage.setItem(getLocalRecordKey(dedupeKey), payload);
+        }
+
+        function collectPayload(formElement) {
+            const formData = new FormData(formElement);
+            const payload = Object.fromEntries(formData.entries());
+            payload.email = normalizeEmail(payload.email);
+            payload.eventId = payload.eventId || "SENER-REGISTRO-2026";
+            payload.dedupeKey = buildDedupeKey(payload.eventId, payload.email);
+            payload.folio = buildFolio(payload.eventId);
+            payload.timestamp = new Date().toISOString();
+            return payload;
+        }
+
+        function validateForm(payload) {
+            if (!payload.fullName || !payload.email || !payload.institution || !payload.state || !payload.attendanceMode) {
+                return "Completa los campos obligatorios antes de enviar el registro.";
+            }
+
+            if (!document.getElementById("privacy").checked) {
+                return "Debes confirmar el aviso de uso de datos para continuar.";
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+                return "Captura un correo electr&oacute;nico v&aacute;lido.";
+            }
+
+            return "";
+        }
+
+        async function submitToEndpoint(payload) {
+            if (!APPS_SCRIPT_URL) {
+                return {
+                    ok: true,
+                    simulated: true,
+                    folio: payload.folio,
+                    message: "Propuesta en modo demostraci&oacute;n. Falta conectar el endpoint real."
+                };
+            }
+
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.ok === false) {
+                throw new Error(data.message || "No fue posible registrar la informaci&oacute;n.");
+            }
+
+            return data;
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearMessage();
+            successCard.classList.remove("show");
+
+            const payload = collectPayload(form);
+            const validationError = validateForm(payload);
+
+            if (validationError) {
+                showMessage("error", validationError);
+                return;
+            }
+
+            if (hasLocalDuplicate(payload.dedupeKey)) {
+                showMessage("error", "Este navegador ya registr&oacute; una respuesta con el mismo correo para este evento. La validaci&oacute;n final debe ocurrir tambi&eacute;n en Apps Script antes de escribir en la hoja.");
+                return;
+            }
+
+            try {
+                setSubmitting(true);
+                const result = await submitToEndpoint(payload);
+                persistLocalDuplicate(payload.dedupeKey, result.folio || payload.folio);
+                showMessage("success", result.message || "Registro enviado correctamente.");
+                successFolio.innerHTML = '<i class="bi bi-patch-check"></i><span>Folio: ' + (result.folio || payload.folio) + '</span>';
+                successCard.classList.add("show");
+                form.reset();
+            } catch (error) {
+                showMessage("error", error.message || "Ocurri&oacute; un error durante el env&iacute;o.");
+            } finally {
+                setSubmitting(false);
+            }
+        });
+    </script>
+</body>
+
+</html>
