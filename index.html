@@ -965,6 +965,40 @@
       font-size: 9px;
     }
 
+    .map-slide .kv-list {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
+    .map-slide .kv-row {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 2px 0;
+      font-size: 10.5px;
+      line-height: 1.25;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .map-slide .kv-row:last-child {
+      border-bottom: 0;
+    }
+
+    .map-slide .kv-k {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .map-slide .kv-v {
+      color: var(--guinda);
+      font-weight: 700;
+      word-break: break-word;
+      min-width: 0;
+    }
+
     .map-slide #mapa {
       width: 100%;
       height: 100%;
@@ -1332,6 +1366,11 @@
             EF</span>
           <span id="mapEfBadge"
             style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
+          <label for="mapProjectSelect"
+            style="margin-left:8px;font-size:11px;color:var(--text);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Cartera:</label>
+          <select id="mapProjectSelect" style="min-width:260px;max-width:420px">
+            <option value="__ALL__">Todos los proyectos</option>
+          </select>
           <button id="mapClearEf"
             style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">←
             Volver a Nacional</button>
@@ -2183,7 +2222,10 @@
             lyr.setStyle({ weight: 2.5, color: '#9B2247' });
           });
           lyr.on('mouseout', () => geoLayer.resetStyle(lyr));
-          lyr.on('click', () => showEfDetail(ef));
+          lyr.on('click', () => {
+            CURRENT_FOCUS_EF = ef;
+            drawMap();
+          });
           lyr.on('dblclick', () => {
             const sel = document.getElementById('efSelect');
             if ([...sel.options].some(o => o.value === ef || o.textContent === ef)) {
@@ -2224,8 +2266,15 @@
         tbE.style.display = 'none';
       }
 
-      if (CURRENT_FOCUS_EF) showEfDetail(CURRENT_FOCUS_EF);
-      else showNacionalSummary(metric, tipo, min, max, values);
+      if (CURRENT_FOCUS_EF) {
+        populateMapProjectSelect(CURRENT_FOCUS_EF);
+        const projectSel = document.getElementById('mapProjectSelect');
+        if (projectSel && projectSel.value !== '__ALL__') showMapProjectDetail(CURRENT_FOCUS_EF, projectSel.value);
+        else showEfDetail(CURRENT_FOCUS_EF);
+      } else {
+        resetMapProjectSelect();
+        showNacionalSummary(metric, tipo, min, max, values);
+      }
 
       // Asegura que Leaflet se recalcule después de cambios de layout/panel.
       scheduleMapResize();
@@ -2247,6 +2296,63 @@
     <div class="stat"><span>Mínimo (>0)</span><strong>${ranked[ranked.length - 1]?.ef || '—'}</strong></div>
     <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.1em;text-transform:uppercase">Top 5</div>
     ${top5.map((v, i) => `<div class="stat"><span>${i + 1}. ${v.ef}</span><strong>${metric === 'proyectos' ? v.value : fmt(v.value, 0) + ' MW'}</strong></div>`).join('')}
+  `;
+    }
+
+    function resetMapProjectSelect() {
+      const sel = document.getElementById('mapProjectSelect');
+      if (!sel) return;
+      sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>';
+      sel.value = '__ALL__';
+      sel.dataset.ef = '';
+      sel.disabled = true;
+    }
+
+    function populateMapProjectSelect(ef) {
+      const sel = document.getElementById('mapProjectSelect');
+      if (!sel) return;
+      const rows = activeDataForMap()
+        .filter(r => r.ef === ef && r.nombre)
+        .sort((a, b) => b.mw - a.mw || a.nombre.localeCompare(b.nombre, 'es-MX'));
+
+      const currentEf = sel.dataset.ef || '';
+      const previous = currentEf === ef ? sel.value : '__ALL__';
+      sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>' + rows.map(r => {
+        const label = `${r.nombre} · ${r.anio || '—'} · ${fmt(r.mw, 2)} MW`;
+        return `<option value="${r.id}">${label}</option>`;
+      }).join('');
+      sel.dataset.ef = ef;
+      sel.disabled = rows.length === 0;
+      sel.value = [...sel.options].some(o => o.value === previous) ? previous : '__ALL__';
+    }
+
+    function showMapProjectDetail(ef, projectId) {
+      const rows = activeDataForMap().filter(r => String(r.id) === String(projectId));
+      if (!rows.length) {
+        showEfDetail(ef);
+        return;
+      }
+      const p = rows[0];
+      const isSaee = techLabel(p.tipo) === 'SAEE Asociado a Centrales Eléctricas';
+
+      document.getElementById('mapEfTitle').textContent = `${ef} · ${p.nombre || 'Proyecto'}`;
+      document.getElementById('mapHint').style.display = 'none';
+      document.getElementById('mapStats').innerHTML = `
+    <div class="ef-detail-grid">
+      <div class="ef-mini-card"><div class="lbl">Proyecto</div><div class="val" style="font-size:12px">${p.nombre || '—'}</div><div class="sub">ID ${p.id}</div></div>
+      <div class="ef-mini-card"><div class="lbl">Capacidad</div><div class="val">${fmt(p.mw, 2)}</div><div class="sub">MW ${isSaee ? '· SAEE' : ''}</div></div>
+      <div class="ef-mini-card"><div class="lbl">Año</div><div class="val">${p.anio || '—'}</div><div class="sub">Mes: ${p.mes || '—'}</div></div>
+      <div class="ef-mini-card"><div class="lbl">Estatus</div><div class="val" style="font-size:12px">${p.status || '—'}</div><div class="sub">Tipo: ${techLabel(p.tipo) || '—'}</div></div>
+    </div>
+
+    <div class="ef-section-title">Detalle</div>
+    <div class="kv-list">
+      <div class="kv-row"><span class="kv-k">Municipio</span><span class="kv-v">${p.municipio || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Entidad</span><span class="kv-v">${p.ef || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Contrato/unidad</span><span class="kv-v">${p.contratoUnidad || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Adición/sustitución</span><span class="kv-v">${p.adicion || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Renovable</span><span class="kv-v">${p.renovable || '—'}</span></div>
+    </div>
   `;
     }
 
@@ -2334,6 +2440,10 @@
     }
 
     document.getElementById('efSelect').addEventListener('change', () => {
+      if (document.getElementById('efSelect').value === '__ALL__') {
+        const projectSel = document.getElementById('projectSelect');
+        if (projectSel) projectSel.value = '__ALL__';
+      }
       populateProjectSelect();
       render();
     });
@@ -2374,6 +2484,12 @@
       document.getElementById('efSelect').value = '__ALL__';
       document.getElementById('projectSelect').value = '__ALL__';
       render();
+    });
+    document.getElementById('mapProjectSelect').addEventListener('change', (ev) => {
+      if (!CURRENT_FOCUS_EF) return;
+      const value = ev.target.value || '__ALL__';
+      if (value === '__ALL__') showEfDetail(CURRENT_FOCUS_EF);
+      else showMapProjectDetail(CURRENT_FOCUS_EF, value);
     });
 
     // =================== PRESENTACION ===================
