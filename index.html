@@ -1402,13 +1402,7 @@
       return ['1', 'x', '*', 'si', 'sí', 'true', 'verdadero', 'no considerar', 'yes', 'y'].includes(v);
     }
     function hasNoConsiderarFlag(row) {
-      const keys = Object.keys(row || {});
-      const noConsiderarKey = keys.find(k => {
-        const normalized = cleanHeader(k).toLowerCase();
-        return normalized.includes('no considerar cmmv') || normalized.includes('no considerar');
-      });
-      if (!noConsiderarKey) return false;
-      return isMarked(row[noConsiderarKey]);
+      return isMarked(field(row, ['No considerar CMMV']));
     }
     function findHeaderOffset(text) {
       const preview = Papa.parse(text, { skipEmptyLines: true }).data || [];
@@ -1439,7 +1433,7 @@
         municipio: field(r, ['Municipio']),
         ef: String(field(r, ['Entidad Federativa'])).trim(),
         firme: String(field(r, ['Firmes'])).trim() === '*',
-        noConsiderar: hasNoConsiderarFlag(r) || isMarked(field(r, ['No considerar', 'No considerar C', 'No considerar CMMV', 'No considerar CMMV2']))
+        noConsiderar: hasNoConsiderarFlag(r)
       };
     }
     function mapRowFromPositionalArray(row, idx) {
@@ -1462,7 +1456,7 @@
         municipio: col(22),
         ef: col(21),
         firme: col(23) === '*',
-        noConsiderar: false
+        noConsiderar: isMarked(col(2))
       };
     }
     function getYearRange() {
@@ -1631,10 +1625,10 @@
         if (headerOffset >= 0) {
           const csv = lines.slice(headerOffset).join('\n');
           const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-          DATA = parsed.data.map(mapRowFromHeaderObject).filter(r => r.ef && r.anio && !r.noConsiderar);
+          DATA = parsed.data.map(mapRowFromHeaderObject).filter(r => r.anio && !r.noConsiderar);
         } else {
           const parsed = Papa.parse(text, { header: false, skipEmptyLines: true });
-          DATA = (parsed.data || []).map(mapRowFromPositionalArray).filter(r => r.ef && r.anio && !r.noConsiderar);
+          DATA = (parsed.data || []).map(mapRowFromPositionalArray).filter(r => r.anio && !r.noConsiderar);
         }
 
         populateEFSelect();
