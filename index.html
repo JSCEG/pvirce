@@ -540,7 +540,7 @@
     .kpi-row {
       padding: 6px 28px 8px;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 12px;
     }
 
@@ -579,6 +579,10 @@
       background: var(--gris);
     }
 
+    .kpi:nth-child(5)::before {
+      background: var(--verde);
+    }
+
     .kpi .value {
       font-family: var(--font-h);
       font-size: 26px;
@@ -599,6 +603,11 @@
 
     .kpi:nth-child(4) .value {
       color: var(--text);
+    }
+
+    .kpi:nth-child(5) .value {
+      color: var(--verde);
+      font-size: 18px;
     }
 
     .kpi .label {
@@ -729,6 +738,14 @@
     table.tech td {
       padding: 4px 8px;
       border-bottom: 1px solid #f0f0f0;
+    }
+
+    table.proyectos.top-list tbody tr:nth-child(even) {
+      background: rgba(155, 34, 71, .075);
+    }
+
+    table.proyectos.top-list tbody tr:nth-child(odd) {
+      background: rgba(155, 34, 71, .028);
     }
 
     table.tech td {
@@ -1245,6 +1262,10 @@
           <div class="value" id="kpiHorizon">—</div>
           <div class="label">Horizonte</div>
         </div>
+        <div class="kpi">
+          <div class="value" id="saeeMW">—</div>
+          <div class="label">SAEE asociado a<br>centrales eléctricas<small id="saeePct">— del total</small></div>
+        </div>
       </div>
 
       <div class="body">
@@ -1270,7 +1291,7 @@
             <div class="chart" id="chartDonut"></div>
           </div>
           <div class="panel accent-dorado">
-            <h3>Capacidad instalada acumulada</h3>
+            <h3>Adiciones por año, proyectos y acumulado</h3>
             <div class="chart" id="chartBar"></div>
           </div>
         </div>
@@ -1381,7 +1402,10 @@
     let DATA = [];
 
     function num(x) { const n = parseFloat(String(x).replace(/,/g, '')); return isNaN(n) ? 0 : n; }
-    function fmt(n, d = 1) { return n.toLocaleString('es-MX', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+    function fmt(n, d = 2) {
+      const digits = Math.max(2, Number.isFinite(d) ? d : 2);
+      return n.toLocaleString('es-MX', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+    }
     function cleanHeader(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
     function field(row, names) {
       const keys = Object.keys(row || {});
@@ -1404,6 +1428,9 @@
     function hasNoConsiderarFlag(row) {
       return isMarked(field(row, ['No considerar CMMV']));
     }
+    function isSustitucion(value) {
+      return /sustit/i.test(String(value ?? '').trim());
+    }
     function findHeaderOffset(text) {
       const preview = Papa.parse(text, { skipEmptyLines: true }).data || [];
       const idx = preview.findIndex(row => {
@@ -1422,6 +1449,7 @@
         nombre: field(r, ['Nombre real']),
         anio: parseInt(field(r, ['Año', 'Anio'])) || null,
         adicion: field(r, ['Adiciones o sustituciones', 'Adiciones o sustituciones']),
+        sustitucion: isSustitucion(field(r, ['Adiciones o sustituciones', 'Adiciones o sustituciones'])),
         contratoUnidad: field(r, ['Contrato o unidad', 'Contrato     o unidad', 'Contrato unidad']),
         tipo: field(r, ['Tipo VF', 'Tipo_VF', 'Tipo']),
         tipoBase: field(r, ['Tipo']),
@@ -1445,6 +1473,7 @@
         nombre: col(10),
         anio: parseInt(col(11)) || null,
         adicion: col(12),
+        sustitucion: isSustitucion(col(12)),
         contratoUnidad: col(13),
         tipo: col(14) || col(15),
         tipoBase: col(15),
@@ -1511,6 +1540,27 @@
     }
     function updateDocumentTitle() {
       document.title = getReportBaseName();
+    }
+    function classifyOwner(status) {
+      return /^CFE/i.test(String(status || '').trim()) ? 'CFE' : 'Particulares';
+    }
+    function techLabel(tipo) {
+      const raw = String(tipo || '').trim().toUpperCase();
+      const labels = {
+        FV: 'Fotovoltaica',
+        EO: 'Eólica',
+        BAT: 'SAEE Asociado a Centrales Eléctricas',
+        CC: 'Ciclo combinado',
+        CCG: 'Ciclo combinado',
+        H: 'Hidráulica',
+        HID: 'Hidráulica',
+        GEO: 'Geotérmica',
+        NUC: 'Nuclear',
+        BIO: 'Bioenergía',
+        BIOMASA: 'Bioenergía',
+        TERMICA: 'Térmica'
+      };
+      return labels[raw] || (tipo ? String(tipo).trim() : '—');
     }
     function printReport() {
       updateDocumentTitle();
@@ -1625,10 +1675,10 @@
         if (headerOffset >= 0) {
           const csv = lines.slice(headerOffset).join('\n');
           const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-          DATA = parsed.data.map(mapRowFromHeaderObject).filter(r => r.anio && !r.noConsiderar);
+          DATA = parsed.data.map(mapRowFromHeaderObject).filter(r => r.anio && !r.noConsiderar && !r.sustitucion);
         } else {
           const parsed = Papa.parse(text, { header: false, skipEmptyLines: true });
-          DATA = (parsed.data || []).map(mapRowFromPositionalArray).filter(r => r.anio && !r.noConsiderar);
+          DATA = (parsed.data || []).map(mapRowFromPositionalArray).filter(r => r.anio && !r.noConsiderar && !r.sustitucion);
         }
 
         populateEFSelect();
@@ -1749,9 +1799,12 @@
       const all = isProject ? DATA : filteredData();
       const rows = isProject ? projectRows : filteredDataByEfAndStatus();
 
-      const totalMW = rows.reduce((s, r) => s + r.mw, 0);
+      const saeeLabel = 'SAEE Asociado a Centrales Eléctricas';
+      const grossMW = rows.reduce((s, r) => s + r.mw, 0);
+      const saeeMW = rows.filter(r => techLabel(r.tipo) === saeeLabel).reduce((s, r) => s + r.mw, 0);
+      const totalMW = grossMW - saeeMW;
       const totalProj = rows.length;
-      const nacionalMW = all.reduce((s, r) => s + r.mw, 0);
+      const nacionalMW = (isProject ? DATA : filteredData()).filter(r => techLabel(r.tipo) !== saeeLabel).reduce((s, r) => s + r.mw, 0);
       const pct = nacionalMW ? (totalMW / nacionalMW * 100) : 0;
       const years = rows.map(r => r.anio).filter(Boolean);
       const yMin = Math.min(...years), yMax = Math.max(...years);
@@ -1770,18 +1823,35 @@
       const topStatus = Object.entries(stats).sort((a, b) => b[1] - a[1])[0];
       const firmes = rows.filter(r => r.firme);
       const firmesMW = firmes.reduce((s, r) => s + r.mw, 0);
+      const capacityRows = rows.filter(r => techLabel(r.tipo) !== saeeLabel);
+      const ownerMW = rows.reduce((acc, r) => {
+        const bucket = classifyOwner(r.status);
+        if (techLabel(r.tipo) !== saeeLabel) acc[bucket] = (acc[bucket] || 0) + r.mw;
+        return acc;
+      }, {});
+      const techMW = capacityRows.reduce((acc, r) => {
+        const label = techLabel(r.tipo);
+        acc[label] = (acc[label] || 0) + r.mw;
+        return acc;
+      }, {});
+      const batMW = saeeMW;
+      const techEntries = Object.entries(techMW).filter(([label]) => label !== saeeLabel);
+      const topTechs = techEntries.sort((a, b) => b[1] - a[1]).slice(0, 3);
+      const topTechsMW = topTechs.reduce((sum, [, mw]) => sum + mw, 0);
+      const topTechsPct = totalMW ? (topTechsMW / totalMW * 100) : 0;
+      const saeePct = grossMW ? (batMW / grossMW * 100) : 0;
       document.getElementById('narrative').innerHTML = isProject && rows.length ?
-        `El proyecto <strong>${ef}</strong> se ubica en <strong>${rows[0].municipio || '—'}, ${rows[0].ef || '—'}</strong>, con <strong>${fmt(totalMW, 1)} MW</strong> registrados para <strong>${yMin || '—'}</strong>. Su estatus PVIRCE es <strong>${rows[0].status || '—'}</strong>; tecnología: <strong>${[...new Set(rows.map(r => r.tipo).filter(Boolean))].join(', ') || '—'}</strong>; condición firme: <strong>${firmes.length ? 'Sí' : 'No'}</strong>.` :
-        topTipo && topStatus ?
-          `En <strong>${ef}</strong>, la capacidad instalada suma <strong>${fmt(totalMW, 1)} MW distribuidos en ${totalProj} proyectos</strong>, de los cuales <strong>${firmes.length} son firmes (${fmt(firmesMW, 0)} MW)</strong>. La tecnología de mayor peso es <strong>${topTipo[0]}, con ${fmt(topTipo[1], 0)} MW</strong>. El estatus dominante por capacidad instalada es <strong>${topStatus[0]}, con ${fmt(topStatus[1], 0)} MW</strong>.` :
+        `El proyecto <strong>${ef}</strong> se ubica en <strong>${rows[0].municipio || '—'}, ${rows[0].ef || '—'}</strong>, con <strong>${fmt(totalMW, 1)} MW netos</strong> registrados para <strong>${yMin || '—'}</strong>. Su estatus PVIRCE es <strong>${rows[0].status || '—'}</strong>; tecnología: <strong>${[...new Set(capacityRows.map(r => techLabel(r.tipo)).filter(Boolean))].join(', ') || '—'}</strong>; condición firme: <strong>${firmes.length ? 'Sí' : 'No'}</strong>.` :
+        topTipo && topStatus && topTechs.length >= 3 ?
+          `El Sistema Eléctrico Nacional tiene una capacidad instalada neta de <strong>${fmt(totalMW, 0)} MW</strong> distribuidos en <strong>${totalProj} proyectos</strong>, de los cuales <strong>${fmt(ownerMW.CFE || 0, 0)} MW</strong> se desarrollarán por la CFE y <strong>${fmt(ownerMW.Particulares || 0, 0)} MW</strong> por particulares. Las tecnologías principales son <strong>${topTechs[0][0]} con ${fmt(topTechs[0][1], 0)} MW</strong>, <strong>${topTechs[1][0]} con ${fmt(topTechs[1][1], 0)} MW</strong> y <strong>${topTechs[2][0]} con ${fmt(topTechs[2][1], 0)} MW</strong>, concentrando <strong>${fmt(topTechsPct, 1)}%</strong> del total neto. El SAEE asociado a centrales eléctricas aporta <strong>${fmt(batMW, 0)} MW</strong> (${fmt(saeePct, 1)}% del bruto).` :
           `Sin datos para ${ef}.`;
 
       // Trayectoria anual stacked col
-      const allYears = [...new Set(rows.map(r => r.anio))].sort();
-      const allTipos = [...new Set(rows.map(r => r.tipo))].sort();
+      const allYears = [...new Set(capacityRows.map(r => r.anio))].sort();
+      const allTipos = [...new Set(capacityRows.map(r => r.tipo))].sort();
       const series = allTipos.map(t => ({
         name: t,
-        data: allYears.map(y => +rows.filter(r => r.anio === y && r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(1))
+        data: allYears.map(y => +capacityRows.filter(r => r.anio === y && r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(2))
       }));
 
       if (typeof Highcharts !== 'undefined') {
@@ -1792,26 +1862,38 @@
           legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
           plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 30 ? this.y + ' MW' : ''; } } } },
           series: series,
-          tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.1f} MW<br>' }
+          tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.2f} MW<br>' }
         });
 
-        // Tech table con % participación estatal
-        const techRows = Object.entries(tipos).sort((a, b) => b[1] - a[1])
+        // Tech table sin SAEE, para mantenerlo separado en su propio recuadro
+        let techRunningMW = 0;
+        const techRows = Object.entries(tipos)
+          .filter(([t]) => techLabel(t) !== saeeLabel)
+          .sort((a, b) => b[1] - a[1])
           .map(([t, m]) => {
+            techRunningMW += m;
             const pctEf = totalMW ? (m / totalMW * 100) : 0;
-            return `<tr><td>${t}</td><td class="mw">${fmt(m, 1)}</td><td class="mw">${fmt(pctEf, 1)}%</td></tr>`;
+            const techRunningPct = totalMW ? (techRunningMW / totalMW * 100) : 0;
+            return `<tr><td>${techLabel(t)}</td><td class="mw">${fmt(m, 1)}</td><td class="mw">${fmt(pctEf, 1)}%</td><td class="mw">${fmt(techRunningMW, 1)}</td><td class="mw">${fmt(techRunningPct, 1)}%</td></tr>`;
           }).join('');
-        const totalPct = '100.0%';
+        const techTotalMW = Object.entries(tipos)
+          .filter(([t]) => techLabel(t) !== saeeLabel)
+          .reduce((sum, [, m]) => sum + m, 0);
+        const techTotalPct = totalMW ? (techTotalMW / totalMW * 100) : 0;
         document.getElementById('techTable').innerHTML = `<table class="tech">
-    <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% EF</th></tr></thead>
+    <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% EF</th><th class="mw">Acumulado MW</th><th class="mw">Acumulado %</th></tr></thead>
     <tbody>${techRows}</tbody>
     <tfoot><tr style="border-top:2px solid var(--guinda);font-weight:700;background:#faf3f5">
-      <td>TOTAL</td><td class="mw">${fmt(totalMW, 1)}</td><td class="mw">${totalPct}</td>
+      <td>TOTAL sin SAEE</td><td class="mw">${fmt(techTotalMW, 1)}</td><td class="mw">${fmt(techTotalPct, 1)}%</td><td class="mw">${fmt(techTotalMW, 1)}</td><td class="mw">${fmt(techTotalPct, 1)}%</td>
     </tr></tfoot>
   </table>`;
+        const saeeMWEl = document.getElementById('saeeMW');
+        const saeePctEl = document.getElementById('saeePct');
+        if (saeeMWEl) saeeMWEl.textContent = `${fmt(batMW, 0)} MW`;
+        if (saeePctEl) saeePctEl.textContent = `${fmt(saeePct, 1)}% del bruto`;
 
         // Top N (10 + caption con total)
-        const sorted = [...rows].sort((a, b) => b.mw - a.mw);
+        const sorted = [...capacityRows].sort((a, b) => b.mw - a.mw);
         const top = sorted.slice(0, 10);
         const remaining = sorted.length - top.length;
         const remainingMW = sorted.slice(10).reduce((s, r) => s + r.mw, 0);
@@ -1831,28 +1913,105 @@
         <tr><th>Gerencia de control</th><td>${rows[0].gerencia || '—'}</td><th>Región de transmisión</th><td>${rows[0].region || '—'}</td></tr>
       </tbody>
     </table>` : '';
-        document.getElementById('topTable').innerHTML = projectFicha || `<table class="proyectos">
+        document.getElementById('topTable').innerHTML = projectFicha || `<table class="proyectos top-list">
     <thead><tr><th>Proyecto</th><th>Año</th><th>Municipio</th><th>Tipo</th><th class="mw">MW</th><th>Estatus</th></tr></thead>
     <tbody>${top.map(r => `<tr><td>${r.nombre}</td><td>${r.anio}</td><td>${r.municipio || '—'}</td><td>${r.tipo}</td><td class="mw">${fmt(r.mw, 0)}</td><td>${r.status}</td></tr>`).join('')}${extraRow}</tbody>
   </table>`;
 
         // Donut by status
-        const donutData = Object.entries(stats).map(([k, v]) => ({ name: k, y: +v.toFixed(1) }));
+        const donutData = Object.entries(stats).map(([k, v]) => ({ name: k, y: +v.toFixed(2) }));
         Highcharts.chart('chartDonut', {
           chart: { type: 'pie', backgroundColor: 'transparent' },
-          plotOptions: { pie: { innerSize: '60%', borderWidth: 1, dataLabels: { enabled: true, style: { fontSize: '9px' }, format: '<b>{point.name}</b><br>{point.percentage:.1f}% · {point.y:.0f} MW' } } },
+          plotOptions: { pie: { innerSize: '60%', borderWidth: 1, dataLabels: { enabled: true, style: { fontSize: '9px' }, format: '<b>{point.name}</b><br>{point.percentage:.2f}% · {point.y:.2f} MW' } } },
           series: [{ name: 'MW', data: donutData }],
-          tooltip: { pointFormat: '<b>{point.y:.1f} MW</b> ({point.percentage:.1f}%)' }
+          tooltip: { pointFormat: '<b>{point.y:.2f} MW</b> ({point.percentage:.2f}%)' }
         });
 
-        // Horizontal bar capacity stacked
+        // Adiciones anuales + acumulado neto
+        const yearSeries = [...new Set(capacityRows.map(r => r.anio).filter(Boolean))].sort((a, b) => a - b);
+        const annualMW = yearSeries.map(y => +capacityRows.filter(r => r.anio === y).reduce((s, r) => s + r.mw, 0).toFixed(2));
+        const annualProjects = yearSeries.map(y => capacityRows.filter(r => r.anio === y).length);
+        const cumulativeMW = annualMW.reduce((acc, mw, idx) => {
+          acc.push((idx ? acc[idx - 1] : 0) + mw);
+          return acc;
+        }, []);
+
         Highcharts.chart('chartBar', {
-          chart: { type: 'bar', backgroundColor: 'transparent' },
-          xAxis: { categories: [ef], labels: { style: { fontSize: '9px' } } },
-          yAxis: { title: { text: 'MW', style: { fontSize: '9px' } }, labels: { style: { fontSize: '9px' } } },
-          legend: { itemStyle: { fontSize: '9px' } },
-          plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 50 ? Math.round(this.y) : ''; } } } },
-          series: allTipos.map(t => ({ name: t, data: [+rows.filter(r => r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(1)] }))
+          chart: { backgroundColor: 'transparent', spacingTop: 10 },
+          title: { text: null },
+          xAxis: {
+            categories: yearSeries,
+            crosshair: true,
+            lineColor: '#E5E5E5',
+            labels: { style: { fontSize: '9px' } }
+          },
+          yAxis: [{
+            title: { text: 'MW', style: { fontSize: '9px' } },
+            gridLineColor: '#f0f0f0',
+            labels: { style: { fontSize: '9px' } }
+          }, {
+            title: { text: 'Proyectos', style: { fontSize: '9px' } },
+            labels: { style: { fontSize: '9px' } },
+            opposite: true,
+            gridLineWidth: 0
+          }],
+          tooltip: { shared: true },
+          plotOptions: {
+            column: {
+              borderWidth: 0,
+              color: 'rgba(155, 34, 71, .78)',
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: 'bold' },
+                formatter: function () { return this.y > 0 ? fmt(this.y, 0) : ''; }
+              }
+            },
+            line: {
+              marker: { enabled: true, radius: 3 },
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: 'bold' },
+                formatter: function () { return this.point.index === this.series.data.length - 1 ? fmt(this.y, 0) : ''; }
+              }
+            },
+            series: {
+              states: { inactive: { opacity: 1 } }
+            }
+          },
+          legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
+          series: [
+            {
+              type: 'column',
+              name: 'Adición anual neta',
+              data: annualMW,
+              yAxis: 0
+            },
+            {
+              type: 'line',
+              name: 'Acumulado neto',
+              data: cumulativeMW,
+              color: '#1E5B4F',
+              lineWidth: 2.5,
+              yAxis: 0
+            },
+            {
+              type: 'column',
+              name: 'Proyectos por año',
+              data: annualProjects,
+              color: 'rgba(165, 127, 44, .72)',
+              borderWidth: 0,
+              pointPadding: 0.25,
+              groupPadding: 0.18,
+              maxPointWidth: 18,
+              yAxis: 1,
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: 'bold' },
+                formatter: function () { return this.y > 0 ? this.y : ''; }
+              },
+              tooltip: { valueSuffix: ' proyectos' }
+            }
+          ]
         });
       }
     }
@@ -2100,33 +2259,35 @@
         document.getElementById('mapStats').innerHTML = '';
         return;
       }
-      const totalMW = rows.reduce((s, r) => s + r.mw, 0);
-      const firmes = rows.filter(r => r.firme);
+      const saeeLabel = 'SAEE Asociado a Centrales Eléctricas';
+      const capacityRows = rows.filter(r => techLabel(r.tipo) !== saeeLabel);
+      const totalMW = capacityRows.reduce((s, r) => s + r.mw, 0);
+      const firmes = capacityRows.filter(r => r.firme);
       const firmesMW = firmes.reduce((s, r) => s + r.mw, 0);
-      const ren = rows.filter(r => /renov/i.test(r.renovable)).reduce((s, r) => s + r.mw, 0);
+      const ren = capacityRows.filter(r => /renov/i.test(r.renovable)).reduce((s, r) => s + r.mw, 0);
       const noRen = totalMW - ren;
 
-      const nacionalMW = activeDataForMap().reduce((s, r) => s + r.mw, 0);
+      const nacionalMW = activeDataForMap().filter(r => techLabel(r.tipo) !== saeeLabel).reduce((s, r) => s + r.mw, 0);
       const pctNal = nacionalMW ? (totalMW / nacionalMW * 100) : 0;
 
       const tipos = {};
-      rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo] || 0) + r.mw; });
+      capacityRows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo] || 0) + r.mw; });
       const tiposSorted = Object.entries(tipos).sort((a, b) => b[1] - a[1]);
       const maxTipoMW = tiposSorted[0]?.[1] || 1;
 
       const stats = {};
-      rows.forEach(r => { stats[r.status] = (stats[r.status] || 0) + r.mw; });
+      capacityRows.forEach(r => { stats[r.status] = (stats[r.status] || 0) + r.mw; });
       const statsSorted = Object.entries(stats).sort((a, b) => b[1] - a[1]);
 
       const munis = {};
-      rows.forEach(r => { if (r.municipio) munis[r.municipio] = (munis[r.municipio] || 0) + r.mw; });
+      capacityRows.forEach(r => { if (r.municipio) munis[r.municipio] = (munis[r.municipio] || 0) + r.mw; });
       const munisSorted = Object.entries(munis).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
-      const years = rows.map(r => r.anio).filter(Boolean);
+      const years = capacityRows.map(r => r.anio).filter(Boolean);
       const horizonte = `${Math.min(...years)}–${Math.max(...years)}`;
 
       const byYear = {};
-      rows.forEach(r => { byYear[r.anio] = (byYear[r.anio] || 0) + r.mw; });
+      capacityRows.forEach(r => { byYear[r.anio] = (byYear[r.anio] || 0) + r.mw; });
       const yearsSorted = Object.keys(byYear).sort();
       const maxYearMW = Math.max(...Object.values(byYear), 1);
 
