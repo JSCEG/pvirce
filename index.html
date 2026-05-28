@@ -1344,6 +1344,11 @@
 
       <div class="map-toolbar" id="mapToolbar">
         <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1">
+          <label for="mapScope">Nivel:</label>
+          <select id="mapScope">
+            <option value="ef">Entidad Federativa</option>
+            <option value="gerencia">Gerencia de control</option>
+          </select>
           <label for="mapMetric">Métrica:</label>
           <select id="mapMetric">
             <option value="capacidad">Capacidad instalada MW</option>
@@ -1362,7 +1367,8 @@
           </div>
         </div>
         <div id="mapToolbarEf" style="display:none;flex:1;align-items:center;gap:10px;font-size:12px;color:var(--text)">
-          <span style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle
+          <span id="mapFocusModeLabel"
+            style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle
             EF</span>
           <span id="mapEfBadge"
             style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
@@ -1830,7 +1836,7 @@
       }
       document.getElementById('contEf').textContent = ef;
       CURRENT_FOCUS_EF = isProject ? (projectRows[0]?.ef || null) : isAll ? null : ef;
-      if (geoData && mapInstance) {
+      if ((geoDataEf || geoDataGerencias) && mapInstance) {
         populateMapTipoSelect();
         drawMap();
       }
@@ -2056,9 +2062,10 @@
     }
 
     // =================== MAPA ===================
-    const GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
+    const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
+    const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
     const SATELLITE_TILES_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-    let mapInstance = null, geoLayer = null, geoData = null, satelliteLayer = null;
+    let mapInstance = null, geoLayer = null, geoDataEf = null, geoDataGerencias = null, satelliteLayer = null;
     let mapResizeRaf = null, mapResizeTimer = null;
     const RAMP = ['#f7e3ea', '#e6b8c9', '#d28aa6', '#b85979', '#9B2247', '#6a172f'];
 
@@ -2119,13 +2126,60 @@
       return geoName;
     }
 
+    const GERENCIA_FEATURE_TO_CODE = {
+      'gerenciadecontrolregionalpeninsular': 'PEN',
+      'gerenciadecontrolregionalbajacaliforniasur': 'BCS',
+      'gerenciadecontrolregionaloriental': 'ORI',
+      'gerenciadecontrolregionalcentral': 'CEL',
+      'gerenciadecontrolregionaloccidental': 'OCC',
+      'gerenciadecontrolregionalmulege': 'MUL',
+      'gerenciadecontrolregionalnoroeste': 'NOR',
+      'gerenciadecontrolregionalbajacalifornia': 'BC',
+      'gerenciadecontrolregionalnorte': 'NTE',
+      'gerenciadecontrolregionalnoreste': 'NES'
+    };
+
+    function normGerencia(s) {
+      return (s || '').toUpperCase().trim().replace(/\s+/g, '');
+    }
+
+    function getGerenciaNameFromFeature(f) {
+      const p = f.properties || {};
+      return p.Field1 || p.field1 || p.NOMBRE || p.name || p.NAME || '';
+    }
+
+    function resolveGerencia(geoName, csvIndex) {
+      const normalized = normEf(geoName);
+      const code = GERENCIA_FEATURE_TO_CODE[normalized] || '';
+      if (code && csvIndex[normGerencia(code)]) return code;
+      return code || geoName;
+    }
+
+    function getMapScope() {
+      return document.getElementById('mapScope')?.value === 'gerencia' ? 'gerencia' : 'ef';
+    }
+
+    function getScopeLabel(scope) {
+      return scope === 'gerencia' ? 'Gerencia de control' : 'Entidad Federativa';
+    }
+
+    function rowsForScope(scope, key) {
+      if (!key) return [];
+      const rows = activeDataForMap();
+      if (scope === 'gerencia') {
+        const target = normGerencia(key);
+        return rows.filter(r => normGerencia(r.gerencia) === target);
+      }
+      return rows.filter(r => r.ef === key);
+    }
+
     function getEfNameFromFeature(f) {
       const p = f.properties || {};
       return p.NOM_ENT || p.NOMGEO || p.ENTIDAD || p.nom_ent || p.estado || p.name || p.NAME || '';
     }
 
-    function metricForEf(ef, metric, tipo) {
-      let rows = activeDataForMap().filter(r => r.ef === ef);
+    function metricForScope(scope, key, metric, tipo) {
+      let rows = rowsForScope(scope, key);
       if (tipo && tipo !== '__ALL__') rows = rows.filter(r => r.tipo === tipo);
       switch (metric) {
         case 'proyectos': return rows.length;
@@ -2143,15 +2197,21 @@
       return RAMP[idx];
     }
 
-    async function loadMap() {
-      if (geoData) return geoData;
-      const r = await fetch(GEOJSON_URL);
-      geoData = await r.json();
-      return geoData;
+    async function loadMap(scope) {
+      if (scope === 'gerencia') {
+        if (geoDataGerencias) return geoDataGerencias;
+        const rg = await fetch(GEOJSON_GERENCIAS_URL);
+        geoDataGerencias = await rg.json();
+        return geoDataGerencias;
+      }
+      if (geoDataEf) return geoDataEf;
+      const r = await fetch(GEOJSON_EF_URL);
+      geoDataEf = await r.json();
+      return geoDataEf;
     }
 
     async function initMap() {
-      await loadMap();
+      await loadMap(getMapScope());
       if (!mapInstance) {
         mapInstance = L.map('mapa', { zoomControl: true, attributionControl: true, preferCanvas: true });
         satelliteLayer = L.tileLayer(SATELLITE_TILES_URL, {
@@ -2164,6 +2224,13 @@
       drawMap();
       document.getElementById('mapMetric').addEventListener('change', drawMap);
       document.getElementById('mapTipo').addEventListener('change', drawMap);
+      document.getElementById('mapScope').addEventListener('change', async () => {
+        CURRENT_FOCUS_EF = null;
+        CURRENT_FOCUS_GERENCIA = null;
+        resetMapProjectSelect();
+        await loadMap(getMapScope());
+        drawMap();
+      });
     }
 
     function populateMapTipoSelect() {
@@ -2175,31 +2242,41 @@
     }
 
     let CURRENT_FOCUS_EF = null; // null = nacional
+    let CURRENT_FOCUS_GERENCIA = null; // null = nacional
 
     function drawMap() {
+      const scope = getMapScope();
+      const geoData = scope === 'gerencia' ? geoDataGerencias : geoDataEf;
+      if (!geoData) return;
       const metric = document.getElementById('mapMetric').value;
       const tipo = document.getElementById('mapTipo').value;
-      const efIndex = {};
-      [...new Set(DATA.map(r => r.ef))].forEach(ef => { efIndex[normEf(ef)] = ef; });
+      const index = {};
+      if (scope === 'gerencia') {
+        [...new Set(DATA.map(r => normGerencia(r.gerencia)).filter(Boolean))].forEach(g => { index[g] = g; });
+      } else {
+        [...new Set(DATA.map(r => r.ef))].forEach(ef => { index[normEf(ef)] = ef; });
+      }
 
       const values = {};
       geoData.features.forEach(f => {
-        const geoName = getEfNameFromFeature(f);
-        const matchedEf = resolveEf(geoName, efIndex);
-        values[geoName] = { ef: matchedEf, value: metricForEf(matchedEf, metric, tipo) };
+        const geoName = scope === 'gerencia' ? getGerenciaNameFromFeature(f) : getEfNameFromFeature(f);
+        const matchedKey = scope === 'gerencia' ? resolveGerencia(geoName, index) : resolveEf(geoName, index);
+        values[geoName] = { key: matchedKey, value: metricForScope(scope, matchedKey, metric, tipo) };
       });
       const allVals = Object.values(values).map(v => v.value).filter(v => v > 0);
       const min = Math.min(...allVals, 0);
       const max = Math.max(...allVals, 1);
 
-      const focusNorm = CURRENT_FOCUS_EF ? normEf(CURRENT_FOCUS_EF) : null;
+      const focusKey = scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF;
+      const focusNorm = focusKey ? (scope === 'gerencia' ? normGerencia(focusKey) : normEf(focusKey)) : null;
 
       if (geoLayer) mapInstance.removeLayer(geoLayer);
       geoLayer = L.geoJSON(geoData, {
         style: f => {
-          const geoName = getEfNameFromFeature(f);
+          const geoName = scope === 'gerencia' ? getGerenciaNameFromFeature(f) : getEfNameFromFeature(f);
           const v = values[geoName];
-          const isFocus = focusNorm && normEf(geoName) === focusNorm;
+          const geoNorm = scope === 'gerencia' ? normGerencia(v?.key || '') : normEf(geoName);
+          const isFocus = focusNorm && geoNorm === focusNorm;
           if (focusNorm && !isFocus) {
             return { fillColor: '#e8e8ea', weight: 0.4, color: '#bbb', fillOpacity: 0.25, opacity: 0.4 };
           }
@@ -2212,24 +2289,29 @@
           };
         },
         onEachFeature: (f, lyr) => {
-          const geoName = getEfNameFromFeature(f);
+          const geoName = scope === 'gerencia' ? getGerenciaNameFromFeature(f) : getEfNameFromFeature(f);
           const v = values[geoName];
-          const ef = v?.ef || geoName;
+          const focusValue = v?.key || geoName;
           const fmtV = metric === 'proyectos' ? (v?.value || 0) : fmt(v?.value || 0, 1) + ' MW';
-          lyr.bindTooltip(`<strong>${ef}</strong>${fmtV}`, { className: 'ef-tip', sticky: true });
+          lyr.bindTooltip(`<strong>${focusValue}</strong>${fmtV}`, { className: 'ef-tip', sticky: true });
           lyr.on('mouseover', () => {
-            if (focusNorm && normEf(geoName) !== focusNorm) return;
+            if (focusNorm) {
+              const hoverNorm = scope === 'gerencia' ? normGerencia(v?.key || '') : normEf(geoName);
+              if (hoverNorm !== focusNorm) return;
+            }
             lyr.setStyle({ weight: 2.5, color: '#9B2247' });
           });
           lyr.on('mouseout', () => geoLayer.resetStyle(lyr));
           lyr.on('click', () => {
-            CURRENT_FOCUS_EF = ef;
+            if (scope === 'gerencia') CURRENT_FOCUS_GERENCIA = focusValue;
+            else CURRENT_FOCUS_EF = focusValue;
             drawMap();
           });
           lyr.on('dblclick', () => {
+            if (scope !== 'ef') return;
             const sel = document.getElementById('efSelect');
-            if ([...sel.options].some(o => o.value === ef || o.textContent === ef)) {
-              sel.value = ef; render();
+            if ([...sel.options].some(o => o.value === focusValue || o.textContent === focusValue)) {
+              sel.value = focusValue; render();
             }
           });
         }
@@ -2238,7 +2320,14 @@
       // zoom: focus → fit selected; nacional → full bounds
       try {
         if (focusNorm) {
-          const focusFeat = geoData.features.find(f => normEf(getEfNameFromFeature(f)) === focusNorm);
+          const focusFeat = geoData.features.find(f => {
+            if (scope === 'gerencia') {
+              const name = getGerenciaNameFromFeature(f);
+              const key = resolveGerencia(name, index);
+              return normGerencia(key) === focusNorm;
+            }
+            return normEf(getEfNameFromFeature(f)) === focusNorm;
+          });
           if (focusFeat) {
             const tmp = L.geoJSON(focusFeat);
             mapInstance.fitBounds(tmp.getBounds(), { padding: [20, 20] });
@@ -2253,12 +2342,14 @@
       const titleEl = document.getElementById('mapSlideTitle');
       const tbN = document.getElementById('mapToolbarNacional');
       const tbE = document.getElementById('mapToolbarEf');
-      if (CURRENT_FOCUS_EF) {
+      const focusModeLabel = document.getElementById('mapFocusModeLabel');
+      if (focusModeLabel) focusModeLabel.textContent = scope === 'gerencia' ? 'Detalle Gerencia' : 'Detalle EF';
+      if (focusKey) {
         slideEl.classList.add('focused');
-        titleEl.textContent = `${CURRENT_FOCUS_EF} — detalle`;
+        titleEl.textContent = `${focusKey} — detalle`;
         tbN.style.display = 'none';
         tbE.style.display = 'flex';
-        document.getElementById('mapEfBadge').textContent = CURRENT_FOCUS_EF;
+        document.getElementById('mapEfBadge').textContent = focusKey;
       } else {
         slideEl.classList.remove('focused');
         titleEl.textContent = 'Vista nacional';
@@ -2266,21 +2357,21 @@
         tbE.style.display = 'none';
       }
 
-      if (CURRENT_FOCUS_EF) {
-        populateMapProjectSelect(CURRENT_FOCUS_EF);
+      if (focusKey) {
+        populateMapProjectSelect(scope, focusKey);
         const projectSel = document.getElementById('mapProjectSelect');
-        if (projectSel && projectSel.value !== '__ALL__') showMapProjectDetail(CURRENT_FOCUS_EF, projectSel.value);
-        else showEfDetail(CURRENT_FOCUS_EF);
+        if (projectSel && projectSel.value !== '__ALL__') showMapProjectDetail(scope, focusKey, projectSel.value);
+        else showScopeDetail(scope, focusKey);
       } else {
         resetMapProjectSelect();
-        showNacionalSummary(metric, tipo, min, max, values);
+        showNacionalSummary(scope, metric, tipo, min, max, values);
       }
 
       // Asegura que Leaflet se recalcule después de cambios de layout/panel.
       scheduleMapResize();
     }
 
-    function showNacionalSummary(metric, tipo, min, max, values) {
+    function showNacionalSummary(scope, metric, tipo, min, max, values) {
       const total = Object.values(values).reduce((s, v) => s + (v.value || 0), 0);
       const ranked = Object.values(values).filter(v => v.value > 0).sort((a, b) => b.value - a.value);
       const top5 = ranked.slice(0, 5);
@@ -2288,14 +2379,14 @@
       const metricLbl = { capacidad: 'MW capacidad instalada', proyectos: 'proyectos', firmesMW: 'MW firmes', renovableMW: 'MW renovables' }[metric];
       document.getElementById('mapEfTitle').textContent = 'Vista nacional';
       document.getElementById('mapHint').style.display = '';
-      document.getElementById('mapHint').textContent = `Métrica: ${metricLbl} · ${tipoLbl}. Click una entidad para detalle.`;
+      document.getElementById('mapHint').textContent = `Métrica: ${metricLbl} · ${tipoLbl}. Click una ${scope === 'gerencia' ? 'gerencia' : 'entidad'} para detalle.`;
       document.getElementById('mapStats').innerHTML = `
     <div class="stat"><span>Total nacional</span><strong>${metric === 'proyectos' ? total : fmt(total, 1) + ' MW'}</strong></div>
-    <div class="stat"><span>Entidades con datos</span><strong>${ranked.length}</strong></div>
-    <div class="stat"><span>Máximo</span><strong>${ranked[0]?.ef || '—'}</strong></div>
-    <div class="stat"><span>Mínimo (>0)</span><strong>${ranked[ranked.length - 1]?.ef || '—'}</strong></div>
+    <div class="stat"><span>${scope === 'gerencia' ? 'Gerencias' : 'Entidades'} con datos</span><strong>${ranked.length}</strong></div>
+    <div class="stat"><span>Máximo</span><strong>${ranked[0]?.key || '—'}</strong></div>
+    <div class="stat"><span>Mínimo (>0)</span><strong>${ranked[ranked.length - 1]?.key || '—'}</strong></div>
     <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.1em;text-transform:uppercase">Top 5</div>
-    ${top5.map((v, i) => `<div class="stat"><span>${i + 1}. ${v.ef}</span><strong>${metric === 'proyectos' ? v.value : fmt(v.value, 0) + ' MW'}</strong></div>`).join('')}
+    ${top5.map((v, i) => `<div class="stat"><span>${i + 1}. ${v.key}</span><strong>${metric === 'proyectos' ? v.value : fmt(v.value, 0) + ' MW'}</strong></div>`).join('')}
   `;
     }
 
@@ -2308,34 +2399,34 @@
       sel.disabled = true;
     }
 
-    function populateMapProjectSelect(ef) {
+    function populateMapProjectSelect(scope, key) {
       const sel = document.getElementById('mapProjectSelect');
       if (!sel) return;
-      const rows = activeDataForMap()
-        .filter(r => r.ef === ef && r.nombre)
+      const rows = rowsForScope(scope, key)
+        .filter(r => r.nombre)
         .sort((a, b) => b.mw - a.mw || a.nombre.localeCompare(b.nombre, 'es-MX'));
 
       const currentEf = sel.dataset.ef || '';
-      const previous = currentEf === ef ? sel.value : '__ALL__';
+      const previous = currentEf === `${scope}:${key}` ? sel.value : '__ALL__';
       sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>' + rows.map(r => {
         const label = `${r.nombre} · ${r.anio || '—'} · ${fmt(r.mw, 2)} MW`;
         return `<option value="${r.id}">${label}</option>`;
       }).join('');
-      sel.dataset.ef = ef;
+      sel.dataset.ef = `${scope}:${key}`;
       sel.disabled = rows.length === 0;
       sel.value = [...sel.options].some(o => o.value === previous) ? previous : '__ALL__';
     }
 
-    function showMapProjectDetail(ef, projectId) {
+    function showMapProjectDetail(scope, focusKey, projectId) {
       const rows = activeDataForMap().filter(r => String(r.id) === String(projectId));
       if (!rows.length) {
-        showEfDetail(ef);
+        showScopeDetail(scope, focusKey);
         return;
       }
       const p = rows[0];
       const isSaee = techLabel(p.tipo) === 'SAEE Asociado a Centrales Eléctricas';
 
-      document.getElementById('mapEfTitle').textContent = `${ef} · ${p.nombre || 'Proyecto'}`;
+      document.getElementById('mapEfTitle').textContent = `${focusKey} · ${p.nombre || 'Proyecto'}`;
       document.getElementById('mapHint').style.display = 'none';
       document.getElementById('mapStats').innerHTML = `
     <div class="ef-detail-grid">
@@ -2349,6 +2440,7 @@
     <div class="kv-list">
       <div class="kv-row"><span class="kv-k">Municipio</span><span class="kv-v">${p.municipio || '—'}</span></div>
       <div class="kv-row"><span class="kv-k">Entidad</span><span class="kv-v">${p.ef || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Gerencia</span><span class="kv-v">${p.gerencia || '—'}</span></div>
       <div class="kv-row"><span class="kv-k">Contrato/unidad</span><span class="kv-v">${p.contratoUnidad || '—'}</span></div>
       <div class="kv-row"><span class="kv-k">Adición/sustitución</span><span class="kv-v">${p.adicion || '—'}</span></div>
       <div class="kv-row"><span class="kv-k">Renovable</span><span class="kv-v">${p.renovable || '—'}</span></div>
@@ -2356,12 +2448,12 @@
   `;
     }
 
-    function showEfDetail(ef) {
-      const rows = activeDataForMap().filter(r => r.ef === ef);
-      document.getElementById('mapEfTitle').textContent = ef;
+    function showScopeDetail(scope, key) {
+      const rows = rowsForScope(scope, key);
+      document.getElementById('mapEfTitle').textContent = key;
       if (!rows.length) {
         document.getElementById('mapHint').style.display = '';
-        document.getElementById('mapHint').textContent = 'Sin proyectos en esta entidad.';
+        document.getElementById('mapHint').textContent = `Sin proyectos en esta ${scope === 'gerencia' ? 'gerencia' : 'entidad'}.`;
         document.getElementById('mapStats').innerHTML = '';
         return;
       }
@@ -2430,7 +2522,7 @@
         <span class="num">${fmt(byYear[y], 0)} MW</span>
       </div>`).join('')}
 
-    ${munisSorted.length ? `<div class="ef-section-title">Top 5 municipios</div>
+    ${scope === 'ef' && munisSorted.length ? `<div class="ef-section-title">Top 5 municipios</div>
     ${munisSorted.map(([m, v], i) => `
       <div class="ef-bar-row">
         <span class="name" style="width:auto;flex:1;text-align:left;font-weight:600;font-size:10.5px">${i + 1}. ${m}</span>
@@ -2481,15 +2573,18 @@
       render();
     });
     document.getElementById('mapClearEf').addEventListener('click', () => {
+      CURRENT_FOCUS_GERENCIA = null;
       document.getElementById('efSelect').value = '__ALL__';
       document.getElementById('projectSelect').value = '__ALL__';
       render();
     });
     document.getElementById('mapProjectSelect').addEventListener('change', (ev) => {
-      if (!CURRENT_FOCUS_EF) return;
+      const scope = getMapScope();
+      const focusKey = scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF;
+      if (!focusKey) return;
       const value = ev.target.value || '__ALL__';
-      if (value === '__ALL__') showEfDetail(CURRENT_FOCUS_EF);
-      else showMapProjectDetail(CURRENT_FOCUS_EF, value);
+      if (value === '__ALL__') showScopeDetail(scope, focusKey);
+      else showMapProjectDetail(scope, focusKey, value);
     });
 
     // =================== PRESENTACION ===================
