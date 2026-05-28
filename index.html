@@ -1148,8 +1148,8 @@
           <option value="__ALL__">Todos</option>
         </select>
       </label>
-      <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
-      <button class="secondary" onclick="loadData()">Recargar</button>
+      <button class="secondary" onclick="openSheetEditor()">Editar datos</button>
+      <button class="secondary" id="btnReload" onclick="loadData(true)">Recargar</button>
       <button class="secondary" onclick="printReport()">Vista PDF</button>
       <button class="secondary" id="btnPresent">Presentar</button>
       <button class="primary" id="btnPpt">Descargar PPT</button>
@@ -1373,8 +1373,10 @@
       });
     }
 
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pub?gid=388978604&single=true&output=csv';
-    const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pubhtml?gid=388978604&single=true';
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTjj424dMUfc6nYoGn50JXLVFY8y1mjJUy27FmdktcPWbUTyLBbPiZcps5xI8-DoOduFYcq4BSUZb_j/pub?gid=618151022&single=true&output=csv';
+    const SHEET_VIEW_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTjj424dMUfc6nYoGn50JXLVFY8y1mjJUy27FmdktcPWbUTyLBbPiZcps5xI8-DoOduFYcq4BSUZb_j/pubhtml?gid=618151022&single=true';
+    const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/1K73EkdZytbQMBQrtOhpXBg1fn4JL8XXxwu0U2BibstA/edit?gid=618151022#gid=618151022';
+    const SHEET_EDIT_URL_KEY = 'pvirce_sheet_edit_url';
 
     let DATA = [];
 
@@ -1414,7 +1416,54 @@
         const headers = row.map(cleanHeader);
         return headers.includes('Nombre real') && headers.includes('Entidad Federativa');
       });
-      return idx >= 0 ? idx : 1;
+      if (idx >= 0) return idx;
+      // Algunas publicaciones traen metadatos en la primera fila y encabezados en la segunda.
+      return preview.length > 1 ? 1 : -1;
+    }
+    function mapRowFromHeaderObject(r, idx) {
+      return {
+        id: idx,
+        status: field(r, ['Status CMMV2', 'Status_CMMV2', 'Status VF', 'Status_VF', 'Status CMMV', 'Status_CMMV', 'Status']) || 'Sin estatus',
+        statusVf: field(r, ['Status VF', 'Status_VF']),
+        nombre: field(r, ['Nombre real']),
+        anio: parseInt(field(r, ['Año', 'Anio'])) || null,
+        adicion: field(r, ['Adiciones o sustituciones', 'Adiciones o sustituciones']),
+        contratoUnidad: field(r, ['Contrato o unidad', 'Contrato     o unidad', 'Contrato unidad']),
+        tipo: field(r, ['Tipo VF', 'Tipo_VF', 'Tipo']),
+        tipoBase: field(r, ['Tipo']),
+        renovable: field(r, ['Renovable']),
+        mw: num(field(r, ['MW'])),
+        mes: field(r, ['Mes']),
+        gerencia: field(r, ['Gerencia de control']),
+        region: field(r, ['Región de transmisión', 'Region de transmision']),
+        municipio: field(r, ['Municipio']),
+        ef: String(field(r, ['Entidad Federativa'])).trim(),
+        firme: String(field(r, ['Firmes'])).trim() === '*',
+        noConsiderar: hasNoConsiderarFlag(r) || isMarked(field(r, ['No considerar', 'No considerar C', 'No considerar CMMV', 'No considerar CMMV2']))
+      };
+    }
+    function mapRowFromPositionalArray(row, idx) {
+      const col = i => String(row?.[i] ?? '').trim();
+      return {
+        id: idx,
+        status: col(0) || 'Sin estatus',
+        statusVf: col(3),
+        nombre: col(10),
+        anio: parseInt(col(11)) || null,
+        adicion: col(12),
+        contratoUnidad: col(13),
+        tipo: col(14) || col(15),
+        tipoBase: col(15),
+        renovable: col(16),
+        mw: num(col(17)),
+        mes: col(18),
+        gerencia: col(19),
+        region: col(20),
+        municipio: col(22),
+        ef: col(21),
+        firme: col(23) === '*',
+        noConsiderar: false
+      };
     }
     function getYearRange() {
       const fallbackFrom = 2026;
@@ -1473,77 +1522,131 @@
       updateDocumentTitle();
       window.print();
     }
+    function isValidSheetEditUrl(url) {
+      return /^https:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+\/edit/i.test(String(url || '').trim());
+    }
+    function getConfiguredEditUrl() {
+      const fromConst = String(SHEET_EDIT_URL || '').trim();
+      if (isValidSheetEditUrl(fromConst)) return fromConst;
+      const fromStorage = String(localStorage.getItem(SHEET_EDIT_URL_KEY) || '').trim();
+      if (isValidSheetEditUrl(fromStorage)) return fromStorage;
+      return '';
+    }
+    function openSheetEditor() {
+      let edit = getConfiguredEditUrl();
+      if (!edit) {
+        const input = prompt('Pega la URL editable de Google Sheets (formato .../spreadsheets/d/ID/edit).');
+        const trimmed = String(input || '').trim();
+        if (trimmed && isValidSheetEditUrl(trimmed)) {
+          localStorage.setItem(SHEET_EDIT_URL_KEY, trimmed);
+          edit = trimmed;
+        }
+      }
+      if (edit) {
+        window.open(edit, '_blank', 'noopener');
+        return;
+      }
+      window.open(SHEET_VIEW_URL, '_blank', 'noopener');
+      alert('No se configuro una URL editable valida. Se abrio la vista publicada.');
+    }
 
     function setStatus(msg) {
       const el = document.getElementById('preloaderMsg');
       if (el) el.textContent = msg;
       console.log('[STATUS]', msg);
     }
+    function showPreloader(msg) {
+      const p = document.getElementById('preloader');
+      if (!p) return;
+      if (msg) setStatus(msg);
+      p.style.display = 'flex';
+      p.classList.remove('hidden');
+    }
     function hidePreloader() {
       const p = document.getElementById('preloader');
       if (p) { p.classList.add('hidden'); setTimeout(() => p.style.display = 'none', 400); }
+    }
+    function setReloadingState(isLoading) {
+      const btn = document.getElementById('btnReload');
+      if (!btn) return;
+      if (!btn.dataset.defaultLabel) btn.dataset.defaultLabel = btn.textContent || 'Recargar';
+      btn.disabled = isLoading;
+      btn.textContent = isLoading ? 'Recargando…' : btn.dataset.defaultLabel;
+      btn.style.opacity = isLoading ? '0.7' : '';
+      btn.style.cursor = isLoading ? 'wait' : '';
+    }
+
+    function withCacheBuster(url, token) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}_ts=${encodeURIComponent(token)}`;
     }
 
     async function tryFetch(url, ms = 20000) {
       const ctl = new AbortController();
       const t = setTimeout(() => ctl.abort(), ms);
       try {
-        const r = await fetch(url, { redirect: 'follow', signal: ctl.signal });
+        const r = await fetch(url, {
+          redirect: 'follow',
+          signal: ctl.signal,
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, max-age=0',
+            'Pragma': 'no-cache'
+          }
+        });
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return await r.text();
       } finally { clearTimeout(t); }
     }
 
-    async function loadData() {
+    let isLoadingData = false;
+    async function loadData(showLoader = false) {
+      if (isLoadingData) return;
+      isLoadingData = true;
+      setReloadingState(true);
+      if (showLoader) showPreloader('Recargando datos…');
       let text;
-      const cb = '?_=' + Date.now();
+      const token = String(Date.now());
+      const freshCsvUrl = withCacheBuster(CSV_URL, token);
       const proxies = [
-        '/data' + cb,
-        CSV_URL,
-        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(CSV_URL),
-        'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL)
+        freshCsvUrl,
+        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(freshCsvUrl),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(freshCsvUrl),
+        '/data?_=' + token
       ];
-      let lastErr;
-      for (let i = 0; i < proxies.length; i++) {
-        const url = proxies[i];
-        setStatus(`Cargando fuente ${i + 1}/${proxies.length}…`);
-        try {
-          text = await tryFetch(url);
-          setStatus(`Datos recibidos (${text.length} bytes). Procesando…`);
-          break;
-        } catch (e) { lastErr = e; console.warn('Fail', i, e.message); }
-      }
-      if (!text) throw lastErr || new Error('No data — todas las fuentes fallaron');
-      const lines = text.split(/\r?\n/);
-      const csv = lines.slice(findHeaderOffset(text)).join('\n');
-      const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-      DATA = parsed.data.map((r, idx) => ({
-        id: idx,
-        status: field(r, ['Status CMMV2', 'Status_CMMV2', 'Status VF', 'Status_VF', 'Status CMMV', 'Status_CMMV', 'Status']) || 'Sin estatus',
-        statusVf: field(r, ['Status VF', 'Status_VF']),
-        nombre: field(r, ['Nombre real']),
-        anio: parseInt(field(r, ['Año', 'Anio'])) || null,
-        adicion: field(r, ['Adiciones o sustituciones', 'Adiciones o sustituciones']),
-        contratoUnidad: field(r, ['Contrato o unidad', 'Contrato     o unidad', 'Contrato unidad']),
-        tipo: field(r, ['Tipo VF', 'Tipo_VF', 'Tipo']),
-        tipoBase: field(r, ['Tipo']),
-        renovable: field(r, ['Renovable']),
-        mw: num(field(r, ['MW'])),
-        mes: field(r, ['Mes']),
-        gerencia: field(r, ['Gerencia de control']),
-        region: field(r, ['Región de transmisión', 'Region de transmision']),
-        municipio: field(r, ['Municipio']),
-        ef: String(field(r, ['Entidad Federativa'])).trim(),
-        firme: String(field(r, ['Firmes'])).trim() === '*',
-        noConsiderar: hasNoConsiderarFlag(r) || isMarked(field(r, ['No considerar', 'No considerar C', 'No considerar CMMV', 'No considerar CMMV2']))
-      })).filter(r => r.ef && r.anio && !r.noConsiderar);
+      try {
+        let lastErr;
+        for (let i = 0; i < proxies.length; i++) {
+          const url = proxies[i];
+          setStatus(`Cargando fuente ${i + 1}/${proxies.length}…`);
+          try {
+            text = await tryFetch(url);
+            setStatus(`Datos recibidos (${text.length} bytes). Procesando…`);
+            break;
+          } catch (e) { lastErr = e; console.warn('Fail', i, e.message); }
+        }
+        if (!text) throw lastErr || new Error('No data — todas las fuentes fallaron');
+        const lines = text.split(/\r?\n/);
+        const headerOffset = findHeaderOffset(text);
+        if (headerOffset >= 0) {
+          const csv = lines.slice(headerOffset).join('\n');
+          const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+          DATA = parsed.data.map(mapRowFromHeaderObject).filter(r => r.ef && r.anio && !r.noConsiderar);
+        } else {
+          const parsed = Papa.parse(text, { header: false, skipEmptyLines: true });
+          DATA = (parsed.data || []).map(mapRowFromPositionalArray).filter(r => r.ef && r.anio && !r.noConsiderar);
+        }
 
-      populateEFSelect();
-      populateStatusSelect();
-      populateProjectSelect();
-      render();
-      initMap().catch(e => console.warn('Mapa no cargo:', e));
-      hidePreloader();
+        populateEFSelect();
+        populateStatusSelect();
+        populateProjectSelect();
+        render();
+        initMap().catch(e => console.warn('Mapa no cargo:', e));
+        hidePreloader();
+      } finally {
+        isLoadingData = false;
+        setReloadingState(false);
+      }
     }
 
     function populateEFSelect() {
@@ -2240,6 +2343,15 @@
         ev.preventDefault();
         exitPresentation();
       }
+    });
+
+    let lastFocusReloadAt = 0;
+    window.addEventListener('focus', () => {
+      if (presentationMode) return;
+      const now = Date.now();
+      if (now - lastFocusReloadAt < 4000) return;
+      lastFocusReloadAt = now;
+      loadData().catch(e => setStatus('Error recargando al volver a la pestana: ' + e.message));
     });
 
     // =================== EXPORT PPT ===================

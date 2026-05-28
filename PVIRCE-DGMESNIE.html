@@ -204,6 +204,22 @@
       font-weight: 700;
     }
 
+    #btnPresent {
+      animation: presentPulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes presentPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(30, 91, 79, .35);
+      }
+
+      60% {
+        box-shadow: 0 0 0 8px rgba(30, 91, 79, 0);
+      }
+    }
+
     .deck {
       max-width: var(--slide-w);
       margin: 0 auto;
@@ -221,12 +237,90 @@
       overflow: hidden;
     }
 
+    .presentation-controls {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, .55);
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      padding: 8px 10px;
+      backdrop-filter: blur(3px);
+    }
+
+    .presentation-controls button {
+      border: 1px solid rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .15);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .presentation-controls button:hover {
+      background: rgba(255, 255, 255, .28);
+    }
+
+    .presentation-controls .counter {
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    body.presentation-mode {
+      padding: 0;
+      background: #000;
+    }
+
+    body.presentation-mode .toolbar,
+    body.presentation-mode .preloader {
+      display: none !important;
+    }
+
+    body.presentation-mode .deck {
+      position: fixed;
+      inset: 0;
+      max-width: none;
+      margin: 0;
+      display: block;
+      background: #000;
+      z-index: 9998;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    body.presentation-mode .deck>.slide {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      margin: 0;
+      box-shadow: none;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) scale(var(--presentation-scale, 1));
+      overflow: hidden;
+    }
+
+    body.presentation-mode .deck>.slide.active {
+      display: block;
+    }
+
     /* ============ PORTADA ============ */
     .slide.cover {
       background: #6a172f;
       color: white;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
+      display: flex;
+      flex-direction: column;
       padding: 0;
       position: relative;
       overflow: hidden;
@@ -283,6 +377,8 @@
     }
 
     .cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
       padding: 20px 60px 64px 28%;
       display: flex;
       flex-direction: column;
@@ -355,6 +451,8 @@
     }
 
     .cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
       height: 14px;
       background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 33%, var(--verde) 33%, var(--verde) 66%, var(--dorado) 66%);
     }
@@ -682,9 +780,14 @@
 
     /* ============ SLIDE MAPA ============ */
     .slide.map-slide {
-      display: grid;
-      grid-template-rows: auto auto 1fr auto;
+      display: flex;
+      flex-direction: column;
       padding: 0;
+    }
+
+    .map-slide>.header,
+    .map-slide>.map-toolbar {
+      flex: 0 0 auto;
     }
 
     .map-slide .map-toolbar {
@@ -735,11 +838,17 @@
       display: grid;
       grid-template-columns: 1fr 320px;
       gap: 0;
+      flex: 1 1 auto;
       min-height: 0;
     }
 
     .map-slide.focused .map-body {
       grid-template-columns: 1fr 380px;
+    }
+
+    .map-slide>.footer {
+      margin-top: auto;
+      flex: 0 0 8px;
     }
 
     .map-slide .ef-detail-grid {
@@ -1028,6 +1137,7 @@
       <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
       <button class="secondary" onclick="loadData()">Recargar</button>
       <button class="secondary" onclick="printReport()">Vista PDF</button>
+      <button class="secondary" id="btnPresent">Presentar</button>
       <button class="primary" id="btnPpt">Descargar PPT</button>
       <div class="filter-stack">
         <div class="filter-title">Estatus:</div>
@@ -1052,6 +1162,13 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="presentationControls" class="presentation-controls" aria-hidden="true">
+    <button type="button" id="btnPrevSlide">← Anterior</button>
+    <span id="presentationCounter" class="counter">1/1</span>
+    <button type="button" id="btnNextSlide">Siguiente →</button>
+    <button type="button" id="btnExitPresentation">Salir</button>
   </div>
 
   <div class="deck">
@@ -1202,43 +1319,45 @@
   </div>
 
   <script>
-    Highcharts.setOptions({
-      colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
-      chart: {
-        style: { fontFamily: "'Noto Sans', sans-serif" },
-        events: {
-          fullscreenOpen: function () { this.update({ chart: { backgroundColor: '#ffffff' } }, false); this.redraw(); },
-          fullscreenClose: function () { this.update({ chart: { backgroundColor: 'transparent' } }, false); this.redraw(); }
-        }
-      },
-      credits: { enabled: false },
-      title: { text: null },
-      lang: { thousandsSep: ',', viewFullscreen: 'Pantalla completa' },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: null,
-            titleKey: 'viewFullscreen',
-            symbol: 'url(data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239B2247%22 stroke-width=%222.5%22><path d=%22M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5%22/></svg>)',
-            symbolSize: 12,
-            symbolX: 8, symbolY: 8,
-            align: 'right', verticalAlign: 'top',
-            x: -10, y: 4,
-            width: 16, height: 16,
-            onclick: function () { this.fullscreen.toggle(); },
-            theme: {
-              fill: 'rgba(255,255,255,0.85)',
-              stroke: '#E5E5E5',
-              'stroke-width': 1,
-              r: 3,
-              padding: 2,
-              states: { hover: { fill: 'rgba(155,34,71,.12)', stroke: '#9B2247' } }
+    if (typeof Highcharts !== 'undefined') {
+      Highcharts.setOptions({
+        colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
+        chart: {
+          style: { fontFamily: "'Noto Sans', sans-serif" },
+          events: {
+            fullscreenOpen: function () { this.update({ chart: { backgroundColor: '#ffffff' } }, false); this.redraw(); },
+            fullscreenClose: function () { this.update({ chart: { backgroundColor: 'transparent' } }, false); this.redraw(); }
+          }
+        },
+        credits: { enabled: false },
+        title: { text: null },
+        lang: { thousandsSep: ',', viewFullscreen: 'Pantalla completa' },
+        exporting: {
+          enabled: true,
+          buttons: {
+            contextButton: {
+              menuItems: null,
+              titleKey: 'viewFullscreen',
+              symbol: 'url(data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239B2247%22 stroke-width=%222.5%22><path d=%22M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5%22/></svg>)',
+              symbolSize: 12,
+              symbolX: 8, symbolY: 8,
+              align: 'right', verticalAlign: 'top',
+              x: -10, y: 4,
+              width: 16, height: 16,
+              onclick: function () { this.fullscreen.toggle(); },
+              theme: {
+                fill: 'rgba(255,255,255,0.85)',
+                stroke: '#E5E5E5',
+                'stroke-width': 1,
+                r: 3,
+                padding: 2,
+                states: { hover: { fill: 'rgba(155,34,71,.12)', stroke: '#9B2247' } }
+              }
             }
           }
         }
-      }
-    });
+      });
+    }
 
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pub?gid=388978604&single=true&output=csv';
     const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_uIRNruk-Dqg4aV21IPIS04XnhVmJPDJZB8qO94y8UXC6kZvetmMq77SOILJ-joGP-CmEf3KlryqI/pubhtml?gid=388978604&single=true';
@@ -1554,24 +1673,25 @@
         data: allYears.map(y => +rows.filter(r => r.anio === y && r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(1))
       }));
 
-      Highcharts.chart('chartTrayectoria', {
-        chart: { type: 'column', backgroundColor: 'transparent' },
-        xAxis: { categories: allYears, lineColor: '#E5E5E5', labels: { style: { fontSize: '10px' } } },
-        yAxis: { title: { text: 'MW', style: { fontSize: '10px' } }, gridLineColor: '#f0f0f0', labels: { style: { fontSize: '9px' } } },
-        legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
-        plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 30 ? this.y + ' MW' : ''; } } } },
-        series: series,
-        tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.1f} MW<br>' }
-      });
+      if (typeof Highcharts !== 'undefined') {
+        Highcharts.chart('chartTrayectoria', {
+          chart: { type: 'column', backgroundColor: 'transparent' },
+          xAxis: { categories: allYears, lineColor: '#E5E5E5', labels: { style: { fontSize: '10px' } } },
+          yAxis: { title: { text: 'MW', style: { fontSize: '10px' } }, gridLineColor: '#f0f0f0', labels: { style: { fontSize: '9px' } } },
+          legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
+          plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 30 ? this.y + ' MW' : ''; } } } },
+          series: series,
+          tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.1f} MW<br>' }
+        });
 
-      // Tech table con % participación estatal
-      const techRows = Object.entries(tipos).sort((a, b) => b[1] - a[1])
-        .map(([t, m]) => {
-          const pctEf = totalMW ? (m / totalMW * 100) : 0;
-          return `<tr><td>${t}</td><td class="mw">${fmt(m, 1)}</td><td class="mw">${fmt(pctEf, 1)}%</td></tr>`;
-        }).join('');
-      const totalPct = '100.0%';
-      document.getElementById('techTable').innerHTML = `<table class="tech">
+        // Tech table con % participación estatal
+        const techRows = Object.entries(tipos).sort((a, b) => b[1] - a[1])
+          .map(([t, m]) => {
+            const pctEf = totalMW ? (m / totalMW * 100) : 0;
+            return `<tr><td>${t}</td><td class="mw">${fmt(m, 1)}</td><td class="mw">${fmt(pctEf, 1)}%</td></tr>`;
+          }).join('');
+        const totalPct = '100.0%';
+        document.getElementById('techTable').innerHTML = `<table class="tech">
     <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% EF</th></tr></thead>
     <tbody>${techRows}</tbody>
     <tfoot><tr style="border-top:2px solid var(--guinda);font-weight:700;background:#faf3f5">
@@ -1579,16 +1699,16 @@
     </tr></tfoot>
   </table>`;
 
-      // Top N (10 + caption con total)
-      const sorted = [...rows].sort((a, b) => b.mw - a.mw);
-      const top = sorted.slice(0, 10);
-      const remaining = sorted.length - top.length;
-      const remainingMW = sorted.slice(10).reduce((s, r) => s + r.mw, 0);
-      const extraRow = remaining > 0
-        ? `<tr style="background:#f7f7f8;font-style:italic"><td colspan="4">+ ${remaining} proyectos restantes</td><td class="mw">${fmt(remainingMW, 0)}</td><td>—</td></tr>`
-        : '';
-      document.getElementById('topPanelTitle').textContent = isProject ? 'Ficha del proyecto seleccionado' : 'Top 10 proyectos por capacidad instalada';
-      const projectFicha = isProject && rows.length ? `
+        // Top N (10 + caption con total)
+        const sorted = [...rows].sort((a, b) => b.mw - a.mw);
+        const top = sorted.slice(0, 10);
+        const remaining = sorted.length - top.length;
+        const remainingMW = sorted.slice(10).reduce((s, r) => s + r.mw, 0);
+        const extraRow = remaining > 0
+          ? `<tr style="background:#f7f7f8;font-style:italic"><td colspan="4">+ ${remaining} proyectos restantes</td><td class="mw">${fmt(remainingMW, 0)}</td><td>—</td></tr>`
+          : '';
+        document.getElementById('topPanelTitle').textContent = isProject ? 'Ficha del proyecto seleccionado' : 'Top 10 proyectos por capacidad instalada';
+        const projectFicha = isProject && rows.length ? `
     <table class="proyectos">
       <tbody>
         <tr><th>Nombre real</th><td>${rows[0].nombre || '—'}</td><th class="mw">MW</th><td class="mw">${fmt(totalMW, 1)}</td></tr>
@@ -1600,29 +1720,30 @@
         <tr><th>Gerencia de control</th><td>${rows[0].gerencia || '—'}</td><th>Región de transmisión</th><td>${rows[0].region || '—'}</td></tr>
       </tbody>
     </table>` : '';
-      document.getElementById('topTable').innerHTML = projectFicha || `<table class="proyectos">
+        document.getElementById('topTable').innerHTML = projectFicha || `<table class="proyectos">
     <thead><tr><th>Proyecto</th><th>Año</th><th>Municipio</th><th>Tipo</th><th class="mw">MW</th><th>Estatus</th></tr></thead>
     <tbody>${top.map(r => `<tr><td>${r.nombre}</td><td>${r.anio}</td><td>${r.municipio || '—'}</td><td>${r.tipo}</td><td class="mw">${fmt(r.mw, 0)}</td><td>${r.status}</td></tr>`).join('')}${extraRow}</tbody>
   </table>`;
 
-      // Donut by status
-      const donutData = Object.entries(stats).map(([k, v]) => ({ name: k, y: +v.toFixed(1) }));
-      Highcharts.chart('chartDonut', {
-        chart: { type: 'pie', backgroundColor: 'transparent' },
-        plotOptions: { pie: { innerSize: '60%', borderWidth: 1, dataLabels: { enabled: true, style: { fontSize: '9px' }, format: '<b>{point.name}</b><br>{point.percentage:.1f}% · {point.y:.0f} MW' } } },
-        series: [{ name: 'MW', data: donutData }],
-        tooltip: { pointFormat: '<b>{point.y:.1f} MW</b> ({point.percentage:.1f}%)' }
-      });
+        // Donut by status
+        const donutData = Object.entries(stats).map(([k, v]) => ({ name: k, y: +v.toFixed(1) }));
+        Highcharts.chart('chartDonut', {
+          chart: { type: 'pie', backgroundColor: 'transparent' },
+          plotOptions: { pie: { innerSize: '60%', borderWidth: 1, dataLabels: { enabled: true, style: { fontSize: '9px' }, format: '<b>{point.name}</b><br>{point.percentage:.1f}% · {point.y:.0f} MW' } } },
+          series: [{ name: 'MW', data: donutData }],
+          tooltip: { pointFormat: '<b>{point.y:.1f} MW</b> ({point.percentage:.1f}%)' }
+        });
 
-      // Horizontal bar capacity stacked
-      Highcharts.chart('chartBar', {
-        chart: { type: 'bar', backgroundColor: 'transparent' },
-        xAxis: { categories: [ef], labels: { style: { fontSize: '9px' } } },
-        yAxis: { title: { text: 'MW', style: { fontSize: '9px' } }, labels: { style: { fontSize: '9px' } } },
-        legend: { itemStyle: { fontSize: '9px' } },
-        plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 50 ? Math.round(this.y) : ''; } } } },
-        series: allTipos.map(t => ({ name: t, data: [+rows.filter(r => r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(1)] }))
-      });
+        // Horizontal bar capacity stacked
+        Highcharts.chart('chartBar', {
+          chart: { type: 'bar', backgroundColor: 'transparent' },
+          xAxis: { categories: [ef], labels: { style: { fontSize: '9px' } } },
+          yAxis: { title: { text: 'MW', style: { fontSize: '9px' } }, labels: { style: { fontSize: '9px' } } },
+          legend: { itemStyle: { fontSize: '9px' } },
+          plotOptions: { bar: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 50 ? Math.round(this.y) : ''; } } } },
+          series: allTipos.map(t => ({ name: t, data: [+rows.filter(r => r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(1)] }))
+        });
+      }
     }
 
     // =================== MAPA ===================
@@ -1964,6 +2085,128 @@
       document.getElementById('efSelect').value = '__ALL__';
       document.getElementById('projectSelect').value = '__ALL__';
       render();
+    });
+
+    // =================== PRESENTACION ===================
+    let presentationMode = false;
+    let presentationIndex = 0;
+    let presentationSlides = [];
+    const PRESENTATION_ZOOM_FACTOR = 1.0;
+
+    function setPresentationControls(visible) {
+      const controls = document.getElementById('presentationControls');
+      if (!controls) return;
+      controls.style.display = visible ? 'flex' : 'none';
+      controls.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    }
+
+    function fitActiveSlide() {
+      if (!presentationMode || !presentationSlides.length) return;
+      const active = presentationSlides[presentationIndex];
+      if (!active) return;
+
+      const baseW = active.offsetWidth || 1280;
+      const baseH = active.offsetHeight || 720;
+      const baseScale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
+      const scale = Math.max(0.2, baseScale * PRESENTATION_ZOOM_FACTOR);
+      active.style.setProperty('--presentation-scale', scale.toFixed(4));
+
+      // Reflow de charts al entrar/cambiar slide en modo presentación.
+      if (window.Highcharts && Array.isArray(window.Highcharts.charts)) {
+        const chartHosts = active.querySelectorAll('[data-highcharts-chart]');
+        chartHosts.forEach(host => {
+          const idx = Number(host.getAttribute('data-highcharts-chart'));
+          const chart = Number.isFinite(idx) ? window.Highcharts.charts[idx] : null;
+          if (chart && typeof chart.reflow === 'function') {
+            try { chart.reflow(); } catch (_) { }
+          }
+        });
+      }
+
+      if (active.querySelector('#mapa') && mapInstance) {
+        setTimeout(() => mapInstance.invalidateSize({ pan: false, animate: false }), 120);
+      }
+    }
+
+    function renderPresentationState() {
+      if (!presentationSlides.length) return;
+      presentationSlides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === presentationIndex);
+        if (idx !== presentationIndex) slide.style.removeProperty('--presentation-scale');
+      });
+      const counter = document.getElementById('presentationCounter');
+      if (counter) counter.textContent = `${presentationIndex + 1}/${presentationSlides.length}`;
+      fitActiveSlide();
+    }
+
+    async function enterPresentation(startAt = 0) {
+      presentationSlides = [...document.querySelectorAll('.deck > .slide')];
+      if (!presentationSlides.length) return;
+      presentationMode = true;
+      presentationIndex = Math.min(Math.max(startAt, 0), presentationSlides.length - 1);
+      document.body.classList.add('presentation-mode');
+      setPresentationControls(true);
+      renderPresentationState();
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        try { await document.documentElement.requestFullscreen(); } catch (_) { }
+      }
+    }
+
+    async function exitPresentation() {
+      if (!presentationMode) return;
+      presentationMode = false;
+      document.body.classList.remove('presentation-mode');
+      presentationSlides.forEach(slide => {
+        slide.classList.remove('active');
+        slide.style.transform = '';
+      });
+      setPresentationControls(false);
+      if (document.fullscreenElement && document.exitFullscreen) {
+        try { await document.exitFullscreen(); } catch (_) { }
+      }
+    }
+
+    function nextPresentationSlide() {
+      if (!presentationMode) return;
+      presentationIndex = Math.min(presentationSlides.length - 1, presentationIndex + 1);
+      renderPresentationState();
+    }
+
+    function prevPresentationSlide() {
+      if (!presentationMode) return;
+      presentationIndex = Math.max(0, presentationIndex - 1);
+      renderPresentationState();
+    }
+
+    document.getElementById('btnPresent').addEventListener('click', () => enterPresentation(0));
+    document.getElementById('btnPrevSlide').addEventListener('click', prevPresentationSlide);
+    document.getElementById('btnNextSlide').addEventListener('click', nextPresentationSlide);
+    document.getElementById('btnExitPresentation').addEventListener('click', exitPresentation);
+
+    window.addEventListener('resize', fitActiveSlide);
+    document.addEventListener('fullscreenchange', () => {
+      if (presentationMode && !document.fullscreenElement) exitPresentation();
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (!presentationMode) return;
+      if (['ArrowRight', 'PageDown', ' '].includes(ev.key)) {
+        ev.preventDefault();
+        nextPresentationSlide();
+      } else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(ev.key)) {
+        ev.preventDefault();
+        prevPresentationSlide();
+      } else if (ev.key === 'Home') {
+        ev.preventDefault();
+        presentationIndex = 0;
+        renderPresentationState();
+      } else if (ev.key === 'End') {
+        ev.preventDefault();
+        presentationIndex = Math.max(0, presentationSlides.length - 1);
+        renderPresentationState();
+      } else if (ev.key === 'Escape') {
+        ev.preventDefault();
+        exitPresentation();
+      }
     });
 
     // =================== EXPORT PPT ===================

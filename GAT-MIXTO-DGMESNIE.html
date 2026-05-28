@@ -865,7 +865,8 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 </div>
 
 <script>
-Highcharts.setOptions({
+if (typeof Highcharts !== 'undefined') {
+  Highcharts.setOptions({
   colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
   chart: {
     style: { fontFamily: "'Noto Sans', sans-serif" },
@@ -901,7 +902,8 @@ Highcharts.setOptions({
       }
     }
   }
-});
+  });
+}
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1612312561&single=true&output=csv';
 const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pubhtml?gid=1612312561&single=true';
