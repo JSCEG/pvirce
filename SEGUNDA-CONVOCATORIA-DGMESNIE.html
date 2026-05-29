@@ -2571,7 +2571,7 @@
         populateStatusSelect();
         populateProjectSelect();
         render();
-        initMap().catch(e => console.warn('Mapa no cargo:', e));
+        await initMap().catch(e => console.warn('Mapa no cargo:', e));
         hidePreloader();
       } finally {
         isLoadingData = false;
@@ -4621,7 +4621,11 @@
     if (typeof Papa === 'undefined') {
       setStatus('ERROR: PapaParse no cargó (sandbox iframe bloquea CDN). Abre el HTML directo en navegador.');
     } else {
-      loadData().catch(e => setStatus('Error cargando datos: ' + e.message));
+      loadData()
+        .then(() => {
+          enterPresentation(0);
+        })
+        .catch(e => setStatus('Error cargando datos: ' + e.message));
     }
   </script>
 
