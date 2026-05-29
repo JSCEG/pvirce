@@ -2121,7 +2121,7 @@
         mw: mwInstalada,
         generacionAnual: num(field(r, ['Generación Anual Estimada'])),
         inversion: String(field(r, ['Inversión MDD', 'Monto de inversión total del proyecto:']) || '').trim(),
-        gerencia: String(field(r, ['Gerencia Regional']) || '').trim(),
+        gerencia: resolvePeninsulaGerencia(field(r, ['Entidad Federativa']), field(r, ['Municipio/Alcaldía']), field(r, ['Gerencia Regional'])),
         region: String(field(r, ['Región_v2']) || '').trim(),
         municipio: String(field(r, ['Municipio/Alcaldía']) || '').trim(),
         domicilio: String(field(r, ['Domicilio']) || '').trim(),
@@ -2212,6 +2212,22 @@
       const v = String(s ?? '').trim();
       return v === 'SIN INFORMACIÓN' || v === 'SIN INFORMACION' ? '' : v;
     }
+    // La "Gerencia Regional" del Sheets viene mal en la península (todo "BAJA CALIFORNIA").
+    // Reasignamos a la GCR correcta (BC norte / BCS / Mulegé) por entidad + municipio.
+    function normLoc(s) {
+      return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '');
+    }
+    const BCS_MUNI = ['LAPAZ', 'LOSCABOS', 'COMONDU', 'LORETO'];
+    const BC_MUNI = ['MEXICALI', 'TIJUANA', 'ENSENADA', 'TECATE', 'PLAYASDEROSARITO', 'ROSARITO', 'SANQUINTIN'];
+    function resolvePeninsulaGerencia(efRaw, muniRaw, gerRaw) {
+      const e = normLoc(efRaw), m = normLoc(muniRaw), g = normLoc(gerRaw);
+      const enPeninsula = e.includes('BAJACALIFORNIA') || g.includes('BAJACALIFORNIA') || g === 'MULEGE';
+      if (!enPeninsula) return gerRaw;
+      if (m === 'MULEGE') return 'MULEGÉ';
+      if (BCS_MUNI.includes(m) || e.includes('SUR')) return 'BAJA CALIFORNIA SUR';
+      if (BC_MUNI.includes(m) || e === 'BAJACALIFORNIA') return 'BAJA CALIFORNIA';
+      return gerRaw;
+    }
     function mapRowFromPositionalArray(row, idx) {
       const col = i => cleanVal(row?.[i]);
       const tipoBase = col(11);            // Tipo Tecnología
@@ -2240,7 +2256,7 @@
         mw: mwInstalada,
         generacionAnual: num(col(62)),     // Generación Anual Estimada
         inversion: col(66),                // Inversión MDD
-        gerencia: /SUR/i.test(col(20)) ? 'BAJA CALIFORNIA SUR' : col(19), // corrige BCS (CSV los pone en BC)
+        gerencia: resolvePeninsulaGerencia(col(20), col(68), col(19)), // EF, municipio, gerencia cruda
         region: col(1),                    // Región_v2
         municipio: col(68),                // Municipio/Alcaldía
         domicilio: col(69),
