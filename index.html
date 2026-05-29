@@ -278,6 +278,198 @@
       text-align: center;
     }
 
+    /* ===== Command bar (presentación) ===== */
+    .command-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 16px;
+      background: rgba(20, 6, 12, .82);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+      font-family: 'Noto Sans', sans-serif;
+    }
+
+    body.presentation-mode .command-bar {
+      display: flex;
+    }
+
+    body.presentation-mode .pres-dup {
+      display: none !important;
+    }
+
+    .command-bar .cb-brand {
+      font-family: 'Patria', 'Merriweather', serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      opacity: .9;
+    }
+
+    .command-bar .cb-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .command-bar .cb-lbl {
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .55);
+      font-weight: 700;
+    }
+
+    .command-bar select,
+    .command-bar input {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .25);
+      color: #fff;
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      max-width: 240px;
+    }
+
+    .command-bar select option {
+      color: #2b2b2b;
+    }
+
+    .command-bar .cb-search {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .command-bar .cb-search input {
+      width: 100%;
+      max-width: none;
+    }
+
+    .command-bar .cb-ico {
+      color: rgba(255, 255, 255, .7);
+      font-size: 14px;
+    }
+
+    .command-bar .cb-btn {
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .3);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .command-bar .cb-btn:hover {
+      background: rgba(165, 127, 44, .5);
+      border-color: var(--dorado);
+    }
+
+    /* ===== Spotlight ===== */
+    .spotlight {
+      position: fixed;
+      inset: 0;
+      z-index: 10001;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 12vh;
+      background: rgba(0, 0, 0, .55);
+      backdrop-filter: blur(4px);
+    }
+
+    .spotlight.open {
+      display: flex;
+    }
+
+    .spotlight-box {
+      width: min(680px, 92vw);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+      overflow: hidden;
+    }
+
+    .spotlight-box>input {
+      width: 100%;
+      border: 0;
+      border-bottom: 2px solid var(--guinda);
+      padding: 18px 22px;
+      font-size: 18px;
+      font-family: 'Noto Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+    }
+
+    .spotlight-results {
+      max-height: 46vh;
+      overflow: auto;
+    }
+
+    .spotlight-results .sr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 22px;
+      cursor: pointer;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .spotlight-results .sr.active,
+    .spotlight-results .sr:hover {
+      background: rgba(155, 34, 71, .08);
+    }
+
+    .spotlight-results .sr .badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--guinda);
+      padding: 3px 8px;
+      border-radius: 999px;
+      min-width: 58px;
+      text-align: center;
+    }
+
+    .spotlight-results .sr .badge.ef { background: var(--verde); }
+    .spotlight-results .sr .badge.ger { background: var(--dorado); }
+    .spotlight-results .sr .badge.tec { background: var(--gris); }
+
+    .spotlight-results .sr .txt {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .spotlight-results .sr .txt .t1 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .spotlight-results .sr .txt .t2 {
+      font-size: 11px;
+      color: #777;
+    }
+
+    .spotlight-results .sr-empty {
+      padding: 22px;
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+    }
+
     body.presentation-mode {
       padding: 0;
       background: #000;
@@ -1226,6 +1418,40 @@
           <button type="button" class="year-chip" data-from="2026" data-to="2040">Todo</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Command bar superior (solo en presentación) -->
+  <div id="commandBar" class="command-bar" aria-hidden="true">
+    <div class="cb-brand">PVIRCE 2026-2040</div>
+    <div class="cb-group">
+      <span class="cb-lbl">Nivel</span>
+      <select id="cbNivel">
+        <option value="ef">Entidad Federativa</option>
+        <option value="gerencia">Gerencia de control</option>
+      </select>
+    </div>
+    <div class="cb-group">
+      <span class="cb-lbl" id="cbScopeLbl">Entidad</span>
+      <select id="cbScope"><option value="__ALL__">Nacional (todas)</option></select>
+    </div>
+    <div class="cb-group">
+      <span class="cb-lbl">Proyecto</span>
+      <select id="cbProject"><option value="__ALL__">Todos</option></select>
+    </div>
+    <div class="cb-group cb-search">
+      <span class="cb-ico">⌕</span>
+      <input id="cbSearch" type="text" placeholder="Buscar proyecto, estado, gerencia…  ( / )" autocomplete="off">
+    </div>
+    <button type="button" id="cbHome" class="cb-btn" title="Vista nacional (N)">⌂ Nacional</button>
+    <button type="button" id="cbSpotlight" class="cb-btn" title="Búsqueda global (Ctrl/⌘ K)">⌘K</button>
+  </div>
+
+  <!-- Spotlight Overlay -->
+  <div id="spotlight" class="spotlight" aria-hidden="true">
+    <div class="spotlight-box">
+      <input type="text" id="spotlightInput" placeholder="Buscar entidad, gerencia, tecnología o proyecto…" autocomplete="off">
+      <div id="spotlightResults" class="spotlight-results"></div>
     </div>
   </div>
 
@@ -2243,6 +2469,7 @@
         resetMapProjectSelect();
         await loadMap(getMapScope());
         drawMap();
+        if (presentationMode) { syncCommandBar(); }
       });
     }
 
@@ -2328,6 +2555,7 @@
               if (efSel && [...efSel.options].some(o => o.value === focusValue)) { efSel.value = focusValue; render(); }
               else drawMap();
             }
+            if (presentationMode) { syncCommandBar(); }
           });
           lyr.on('dblclick', () => {
             if (scope !== 'ef') return;
@@ -2599,12 +2827,14 @@
       }
       populateProjectSelect();
       render();
+      if (presentationMode) { syncCommandBar(); }
     });
     document.getElementById('mapClearEf').addEventListener('click', () => {
       CURRENT_FOCUS_GERENCIA = null;
       document.getElementById('efSelect').value = '__ALL__';
       document.getElementById('projectSelect').value = '__ALL__';
       render();
+      if (presentationMode) { syncCommandBar(); }
     });
     document.getElementById('mapProjectSelect').addEventListener('change', (ev) => {
       const scope = getMapScope();
@@ -2623,9 +2853,13 @@
 
     function setPresentationControls(visible) {
       const controls = document.getElementById('presentationControls');
-      if (!controls) return;
-      controls.style.display = visible ? 'flex' : 'none';
-      controls.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      if (controls) {
+        controls.style.display = visible ? 'flex' : 'none';
+        controls.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      }
+      const cb = document.getElementById('commandBar');
+      if (cb) cb.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      if (visible) syncCommandBar();
     }
 
     function fitActiveSlide() {
@@ -2685,6 +2919,7 @@
       if (!presentationMode) return;
       presentationMode = false;
       document.body.classList.remove('presentation-mode');
+      document.body.classList.remove('present-black');
       presentationSlides.forEach(slide => {
         slide.classList.remove('active');
         slide.style.removeProperty('--presentation-scale');
@@ -2707,36 +2942,270 @@
       renderPresentationState();
     }
 
+    // ===================== COMMAND BAR + SPOTLIGHT + NAVEGACIÓN =====================
+    function normTxt(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+
+    function presentationGoTo(selector) {
+      if (!presentationMode) return;
+      const el = document.querySelector(selector);
+      const idx = presentationSlides.indexOf(el);
+      if (idx >= 0) { presentationIndex = idx; renderPresentationState(); }
+    }
+
+    function cbScopeList(scope) {
+      const key = scope === 'gerencia' ? 'gerencia' : 'ef';
+      return [...new Set(DATA.map(r => r[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es-MX'));
+    }
+
+    function updateBreadcrumb() {
+      const el = document.querySelector('#commandBar .cb-brand');
+      if (!el) return;
+      const scope = getMapScope();
+      const parts = ['Nacional'];
+      if (scope === 'gerencia' && CURRENT_FOCUS_GERENCIA) parts.push('GCR ' + CURRENT_FOCUS_GERENCIA);
+      const efv = document.getElementById('efSelect')?.value;
+      if (scope === 'ef' && efv && efv !== '__ALL__') parts.push(efv);
+      const rows0 = selectedProjectRows();
+      if (rows0?.length) parts.push(rows0[0].nombre);
+      // Métrica del ámbito actual (no nacional) cuando hay foco EF/gerencia.
+      let data;
+      if (rows0?.length) data = rows0;
+      else if (scope === 'gerencia' && CURRENT_FOCUS_GERENCIA) data = rowsForScope('gerencia', CURRENT_FOCUS_GERENCIA);
+      else if (scope === 'ef' && efv && efv !== '__ALL__') data = rowsForScope('ef', efv);
+      else data = filteredData();
+      const saeeLabel = 'SAEE Asociado a Centrales Eléctricas';
+      const cap = data.filter(r => techLabel(r.tipo) !== saeeLabel);
+      const mw = cap.reduce((s, r) => s + r.mw, 0);
+      el.innerHTML = parts.map((p, i) => i === parts.length - 1
+        ? `<strong style="color:var(--dorado)">${p}</strong>` : p)
+        .join(' <span style="opacity:.45">›</span> ') +
+        ` <span style="opacity:.6;font-weight:400">· ${fmt(mw, 0)} MW · ${cap.length} proy</span>`;
+    }
+
+    function syncCommandBar() {
+      const cbN = document.getElementById('cbNivel');
+      const cbS = document.getElementById('cbScope');
+      const cbP = document.getElementById('cbProject');
+      if (!cbN || !cbS || !cbP || !DATA.length) return;
+      const scope = getMapScope();
+      cbN.value = scope;
+      document.getElementById('cbScopeLbl').textContent = scope === 'gerencia' ? 'Gerencia' : 'Entidad';
+      const list = cbScopeList(scope);
+      cbS.innerHTML = '<option value="__ALL__">Nacional (todas)</option>' +
+        list.map(v => `<option value="${v}">${v}</option>`).join('');
+      if (scope === 'gerencia') {
+        const cur = CURRENT_FOCUS_GERENCIA;
+        const opt = cur ? [...cbS.options].find(o => normGerencia(o.value) === normGerencia(cur)) : null;
+        cbS.value = opt ? opt.value : '__ALL__';
+      } else {
+        const cur = document.getElementById('efSelect')?.value || '__ALL__';
+        cbS.value = [...cbS.options].some(o => o.value === cur) ? cur : '__ALL__';
+      }
+      const src = document.getElementById('projectSelect');
+      if (src) { cbP.innerHTML = src.innerHTML; cbP.value = src.value; cbP.disabled = src.disabled; }
+      updateBreadcrumb();
+    }
+
+    function goNacional() {
+      const projSel = document.getElementById('projectSelect');
+      if (projSel) projSel.value = '__ALL__';
+      document.getElementById('efSelect').value = '__ALL__';
+      CURRENT_FOCUS_EF = null;
+      CURRENT_FOCUS_GERENCIA = null;
+      render();
+      if (presentationMode) { syncCommandBar(); presentationGoTo('.slide.content'); }
+    }
+
+    function selectEf(ef) {
+      const mapScope = document.getElementById('mapScope');
+      if (mapScope && mapScope.value !== 'ef') { mapScope.value = 'ef'; mapScope.dispatchEvent(new Event('change')); }
+      const efSel = document.getElementById('efSelect');
+      const projSel = document.getElementById('projectSelect');
+      if (projSel) projSel.value = '__ALL__';
+      if (efSel) {
+        efSel.value = (ef && [...efSel.options].some(o => o.value === ef)) ? ef : '__ALL__';
+        efSel.dispatchEvent(new Event('change'));
+      }
+      if (presentationMode) { syncCommandBar(); presentationGoTo('.slide.content'); }
+    }
+
+    async function selectGerencia(ger) {
+      const mapScope = document.getElementById('mapScope');
+      const projSel = document.getElementById('projectSelect');
+      if (projSel) projSel.value = '__ALL__';
+      document.getElementById('efSelect').value = '__ALL__';
+      if (mapScope && mapScope.value !== 'gerencia') {
+        mapScope.value = 'gerencia';
+        mapScope.dispatchEvent(new Event('change'));
+        await new Promise(r => setTimeout(r, 450));
+      }
+      CURRENT_FOCUS_GERENCIA = (ger && ger !== '__ALL__') ? normGerencia(ger) : null;
+      drawMap();
+      if (CURRENT_FOCUS_GERENCIA) showScopeDetail('gerencia', CURRENT_FOCUS_GERENCIA);
+      render();
+      if (presentationMode) { syncCommandBar(); presentationGoTo('.map-slide'); }
+    }
+
+    function selectProjectById(id) {
+      const sel = document.getElementById('projectSelect');
+      if (!sel) return;
+      const prow = DATA.find(r => String(r.id) === String(id));
+      if (prow) {
+        const efSel = document.getElementById('efSelect');
+        if (efSel && prow.ef && efSel.value !== prow.ef && [...efSel.options].some(o => o.value === prow.ef)) {
+          efSel.value = prow.ef;
+          populateProjectSelect();
+        }
+      }
+      if ([...sel.options].some(o => o.value === String(id))) {
+        sel.value = String(id);
+        sel.dispatchEvent(new Event('change'));
+      }
+      if (presentationMode) {
+        syncCommandBar();
+        presentationGoTo('.map-slide');
+      }
+    }
+
+    // ---- Spotlight ----
+    let spotlightItems = [], spotlightSel = 0, SPOT_INDEX = [];
+    function buildSpotlightIndex() {
+      const items = [];
+      cbScopeList('ef').forEach(ef => items.push({ type: 'ef', label: ef, sub: 'Entidad Federativa', key: ef }));
+      cbScopeList('gerencia').forEach(g => items.push({ type: 'ger', label: g, sub: 'Gerencia de control', key: g }));
+      [...new Set(DATA.map(r => r.tipo).filter(Boolean))].sort().forEach(t => items.push({ type: 'tec', label: t, sub: 'Tecnología', key: t }));
+      DATA.filter(r => r.nombre).sort((a, b) => b.mw - a.mw).forEach(r => items.push({
+        type: 'prj', label: r.nombre,
+        sub: `${r.ef || '—'} · ${r.municipio || '—'} · ${fmt(r.mw, 1)} MW`,
+        key: String(r.id), hay: normTxt(`${r.nombre} ${r.ef} ${r.municipio} ${r.gerencia} ${r.tipo}`)
+      }));
+      return items;
+    }
+
+    function openSpotlight(q = '') {
+      if (!DATA.length) return;
+      SPOT_INDEX = buildSpotlightIndex();
+      const sp = document.getElementById('spotlight');
+      sp.classList.add('open'); sp.setAttribute('aria-hidden', 'false');
+      const inp = document.getElementById('spotlightInput');
+      inp.value = q; spotlightSel = 0;
+      renderSpotlight(q);
+      setTimeout(() => { inp.focus(); inp.select(); }, 20);
+    }
+
+    function closeSpotlight() {
+      const sp = document.getElementById('spotlight');
+      sp.classList.remove('open'); sp.setAttribute('aria-hidden', 'true');
+    }
+
+    function renderSpotlight(q) {
+      const nq = normTxt(q);
+      const res = !nq ? SPOT_INDEX.slice(0, 40)
+        : SPOT_INDEX.filter(it => (it.hay || normTxt(it.label + ' ' + it.sub)).includes(nq)).slice(0, 50);
+      spotlightItems = res;
+      if (spotlightSel >= res.length) spotlightSel = Math.max(0, res.length - 1);
+      const box = document.getElementById('spotlightResults');
+      if (!res.length) { box.innerHTML = '<div class="sr-empty">Sin coincidencias.</div>'; return; }
+      const badge = { ef: 'EF', ger: 'GER', tec: 'TEC', prj: 'PRJ' };
+      box.innerHTML = res.map((it, i) =>
+        `<div class="sr ${i === spotlightSel ? 'active' : ''}" data-i="${i}"><span class="badge ${it.type}">${badge[it.type]}</span><div class="txt"><div class="t1">${it.label}</div><div class="t2">${it.sub}</div></div></div>`
+      ).join('');
+    }
+
+    function scrollSpotActive() {
+      document.querySelector('.spotlight-results .sr.active')?.scrollIntoView({ block: 'nearest' });
+    }
+
+    function execSpotlight(it) {
+      if (!it) return;
+      closeSpotlight();
+      if (!presentationMode) enterPresentation(0);
+      if (it.type === 'ef') selectEf(it.key);
+      else if (it.type === 'ger') selectGerencia(it.key);
+      else if (it.type === 'prj') selectProjectById(it.key);
+      else if (it.type === 'tec') {
+        const mt = document.getElementById('mapTipo');
+        if (mt) { mt.value = [...mt.options].some(o => o.value === it.key) ? it.key : '__ALL__'; drawMap(); }
+        if (presentationMode) { syncCommandBar(); presentationGoTo('.map-slide'); }
+      }
+    }
+
     document.getElementById('btnPresent').addEventListener('click', () => enterPresentation(0));
     document.getElementById('btnPrevSlide').addEventListener('click', prevPresentationSlide);
     document.getElementById('btnNextSlide').addEventListener('click', nextPresentationSlide);
     document.getElementById('btnExitPresentation').addEventListener('click', exitPresentation);
 
-    window.addEventListener('resize', fitActiveSlide);
-    window.addEventListener('resize', scheduleMapResize);
-    document.addEventListener('fullscreenchange', () => {
-      if (presentationMode && !document.fullscreenElement) exitPresentation();
+    document.getElementById('cbNivel').addEventListener('change', (e) => {
+      if (e.target.value === 'gerencia') selectGerencia('__ALL__');
+      else selectEf('__ALL__');
     });
+    document.getElementById('cbScope').addEventListener('change', (e) => {
+      if (getMapScope() === 'gerencia') selectGerencia(e.target.value);
+      else selectEf(e.target.value);
+    });
+    document.getElementById('cbProject').addEventListener('change', (e) => {
+      if (e.target.value === '__ALL__') {
+        const sel = document.getElementById('projectSelect');
+        if (sel) { sel.value = '__ALL__'; sel.dispatchEvent(new Event('change')); }
+        if (presentationMode) { syncCommandBar(); presentationGoTo('.map-slide'); }
+      } else selectProjectById(e.target.value);
+    });
+    document.getElementById('cbHome').addEventListener('click', goNacional);
+    document.getElementById('cbSearch').addEventListener('focus', () => openSpotlight(document.getElementById('cbSearch').value));
+    document.getElementById('cbSpotlight').addEventListener('click', () => openSpotlight(''));
+
+    const spInput = document.getElementById('spotlightInput');
+    spInput.addEventListener('input', (e) => { spotlightSel = 0; renderSpotlight(e.target.value); });
+    spInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); spotlightSel = Math.min(spotlightItems.length - 1, spotlightSel + 1); renderSpotlight(spInput.value); scrollSpotActive(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); spotlightSel = Math.max(0, spotlightSel - 1); renderSpotlight(spInput.value); scrollSpotActive(); }
+      else if (e.key === 'Enter') { e.preventDefault(); execSpotlight(spotlightItems[spotlightSel]); }
+      else if (e.key === 'Escape') { e.preventDefault(); closeSpotlight(); }
+    });
+    document.getElementById('spotlightResults').addEventListener('click', (e) => {
+      const row = e.target.closest('.sr');
+      if (row) execSpotlight(spotlightItems[+row.dataset.i]);
+    });
+    document.getElementById('spotlight').addEventListener('click', (e) => { if (e.target.id === 'spotlight') closeSpotlight(); });
+
+    // Ctrl/Cmd+K abre spotlight en cualquier momento
+    document.addEventListener('keydown', (ev) => {
+      if ((ev.ctrlKey || ev.metaKey) && (ev.key === 'k' || ev.key === 'K')) {
+        ev.preventDefault();
+        document.getElementById('spotlight').classList.contains('open') ? closeSpotlight() : openSpotlight('');
+      }
+    });
+
+    // ---- Atajos de presentación ----
     document.addEventListener('keydown', (ev) => {
       if (!presentationMode) return;
-      if (['ArrowRight', 'PageDown', ' '].includes(ev.key)) {
+      if (document.getElementById('spotlight').classList.contains('open')) return;
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      const tag = (ev.target.tagName || '').toLowerCase();
+      const typing = tag === 'input' || tag === 'select' || tag === 'textarea';
+      if (ev.key === '/' && !typing) { ev.preventDefault(); document.getElementById('cbSearch')?.focus(); return; }
+      if (typing) { if (ev.key === 'Escape') ev.target.blur(); return; }
+      if (['ArrowRight', 'PageDown', ' '].includes(ev.key)) { ev.preventDefault(); nextPresentationSlide(); }
+      else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(ev.key)) { ev.preventDefault(); prevPresentationSlide(); }
+      else if (ev.key === 'Home') { ev.preventDefault(); presentationIndex = 0; renderPresentationState(); }
+      else if (ev.key === 'End') { ev.preventDefault(); presentationIndex = Math.max(0, presentationSlides.length - 1); renderPresentationState(); }
+      else if (ev.key === 'Escape') { ev.preventDefault(); exitPresentation(); }
+      else if (ev.key === 'n' || ev.key === 'N') { ev.preventDefault(); goNacional(); }
+      else if (ev.key === 'e' || ev.key === 'E') {
         ev.preventDefault();
-        nextPresentationSlide();
-      } else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(ev.key)) {
-        ev.preventDefault();
-        prevPresentationSlide();
-      } else if (ev.key === 'Home') {
-        ev.preventDefault();
-        presentationIndex = 0;
-        renderPresentationState();
-      } else if (ev.key === 'End') {
-        ev.preventDefault();
-        presentationIndex = Math.max(0, presentationSlides.length - 1);
-        renderPresentationState();
-      } else if (ev.key === 'Escape') {
-        ev.preventDefault();
-        exitPresentation();
+        if (getMapScope() !== 'ef') { const n = document.getElementById('cbNivel'); n.value = 'ef'; n.dispatchEvent(new Event('change')); }
+        setTimeout(() => document.getElementById('cbScope')?.focus(), 60);
       }
+      else if (ev.key === 'g' || ev.key === 'G') {
+        ev.preventDefault();
+        const n = document.getElementById('cbNivel');
+        if (getMapScope() !== 'gerencia') { n.value = 'gerencia'; n.dispatchEvent(new Event('change')); }
+        setTimeout(() => document.getElementById('cbScope')?.focus(), 480);
+      }
+      else if (ev.key === 'p' || ev.key === 'P') { ev.preventDefault(); document.getElementById('cbProject')?.focus(); }
+      else if (ev.key === 'm' || ev.key === 'M') { ev.preventDefault(); presentationGoTo('.map-slide'); }
+      else if (ev.key === 'k' || ev.key === 'K') { ev.preventDefault(); presentationGoTo('.slide.content'); }
+      else if (ev.key === '.') { ev.preventDefault(); document.body.classList.toggle('present-black'); }
     });
 
     let lastFocusReloadAt = 0;
