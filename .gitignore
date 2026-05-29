@@ -19,3 +19,8 @@ dist/
 # Backups
 *.backup
 *.bak
+
+# Insumos / Archivos temporales locales
+Insumos/
+_segunda.csv
+
