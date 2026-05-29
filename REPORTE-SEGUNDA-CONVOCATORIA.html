@@ -10,14 +10,33 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
   <style>
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
+      font-weight: 300;
+    }
+
     /* VARIABLES DE DISEÑO (Identidad de Marca - SENER Guinda/Dorado) */
     :root {
-      --color-guinda: #691B31;
-      --color-guinda-light: #9B2247;
-      --color-dorado: #BC955C;
-      --color-dorado-light: #D4C19C;
+      --color-guinda: #9B2247;
+      --color-verde: #1E5B4F;
+      --color-dorado: #A57F2C;
+      --color-gris: #98989A;
+      --color-gris-claro: #E5E5E5;
       --color-bg-dark: #1E1E1E;
-      --color-text-dark: #333333;
+      --color-text-dark: #2b2b2b;
       --color-text-light: #666666;
       --color-bg-light: #F4F6F8;
       --scale: 1.0;
@@ -30,7 +49,7 @@
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Patria', 'Outfit', sans-serif;
       background-color: var(--color-bg-dark);
       color: var(--color-text-dark);
       overflow: hidden;
@@ -114,28 +133,79 @@
       flex-direction: column;
       padding: 35px 45px;
       transform-origin: center center;
-      border-bottom: 8px solid var(--color-guinda);
+      border-bottom: none; /* No border, we use slide-footer for the tricolor band */
     }
 
-    /* BARRA DE HEADER DE LA DIAPOSITIVA */
+    /* BARRA DE HEADER DE LA DIAPOSITIVA PREMIUM */
     .slide-header {
-      display: flex;
-      justify-content: space-between;
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      padding: 14px 28px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
       align-items: center;
-      border-bottom: 2px solid var(--color-dorado);
-      padding-bottom: 12px;
+      border-bottom: 2px solid var(--color-guinda);
       margin-bottom: 15px;
+      width: calc(100% + 90px);
+      margin-left: -45px;
+      margin-top: -35px;
     }
 
-    .slide-header h2 {
-      font-family: 'Outfit', sans-serif;
+    .slide-header .brand-left {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
       color: var(--color-guinda);
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slide-header .brand-left::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--color-guinda);
+      border-radius: 2px;
+    }
+
+    .slide-header .ef-title {
+      font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 24px;
       font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+
+    .slide-header .ef-title::before,
+    .slide-header .ef-title::after {
+      content: '·';
+      color: var(--color-dorado);
+      margin: 0 14px;
+      font-size: 24px;
+    }
+
+    .slide-header .logo-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
     }
 
     .slide-header .logo-sener {
-      height: 32px;
+      height: 38px;
+    }
+
+    /* BARRA DE FOOTER PREMIUM CON DIAPOSITIVA TRICOLOR */
+    .slide-footer {
+      margin-top: auto;
+      height: 8px;
+      width: calc(100% + 90px);
+      margin-left: -45px;
+      margin-bottom: -35px;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 60%, var(--color-dorado) 60%, var(--color-dorado) 100%);
+      flex-shrink: 0;
     }
 
     /* CONTROLES DE PRESENTACIÓN */
@@ -181,89 +251,157 @@
     .control-btn:disabled {
       color: #666;
       cursor: not-allowed;
-    }
-
-    /* DIAPOSITIVA 1: PORTADA */
+    }    /* DIAPOSITIVA 1: PORTADA PREMIUM COPIADA DEL ORIGINAL */
     .slide.cover .slide-container {
-      background: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 1) 0%, rgba(247, 245, 246, 1) 90%);
-      justify-content: space-between;
-      border-bottom: 12px solid var(--color-guinda);
-    }
-
-    .cover-logos {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-
-    .cover-logos img.gob { height: 48px; }
-    .cover-logos img.sener { height: 42px; }
-
-    .cover-center {
-      margin-top: 20px;
+      background: #6a172f;
+      color: white;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
+      justify-content: flex-start;
+      border-bottom: none;
     }
 
-    .cover-eyebrow {
-      color: var(--color-dorado);
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    .cover-title {
-      font-family: 'Outfit', sans-serif;
-      color: var(--color-guinda);
-      font-size: 48px;
-      font-weight: 700;
-      line-height: 1.15;
-      margin-bottom: 5px;
-      border-left: 5px solid var(--color-dorado);
-      padding-left: 20px;
-    }
-
-    .cover-sub {
-      color: var(--color-text-dark);
-      font-size: 16px;
-      font-weight: 500;
-      max-width: 900px;
-      margin-left: 25px;
-    }
-
-    .cover-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
+    .slide.cover .cover-bg {
+      position: absolute;
+      inset: 0;
       width: 100%;
-      border-top: 1px solid rgba(0,0,0,0.1);
-      padding-top: 20px;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
     }
 
-    .cover-date {
-      color: var(--color-text-light);
-      font-size: 15px;
-      font-weight: 600;
+    .slide.cover .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155, 34, 71, .35) 0%, rgba(30, 91, 79, .25) 60%, rgba(0, 0, 0, .45) 100%);
+      z-index: 1;
     }
 
-    .cover-margarita {
+    .slide.cover .top-band,
+    .slide.cover .body,
+    .slide.cover .bottom-band {
+      position: relative;
+      z-index: 2;
+    }
+
+    .slide.cover .top-band {
+      background: rgba(255, 255, 255, .96);
+      padding: 18px 56px;
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 24px;
+      border-bottom: 4px solid var(--color-dorado);
+      width: 100%;
     }
-    .cover-margarita img {
-      height: 55px;
-      filter: grayscale(1) contrast(1.1);
+
+    .slide.cover .top-band img.gob {
+      height: 56px;
+      width: auto;
     }
-    .cover-margarita .m-txt {
-      font-size: 12px;
-      color: var(--color-text-light);
-      line-height: 1.3;
+
+    .slide.cover .top-band img.sener {
+      height: 48px;
+      width: auto;
+    }
+
+    .slide.cover .top-band .divider {
+      width: 1px;
+      height: 48px;
+      background: var(--color-gris);
+    }
+
+    .slide.cover .top-band .unit {
+      font-size: 11px;
+      color: var(--color-text-dark);
+      letter-spacing: .04em;
+      text-transform: uppercase;
       font-weight: 600;
+      margin-left: auto;
+    }
+
+    .slide.cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 40px 60px 64px 28%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 15px;
+      text-align: left;
+    }
+
+    .slide.cover .eyebrow {
+      font-size: 14px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--color-dorado);
+      font-weight: 700;
+    }
+
+    .slide.cover h1 {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 1.05;
+      max-width: 900px;
+      color: white;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
+    }
+
+    .slide.cover .unidad {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.3;
+      color: white;
+      max-width: 720px;
+      border-left: 3px solid var(--color-dorado);
+      padding-left: 14px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+      margin-bottom: 5px;
+    }
+
+    .slide.cover .subtitle {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 24px;
+      color: rgba(255, 255, 255, .92);
+      max-width: 800px;
+    }
+
+    .slide.cover .subtitle-status {
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .88);
+      margin-top: -8px;
+    }
+
+    .slide.cover .meta {
+      margin-top: 15px;
+      display: flex;
+      gap: 32px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .slide.cover .meta strong {
+      color: var(--color-dorado);
+      display: block;
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .slide.cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
+      height: 14px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 33%, var(--color-verde) 33%, var(--color-verde) 66%, var(--color-dorado) 66%);
     }
 
     /* DIAPOSITIVA 2: NUMERALIA DASHBOARD */
@@ -649,24 +787,29 @@
     <!-- SLIDE 1: PORTADA -->
     <section class="slide cover active" id="slide-0">
       <div class="slide-container">
-        <div class="cover-logos">
+        <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
+        <div class="cover-overlay"></div>
+        
+        <div class="top-band">
           <img class="gob" src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
+          <div class="divider"></div>
           <img class="sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+          <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
         </div>
-        
-        <div class="cover-center">
-          <div class="cover-eyebrow">Seguimiento de la Segunda Convocatoria</div>
-          <h1 class="cover-title">Proyectos Privados de Generación</h1>
-          <div class="cover-sub">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
-        </div>
-        
-        <div class="cover-footer">
-          <div class="cover-date" id="coverDate">28 de mayo de 2026</div>
-          <div class="cover-margarita">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Margarita_Maza_de_Juarez.png" alt="Margarita Maza" onerror="this.style.display='none'">
-            <div class="m-txt">2026<br>Año de Margarita Maza</div>
+
+        <div class="body">
+          <div class="eyebrow">Seguimiento de la Segunda Convocatoria</div>
+          <h1>Proyectos de Generación Eléctrica — Segunda Convocatoria</h1>
+          <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
+          <div class="subtitle" id="coverPeriod">Periodo: <strong>2026-2035</strong></div>
+          <div class="meta">
+            <div><strong>Versión</strong>2026 · v1.0</div>
+            <div><strong>Fecha</strong>Mayo 2026</div>
+            <div><strong>Fuente</strong>SNIE — DGMESNIE</div>
           </div>
         </div>
+
+        <div class="bottom-band"></div>
       </div>
     </section>
 
@@ -674,8 +817,9 @@
     <section class="slide" id="slide-1">
       <div class="slide-container">
         <div class="slide-header">
-          <h2>Numeralia de Proyectos Finalizados</h2>
-          <img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+          <div class="brand-left">Segunda Convocatoria 2026</div>
+          <div class="ef-title">Numeralia de Proyectos</div>
+          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
         </div>
         
         <div class="numeralia-grid">
@@ -755,6 +899,7 @@
             </div>
           </div>
         </div>
+        <div class="slide-footer"></div>
       </div>
     </section>
 
@@ -1339,8 +1484,9 @@
           slide.innerHTML = `
             <div class="slide-container">
               <div class="slide-header">
-                <h2>Información de Proyectos con registro Finalizado (${gcrInfo.title})${pageIndicator}</h2>
-                <img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+                <div class="brand-left">Segunda Convocatoria 2026</div>
+                <div class="ef-title">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})${pageIndicator}</div>
+                <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
               </div>
               <div class="table-container">
                 <table class="report-table">
@@ -1366,6 +1512,7 @@
                   </tbody>
                 </table>
               </div>
+              <div class="slide-footer"></div>
             </div>
           `;
 
@@ -1407,8 +1554,9 @@
         slide.innerHTML = `
           <div class="slide-container">
             <div class="slide-header">
-              <h2>Sistema de Almacenamiento (GCR Peninsular)</h2>
-              <img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+              <div class="brand-left">Segunda Convocatoria 2026</div>
+              <div class="ef-title">Sistemas de Almacenamiento (BESS)</div>
+              <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
             </div>
             <div class="table-container">
               <table class="report-table">
@@ -1441,6 +1589,7 @@
                 </tbody>
               </table>
             </div>
+            <div class="slide-footer"></div>
           </div>
         `;
         deck.appendChild(slide);
