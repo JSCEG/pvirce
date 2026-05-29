@@ -1307,6 +1307,30 @@
       font-style: italic;
     }
 
+    /* CTA "Ver ficha completa" en el panel de detalle del mapa */
+    .map-slide .side-panel .ficha-cta {
+      width: 100%;
+      margin-bottom: 6px;
+      padding: 8px 10px;
+      background: var(--guinda);
+      color: #fff;
+      border: 0;
+      border-radius: 6px;
+      font-family: var(--font-b);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .15s ease, transform .1s ease;
+      box-shadow: 0 2px 6px rgba(155, 34, 71, .3);
+    }
+
+    .map-slide .side-panel .ficha-cta:hover {
+      background: var(--dorado);
+      transform: translateY(-1px);
+    }
+
     /* ============ FICHAS DE PROYECTO (2 láminas) ============ */
     .slide.ficha.ficha-hidden { display: none; }
 
@@ -3465,6 +3489,7 @@
       document.getElementById('mapHint').style.display = 'none';
       // COSTADO: mini-cards + identificación
       document.getElementById('mapStats').innerHTML = `
+    <button type="button" class="ficha-cta" onclick="goToProjectFicha()">Ver ficha completa del proyecto →</button>
     <div class="ef-detail-grid">
       <div class="ef-mini-card"><div class="lbl">Cap. Instalada</div><div class="val">${fmt(p.mwInstalada, 2)}</div><div class="sub">MW</div></div>
       <div class="ef-mini-card"><div class="lbl">Cap. Generación</div><div class="val">${fmt(p.mwGeneracion, 2)}</div><div class="sub">MW</div></div>
@@ -4135,6 +4160,19 @@
       const src = document.getElementById('projectSelect');
       if (src) { cbP.innerHTML = src.innerHTML; cbP.value = src.value; cbP.disabled = src.disabled; }
       updateBreadcrumb();
+    }
+
+    // Desde el detalle del mapa → saltar a las fichas completas del proyecto.
+    function goToProjectFicha() {
+      const fichaA = document.getElementById('slideFichaA');
+      if (!fichaA || fichaA.classList.contains('ficha-hidden')) return;
+      if (presentationMode) {
+        syncCommandBar();
+        refreshPresentationDeck(fichaA);
+        presentationGoTo('#slideFichaA');
+      } else {
+        fichaA.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     function goNacional() {
