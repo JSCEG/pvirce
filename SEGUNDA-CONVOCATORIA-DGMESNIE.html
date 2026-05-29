@@ -2553,6 +2553,7 @@
         const dataRows = allRows.slice(headerIdx >= 0 ? headerIdx + 1 : 1);
         DATA = dataRows.map(mapRowFromPositionalArray).filter(r => r.anio && r.nombre);
         applyMwMetric();
+        initYearRangeFromData();
 
         populateEFSelect();
         populateStatusSelect();
@@ -2564,6 +2565,20 @@
         isLoadingData = false;
         setReloadingState(false);
       }
+    }
+
+    // En la primera carga, abrir el rango de años a todo el span de los datos
+    // (no tiene caso filtrar por año por defecto). No pisa cambios manuales posteriores.
+    let yearRangeInitialized = false;
+    function initYearRangeFromData() {
+      if (yearRangeInitialized) return;
+      const years = DATA.map(r => r.anio).filter(Number.isFinite);
+      if (!years.length) return;
+      const min = Math.min(...years), max = Math.max(...years);
+      const fromEl = document.getElementById('yearFrom'), toEl = document.getElementById('yearTo');
+      if (fromEl) fromEl.value = String(min);
+      if (toEl) toEl.value = String(max);
+      yearRangeInitialized = true;
     }
 
     function populateEFSelect() {
