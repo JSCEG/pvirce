@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segunda Convocatoria - Reporte de Proyectos Particulares</title>
+  
+  <!-- Hojas de estilo y Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
+      font-weight: 300;
+    }
+
+    /* VARIABLES DE DISEÑO (Identidad de Marca - SENER Guinda/Dorado) */
+    :root {
+      --color-guinda: #9B2247;
+      --color-verde: #1E5B4F;
+      --color-dorado: #A57F2C;
+      --color-gris: #98989A;
+      --color-gris-claro: #E5E5E5;
+      --color-bg-dark: #1E1E1E;
+      --color-text-dark: #2b2b2b;
+      --color-text-light: #666666;
+      --color-bg-light: #F4F6F8;
+      --scale: 1.0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      background-color: var(--color-bg-dark);
+      color: var(--color-text-dark);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* PRELOADER */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--color-bg-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.1);
+      border-top-color: var(--color-dorado);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* DECK DE DIAPOSITIVAS */
+    #deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--color-bg-dark);
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+      z-index: 1;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      z-index: 2;
+    }
+
+    /* CONTENEDOR VIRTUAL DE ASPECTO Fijo 16:9 */
+    .slide-container {
+      width: 1333px;
+      height: 750px;
+      background-color: #ffffff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 35px 45px;
+      transform-origin: center center;
+      border-bottom: none; /* No border, we use slide-footer for the tricolor band */
+    }
+
+    /* BARRA DE HEADER DE LA DIAPOSITIVA PREMIUM */
+    .slide-header {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      padding: 14px 28px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      border-bottom: 2px solid var(--color-guinda);
+      margin-bottom: 15px;
+      width: calc(100% + 90px);
+      margin-left: -45px;
+      margin-top: -35px;
+    }
+
+    .slide-header .brand-left {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slide-header .brand-left::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--color-guinda);
+      border-radius: 2px;
+    }
+
+    .slide-header .ef-title {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+
+    .slide-header .ef-title::before,
+    .slide-header .ef-title::after {
+      content: '·';
+      color: var(--color-dorado);
+      margin: 0 14px;
+      font-size: 24px;
+    }
+
+    .slide-header .logo-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .slide-header .logo-sener {
+      height: 38px;
+    }
+
+    /* BARRA DE FOOTER PREMIUM CON DIAPOSITIVA TRICOLOR */
+    .slide-footer {
+      margin-top: auto;
+      height: 8px;
+      width: calc(100% + 90px);
+      margin-left: -45px;
+      margin-bottom: -35px;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 60%, var(--color-dorado) 60%, var(--color-dorado) 100%);
+      flex-shrink: 0;
+    }
+
+    /* CONTROLES DE PRESENTACIÓN */
+    #presentationControls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 8px 18px;
+      border-radius: 30px;
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      gap: 15px;
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .control-btn:disabled {
+      color: #666;
+      cursor: not-allowed;
+    }    /* DIAPOSITIVA 1: PORTADA PREMIUM COPIADA DEL ORIGINAL */
+    .slide.cover .slide-container {
+      background: #6a172f;
+      color: white;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      border-bottom: none;
+    }
+
+    .slide.cover .cover-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .slide.cover .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155, 34, 71, .35) 0%, rgba(30, 91, 79, .25) 60%, rgba(0, 0, 0, .45) 100%);
+      z-index: 1;
+    }
+
+    .slide.cover .top-band,
+    .slide.cover .body,
+    .slide.cover .bottom-band {
+      position: relative;
+      z-index: 2;
+    }
+
+    .slide.cover .top-band {
+      background: rgba(255, 255, 255, .96);
+      padding: 18px 56px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      border-bottom: 4px solid var(--color-dorado);
+      width: 100%;
+    }
+
+    .slide.cover .top-band img.gob {
+      height: 56px;
+      width: auto;
+    }
+
+    .slide.cover .top-band img.sener {
+      height: 48px;
+      width: auto;
+    }
+
+    .slide.cover .top-band .divider {
+      width: 1px;
+      height: 48px;
+      background: var(--color-gris);
+    }
+
+    .slide.cover .top-band .unit {
+      font-size: 11px;
+      color: var(--color-text-dark);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-left: auto;
+    }
+
+    .slide.cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 40px 60px 64px 28%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 15px;
+      text-align: left;
+    }
+
+    .slide.cover .eyebrow {
+      font-size: 14px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--color-dorado);
+      font-weight: 700;
+    }
+
+    .slide.cover h1 {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 1.05;
+      max-width: 900px;
+      color: white;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
+    }
+
+    .slide.cover .unidad {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.3;
+      color: white;
+      max-width: 720px;
+      border-left: 3px solid var(--color-dorado);
+      padding-left: 14px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+      margin-bottom: 5px;
+    }
+
+    .slide.cover .subtitle {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 24px;
+      color: rgba(255, 255, 255, .92);
+      max-width: 800px;
+    }
+
+    .slide.cover .subtitle-status {
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .88);
+      margin-top: -8px;
+    }
+
+    .slide.cover .meta {
+      margin-top: 15px;
+      display: flex;
+      gap: 32px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .slide.cover .meta strong {
+      color: var(--color-dorado);
+      display: block;
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .slide.cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
+      height: 14px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 33%, var(--color-verde) 33%, var(--color-verde) 66%, var(--color-dorado) 66%);
+    }
+
+    /* DIAPOSITIVA 2: NUMERALIA DASHBOARD */
+    .numeralia-grid {
+      display: grid;
+      grid-template-columns: 290px 1fr 400px;
+      gap: 20px;
+      flex-grow: 1;
+      height: calc(100% - 60px);
+    }
+
+    .col-left {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .kpi-card-main {
+      background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%);
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(105, 27, 49, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+      min-height: 150px;
+    }
+
+    .kpi-card-main .lbl {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+
+    .kpi-card-main .val-main {
+      font-family: 'Outfit', sans-serif;
+      font-size: 46px;
+      font-weight: 700;
+      margin: 5px 0;
+      color: var(--color-dorado-light);
+    }
+
+    .kpi-card-main .val-sub {
+      font-size: 16px;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    .tech-card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 15px;
+      flex-grow: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tech-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--color-guinda);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #E2E8F0;
+      padding-bottom: 5px;
+    }
+
+    .tech-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .tech-item .icon-bg {
+      width: 32px;
+      height: 32px;
+      background: var(--color-bg-light);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      color: var(--color-guinda);
+    }
+
+    .tech-item .t-info {
+      flex-grow: 1;
+    }
+    .tech-item .t-info .t-name {
+      font-weight: 600;
+      color: var(--color-text-dark);
+    }
+    .tech-item .t-info .t-sub {
+      font-size: 10px;
+      color: var(--color-text-light);
+    }
+    .tech-item .t-val {
+      font-weight: 700;
+      color: var(--color-guinda);
+      text-align: right;
+    }
+
+    .col-center {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .gcr-table-card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 15px;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gcr-table-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--color-guinda);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .gcr-minitable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .gcr-minitable th {
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      font-weight: 600;
+      padding: 4px 8px;
+      text-align: left;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    .gcr-minitable td {
+      padding: 4px 8px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .gcr-minitable tr:last-child td {
+      font-weight: 700;
+      background: var(--color-bg-light);
+      border-top: 1px solid var(--color-text-dark);
+    }
+
+    .group-chart-card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .group-chart-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--color-guinda);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    #chartGrupo {
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    .col-right {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .map-card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 8px;
+      height: 310px;
+      position: relative;
+    }
+    #miniMap {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      z-index: 10;
+    }
+
+    .map-lbl {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid #E2E8F0;
+      pointer-events: none;
+    }
+
+    .invest-lbl {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 100;
+      background: var(--color-guinda);
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      font-family: 'Outfit', sans-serif;
+      pointer-events: none;
+    }
+
+    .status-card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .status-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--color-guinda);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #E2E8F0;
+      padding-bottom: 5px;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex-grow: 1;
+    }
+
+    .status-box {
+      background: var(--color-bg-light);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .status-box .s-lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--color-text-light);
+      line-height: 1.2;
+    }
+
+    .status-box .s-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      margin-top: 2px;
+    }
+    .status-box .s-mw {
+      font-size: 9px;
+      color: var(--color-text-light);
+    }
+
+    /* DIAPOSITIVAS DE TABLAS DETALLADAS */
+    .table-container {
+      width: 100%;
+      height: calc(100% - 60px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+
+    .report-table th {
+      background: var(--color-guinda);
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      padding: 5px 6px;
+      text-align: left;
+      border: 1px solid #dee2e6;
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .report-table td {
+      padding: 4px 6px;
+      border: 1px solid #dee2e6;
+      color: var(--color-text-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .report-table tr:nth-child(even) {
+      background-color: #fdfdfd;
+    }
+    .report-table tr:hover {
+      background-color: #f1f3f5;
+    }
+
+    .report-table tr.total-row {
+      background-color: #f1f3f5 !important;
+      font-weight: 700;
+    }
+    .report-table tr.total-row td {
+      border-top: 2px solid var(--color-guinda);
+      border-bottom: 2px double var(--color-guinda);
+      color: var(--color-guinda);
+    }
+
+    /* Estilos específicos para celdas */
+    .col-center-text { text-align: center; }
+    .col-right-text { text-align: right; }
+    
+    .badge-status {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-si { background: #d4edda; color: #155724; }
+    .badge-no { background: #f8d7da; color: #721c24; }
+    .badge-tramite { background: #fff3cd; color: #856404; }
+
+    /* ENLACES INTERACTIVOS */
+    .clickable-link {
+      color: var(--color-guinda-light);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .clickable-link:hover {
+      color: var(--color-guinda);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING PRELOADER -->
+  <div id="preloader">
+    <div class="spinner"></div>
+    <h3 id="loaderText">Descargando datos desde Google Sheets…</h3>
+  </div>
+
+  <!-- DECK PRINCIPAL DE SLIDES -->
+  <div id="deck">
+    
+    <!-- SLIDE 1: PORTADA -->
+    <section class="slide cover active" id="slide-0">
+      <div class="slide-container">
+        <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
+        <div class="cover-overlay"></div>
+        
+        <div class="top-band">
+          <img class="gob" src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
+          <div class="divider"></div>
+          <img class="sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+          <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
+        </div>
+
+        <div class="body">
+          <div class="eyebrow">Seguimiento de la Segunda Convocatoria — Particulares</div>
+          <h1>Proyectos de Generación Eléctrica Particulares — Segunda Convocatoria</h1>
+          <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
+          <div class="subtitle" id="coverPeriod">Periodo: <strong>2026-2035</strong></div>
+          <div class="meta">
+            <div><strong>Versión</strong>2026 · v1.0</div>
+            <div><strong>Fecha</strong>Mayo 2026</div>
+            <div><strong>Fuente</strong>SNIE — DGMESNIE</div>
+          </div>
+        </div>
+
+        <div class="bottom-band"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: NUMERALIA DASHBOARD -->
+    <section class="slide" id="slide-1">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+          <div class="ef-title">Numeralia de Proyectos</div>
+          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+        </div>
+        
+        <div class="numeralia-grid">
+          <!-- Columna Izquierda: KPIs y Tecnologías -->
+          <div class="col-left">
+            <div class="kpi-card-main">
+              <span class="lbl">Registros Finalizados</span>
+              <span class="val-main" id="kpiTotalCount">0</span>
+              <span class="val-sub" id="kpiTotalMw">0 MW</span>
+            </div>
+            
+            <div class="tech-card">
+              <h3>Tipo de Tecnología</h3>
+              <div id="techList" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Rellenado dinámicamente -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Columna Central: GCR y Grupos Económicos -->
+          <div class="col-center">
+            <div class="gcr-table-card">
+              <h3>Gerencias Nacionales de Transmisión</h3>
+              <table class="gcr-minitable">
+                <thead>
+                  <tr>
+                    <th>GCR</th>
+                    <th class="col-right-text">Proyectos</th>
+                    <th class="col-right-text">MW</th>
+                    <th class="col-right-text">%</th>
+                  </tr>
+                </thead>
+                <tbody id="gcrMiniTableBody">
+                  <!-- Rellenado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="group-chart-card">
+              <h3>Proyectos por Grupo Económico (MW)</h3>
+              <div id="chartGrupo"></div>
+            </div>
+          </div>
+          
+          <!-- Columna Derecha: Mapa y Trámites -->
+          <div class="col-right">
+            <div class="map-card">
+              <div class="map-lbl">Distribución de Proyectos</div>
+              <div class="invest-lbl" id="kpiTotalInversion">0 MDD</div>
+              <div id="miniMap"></div>
+            </div>
+            
+            <div class="status-card">
+              <h3>Avance en Trámites y Estudios</h3>
+              <div class="status-grid">
+                <div class="status-box">
+                  <span class="s-lbl">MIA en Trámite</span>
+                  <span class="s-val" id="sMiaCount">0</span>
+                  <span class="s-mw" id="sMiaMw">0 MW</span>
+                </div>
+                <div class="status-box">
+                  <span class="s-lbl">EvIS/MISSE Aprobada</span>
+                  <span class="s-val" id="sEvisCount">0</span>
+                  <span class="s-mw" id="sEvisMw">0 MW</span>
+                </div>
+                <div class="status-box">
+                  <span class="s-lbl">Propiedad de Tierras</span>
+                  <span class="s-val" id="sTierrasCount">0</span>
+                  <span class="s-mw" id="sTierrasMw">0 MW</span>
+                </div>
+                <div class="status-box">
+                  <span class="s-lbl">Estudios CENACE</span>
+                  <span class="s-val" id="sCenaceCount">0</span>
+                  <span class="s-mw" id="sCenaceMw">0 MW</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- LAS DIAPOSITIVAS DE TABLAS DETALLADAS SE INYECTARÁN AQUÍ DINÁMICAMENTE -->
+
+  </div>
+
+  <!-- PANEL DE NAVEGACIÓN -->
+  <div id="presentationControls">
+    <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()">◀</button>
+    <span id="slideCounter">1 / 2</span>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()">▶</button>
+    <button class="control-btn" id="btnFs" onclick="toggleFullscreen()" title="Pantalla completa">⛶</button>
+  </div>
+
+  <!-- CDN scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <script>
+    // ==========================================
+    // CONFIGURACIÓN GENERAL Y VARIABLES GLOBALES
+    // ==========================================
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9QhQpXdFeh9ZkNh2WqA28v61ySMz4pISGX0hbZl5QAEU8LTypjCprVndMnkWPok1JdgjujmTV9p9i/pub?output=csv';
+    const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
+    
+    let DATA = [];
+    let currentSlideIndex = 0;
+    let slidesCount = 2; // Portada y Numeralia iniciales
+    let mapInstance = null;
+
+    // Colores para el mapa por tecnología
+    const TECH_COLORS = {
+      'Fotovoltaica': '#BC955C', // Dorado
+      'Eólica': '#691B31',       // Guinda
+      'Almacenamiento': '#2D3748', // Carbón/Dark
+      'Hidroeléctrica': '#3182CE', // Azul
+      'Otro': '#718096'
+    };
+
+    // ==========================================
+    // CARGA DE DATOS Y FALLBACK DE PROXIES
+    // ==========================================
+    function withCacheBuster(url) {
+      return url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+    }
+
+    async function tryFetch(url) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), 8000);
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const text = await response.text();
+        return text;
+      } finally {
+        clearTimeout(id);
+      }
+    }
+
+    async function loadData() {
+      const freshCsvUrl = withCacheBuster(CSV_URL);
+      const proxies = [
+        CSV_URL,
+        freshCsvUrl,
+        'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(CSV_URL),
+        'https://corsproxy.io/?' + encodeURIComponent(CSV_URL),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL)
+      ];
+
+      let csvText = null;
+      let lastErr = null;
+      
+      for (let i = 0; i < proxies.length; i++) {
+        try {
+          document.getElementById('loaderText').innerText = `Descargando datos (Intento ${i + 1}/${proxies.length})…`;
+          csvText = await tryFetch(proxies[i]);
+          if (csvText && csvText.includes('Folio Proyecto')) {
+            console.log(`Cargado con éxito usando fuente ${i + 1}`);
+            break;
+          }
+        } catch (e) {
+          lastErr = e;
+          console.warn(`Falló la fuente ${i + 1}: ${e.message}`);
+        }
+      }
+
+      if (!csvText) {
+        throw lastErr || new Error("No se pudo obtener el archivo CSV de Google Sheets.");
+      }
+
+      // Parsear
+      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: true });
+      const allRows = parsed.data || [];
+      const headerIdx = allRows.findIndex(r => Array.isArray(r) && r.map(h => String(h).trim()).includes('Folio Proyecto'));
+      const dataRows = allRows.slice(headerIdx >= 0 ? headerIdx + 1 : 1);
+      
+      DATA = dataRows.map(mapRowPositional).filter(r => r.nombre && r.mw > 0);
+      console.log(`Total de proyectos mapeados: ${DATA.length}`);
+    }
+
+    function parseInversionToMdd(val) {
+      if (!val || val === 'SIN INFORMACIÓN') return 0;
+      const cleanStr = String(val).toUpperCase().replace(/[\$,]/g, '');
+      const match = cleanStr.match(/([\d\.]+)/);
+      if (!match) return 0;
+      const amount = parseFloat(match[1]);
+      if (isNaN(amount)) return 0;
+      if (cleanStr.includes('MXN') || cleanStr.includes('PESOS') || amount > 50000000) {
+        return amount / 18 / 1000000;
+      }
+      if (amount > 1000000) {
+        return amount / 1000000;
+      }
+      return amount;
+    }
+
+    // Mapeo posicional exacto para Proyectos Particulares
+    function mapRowPositional(row, idx) {
+      const col = i => String(row?.[i] || '').trim();
+      const num = x => { const n = parseFloat(String(x || '').replace(/[\$,\s]/g, '')); return isNaN(n) ? 0 : n; };
+      
+      const rawGcr = col(15);
+      const ef = col(16);
+      const muni = col(63);
+      const name = col(5);
+      const techBase = col(8);
+      const subtech = col(9);
+      
+      const rawGie = col(19);
+      const developer = col(4);
+      const gie = (rawGie && rawGie !== 'SIN INFORMACIÓN') ? rawGie : (developer || 'NO IDENTIFICADO');
+
+      return {
+        rowNum: col(0),
+        id: col(2) || String(idx),
+        folio: col(2),
+        nombre: name,
+        gie,
+        origenGie: 'MÉXICO',
+        mw: num(col(56)) || num(col(55)) || 0, // Capacidad Instalada / Generación
+        tecnologia: subtech || techBase || 'OTRA',
+        techBase,
+        subtech,
+        ef: ef,
+        inversion: parseInversionToMdd(col(61)),
+        feoc: col(50) || 'SIN INFORMACIÓN',
+        tierras: col(532) || 'SIN INFORMACIÓN',
+        misse: col(519) || 'SIN INFORMACIÓN',
+        mia: col(524) === 'EN TRÁMITE' ? 'TRÁMITE' : (col(523) || 'SIN INFORMACIÓN'),
+        cenace: col(526) || 'SIN INFORMACIÓN',
+        coords: parseCoords(col(66)), // Vértice A para Leaflet
+        gerencia: resolveMappedGcr(ef, muni, rawGcr)
+      };
+    }
+
+    function parseCoords(str) {
+      if (!str) return null;
+      const m = str.match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+      if (m) {
+        let lat = parseFloat(m[1]), lng = parseFloat(m[2]);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          if (lng > 0) lng = -lng; // Forzar a cuadrante oeste para México
+          return [lat, lng];
+        }
+      }
+      return null;
+    }
+
+    const BCS_MUNI = ['LAPAZ', 'LOSCABOS', 'COMONDU', 'LORETO'];
+    const BC_MUNI = ['MEXICALI', 'TIJUANA', 'ENSENADA', 'TECATE', 'PLAYASDEROSARITO', 'ROSARITO', 'SANQUINTIN'];
+    function resolveMappedGcr(efRaw, muniRaw, gerRaw) {
+      const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '');
+      const e = norm(efRaw), m = norm(muniRaw), g = norm(gerRaw);
+      const enPeninsula = e.includes('BAJACALIFORNIA') || g.includes('BAJACALIFORNIA') || g === 'MULEGE';
+      if (!enPeninsula) return gerRaw;
+      if (m === 'MULEGE') return 'MULEGÉ';
+      if (BCS_MUNI.includes(m) || e.includes('SUR')) return 'BAJA CALIFORNIA SUR';
+      if (BC_MUNI.includes(m) || e === 'BAJACALIFORNIA') return 'BAJA CALIFORNIA';
+      return gerRaw;
+    }
+
+    function getTechGroup(p) {
+      const name = p.nombre || '';
+      const tech = p.tecnologia || '';
+      const techBase = p.techBase || '';
+      if (/ALMACENAMIE/i.test(name) || /ALMACENA/i.test(tech) || /BATERI/i.test(tech)) {
+        return 'Almacenamiento';
+      }
+      if (/FOTOVOL/i.test(tech) || /SOLAR/i.test(tech) || /SOLAR/i.test(techBase)) {
+        return 'Fotovoltaica';
+      }
+      if (/EOL/i.test(tech) || /EOL/i.test(techBase)) {
+        return 'Eólica';
+      }
+      if (/HIDR/i.test(tech) || /HIDR/i.test(techBase)) {
+        return 'Hidroeléctrica';
+      }
+      return 'Otro';
+    }
+
+    // Normalizador de texto para búsquedas y comparación
+    function normText(s) {
+      return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    }
+
+    // ==========================================
+    // CÁLCULO E INYECCIÓN DE LA NUMERALIA (SLIDE 2)
+    // ==========================================
+    function formatMw(n) {
+      return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MW';
+    }
+    function formatMdd(n) {
+      return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MDD';
+    }
+
+    function renderNumeralia() {
+      // 1. Totales Generales
+      // Filtrar almacenamiento de los totales generales de "generación" si el PDF los separa
+      // En el PDF: "149 Registros = 21,218 MW + 3 Almacenamiento 60 MW"
+      // En nuestro CSV: tenemos N registros totales.
+      const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
+      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      
+      const totalCount = DATA.length;
+      const totalMw = genProjects.reduce((sum, p) => sum + p.mw, 0);
+      const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
+      const totalInversion = DATA.reduce((sum, p) => sum + p.inversion, 0);
+
+      document.getElementById('kpiTotalCount').innerText = totalCount;
+      document.getElementById('kpiTotalMw').innerText = `${formatMw(totalMw)} + ${storageMw} MW Almacenamiento*`;
+      document.getElementById('kpiTotalInversion').innerText = formatMdd(totalInversion);
+
+      // 2. Desglose de Tecnologías
+      const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
+      const techCounts = {};
+      const techMws = {};
+      techs.forEach(t => { techCounts[t] = 0; techMws[t] = 0; });
+
+      DATA.forEach(p => {
+        const tg = getTechGroup(p);
+        if (techCounts[tg] !== undefined) {
+          techCounts[tg]++;
+          techMws[tg] += p.mw;
+        }
+      });
+
+      const techIcons = {
+        'Fotovoltaica': '☀️',
+        'Eólica': '🌬️',
+        'Almacenamiento': '🔋',
+        'Hidroeléctrica': '💧'
+      };
+
+      const techListContainer = document.getElementById('techList');
+      techListContainer.innerHTML = techs.map(t => `
+        <div class="tech-item">
+          <div class="icon-bg">${techIcons[t]}</div>
+          <div class="t-info">
+            <div class="t-name">${t}</div>
+            <div class="t-sub">${techCounts[t]} Proyectos</div>
+          </div>
+          <div class="t-val">${formatMw(techMws[t])}</div>
+        </div>
+      `).join('');
+
+      // 3. Desglose GCR (Gerencias)
+      // Agrupamos por gerencia. Excluimos almacenamiento de las sumas GCR normales si el PDF lo hace (Slide 15 dedicada)
+      // Para coincidir con el PDF, el desglose de GCR incluye solo los de generación.
+      const gcrData = {};
+      genProjects.forEach(p => {
+        const gcr = p.gerencia || 'OTRO';
+        gcrData[gcr] = gcrData[gcr] || { count: 0, mw: 0 };
+        gcrData[gcr].count++;
+        gcrData[gcr].mw += p.mw;
+      });
+
+      const sortedGcr = Object.keys(gcrData).sort((a,b) => gcrData[b].mw - gcrData[a].mw);
+      const gcrTableBody = document.getElementById('gcrMiniTableBody');
+      
+      let gcrRowsHtml = sortedGcr.map(gcr => {
+        const pct = (gcrData[gcr].mw / totalMw) * 100;
+        return `
+          <tr>
+            <td style="font-weight: 600;">GCR ${gcr}</td>
+            <td class="col-right-text">${gcrData[gcr].count}</td>
+            <td class="col-right-text" style="font-weight: 600;">${gcrData[gcr].mw.toFixed(0)}</td>
+            <td class="col-right-text">${pct.toFixed(0)}%</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Añadir fila de totales en la minitabla GCR
+      gcrRowsHtml += `
+        <tr>
+          <td>TOTALES</td>
+          <td class="col-right-text">${genProjects.length}</td>
+          <td class="col-right-text">${totalMw.toFixed(0)}</td>
+          <td class="col-right-text">100%</td>
+        </tr>
+      `;
+      gcrTableBody.innerHTML = gcrRowsHtml;
+
+      // 4. Avance en Trámites
+      let miaCount = 0, miaMw = 0;
+      let evisCount = 0, evisMw = 0;
+      let tierrasCount = 0, tierrasMw = 0;
+      let cenaceCount = 0, cenaceMw = 0;
+
+      DATA.forEach(p => {
+        const mia = normText(p.mia);
+        const evis = normText(p.misse);
+        const terreno = normText(p.tierras);
+        const cenace = normText(p.cenace);
+
+        if (mia.includes('TRAMITE') || mia.includes('PROCESO') || mia.includes('INICIADO')) {
+          miaCount++;
+          miaMw += p.mw;
+        }
+        if (evis.includes('RESUELTA') || evis.includes('AUTORIZADA') || evis.includes('APROBADA')) {
+          evisCount++;
+          evisMw += p.mw;
+        }
+        if (terreno === 'SI' || terreno.includes('TRAMITE')) {
+          tierrasCount++;
+          tierrasMw += p.mw;
+        }
+        if (cenace === 'SI') {
+          cenaceCount++;
+          cenaceMw += p.mw;
+        }
+      });
+
+      document.getElementById('sMiaCount').innerText = miaCount;
+      document.getElementById('sMiaMw').innerText = formatMw(miaMw);
+      document.getElementById('sEvisCount').innerText = evisCount;
+      document.getElementById('sEvisMw').innerText = formatMw(evisMw);
+      document.getElementById('sTierrasCount').innerText = tierrasCount;
+      document.getElementById('sTierrasMw').innerText = formatMw(tierrasMw);
+      document.getElementById('sCenaceCount').innerText = cenaceCount;
+      document.getElementById('sCenaceMw').innerText = formatMw(cenaceMw);
+
+      // 5. Gráfica de Grupo Económico (Highcharts)
+      renderGroupChart();
+    }
+
+    function renderGroupChart() {
+      const groups = {};
+      DATA.forEach(p => {
+        const gie = p.gie || 'NO IDENTIFICADO';
+        groups[gie] = (groups[gie] || 0) + p.mw;
+      });
+
+      // Ordenar y tomar los top 12
+      const sortedGroups = Object.keys(groups)
+        .map(name => ({ name, y: groups[name] }))
+        .sort((a,b) => b.y - a.y)
+        .slice(0, 12);
+
+      Highcharts.chart('chartGrupo', {
+        chart: {
+          type: 'bar',
+          backgroundColor: 'transparent',
+          marginRight: 20,
+          marginTop: 10,
+          marginBottom: 40,
+          style: { fontFamily: 'Montserrat, sans-serif' }
+        },
+        title: { text: '' },
+        xAxis: {
+          categories: sortedGroups.map(g => g.name),
+          labels: { style: { fontSize: '9px', color: '#333', fontWeight: '500' } },
+          lineColor: '#CBD5E0'
+        },
+        yAxis: {
+          title: { text: 'Capacidad (MW)', style: { fontSize: '9px' } },
+          labels: { style: { fontSize: '9px' } },
+          gridLineColor: '#EDF2F7'
+        },
+        legend: { enabled: false },
+        plotOptions: {
+          series: {
+            color: '#691B31', // Color guinda institucional
+            borderRadius: 3,
+            dataLabels: {
+              enabled: true,
+              format: '{point.y:.0f}',
+              style: { fontSize: '8px', fontWeight: 'bold' }
+            }
+          }
+        },
+        tooltip: {
+          pointFormat: '<b>{point.y:.1f} MW</b>'
+        },
+        credits: { enabled: false },
+        series: [{ data: sortedGroups.map(g => g.y) }]
+      });
+    }
+
+    // ==========================================
+    // INICIALIZACIÓN DEL MINIMAPA (SLIDE 2)
+    // ==========================================
+    async function initMiniMap() {
+      if (mapInstance) return;
+      
+      const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
+      mapInstance = L.map('miniMap', {
+        zoomControl: false,
+        attributionControl: false,
+        preferCanvas: true,
+        minZoom: 4,
+        maxZoom: 9,
+        maxBounds: MEXICO_BOUNDS,
+        maxBoundsViscosity: 1.0
+      });
+
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Esri'
+      }).addTo(mapInstance);
+
+      mapInstance.setView([23.5, -102.2], 4.5);
+
+      // Cargar límites GCR y pintarlos
+      try {
+        const res = await fetch(GEOJSON_GERENCIAS_URL);
+        const geojson = await res.json();
+        
+        // Colores pastel para distinguir gerencias
+        const gcrColors = {
+          'NORESTE': '#FED7D7',
+          'OCCIDENTE': '#FEEBC8',
+          'NORTE': '#EBF8FF',
+          'ORIENTAL': '#E6FFFA',
+          'PENINSULAR': '#EDF2F7',
+          'CENTRAL': '#E2E8F0',
+          'BAJA CALIFORNIA SUR': '#FAF5FF'
+        };
+
+        L.geoJSON(geojson, {
+          style: (feature) => {
+            const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
+            let fill = '#EDF2F7';
+            Object.keys(gcrColors).forEach(k => {
+              if (name.includes(k)) fill = gcrColors[k];
+            });
+            return {
+              fillColor: fill,
+              fillOpacity: 0.5,
+              color: '#A0AEC0',
+              weight: 1
+            };
+          }
+        }).addTo(mapInstance);
+      } catch (e) {
+        console.warn('No se pudo cargar el GeoJSON de gerencias en el mapa:', e);
+      }
+
+      // Dibujar marcadores de proyectos
+      DATA.forEach(p => {
+        if (p.coords) {
+          const tGroup = getTechGroup(p);
+          const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
+          
+          const marker = L.circleMarker(p.coords, {
+            radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
+            fillColor: col,
+            fillOpacity: 0.85,
+            color: '#ffffff',
+            weight: 1
+          }).addTo(mapInstance);
+
+          marker.bindPopup(`
+            <div style="font-family:Montserrat,sans-serif; font-size:11px; line-height:1.4;">
+              <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
+              <strong>GIE:</strong> ${p.gie}<br>
+              <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${tGroup})<br>
+              <strong>Inversión:</strong> ${p.inversion > 0 ? p.inversion.toFixed(1) + ' MDD' : 'Sin datos'}
+            </div>
+          `);
+        }
+      });
+    }
+
+    // ==========================================
+    // PAGINACIÓN Y RENDERIZADO DINÁMICO DE TABLAS
+    // ==========================================
+    function formatCell(val, type = 'text') {
+      if (val === undefined || val === null || val === '') return '—';
+      const cleanVal = String(val).trim();
+      if (cleanVal === 'SIN INFORMACIÓN' || cleanVal === 'SIN PROCESO' || cleanVal === 'NO APLICA') return '—';
+      
+      if (type === 'status') {
+        const norm = normText(cleanVal);
+        if (norm === 'SI' || norm.includes('RESUELTA') || norm.includes('APROBADA') || norm.includes('AUTORIZADA')) {
+          return `<span class="badge-status badge-si">SI</span>`;
+        }
+        if (norm === 'NO' || norm.includes('SIN SOLICITUD')) {
+          return `<span class="badge-status badge-no">NO</span>`;
+        }
+        if (norm.includes('TRAMITE') || norm.includes('PROCESO') || norm.includes('PREVENCION') || norm.includes('AUTORIZADA CONDICIONADA')) {
+          return `<span class="badge-status badge-tramite">TRÁMITE</span>`;
+        }
+      }
+      return cleanVal;
+    }
+
+    // Helper para detectar links y correos
+    function makeInteractive(val) {
+      if (!val) return '—';
+      const str = String(val).trim();
+      if (str.startsWith('http://') || str.startsWith('https://')) {
+        return `<span class="clickable-link" onclick="window.open('${str}', '_blank')">Link</span>`;
+      }
+      if (str.includes('@') && !str.includes(' ')) {
+        return `<a class="clickable-link" href="mailto:${str}">${str}</a>`;
+      }
+      return str;
+    }
+
+    function generateGcrTables() {
+      // 1. Agrupar proyectos de generación por GCR
+      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      const groups = {};
+      
+      genProjects.forEach(p => {
+        const gcr = p.gerencia || 'OTRO';
+        groups[gcr] = groups[gcr] || [];
+        groups[gcr].push(p);
+      });
+
+      // Lista ordenada de gerencias según el PDF
+      // Noreste, Occidental, Norte, Oriental, Peninsular, Central, Baja California Sur, Baja California
+      const gcrOrder = [
+        { key: 'NORESTE', title: 'GCR Noreste' },
+        { key: 'OCCIDENTE', title: 'GCR Occidental' },
+        { key: 'NORTE', title: 'GCR Norte' },
+        { key: 'ORIENTAL', title: 'GCR Oriental' },
+        { key: 'PENINSULAR', title: 'GCR Peninsular' },
+        { key: 'CENTRAL', title: 'GCR Central' },
+        { key: 'BAJA CALIFORNIA SUR', title: 'GCR Baja California Sur' },
+        { key: 'BAJA CALIFORNIA', title: 'GCR Baja California' }
+      ];
+
+      const deck = document.getElementById('deck');
+      let slideIdx = 2; // Portada=0, Numeralia=1, las tablas empiezan en slideIndex=2
+
+      gcrOrder.forEach(gcrInfo => {
+        const rawProjs = groups[gcrInfo.key] || [];
+        if (!rawProjs.length) return;
+
+        // Ordenar alfabéticamente por nombre de proyecto
+        const projs = rawProjs.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+        // Paginación dinámica (máximo 14 filas por diapositiva para evitar desbordamiento)
+        const rowsPerSlide = 14;
+        const totalPages = Math.ceil(projs.length / rowsPerSlide);
+
+        for (let pIdx = 0; pIdx < totalPages; pIdx++) {
+          const slice = projs.slice(pIdx * rowsPerSlide, (pIdx + 1) * rowsPerSlide);
+          const isLastPage = (pIdx === totalPages - 1);
+          
+          const slide = document.createElement('section');
+          slide.className = 'slide';
+          slide.id = `slide-${slideIdx}`;
+
+          const pageIndicator = totalPages > 1 ? ` (${pIdx + 1}/${totalPages})` : '';
+
+          let rowsHtml = slice.map((p, i) => {
+            const rowNum = pIdx * rowsPerSlide + i + 1;
+            return `
+              <tr>
+                <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);">${rowNum}</td>
+                <td style="font-weight:600; max-width:180px;">${p.nombre}</td>
+                <td style="max-width:120px;">${p.gie}</td>
+                <td class="col-center-text">${p.origenGie}</td>
+                <td class="col-right-text" style="font-weight:600;">${p.mw.toFixed(0)}</td>
+                <td style="max-width:110px;">${formatCell(p.tecnologia)}</td>
+                <td style="max-width:110px;">${p.ef}</td>
+                <td class="col-right-text">${p.inversion > 0 ? p.inversion.toFixed(0) : '—'}</td>
+                <td class="col-center-text">${p.feoc.substring(0, 10)}</td>
+                <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
+                <td class="col-center-text">${formatCell(p.misse, 'status')}</td>
+                <td class="col-center-text">${formatCell(p.mia, 'status')}</td>
+                <td class="col-center-text">${formatCell(p.cenace, 'status')}</td>
+              </tr>
+            `;
+          }).join('');
+
+          // Si es el último slide del GCR, inyectamos la fila de sumatoria total
+          if (isLastPage) {
+            const sumMw = projs.reduce((s, p) => s + p.mw, 0);
+            const sumInv = projs.reduce((s, p) => s + p.inversion, 0);
+            rowsHtml += `
+              <tr class="total-row">
+                <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ${gcrInfo.title.toUpperCase()}</td>
+                <td class="col-right-text">${sumMw.toFixed(0)}</td>
+                <td colspan="2"></td>
+                <td class="col-right-text">${sumInv > 0 ? sumInv.toFixed(0) : '—'}</td>
+                <td colspan="5"></td>
+              </tr>
+            `;
+          }
+
+          slide.innerHTML = `
+            <div class="slide-container">
+              <div class="slide-header">
+                <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+                <div class="ef-title">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})${pageIndicator}</div>
+                <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+              </div>
+              <div class="table-container">
+                <table class="report-table">
+                  <thead>
+                    <tr>
+                      <th style="width:25px; text-align:center;">#</th>
+                      <th style="width:180px;">Proyecto</th>
+                      <th style="width:120px;">GIE</th>
+                      <th style="width:50px; text-align:center;">Origen</th>
+                      <th style="width:40px; text-align:right;">MW</th>
+                      <th style="width:110px;">Tecnología</th>
+                      <th style="width:110px;">Ubicación</th>
+                      <th style="width:45px; text-align:right;">Inversión</th>
+                      <th style="width:65px; text-align:center;">FEOC</th>
+                      <th style="width:45px; text-align:center;">Tierras</th>
+                      <th style="width:45px; text-align:center;">MISSE</th>
+                      <th style="width:45px; text-align:center;">MIA</th>
+                      <th style="width:45px; text-align:center;">Cenace</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rowsHtml}
+                  </tbody>
+                </table>
+              </div>
+              <div class="slide-footer"></div>
+            </div>
+          `;
+
+          deck.appendChild(slide);
+          slideIdx++;
+        }
+      });
+
+      // 2. Diapositiva para el Sistema de Almacenamiento (Slide 15 dedicada)
+      const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
+      if (storageProjects.length > 0) {
+        const sortedStorage = storageProjects.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        
+        const slide = document.createElement('section');
+        slide.className = 'slide';
+        slide.id = `slide-${slideIdx}`;
+
+        const rowsHtml = sortedStorage.map((p, i) => `
+          <tr>
+            <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);">${i + 1}</td>
+            <td style="font-weight:600; max-width:180px;">${p.nombre}</td>
+            <td style="max-width:120px;">${p.gie}</td>
+            <td class="col-center-text">${p.origenGie}</td>
+            <td class="col-right-text" style="font-weight:600;">${p.mw.toFixed(0)}</td>
+            <td style="max-width:110px;">ALMACENAMIENTO</td>
+            <td style="max-width:110px;">${p.ef}</td>
+            <td class="col-right-text">${p.inversion > 0 ? p.inversion.toFixed(0) : '—'}</td>
+            <td class="col-center-text">${p.feoc.substring(0, 10)}</td>
+            <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
+            <td class="col-center-text">${formatCell(p.misse, 'status')}</td>
+            <td class="col-center-text">${formatCell(p.mia, 'status')}</td>
+            <td class="col-center-text">${formatCell(p.cenace, 'status')}</td>
+          </tr>
+        `).join('');
+
+        const sumMw = sortedStorage.reduce((s, p) => s + p.mw, 0);
+        const sumInv = sortedStorage.reduce((s, p) => s + p.inversion, 0);
+
+        slide.innerHTML = `
+          <div class="slide-container">
+            <div class="slide-header">
+              <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+              <div class="ef-title">Sistemas de Almacenamiento (BESS)</div>
+              <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+            </div>
+            <div class="table-container">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th style="width:25px; text-align:center;">#</th>
+                    <th style="width:180px;">Proyecto</th>
+                    <th style="width:120px;">GIE</th>
+                    <th style="width:50px; text-align:center;">Origen</th>
+                    <th style="width:40px; text-align:right;">MW</th>
+                    <th style="width:110px;">Tecnología</th>
+                    <th style="width:110px;">Ubicación</th>
+                    <th style="width:45px; text-align:right;">Inversión</th>
+                    <th style="width:65px; text-align:center;">FEOC</th>
+                    <th style="width:45px; text-align:center;">Tierras</th>
+                    <th style="width:45px; text-align:center;">MISSE</th>
+                    <th style="width:45px; text-align:center;">MIA</th>
+                    <th style="width:45px; text-align:center;">Cenace</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                  <tr class="total-row">
+                    <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ALMACENAMIENTO</td>
+                    <td class="col-right-text">${sumMw.toFixed(0)}</td>
+                    <td colspan="2"></td>
+                    <td class="col-right-text">${sumInv > 0 ? sumInv.toFixed(0) : '—'}</td>
+                    <td colspan="5"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="slide-footer"></div>
+          </div>
+        `;
+        deck.appendChild(slide);
+        slideIdx++;
+      }
+
+      slidesCount = slideIdx;
+      updateControls();
+    }
+
+    // ==========================================
+    // CONTROLES DE NAVEGACIÓN Y ESCALADO
+    // ==========================================
+    function showSlide(index) {
+      if (index < 0 || index >= slidesCount) return;
+      
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      
+      currentSlideIndex = index;
+      updateControls();
+
+      // Forzar recálculo del mapa si es el Slide 2 (Dashboard)
+      if (index === 1) {
+        setTimeout(() => {
+          if (!mapInstance) {
+            initMiniMap();
+          } else {
+            mapInstance.invalidateSize({ pan: false, animate: false });
+          }
+        }, 150);
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < slidesCount - 1) {
+        showSlide(currentSlideIndex + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        showSlide(currentSlideIndex - 1);
+      }
+    }
+
+    function updateControls() {
+      document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${slidesCount}`;
+      document.getElementById('btnPrev').disabled = (currentSlideIndex === 0);
+      document.getElementById('btnNext').disabled = (currentSlideIndex === slidesCount - 1);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn(`Error al activar pantalla completa: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Escalado adaptativo 16:9 responsivo
+    function fitSlides() {
+      const baseW = 1333;
+      const baseH = 750;
+      
+      const availW = window.innerWidth;
+      const availH = window.innerHeight;
+      
+      // Encontrar la escala que encaje en el espacio disponible
+      const scale = Math.min(availW / baseW, availH / baseH);
+      
+      // Asignar variable CSS
+      document.documentElement.style.setProperty('--scale', scale.toFixed(4));
+      
+      const containers = document.querySelectorAll('.slide-container');
+      containers.forEach(container => {
+        container.style.transform = `scale(${scale.toFixed(4)})`;
+      });
+    }
+
+    // ==========================================
+    // ATAJOS DE TECLADO Y EVENTOS
+    // ==========================================
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) {
+        e.preventDefault();
+        nextSlide();
+      } else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        showSlide(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        showSlide(slidesCount - 1);
+      } else if (e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    });
+
+    window.addEventListener('resize', fitSlides);
+
+    // ==========================================
+    // INICIALIZACIÓN DE LA APLICACIÓN
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData()
+        .then(() => {
+          renderNumeralia();
+          generateGcrTables();
+          fitSlides();
+          
+          // Ocultar preloader con fade
+          const preloader = document.getElementById('preloader');
+          preloader.style.opacity = 0;
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('loaderText').innerHTML = `
+            <span style="color:#f8d7da; font-weight:bold;">ERROR CARGANDO DATOS</span><br>
+            ${err.message}<br>
+            <span style="font-size:12px; opacity:0.8; cursor:pointer; text-decoration:underline;" onclick="window.location.reload()">Reintentar</span>
+          `;
+          document.querySelector('.spinner').style.borderTopColor = '#f8d7da';
+        });
+    });
+  </script>
+</body>
+</html>
