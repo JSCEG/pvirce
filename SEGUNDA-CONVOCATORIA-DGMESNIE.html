@@ -301,6 +301,11 @@
       display: flex;
     }
 
+    /* Combos del slide que ya viven en la command bar → ocultar en presentación */
+    body.presentation-mode .pres-dup {
+      display: none !important;
+    }
+
     .command-bar .cb-brand {
       font-family: 'Patria', 'Merriweather', serif;
       font-size: 12px;
@@ -1836,11 +1841,13 @@
 
       <div class="map-toolbar" id="mapToolbar">
         <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1">
-          <label for="mapScope">Nivel:</label>
-          <select id="mapScope">
-            <option value="ef">Entidad Federativa</option>
-            <option value="gerencia">Gerencia de control</option>
-          </select>
+          <span class="pres-dup" style="display:flex;align-items:center;gap:8px">
+            <label for="mapScope">Nivel:</label>
+            <select id="mapScope">
+              <option value="ef">Entidad Federativa</option>
+              <option value="gerencia">Gerencia de control</option>
+            </select>
+          </span>
           <label for="mapMetric">Métrica:</label>
           <select id="mapMetric">
             <option value="capacidad">Capacidad instalada MW</option>
@@ -1864,12 +1871,14 @@
             EF</span>
           <span id="mapEfBadge"
             style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
-          <label for="mapProjectSelect"
-            style="margin-left:8px;font-size:11px;color:var(--text);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Cartera:</label>
-          <select id="mapProjectSelect" style="min-width:260px;max-width:420px">
-            <option value="__ALL__">Todos los proyectos</option>
-          </select>
-          <button id="mapClearEf"
+          <span class="pres-dup" style="display:flex;align-items:center;gap:10px;margin-left:8px">
+            <label for="mapProjectSelect"
+              style="font-size:11px;color:var(--text);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Cartera:</label>
+            <select id="mapProjectSelect" style="min-width:260px;max-width:420px">
+              <option value="__ALL__">Todos los proyectos</option>
+            </select>
+          </span>
+          <button id="mapClearEf" class="pres-dup"
             style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">←
             Volver a Nacional</button>
         </div>
@@ -4089,7 +4098,12 @@
       if (scope === 'ef' && efv && efv !== '__ALL__') parts.push(efv);
       const rows0 = selectedProjectRows();
       if (rows0?.length) parts.push(rows0[0].nombre);
-      const data = activeDataForMap();
+      // Métrica del ámbito actual (no nacional) cuando hay foco EF/gerencia.
+      let data;
+      if (rows0?.length) data = rows0;
+      else if (scope === 'gerencia' && CURRENT_FOCUS_GERENCIA) data = rowsForScope('gerencia', CURRENT_FOCUS_GERENCIA);
+      else if (scope === 'ef' && efv && efv !== '__ALL__') data = rowsForScope('ef', efv);
+      else data = filteredData();
       const saeeLabel = 'SAEE Asociado a Centrales Eléctricas';
       const cap = data.filter(r => techLabel(r.tipo) !== saeeLabel);
       const mw = cap.reduce((s, r) => s + r.mw, 0);
