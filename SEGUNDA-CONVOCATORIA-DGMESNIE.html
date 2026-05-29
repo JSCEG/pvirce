@@ -2365,14 +2365,26 @@
       const rows = statusVal === '__ALL__' ? DATA : DATA.filter(r => r.status === statusVal);
       return rows.filter(r => Number.isFinite(r.anio) && r.anio >= from && r.anio <= to);
     }
-    function filteredDataByEfAndStatus() {
-      const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+    function filteredDataByScope() {
+      const scope = getMapScope();
       const rows = filteredData();
-      return efVal === '__ALL__' ? rows : rows.filter(r => r.ef === efVal);
+      if (scope === 'gerencia') {
+        if (CURRENT_FOCUS_GERENCIA) {
+          const normFoc = normGerencia(CURRENT_FOCUS_GERENCIA);
+          return rows.filter(r => r.gerencia && normGerencia(r.gerencia) === normFoc);
+        }
+        return rows;
+      } else {
+        const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+        return efVal === '__ALL__' ? rows : rows.filter(r => r.ef === efVal);
+      }
+    }
+    function filteredDataByEfAndStatus() {
+      return filteredDataByScope();
     }
     function selectedProjectRows() {
       const projectVal = document.getElementById('projectSelect')?.value || '__ALL__';
-      return projectVal === '__ALL__' ? null : filteredDataByEfAndStatus().filter(r => String(r.id) === projectVal);
+      return projectVal === '__ALL__' ? null : DATA.filter(r => String(r.id) === projectVal);
     }
     function activeDataForMap() {
       return selectedProjectRows() || filteredData();
@@ -2652,6 +2664,7 @@
     }
 
     function render() {
+      populateProjectSelect();
       const efVal = document.getElementById('efSelect').value;
       const projectRows = selectedProjectRows();
       const isProject = !!projectRows;
@@ -2826,7 +2839,7 @@
     <table class="proyectos">
       <tbody>
         <tr><th>Indicativo</th><td>${p0.estatusIndicativo || '—'}</td></tr>
-        <tr><th>Anexo 4</th><td>${p0.anexo4 || '—'}</td></tr>
+        <tr><th>Anexo 4</th><td>${makeClickableIfUrl(p0.anexo4)}</td></tr>
         <tr><th>MIA</th><td>${p0.estatusMia || '—'}${p0.folioMia ? ' · ' + p0.folioMia : ''} (${p0.tieneMia || '—'})</td></tr>
         <tr><th>EVIS</th><td>${p0.estatusEvis || '—'}${p0.folioEvis ? ' · ' + p0.folioEvis : ''}</td></tr>
         <tr><th>Impacto Social</th><td>${p0.estatusImpacto || '—'}</td></tr>
@@ -3221,6 +3234,7 @@
         resetMapProjectSelect();
         await loadMap(getMapScope());
         drawMap();
+        if (presentationMode) { syncCommandBar(); refreshPresentationDeck(); }
       });
     }
 
@@ -3296,12 +3310,13 @@
           lyr.on('click', () => {
             const projSel = document.getElementById('projectSelect');
             if (projSel) projSel.value = '__ALL__';
+            const efSel = document.getElementById('efSelect');
+            if (efSel) efSel.value = '__ALL__';
             if (scope === 'gerencia') {
               CURRENT_FOCUS_GERENCIA = focusValue;
-              drawMap();
+              render();
             } else {
               CURRENT_FOCUS_EF = focusValue;
-              const efSel = document.getElementById('efSelect');
               if (efSel && [...efSel.options].some(o => o.value === focusValue)) { efSel.value = focusValue; render(); }
               else drawMap();
             }
@@ -3333,7 +3348,7 @@
             mapInstance.fitBounds(tmp.getBounds(), { padding: [20, 20] });
           }
         } else {
-          mapInstance.fitBounds(geoLayer.getBounds(), { padding: [10, 10] });
+          mapInstance.setView([24, -102], 4.5);
         }
       } catch (e) { }
 
@@ -3547,8 +3562,9 @@
         .filter(r => r.nombre)
         .sort((a, b) => b.mw - a.mw || a.nombre.localeCompare(b.nombre, 'es-MX'));
 
+      const globalSelVal = document.getElementById('projectSelect')?.value || '__ALL__';
       const currentEf = sel.dataset.ef || '';
-      const previous = currentEf === `${scope}:${key}` ? sel.value : '__ALL__';
+      const previous = (globalSelVal !== '__ALL__' && currentEf === `${scope}:${key}`) ? sel.value : '__ALL__';
       sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>' + rows.map(r => {
         const label = `${r.nombre} · ${r.anio || '—'} · ${fmt(r.mw, 2)} MW`;
         return `<option value="${r.id}">${label}</option>`;
@@ -3601,7 +3617,7 @@
       <div class="ef-section-title">Estatus regulatorios</div>
       <div class="kv-list">
         <div class="kv-row"><span class="kv-k">Indicativo</span><span class="kv-v">${p.estatusIndicativo || '—'}</span></div>
-        <div class="kv-row"><span class="kv-k">Anexo 4</span><span class="kv-v">${p.anexo4 || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Anexo 4</span><span class="kv-v">${makeClickableIfUrl(p.anexo4)}</span></div>
         <div class="kv-row"><span class="kv-k">MIA</span><span class="kv-v">${p.estatusMia || '—'}${p.folioMia ? ' · ' + p.folioMia : ''} (${p.tieneMia || '—'})</span></div>
         <div class="kv-row"><span class="kv-k">EVIS</span><span class="kv-v">${p.estatusEvis || '—'}${p.folioEvis ? ' · ' + p.folioEvis : ''}</span></div>
         <div class="kv-row"><span class="kv-k">Impacto Social</span><span class="kv-v">${p.estatusImpacto || '—'}</span></div>
@@ -3634,12 +3650,25 @@
       renderFichaSlides(p);
     }
 
+    function makeClickableIfUrl(val) {
+      if (!val || val === '—' || val === 'Sin información') return val || '—';
+      const trimmed = String(val).trim();
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return `<a href="${trimmed}" target="_blank" style="color:var(--guinda);text-decoration:underline;word-break:break-all">${trimmed}</a>`;
+      }
+      if (trimmed.includes('@') && !trimmed.includes(' ') && !trimmed.includes('http')) {
+        return `<a href="mailto:${trimmed}" style="color:var(--guinda);text-decoration:underline;word-break:break-all">${trimmed}</a>`;
+      }
+      return val;
+    }
+
     // ===================== FICHAS DE PROYECTO (2 láminas) =====================
     function fkv(k, v, opts = {}) {
       const raw = (v === 0 || v) ? String(v).trim() : '';
       const empty = !raw || raw === '—';
       const cls = empty ? 'v muted' : 'v';
-      const val = empty ? 'Sin información' : raw;
+      let val = empty ? 'Sin información' : raw;
+      if (!empty) val = makeClickableIfUrl(val);
       return `<div class="ficha-kv"><span class="k">${k}</span><span class="${cls}">${val}</span></div>`;
     }
     function fkpi(lbl, val, sub) {
@@ -3647,8 +3676,9 @@
     }
     // kv con bandera de validación: ok=true (✓ verde), ok=false (⚠ rojo), ok=null (neutro)
     function fkvFlag(k, v, ok) {
-      if (ok === false) return `<div class="ficha-kv"><span class="k">${k}</span><span class="v" style="color:#b00020">${v || '—'} ⚠</span></div>`;
-      if (ok === true) return `<div class="ficha-kv"><span class="k">${k}</span><span class="v" style="color:var(--verde)">${v || '—'} ✓</span></div>`;
+      const val = makeClickableIfUrl(v);
+      if (ok === false) return `<div class="ficha-kv"><span class="k">${k}</span><span class="v" style="color:#b00020">${val || '—'} ⚠</span></div>`;
+      if (ok === true) return `<div class="ficha-kv"><span class="k">${k}</span><span class="v" style="color:var(--verde)">${val || '—'} ✓</span></div>`;
       return fkv(k, v);
     }
     function trunc(s, n = 140) {
@@ -3943,7 +3973,12 @@
     });
     document.getElementById('projectSelect').addEventListener('change', () => {
       const rows = selectedProjectRows();
-      if (rows?.length) document.getElementById('efSelect').value = rows[0].ef;
+      if (rows?.length) {
+        document.getElementById('efSelect').value = rows[0].ef;
+      } else {
+        const mapProjSel = document.getElementById('mapProjectSelect');
+        if (mapProjSel) mapProjSel.value = '__ALL__';
+      }
       populateProjectSelect();
       render();
       flyToSelectedProject();
@@ -4052,7 +4087,8 @@
 
     function renderPresentationState() {
       if (!presentationSlides.length) return;
-      presentationSlides.forEach(slide => {
+      document.querySelectorAll('.deck > .slide').forEach(slide => {
+        slide.classList.remove('active');
         slide.classList.remove('slide-has-zoom');
         slide.querySelectorAll('.panel.panel-zoomed').forEach(p => p.classList.remove('panel-zoomed'));
       });
@@ -4332,8 +4368,8 @@
       }
       if (presentationMode) {
         syncCommandBar();
-        refreshPresentationDeck(document.getElementById('slideFichaA'));
-        presentationGoTo('#slideFichaA');
+        refreshPresentationDeck(document.querySelector('.map-slide'));
+        presentationGoTo('.map-slide');
       }
     }
 

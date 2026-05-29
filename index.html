@@ -1549,14 +1549,26 @@
       const rows = statusVal === '__ALL__' ? DATA : DATA.filter(r => r.status === statusVal);
       return rows.filter(r => Number.isFinite(r.anio) && r.anio >= from && r.anio <= to);
     }
-    function filteredDataByEfAndStatus() {
-      const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+    function filteredDataByScope() {
+      const scope = getMapScope();
       const rows = filteredData();
-      return efVal === '__ALL__' ? rows : rows.filter(r => r.ef === efVal);
+      if (scope === 'gerencia') {
+        if (CURRENT_FOCUS_GERENCIA) {
+          const normFoc = normGerencia(CURRENT_FOCUS_GERENCIA);
+          return rows.filter(r => r.gerencia && normGerencia(r.gerencia) === normFoc);
+        }
+        return rows;
+      } else {
+        const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+        return efVal === '__ALL__' ? rows : rows.filter(r => r.ef === efVal);
+      }
+    }
+    function filteredDataByEfAndStatus() {
+      return filteredDataByScope();
     }
     function selectedProjectRows() {
       const projectVal = document.getElementById('projectSelect')?.value || '__ALL__';
-      return projectVal === '__ALL__' ? null : filteredDataByEfAndStatus().filter(r => String(r.id) === projectVal);
+      return projectVal === '__ALL__' ? null : DATA.filter(r => String(r.id) === projectVal);
     }
     function activeDataForMap() {
       return selectedProjectRows() || filteredData();
@@ -1809,6 +1821,7 @@
     }
 
     function render() {
+      populateProjectSelect();
       const efVal = document.getElementById('efSelect').value;
       const projectRows = selectedProjectRows();
       const isProject = !!projectRows;
@@ -2303,9 +2316,18 @@
           });
           lyr.on('mouseout', () => geoLayer.resetStyle(lyr));
           lyr.on('click', () => {
-            if (scope === 'gerencia') CURRENT_FOCUS_GERENCIA = focusValue;
-            else CURRENT_FOCUS_EF = focusValue;
-            drawMap();
+            const projSel = document.getElementById('projectSelect');
+            if (projSel) projSel.value = '__ALL__';
+            const efSel = document.getElementById('efSelect');
+            if (efSel) efSel.value = '__ALL__';
+            if (scope === 'gerencia') {
+              CURRENT_FOCUS_GERENCIA = focusValue;
+              render();
+            } else {
+              CURRENT_FOCUS_EF = focusValue;
+              if (efSel && [...efSel.options].some(o => o.value === focusValue)) { efSel.value = focusValue; render(); }
+              else drawMap();
+            }
           });
           lyr.on('dblclick', () => {
             if (scope !== 'ef') return;
@@ -2333,7 +2355,7 @@
             mapInstance.fitBounds(tmp.getBounds(), { padding: [20, 20] });
           }
         } else {
-          mapInstance.fitBounds(geoLayer.getBounds(), { padding: [10, 10] });
+          mapInstance.setView([24, -102], 4.5);
         }
       } catch (e) { }
 
@@ -2406,8 +2428,9 @@
         .filter(r => r.nombre)
         .sort((a, b) => b.mw - a.mw || a.nombre.localeCompare(b.nombre, 'es-MX'));
 
+      const globalSelVal = document.getElementById('projectSelect')?.value || '__ALL__';
       const currentEf = sel.dataset.ef || '';
-      const previous = currentEf === `${scope}:${key}` ? sel.value : '__ALL__';
+      const previous = (globalSelVal !== '__ALL__' && currentEf === `${scope}:${key}`) ? sel.value : '__ALL__';
       sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>' + rows.map(r => {
         const label = `${r.nombre} · ${r.anio || '—'} · ${fmt(r.mw, 2)} MW`;
         return `<option value="${r.id}">${label}</option>`;
@@ -2568,7 +2591,12 @@
     });
     document.getElementById('projectSelect').addEventListener('change', () => {
       const rows = selectedProjectRows();
-      if (rows?.length) document.getElementById('efSelect').value = rows[0].ef;
+      if (rows?.length) {
+        document.getElementById('efSelect').value = rows[0].ef;
+      } else {
+        const mapProjSel = document.getElementById('mapProjectSelect');
+        if (mapProjSel) mapProjSel.value = '__ALL__';
+      }
       populateProjectSelect();
       render();
     });
