@@ -1,0 +1,4442 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <title>Segunda Convocatoria 2026 · DGMESNIE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Merriweather:wght@400;700;900&display=swap"
+    rel="stylesheet">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/full-screen.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@v3.12.0/dist/pptxgen.bundle.js"></script>
+  <style>
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
+      font-weight: 300;
+    }
+
+    :root {
+      --guinda: #9B2247;
+      --verde: #1E5B4F;
+      --dorado: #A57F2C;
+      --gris: #98989A;
+      --gris-claro: #E5E5E5;
+      --text: #2b2b2b;
+      --bg: #f3f4f6;
+      --slide-w: 1280px;
+      --slide-h: 720px;
+      --font-h: 'Patria', 'Merriweather', serif;
+      --font-b: 'Noto Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text);
+      padding: 40px 20px;
+    }
+
+    .toolbar {
+      max-width: var(--slide-w);
+      margin: 0 auto 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: stretch;
+    }
+
+    .toolbar-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .toolbar-row.top {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
+    }
+
+    .toolbar-row.bottom {
+      align-items: flex-end;
+    }
+
+    .toolbar h1 {
+      font-family: var(--font-h);
+      font-size: 22px;
+      color: var(--guinda);
+      margin: 0;
+      text-align: center;
+    }
+
+    .toolbar .toolbar-title {
+      grid-column: 2;
+      justify-self: center;
+      max-width: 980px;
+    }
+
+    .toolbar .top-link {
+      grid-column: 3;
+      justify-self: end;
+      align-self: start;
+    }
+
+    .toolbar select,
+    .toolbar button {
+      font-family: var(--font-b);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--gris);
+      background: white;
+      cursor: pointer;
+    }
+
+    .toolbar .hidden-select {
+      display: none;
+    }
+
+    .toolbar .filter-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      flex: 1 1 320px;
+    }
+
+    .toolbar .filter-title {
+      font-size: 11px;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .toolbar .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .toolbar button.filter-chip,
+    .toolbar button.year-chip {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--gris-claro);
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 999px;
+      line-height: 1;
+    }
+
+    .toolbar label {
+      font-size: 12px !important;
+    }
+
+    #yearFrom,
+    #yearTo {
+      width: 64px !important;
+      padding: 4px 6px !important;
+      font-size: 11px;
+    }
+
+    #statusButtons,
+    #yearPresetButtons {
+      flex-wrap: wrap;
+      overflow: visible;
+      max-width: none;
+      padding-bottom: 0;
+    }
+
+    #statusButtons .filter-chip,
+    #yearPresetButtons .year-chip {
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .toolbar button.filter-chip.active,
+    .toolbar button.year-chip.active {
+      background: var(--guinda);
+      color: #fff;
+      border-color: var(--guinda);
+    }
+
+    .toolbar button.primary {
+      background: var(--guinda);
+      color: white;
+      border-color: var(--guinda);
+      font-weight: 700;
+    }
+
+    .toolbar button.secondary {
+      background: var(--verde);
+      color: white;
+      border-color: var(--verde);
+      font-weight: 700;
+    }
+
+    #btnPresent {
+      background: var(--dorado);
+      border-color: var(--dorado);
+      color: #fff;
+      animation: presentPulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes presentPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(165, 127, 44, .36);
+      }
+
+      60% {
+        box-shadow: 0 0 0 8px rgba(165, 127, 44, 0);
+      }
+    }
+
+    .deck {
+      max-width: var(--slide-w);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .slide {
+      width: var(--slide-w);
+      height: var(--slide-h);
+      background: white;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .presentation-controls {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, .55);
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      padding: 8px 10px;
+      backdrop-filter: blur(3px);
+    }
+
+    .presentation-controls button {
+      border: 1px solid rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .15);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .presentation-controls button:hover {
+      background: rgba(255, 255, 255, .28);
+    }
+
+    .presentation-controls .counter {
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    /* ===== Command bar (presentación) ===== */
+    .command-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 16px;
+      background: rgba(20, 6, 12, .82);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+      font-family: 'Noto Sans', sans-serif;
+    }
+
+    body.presentation-mode .command-bar {
+      display: flex;
+    }
+
+    .command-bar .cb-brand {
+      font-family: 'Patria', 'Merriweather', serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      opacity: .9;
+    }
+
+    .command-bar .cb-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .command-bar .cb-lbl {
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .55);
+      font-weight: 700;
+    }
+
+    .command-bar select,
+    .command-bar input {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .25);
+      color: #fff;
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      max-width: 240px;
+    }
+
+    .command-bar select option {
+      color: #2b2b2b;
+    }
+
+    .command-bar .cb-search {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .command-bar .cb-search input {
+      width: 100%;
+      max-width: none;
+    }
+
+    .command-bar .cb-ico {
+      color: rgba(255, 255, 255, .7);
+      font-size: 14px;
+    }
+
+    .command-bar .cb-btn {
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .3);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .command-bar .cb-btn:hover {
+      background: rgba(165, 127, 44, .5);
+      border-color: var(--dorado);
+    }
+
+    /* ===== Spotlight ===== */
+    .spotlight {
+      position: fixed;
+      inset: 0;
+      z-index: 10001;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 12vh;
+      background: rgba(0, 0, 0, .55);
+      backdrop-filter: blur(4px);
+    }
+
+    .spotlight.open {
+      display: flex;
+    }
+
+    .spotlight-box {
+      width: min(680px, 92vw);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+      overflow: hidden;
+    }
+
+    .spotlight-box>input {
+      width: 100%;
+      border: 0;
+      border-bottom: 2px solid var(--guinda);
+      padding: 18px 22px;
+      font-size: 18px;
+      font-family: 'Noto Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+    }
+
+    .spotlight-results {
+      max-height: 46vh;
+      overflow: auto;
+    }
+
+    .spotlight-results .sr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 22px;
+      cursor: pointer;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .spotlight-results .sr.active,
+    .spotlight-results .sr:hover {
+      background: rgba(155, 34, 71, .08);
+    }
+
+    .spotlight-results .sr .badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--guinda);
+      padding: 3px 8px;
+      border-radius: 999px;
+      min-width: 58px;
+      text-align: center;
+    }
+
+    .spotlight-results .sr .badge.ef { background: var(--verde); }
+    .spotlight-results .sr .badge.ger { background: var(--dorado); }
+    .spotlight-results .sr .badge.tec { background: var(--gris); }
+
+    .spotlight-results .sr .txt {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .spotlight-results .sr .txt .t1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .spotlight-results .sr .txt .t2 {
+      font-size: 11px;
+      color: var(--gris);
+    }
+
+    .spotlight-foot {
+      padding: 8px 22px;
+      font-size: 11px;
+      color: var(--gris);
+      background: #fafafa;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .spotlight-results .sr-empty {
+      padding: 22px;
+      color: var(--gris);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    body.present-black .deck > .slide.active { opacity: 0; }
+    body.present-black .command-bar,
+    body.present-black .presentation-controls { opacity: .15; }
+
+    body.presentation-mode {
+      padding: 0;
+      background: #000;
+    }
+
+    body.presentation-mode .toolbar,
+    body.presentation-mode .preloader {
+      display: none !important;
+    }
+
+    body.presentation-mode .deck {
+      position: fixed;
+      inset: 0;
+      max-width: none;
+      margin: 0;
+      display: block;
+      background: #000;
+      z-index: 9998;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    body.presentation-mode .deck>.slide {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      margin: 0;
+      box-shadow: none;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) scale(var(--presentation-scale, 1));
+      overflow: hidden;
+    }
+
+    body.presentation-mode .deck>.slide.active {
+      display: var(--slide-presentation-display, block);
+    }
+
+    /* ============ PORTADA ============ */
+    .slide.cover {
+      --slide-presentation-display: flex;
+      background: #6a172f;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide.cover .cover-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .slide.cover .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155, 34, 71, .35) 0%, rgba(30, 91, 79, .25) 60%, rgba(0, 0, 0, .45) 100%);
+      z-index: 1;
+    }
+
+    .slide.cover .top-band,
+    .slide.cover .body,
+    .slide.cover .bottom-band {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cover .top-band {
+      background: rgba(255, 255, 255, .96);
+      padding: 18px 56px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      border-bottom: 4px solid var(--dorado);
+    }
+
+    .cover .top-band img {
+      height: 56px;
+      width: auto;
+    }
+
+    .cover .top-band .divider {
+      width: 1px;
+      height: 48px;
+      background: var(--gris);
+    }
+
+    .cover .top-band .unit {
+      font-size: 11px;
+      color: var(--text);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 20px 60px 64px 28%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .cover .eyebrow {
+      font-family: var(--font-b);
+      font-size: 14px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--dorado);
+      font-weight: 700;
+    }
+
+    .cover h1 {
+      font-family: var(--font-h);
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 1.05;
+      max-width: 900px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
+    }
+
+    .cover .unidad {
+      font-family: var(--font-h);
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.3;
+      color: white;
+      max-width: 720px;
+      border-left: 3px solid var(--dorado);
+      padding-left: 14px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+    }
+
+    .cover .subtitle {
+      font-family: var(--font-h);
+      font-weight: 300;
+      font-size: 26px;
+      color: rgba(255, 255, 255, .92);
+      max-width: 800px;
+    }
+
+    .cover .subtitle-status {
+      font-family: var(--font-b);
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .88);
+      margin-top: -8px;
+    }
+
+    .cover .meta {
+      margin-top: 24px;
+      display: flex;
+      gap: 32px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .cover .meta strong {
+      color: var(--dorado);
+      display: block;
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
+      height: 14px;
+      background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 33%, var(--verde) 33%, var(--verde) 66%, var(--dorado) 66%);
+    }
+
+    /* ============ CONTENIDO ============ */
+    .slide.content {
+      --slide-presentation-display: grid;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      padding: 0;
+    }
+
+    .content .header {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      padding: 14px 28px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      border-bottom: 2px solid var(--guinda);
+    }
+
+    .content .header .brand-left {
+      font-family: var(--font-h);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--guinda);
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .content .header .brand-left::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--guinda);
+      border-radius: 2px;
+    }
+
+    .content .header .ef-title {
+      font-family: var(--font-h);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+
+    .content .header .ef-title::before,
+    .content .header .ef-title::after {
+      content: '·';
+      color: var(--dorado);
+      margin: 0 14px;
+      font-size: 24px;
+    }
+
+    .content .header .logo-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .content .header .logo-right img {
+      height: 38px;
+    }
+
+    .content .narrative {
+      padding: 14px 28px 6px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    .content .narrative strong {
+      color: var(--guinda);
+      font-weight: 700;
+    }
+
+    .kpi-row {
+      padding: 6px 28px 8px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .kpi {
+      padding: 8px 14px;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--gris-claro);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--guinda);
+    }
+
+    .kpi:nth-child(2)::before {
+      background: var(--verde);
+    }
+
+    .kpi:nth-child(3)::before {
+      background: var(--dorado);
+    }
+
+    .kpi:nth-child(4)::before {
+      background: var(--gris);
+    }
+
+    .kpi:nth-child(5)::before {
+      background: var(--verde);
+    }
+
+    .kpi .value {
+      font-family: var(--font-h);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--guinda);
+      line-height: 1;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+
+    .kpi:nth-child(2) .value {
+      color: var(--verde);
+    }
+
+    .kpi:nth-child(3) .value {
+      color: var(--dorado);
+    }
+
+    .kpi:nth-child(4) .value {
+      color: var(--text);
+    }
+
+    .kpi:nth-child(5) .value {
+      color: var(--verde);
+      font-size: 18px;
+    }
+
+    .kpi .label {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.25;
+      flex: 1;
+    }
+
+    .kpi .label small {
+      display: block;
+      font-weight: 400;
+      color: var(--gris);
+      letter-spacing: .08em;
+      margin-top: 2px;
+      font-size: 9px;
+      text-transform: none;
+    }
+
+    .content .body {
+      padding: 4px 28px 12px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 14px;
+      min-height: 0;
+      position: relative;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: 0;
+      background: white;
+      border: 1px solid var(--gris-claro);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel h3 {
+      background: linear-gradient(180deg, #fbfbfb 0%, #f3f3f3 100%);
+      color: var(--guinda);
+      font-family: var(--font-b);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--guinda);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel h3::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--guinda);
+      display: inline-block;
+    }
+
+    .panel.accent-verde h3 {
+      color: var(--verde);
+      border-bottom-color: var(--verde);
+    }
+
+    .panel.accent-verde h3::before {
+      background: var(--verde);
+    }
+
+    .panel.accent-dorado h3 {
+      color: var(--dorado);
+      border-bottom-color: var(--dorado);
+    }
+
+    .panel.accent-dorado h3::before {
+      background: var(--dorado);
+    }
+
+    .panel .chart {
+      flex: 1;
+      min-height: 0;
+      padding: 8px 6px 4px;
+    }
+
+    .panel>div:not(.chart) {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .col-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .col-stack .panel {
+      flex: 1;
+      min-height: 0;
+    }
+
+    table.proyectos,
+    table.tech {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+
+    table.proyectos thead th,
+    table.tech thead th {
+      background: #f7f7f8;
+      color: var(--text);
+      text-align: left;
+      padding: 6px 8px;
+      font-weight: 700;
+      font-size: 9px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid var(--gris);
+    }
+
+    table.proyectos td,
+    table.tech td {
+      padding: 4px 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    table.proyectos.top-list tbody tr:nth-child(even) {
+      background: rgba(155, 34, 71, .075);
+    }
+
+    table.proyectos.top-list tbody tr:nth-child(odd) {
+      background: rgba(155, 34, 71, .028);
+    }
+
+    table.tech td {
+      padding: 3px 8px;
+      font-size: 9.5px;
+    }
+
+    table.tech thead th {
+      padding: 4px 8px;
+      font-size: 9.5px;
+    }
+
+    table.proyectos tbody tr:hover,
+    table.tech tbody tr:hover {
+      background: rgba(155, 34, 71, .04);
+    }
+
+    table.proyectos tbody tr:hover,
+    table.tech tbody tr:hover {
+      background: rgba(155, 34, 71, .04);
+    }
+
+    table.proyectos td.mw,
+    table.tech td.mw,
+    table.proyectos th.mw,
+    table.tech th.mw {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.proyectos td.mw,
+    table.tech td.mw {
+      font-weight: 700;
+      color: var(--guinda);
+    }
+
+    table.tech tbody td:first-child {
+      font-weight: 600;
+      color: var(--verde);
+    }
+
+    table.tech tfoot td {
+      border-top: 2px solid var(--guinda);
+      border-bottom: 0;
+      background: #faf3f5;
+      font-weight: 700;
+    }
+
+    .content .footer {
+      background: var(--guinda);
+      height: 8px;
+      background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 60%, var(--dorado) 60%, var(--dorado) 100%);
+    }
+
+    /* ============ SLIDE MAPA ============ */
+    .slide.map-slide {
+      --slide-presentation-display: flex;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    .map-slide>.header,
+    .map-slide>.map-toolbar {
+      flex: 0 0 auto;
+    }
+
+    .map-slide .map-toolbar {
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+      border-bottom: 1px solid var(--gris-claro);
+    }
+
+    .map-slide .map-toolbar label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .map-slide .map-toolbar select {
+      padding: 6px 12px;
+      border: 1px solid var(--gris);
+      border-radius: 4px;
+      font-family: var(--font-b);
+      font-size: 13px;
+      background: white;
+    }
+
+    .map-slide .map-toolbar .legend {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text);
+    }
+
+    .map-slide .map-toolbar .legend .ramp {
+      display: inline-block;
+      width: 160px;
+      height: 10px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #f7e3ea 0%, #d99cb1 25%, #c46d8a 50%, #a83a5d 75%, #6a172f 100%);
+      border: 1px solid #ccc;
+    }
+
+    .map-slide .map-body {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 0;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .map-slide .map-body>* {
+      min-height: 0;
+    }
+
+    .map-slide.focused .map-body {
+      grid-template-columns: 1fr 380px;
+    }
+
+    /* Proyecto seleccionado: panel al costado (identificación) + franja inferior (resto) */
+    .map-slide.project-detail .map-body {
+      grid-template-columns: 1fr 400px;
+    }
+
+    .map-slide.project-detail .side-panel {
+      font-size: 10.5px;
+    }
+
+    .map-slide.project-detail .side-panel .kv-row {
+      grid-template-columns: 110px 1fr;
+      font-size: 10px;
+      padding: 1px 0;
+    }
+
+    .map-slide.project-detail .side-panel .ef-section-title {
+      margin-top: 4px;
+    }
+
+    .map-bottom-ficha {
+      display: none;
+    }
+
+    .map-slide.project-detail .map-bottom-ficha {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 10px;
+      flex: 0 0 auto;
+      padding: 8px 28px 10px;
+      background: #fafafa;
+      border-top: 1px solid var(--gris-claro);
+      max-height: 210px;
+      overflow: hidden;
+    }
+
+    .map-bottom-ficha .bf-col {
+      min-width: 0;
+      overflow: auto;
+    }
+
+    .map-bottom-ficha .ef-section-title {
+      margin-top: 0;
+    }
+
+    .map-bottom-ficha .kv-row {
+      grid-template-columns: 110px 1fr;
+      font-size: 10px;
+      padding: 1px 0;
+    }
+
+    .map-slide>.footer {
+      margin-top: auto;
+      flex: 0 0 8px;
+    }
+
+    .map-slide .ef-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+
+    .map-slide .ef-mini-card {
+      background: white;
+      border: 1px solid var(--gris-claro);
+      border-radius: 4px;
+      padding: 5px 7px;
+    }
+
+    .map-slide .ef-mini-card .lbl {
+      font-size: 7.5px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gris);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .map-slide .ef-mini-card .val {
+      font-family: var(--font-h);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--guinda);
+      margin-top: 1px;
+      line-height: 1;
+    }
+
+    .map-slide .ef-mini-card .sub {
+      font-size: 8.5px;
+      color: var(--text);
+      margin-top: 1px;
+      line-height: 1.1;
+    }
+
+    .map-slide .ef-section-title {
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--guinda);
+      font-weight: 700;
+      margin-top: 2px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--guinda);
+    }
+
+    .map-slide .ef-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9.5px;
+      padding: 1.5px 0;
+    }
+
+    .map-slide .ef-bar-row .name {
+      width: 34px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .map-slide .ef-bar-row .bar {
+      flex: 1;
+      height: 7px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .map-slide .ef-bar-row .bar>span {
+      display: block;
+      height: 100%;
+      background: var(--guinda);
+    }
+
+    .map-slide .ef-bar-row .num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: var(--guinda);
+      width: 58px;
+      text-align: right;
+      font-size: 9px;
+    }
+
+    .map-slide .kv-list {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
+    .map-slide .kv-row {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 2px 0;
+      font-size: 10.5px;
+      line-height: 1.25;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .map-slide .kv-row:last-child {
+      border-bottom: 0;
+    }
+
+    .map-slide .kv-k {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .map-slide .kv-v {
+      color: var(--guinda);
+      font-weight: 700;
+      word-break: break-word;
+      min-width: 0;
+    }
+
+    .map-slide #mapa {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      background: #f4f6f8;
+      overflow: hidden;
+    }
+
+    .map-slide .side-panel {
+      background: #fafafa;
+      border-left: 1px solid var(--gris-claro);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .map-slide .side-panel h4 {
+      font-family: var(--font-h);
+      color: var(--guinda);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .map-slide .side-panel .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 3px 0;
+      border-bottom: 1px dashed var(--gris-claro);
+      font-size: 11px;
+    }
+
+    .map-slide .side-panel .stat strong {
+      font-family: var(--font-h);
+      color: var(--guinda);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .map-slide .side-panel .hint {
+      font-size: 10px;
+      color: var(--gris);
+      font-style: italic;
+    }
+
+    /* ============ FICHAS DE PROYECTO (2 láminas) ============ */
+    .slide.ficha.ficha-hidden { display: none; }
+
+    .slide.ficha {
+      --slide-presentation-display: grid;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      padding: 0;
+    }
+
+    .slide.ficha .header {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      padding: 12px 28px 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      border-bottom: 2px solid var(--guinda);
+      gap: 12px;
+    }
+
+    .slide.ficha .header .ficha-title {
+      font-family: var(--font-h);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.05;
+    }
+
+    .slide.ficha .header .ficha-sub {
+      font-size: 11px;
+      color: var(--gris);
+      margin-top: 3px;
+      letter-spacing: .02em;
+    }
+
+    .slide.ficha .header .ficha-page {
+      font-family: var(--font-h);
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--guinda);
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .slide.ficha .header .logo-right img {
+      height: 32px;
+    }
+
+    .ficha-kpis {
+      padding: 8px 28px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      border-bottom: 1px solid var(--gris-claro);
+    }
+
+    .ficha-kpis .fk {
+      background: white;
+      border: 1px solid var(--gris-claro);
+      border-radius: 5px;
+      padding: 6px 9px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ficha-kpis .fk::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--guinda);
+    }
+
+    .ficha-kpis .fk:nth-child(2)::before { background: var(--verde); }
+    .ficha-kpis .fk:nth-child(3)::before { background: var(--dorado); }
+    .ficha-kpis .fk:nth-child(4)::before { background: var(--gris); }
+    .ficha-kpis .fk:nth-child(5)::before { background: var(--verde); }
+    .ficha-kpis .fk:nth-child(6)::before { background: var(--dorado); }
+
+    .ficha-kpis .fk .lbl {
+      font-size: 7.5px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--gris);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .ficha-kpis .fk .val {
+      font-family: var(--font-h);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--guinda);
+      line-height: 1.05;
+      margin-top: 2px;
+    }
+
+    .ficha-kpis .fk .sub {
+      font-size: 8px;
+      color: var(--text);
+      margin-top: 1px;
+    }
+
+    .slide.ficha .ficha-body {
+      padding: 10px 28px 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .ficha-col {
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ficha-sec {
+      font-family: var(--font-b);
+      font-size: 9.5px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--guinda);
+      font-weight: 700;
+      margin-top: 6px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--guinda);
+    }
+
+    .ficha-sec:first-child { margin-top: 0; }
+
+    .ficha-sec.verde { color: var(--verde); border-bottom-color: var(--verde); }
+    .ficha-sec.dorado { color: var(--dorado); border-bottom-color: var(--dorado); }
+
+    .ficha-kv {
+      display: grid;
+      grid-template-columns: 122px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 2px 0;
+      font-size: 10px;
+      line-height: 1.3;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .ficha-kv .k {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .ficha-kv .v {
+      color: var(--guinda);
+      font-weight: 700;
+      word-break: break-word;
+      min-width: 0;
+    }
+
+    .ficha-kv .v.muted {
+      color: var(--gris);
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .slide.ficha .footer {
+      padding: 4px 28px;
+      font-size: 8.5px;
+      color: var(--gris);
+      border-top: 1px solid var(--gris-claro);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .leaflet-tooltip.ef-tip {
+      background: rgba(155, 34, 71, .95);
+      color: white;
+      border: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+      font-family: 'Noto Sans', sans-serif;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .leaflet-tooltip.ef-tip strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .leaflet-tooltip.ef-tip::before {
+      display: none;
+    }
+
+    /* ============ PRELOADER ============ */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #9B2247 0%, #6a172f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      color: white;
+      transition: opacity .35s ease;
+    }
+
+    .preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .preloader .spin {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(255, 255, 255, .2);
+      border-top-color: var(--dorado);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .preloader h2 {
+      font-family: var(--font-h);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .preloader .msg {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .85);
+      letter-spacing: .04em;
+    }
+
+    .panel.panel-zoomed {
+      position: absolute;
+      inset: 12px;
+      z-index: 60;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, .35);
+      border: 2px solid var(--guinda);
+      background: #fff;
+    }
+
+    .slide.slide-has-zoom .panel:not(.panel-zoomed) {
+      pointer-events: none;
+    }
+
+    @media print {
+      @page {
+        size: 13.333in 7.5in;
+        margin: 0;
+      }
+
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        background: white;
+        width: 13.333in;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .toolbar,
+      .highcharts-contextbutton,
+      .highcharts-exporting-group,
+      .preloader {
+        display: none !important;
+      }
+
+      .deck {
+        gap: 0;
+        max-width: none;
+        margin: 0;
+      }
+
+      .slide {
+        width: 13.333in;
+        height: 7.5in;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+        overflow: hidden;
+      }
+
+      .slide:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="preloader" class="preloader">
+    <div class="spin"></div>
+    <h2>Segunda Convocatoria 2026</h2>
+    <div class="msg" id="preloaderMsg">Cargando datos…</div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-row top">
+      <h1 class="toolbar-title" style="line-height:1.2"><span
+          style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">Segunda
+          Convocatoria 2026
+          · Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas
+        del
+        Sistema Nacional de Información Energética</h1>
+      <a class="top-link" href="index.html"
+        style="font-size:12px;text-decoration:none;color:var(--guinda);font-weight:700;border:1px solid var(--guinda);padding:6px 10px;border-radius:4px">←
+        PVIRCE</a>
+    </div>
+    <div class="toolbar-row bottom">
+      <label style="font-size:13px;">EF:
+        <select id="efSelect">
+          <option>Cargando…</option>
+        </select>
+      </label>
+      <label style="font-size:13px;">Proyecto:
+        <select id="projectSelect">
+          <option value="__ALL__">Todos</option>
+        </select>
+      </label>
+      <label style="font-size:13px;">MW:
+        <select id="mwMetric">
+          <option value="instalada" selected>Instalada</option>
+          <option value="generacion">Generación</option>
+          <option value="neta">Instalada Neta</option>
+        </select>
+      </label>
+      <button class="secondary" onclick="openSheetEditor()">Editar datos</button>
+      <button class="secondary" id="btnReload" onclick="loadData(true)">Recargar</button>
+      <button class="secondary" onclick="printReport()">Vista PDF</button>
+      <button class="secondary" id="btnPresent">Presentar</button>
+      <button class="primary" id="btnPpt">Descargar PPT</button>
+      <div class="filter-stack">
+        <div class="filter-title">Estatus:</div>
+        <select id="statusSelect" class="hidden-select">
+          <option value="__ALL__">Todos</option>
+        </select>
+        <div class="chip-group" id="statusButtons"></div>
+      </div>
+      <div class="filter-stack">
+        <div class="filter-title">Años:</div>
+        <div class="chip-group">
+          <input id="yearFrom" type="number" step="1" value="2026"
+            style="width:78px;padding:6px 8px;border:1px solid var(--gris);border-radius:4px;"> -
+          <input id="yearTo" type="number" step="1" value="2035"
+            style="width:78px;padding:6px 8px;border:1px solid var(--gris);border-radius:4px;">
+        </div>
+        <div class="chip-group" id="yearPresetButtons">
+          <button type="button" class="year-chip" data-from="2026" data-to="2030">2026-2030</button>
+          <button type="button" class="year-chip" data-from="2031" data-to="2035">2031-2035</button>
+          <button type="button" class="year-chip" data-from="2036" data-to="2040">2036-2040</button>
+          <button type="button" class="year-chip" data-from="2026" data-to="2040">Todo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command bar superior (solo en presentación) -->
+  <div id="commandBar" class="command-bar" aria-hidden="true">
+    <div class="cb-brand">SEGUNDA CONVOCATORIA 2026</div>
+    <div class="cb-group">
+      <span class="cb-lbl">Nivel</span>
+      <select id="cbNivel">
+        <option value="ef">Entidad Federativa</option>
+        <option value="gerencia">Gerencia de control</option>
+      </select>
+    </div>
+    <div class="cb-group">
+      <span class="cb-lbl" id="cbScopeLbl">Entidad</span>
+      <select id="cbScope"><option value="__ALL__">Nacional (todas)</option></select>
+    </div>
+    <div class="cb-group">
+      <span class="cb-lbl">Proyecto</span>
+      <select id="cbProject"><option value="__ALL__">Todos</option></select>
+    </div>
+    <div class="cb-group cb-search">
+      <span class="cb-ico">⌕</span>
+      <input id="cbSearch" type="text" placeholder="Buscar proyecto, estado, gerencia…  ( / )" autocomplete="off">
+    </div>
+    <button type="button" id="cbHome" class="cb-btn" title="Vista nacional (N)">⌂ Nacional</button>
+    <button type="button" id="cbSpotlight" class="cb-btn" title="Búsqueda global (Ctrl/⌘ K)">⌘K</button>
+  </div>
+
+  <div id="presentationControls" class="presentation-controls" aria-hidden="true">
+    <button type="button" id="btnPrevSlide">← Anterior</button>
+    <span id="presentationCounter" class="counter">1/1</span>
+    <button type="button" id="btnNextSlide">Siguiente →</button>
+    <button type="button" id="btnExitPresentation">Salir</button>
+  </div>
+
+  <!-- Spotlight global (Ctrl/Cmd+K) -->
+  <div id="spotlight" class="spotlight" aria-hidden="true">
+    <div class="spotlight-box">
+      <input id="spotlightInput" type="text" placeholder="Buscar entidad, gerencia, tecnología o proyecto…" autocomplete="off">
+      <div id="spotlightResults" class="spotlight-results"></div>
+      <div class="spotlight-foot">↑↓ navegar · ↵ abrir · Esc cerrar</div>
+    </div>
+  </div>
+
+  <div class="deck">
+
+    <!-- ============ SLIDE 1: PORTADA ============ -->
+    <section class="slide cover">
+      <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
+      <div class="cover-overlay"></div>
+      <div class="top-band">
+        <img src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
+        <div class="divider"></div>
+        <img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+        <div style="margin-left:auto" class="unit">DGMESNIE · Subsecretaría de Planeación</div>
+      </div>
+
+      <div class="body">
+        <div class="eyebrow">Convocatoria Pública 2026 · Segunda</div>
+        <h1>Proyectos de Generación Eléctrica — Segunda Convocatoria</h1>
+        <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información
+          Energética</div>
+        <div class="subtitle" id="coverEf"><span id="coverScopeLabel">Entidad Federativa</span>:
+          <strong>Yucatán</strong>
+        </div>
+        <div class="subtitle subtitle-status" id="coverStatus" style="display:none">Estatus: <strong>—</strong></div>
+        <div class="subtitle subtitle-status" id="coverPeriod">Periodo: <strong>2026-2035</strong></div>
+        <div class="meta">
+          <div><strong>Versión</strong>2026 · v1.0</div>
+          <div><strong>Fecha</strong>Mayo 2026</div>
+          <div><strong>Fuente</strong>SNIE — DGMESNIE</div>
+        </div>
+      </div>
+
+      <div class="bottom-band"></div>
+    </section>
+
+    <!-- ============ SLIDE 2: CONTENIDO ============ -->
+    <section class="slide content">
+      <div class="header">
+        <div class="brand-left">Segunda Convocatoria 2026</div>
+        <div class="ef-title" id="contEf">Yucatán</div>
+        <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+      </div>
+
+      <div class="narrative" id="narrative">Cargando datos…</div>
+
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="value" id="kpiMW">—</div>
+          <div class="label">MW capacidad<br>instalada</div>
+        </div>
+        <div class="kpi">
+          <div class="value" id="kpiProj">—</div>
+          <div class="label">Total de<br>proyectos</div>
+        </div>
+        <div class="kpi">
+          <div class="value" id="kpiPct">—</div>
+          <div class="label">Participación<br>nacional</div>
+        </div>
+        <div class="kpi">
+          <div class="value" id="kpiHorizon">—</div>
+          <div class="label">Horizonte</div>
+        </div>
+        <div class="kpi">
+          <div class="value" id="saeeMW">—</div>
+          <div class="label">SAEE asociado a<br>centrales eléctricas<small id="saeePct">— del total</small></div>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="col-stack">
+          <div class="panel" id="panelTrayectoria">
+            <h3 id="h3Trayectoria">Trayectoria anual por tecnología</h3>
+            <div class="chart" id="chartTrayectoria"></div>
+          </div>
+          <div class="panel accent-dorado" id="panelTech">
+            <h3 id="h3Tech">Capacidad instalada por tecnología</h3>
+            <div id="techTable" style="overflow:auto"></div>
+          </div>
+        </div>
+
+        <div class="panel accent-verde">
+          <h3 id="topPanelTitle">Top 10 proyectos por capacidad instalada</h3>
+          <div id="topTable" style="overflow:auto"></div>
+        </div>
+
+        <div class="col-stack">
+          <div class="panel accent-verde" id="panelDonut">
+            <h3 id="h3Donut">Generación por participación</h3>
+            <div class="chart" id="chartDonut"></div>
+          </div>
+          <div class="panel accent-dorado" id="panelBar">
+            <h3 id="h3Bar">Adiciones por año, proyectos y acumulado</h3>
+            <div class="chart" id="chartBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer"></div>
+    </section>
+
+    <!-- ============ SLIDE 3: MAPA NACIONAL ============ -->
+    <section class="slide content map-slide">
+      <div class="header">
+        <div class="brand-left">Segunda Convocatoria 2026</div>
+        <div class="ef-title" id="mapSlideTitle">Mapa nacional</div>
+        <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+      </div>
+
+      <div class="map-toolbar" id="mapToolbar">
+        <div id="mapToolbarNacional" style="display:flex;align-items:center;gap:14px;flex:1">
+          <label for="mapScope">Nivel:</label>
+          <select id="mapScope">
+            <option value="ef">Entidad Federativa</option>
+            <option value="gerencia">Gerencia de control</option>
+          </select>
+          <label for="mapMetric">Métrica:</label>
+          <select id="mapMetric">
+            <option value="capacidad">Capacidad instalada MW</option>
+            <option value="proyectos">Número de proyectos</option>
+            <option value="firmesMW">MW firmes</option>
+            <option value="renovableMW">MW renovable</option>
+          </select>
+          <label for="mapTipo" style="margin-left:14px">Tecnología:</label>
+          <select id="mapTipo">
+            <option value="__ALL__">Todas</option>
+          </select>
+          <div class="legend">
+            <span>Bajo</span>
+            <span class="ramp"></span>
+            <span>Alto</span>
+          </div>
+        </div>
+        <div id="mapToolbarEf" style="display:none;flex:1;align-items:center;gap:10px;font-size:12px;color:var(--text)">
+          <span id="mapFocusModeLabel"
+            style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle
+            EF</span>
+          <span id="mapEfBadge"
+            style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
+          <label for="mapProjectSelect"
+            style="margin-left:8px;font-size:11px;color:var(--text);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Cartera:</label>
+          <select id="mapProjectSelect" style="min-width:260px;max-width:420px">
+            <option value="__ALL__">Todos los proyectos</option>
+          </select>
+          <button id="mapClearEf"
+            style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">←
+            Volver a Nacional</button>
+        </div>
+      </div>
+
+      <div class="map-body">
+        <div id="mapa">
+          <div id="mapKmlLoader"
+            style="display:none;position:absolute;inset:0;z-index:1500;background:rgba(106,23,47,.55);backdrop-filter:blur(2px);align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#fff;font-family:'Noto Sans',sans-serif">
+            <div
+              style="width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#A57F2C;border-radius:50%;animation:spin .9s linear infinite">
+            </div>
+            <div style="font-size:13px;font-weight:700;letter-spacing:.04em">Cargando polígono KML…</div>
+            <div id="mapKmlLoaderSub" style="font-size:11px;color:rgba(255,255,255,.8)">Descargando archivo</div>
+          </div>
+        </div>
+        <div class="side-panel">
+          <h4 id="mapEfTitle">Selecciona un estado</h4>
+          <div class="hint" id="mapHint">Click en cualquier entidad federativa para ver su detalle. Doble click para
+            fijarla en las otras láminas.</div>
+          <div id="mapStats"></div>
+        </div>
+      </div>
+
+      <div id="mapBottomFicha" class="map-bottom-ficha"></div>
+
+      <div class="footer"></div>
+    </section>
+
+    <!-- ============ SLIDE 4: FICHA PROYECTO · PÁGINA 1 ============ -->
+    <section class="slide ficha ficha-hidden" id="slideFichaA">
+      <div class="header">
+        <div>
+          <div class="ficha-title" id="fichaATitle">Ficha de proyecto</div>
+          <div class="ficha-sub" id="fichaASub">Selecciona un proyecto</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="ficha-page">Ficha 1/2 · Generales</span>
+          <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
+        </div>
+      </div>
+      <div class="ficha-kpis" id="fichaAKpis"></div>
+      <div class="ficha-body" id="fichaABody"></div>
+      <div class="footer">
+        <span id="fichaAFolio">—</span>
+        <span>Segunda Convocatoria 2026 · DGMESNIE · SNIE</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 5: FICHA PROYECTO · PÁGINA 2 ============ -->
+    <section class="slide ficha ficha-hidden" id="slideFichaB">
+      <div class="header">
+        <div>
+          <div class="ficha-title" id="fichaBTitle">Ficha de proyecto</div>
+          <div class="ficha-sub" id="fichaBSub">Regulatorio · Almacenamiento · Técnico</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="ficha-page">Ficha 2/2 · Detalle técnico</span>
+          <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
+        </div>
+      </div>
+      <div class="ficha-kpis" id="fichaBKpis"></div>
+      <div class="ficha-body" id="fichaBBody"></div>
+      <div class="footer">
+        <span id="fichaBFolio">—</span>
+        <span>Segunda Convocatoria 2026 · DGMESNIE · SNIE</span>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    if (typeof Highcharts !== 'undefined') {
+      Highcharts.setOptions({
+        colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
+        chart: {
+          style: { fontFamily: "'Noto Sans', sans-serif" },
+          events: {
+            fullscreenOpen: function () { this.update({ chart: { backgroundColor: '#ffffff' } }, false); this.redraw(); },
+            fullscreenClose: function () { this.update({ chart: { backgroundColor: 'transparent' } }, false); this.redraw(); }
+          }
+        },
+        credits: { enabled: false },
+        title: { text: null },
+        lang: { thousandsSep: ',', viewFullscreen: 'Pantalla completa' },
+        exporting: {
+          enabled: true,
+          buttons: {
+            contextButton: {
+              menuItems: null,
+              titleKey: 'viewFullscreen',
+              symbol: 'url(data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239B2247%22 stroke-width=%222.5%22><path d=%22M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5%22/></svg>)',
+              symbolSize: 13,
+              symbolX: 10, symbolY: 10,
+              align: 'right', verticalAlign: 'top',
+              x: -6, y: 6,
+              width: 20, height: 20,
+              onclick: function () {
+                if (presentationMode) { togglePanelZoom(this); }
+                else { this.fullscreen.toggle(); }
+              },
+              theme: {
+                fill: 'rgba(255,255,255,0.85)',
+                stroke: '#E5E5E5',
+                'stroke-width': 1,
+                r: 3,
+                padding: 2,
+                states: { hover: { fill: 'rgba(155,34,71,.12)', stroke: '#9B2247' } }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2Ffre2ItozEiKEj0Omx5X_2fSiopFjc1lGlBugXZZ6AxhFSwb7BXS8Ufs4qvHGOqcKxUU9thg_nkE/pub?output=csv';
+    const SHEET_VIEW_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2Ffre2ItozEiKEj0Omx5X_2fSiopFjc1lGlBugXZZ6AxhFSwb7BXS8Ufs4qvHGOqcKxUU9thg_nkE/pubhtml';
+    const SHEET_EDIT_URL = '';
+    const SHEET_EDIT_URL_KEY = 'segunda_convocatoria_sheet_edit_url';
+
+    let DATA = [];
+
+    function num(x) { const n = parseFloat(String(x).replace(/,/g, '')); return isNaN(n) ? 0 : n; }
+    function fmt(n, d = 2) {
+      const digits = Math.max(2, Number.isFinite(d) ? d : 2);
+      return n.toLocaleString('es-MX', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+    }
+    function cleanHeader(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
+    function field(row, names) {
+      const keys = Object.keys(row || {});
+      for (const name of names) {
+        if (row[name] != null && String(row[name]).trim() !== '') return row[name];
+        const target = cleanHeader(name).toLowerCase();
+        const key = keys.find(k => cleanHeader(k).toLowerCase() === target);
+        if (key && String(row[key]).trim() !== '') return row[key];
+      }
+      return '';
+    }
+    function isMarked(value) {
+      const raw = String(value ?? '').trim();
+      if (!raw) return false;
+      const asNumber = Number(raw.replace(',', '.'));
+      if (!Number.isNaN(asNumber) && asNumber >= 1) return true;
+      const v = raw.toLowerCase();
+      return ['1', 'x', '*', 'si', 'sí', 'true', 'verdadero', 'no considerar', 'yes', 'y'].includes(v);
+    }
+    function hasNoConsiderarFlag(row) {
+      return isMarked(field(row, ['No considerar CMMV']));
+    }
+    function isSustitucion(value) {
+      return /sustit/i.test(String(value ?? '').trim());
+    }
+    function findHeaderOffset(text) {
+      const preview = Papa.parse(text, { skipEmptyLines: true }).data || [];
+      const idx = preview.findIndex(row => {
+        const headers = row.map(cleanHeader);
+        return headers.includes('Folio Proyecto') && headers.includes('Entidad Federativa');
+      });
+      return idx >= 0 ? idx : 0;
+    }
+    function parseDateYear(s) {
+      const str = String(s || '').trim();
+      if (!str || str === 'SIN INFORMACIÓN') return null;
+      // formatos: "6/30/2030", "9/28/2029", "5/14/26 16:58"
+      const m = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+      if (!m) return null;
+      let y = parseInt(m[3], 10);
+      if (y < 100) y += 2000;
+      return y;
+    }
+    const RENEWABLE_TIPOS = /SOLAR|EÓLIC|EOLIC|HIDR|GEOT|BIO|MAREO/i;
+    function deriveRenovable(tipo, sub) {
+      const s = `${tipo || ''} ${sub || ''}`;
+      return RENEWABLE_TIPOS.test(s) ? 'Renovable' : 'No renovable';
+    }
+    function getMwMetric() {
+      return document.getElementById('mwMetric')?.value || 'instalada';
+    }
+    function pickMW(r) {
+      const m = getMwMetric();
+      if (m === 'generacion') return r.mwGeneracion;
+      if (m === 'neta') return r.mwNeta;
+      return r.mwInstalada;
+    }
+    function parseCoords(v) {
+      const m = String(v || '').match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+      if (!m) return null;
+      const lat = parseFloat(m[1]), lon = parseFloat(m[2]);
+      if (!isFinite(lat) || !isFinite(lon)) return null;
+      return [lat, lon];
+    }
+    function mapRowFromHeaderObject(r, idx) {
+      const tipo = String(field(r, ['Subtecnología', 'Tipo Tecnología']) || '').trim();
+      const tipoBase = String(field(r, ['Tipo Tecnología']) || '').trim();
+      const sub = String(field(r, ['Subtecnología']) || '').trim();
+      const cod = field(r, ['Fecha prevista para entrada en operación comercial:', 'Fecha prevista para entrada en operación comercial']);
+      const anio = parseDateYear(cod);
+      const mwInstalada = num(field(r, ['Capacidad Instalada']));
+      const mwGeneracion = num(field(r, ['Capacidad Generación']));
+      const mwNeta = num(field(r, ['Capacidad Instalada Neta']));
+      const coords = parseCoords(field(r, ['Vértice A']));
+      return {
+        id: idx,
+        status: String(field(r, ['Registro']) || 'Sin estatus').trim(),
+        nombre: String(field(r, ['Proyecto', 'Nombre']) || '').trim(),
+        empresa: String(field(r, ['Nombre']) || '').trim(),
+        folio: String(field(r, ['Folio Proyecto']) || '').trim(),
+        descripcion: String(field(r, ['Descripción Proyecto']) || '').trim(),
+        anio: anio,
+        codFecha: String(cod || '').trim(),
+        tipo: tipo || tipoBase,
+        tipoBase: tipoBase,
+        subtec: sub,
+        renovable: deriveRenovable(tipoBase, sub),
+        mwInstalada, mwGeneracion, mwNeta,
+        mw: mwInstalada,
+        generacionAnual: num(field(r, ['Generación Anual Estimada'])),
+        inversion: String(field(r, ['Inversión MDD', 'Monto de inversión total del proyecto:']) || '').trim(),
+        gerencia: String(field(r, ['Gerencia Regional']) || '').trim(),
+        region: String(field(r, ['Región_v2']) || '').trim(),
+        municipio: String(field(r, ['Municipio/Alcaldía']) || '').trim(),
+        domicilio: String(field(r, ['Domicilio']) || '').trim(),
+        ef: String(field(r, ['Entidad Federativa']) || '').trim(),
+        subestacion: String(field(r, ['Subestación Eléctrica de Interconexión']) || '').trim(),
+        tension: String(field(r, ['Nivel de tensión (kV):']) || '').trim(),
+        repre: String(field(r, ['Representante']) || '').trim(),
+        email: String(field(r, ['Email']) || '').trim(),
+        kmz: String(field(r, ['Archivo KMZ']) || '').trim(),
+        coords: coords,
+        // estatus desglose
+        estatusIndicativo: String(field(r, ['Estatus Indicativo']) || '').trim(),
+        estatusMia: String(field(r, ['Estatus MIA']) || '').trim(),
+        folioMia: String(field(r, ['Folio MIA']) || '').trim(),
+        tieneMia: String(field(r, ['¿Tiene MIA?']) || '').trim(),
+        estatusEvis: String(field(r, ['Estatus EVIS']) || '').trim(),
+        folioEvis: String(field(r, ['Folio EVIS']) || '').trim(),
+        estatusImpacto: String(field(r, ['Estatus Impacto']) || '').trim(),
+        estatusInstalaciones: String(field(r, ['Estatus Instalaciones']) || '').trim(),
+        tieneEstudios: String(field(r, ['¿Tiene estudios de interconexión?']) || '').trim(),
+        anexo4: String(field(r, ['Anexo 4']) || '').trim(),
+        definicionTerreno: String(field(r, ['Definición Terreno']) || '').trim(),
+        restriccion: String(field(r, ['Restricción']) || '').trim(),
+        pctImpl: String(field(r, ['Porcentaje Implementación']) || '').trim(),
+        // SAEE
+        saeeMW: num(field(r, ['Indicar Potencia del SAEE (MW):'])),
+        saeeAlm: num(field(r, ['Capacidad de Almacenamiento (MW):'])),
+        saeeTec: String(field(r, ['Tecnología que utiliza el SAEE:']) || '').trim(),
+        saeeRed: String(field(r, ['¿El SAEE inyectará energía eléctrica a la RNT o a las RGD?']) || '').trim(),
+        // ===== MÁXIMO DETALLE =====
+        rfc: String(field(r, ['RFC']) || '').trim(),
+        preFolio: String(field(r, ['Pre Folio']) || '').trim(),
+        hibrida: String(field(r, ['Es configuración Hibrida']) || '').trim(),
+        otraTec: String(field(r, ['Otra tecnología']) || '').trim(),
+        puntoInterconexion: String(field(r, ['Punto Interconexión']) || '').trim(),
+        oir: String(field(r, ['Oir']) || '').trim(),
+        capturista: String(field(r, ['Capturista']) || '').trim(),
+        telefono: String(field(r, ['Teléfono']) || '').trim(),
+        personaEscuchar: String(field(r, ['Persona Escuchar']) || '').trim(),
+        domFiscal: String(field(r, ['Domicilio Fiscal']) || '').trim(),
+        domNotif: String(field(r, ['Domicilio Notificaciones']) || '').trim(),
+        capacidadContratada: num(field(r, ['Capacidad Contratada'])),
+        capacidadGenPermiso: num(field(r, ['Capacidad Generación Permiso'])),
+        numEquipos: String(field(r, ['Número Equipos']) || '').trim(),
+        montoInversionTotal: String(field(r, ['Monto de inversión total del proyecto:']) || '').trim(),
+        inversionDolares: String(field(r, ['Inversión Dólares']) || '').trim(),
+        numVertices: String(field(r, ['Número de vértices:']) || '').trim(),
+        montoInversionSocial: String(field(r, ['Monto de inversión social destinado al proyecto']) || '').trim(),
+        cenaceGerencia: String(field(r, ['¿A qué gerencia de control regional del CENACE estará interconectado?']) || '').trim(),
+        distanciaSE: String(field(r, ['¿Cuál es la distancia que hay entre el proyecto y la subestación?']) || '').trim(),
+        respaldoIntermitente: String(field(r, ['Indicar el respaldo en caso de ser generadora intermitente:']) || '').trim(),
+        cuencasHidro: String(field(r, ['¿En qué cuentas hidrológicas se encuentra el sistema?']) || '').trim(),
+        invFabricante: String(field(r, ['Fabricante(s) de los inversores']) || '').trim(),
+        invModelo: String(field(r, ['Modelo(s) de los inversores']) || '').trim(),
+        invCapacidadKw: String(field(r, ['Capacidad del inversor en kW']) || '').trim(),
+        fechaInicioRegistro: String(field(r, ['Fecha Inicio Registro']) || '').trim(),
+        fechaFirmaProyecto: String(field(r, ['Fecha Firma Proyecto']) || '').trim(),
+        energiaBrutaMensual: String(field(r, ['Energía bruta en MWh estimada a producir mensualmente:']) || '').trim(),
+        irradiacionSolar: String(field(r, ['La irradiación solar global y difusa horizontal en W/m2:']) || '').trim(),
+        tempAmbiente: String(field(r, ['El perfil horario de la temperatura ambiente promedio por mes:']) || '').trim(),
+        velocidadViento: String(field(r, ['La velocidad de viento cinco minutal durante un año:']) || '').trim(),
+        densidadViento: String(field(r, ['El perfil horario de la densidad del viento promedio mensual:']) || '').trim(),
+        saeeRespaldo: String(field(r, ['El proyecto ya cuenta con respaldo; indicar si se desea incorporar SAEE:']) || '').trim(),
+        saeeTiempoResp: String(field(r, ['Tiempo de respuesta (seg)']) || '').trim(),
+        saeeVelCarga: String(field(r, ['Velocidad de carga (MW/min)']) || '').trim(),
+        saeeVelDescarga: String(field(r, ['Velocidad de descarga (MW/min)']) || '').trim(),
+        saeeDOD: String(field(r, ['Profundidad de Descarga (DOD):']) || '').trim(),
+        saeePerfilPot: String(field(r, ['Perfil de potencia horario del SAEE:']) || '').trim(),
+        saeeCorrienteFalla: String(field(r, ['Indicar corriente de falla que soporta el SAEE:']) || '').trim(),
+        saeeModos: String(field(r, ['Seleccionar el(los) modo(s) de operación para elaboración de estudios:']) || '').trim(),
+        saeeMetodoCarga: String(field(r, ['Indicar método de carga del SAEE:']) || '').trim(),
+        saeeComposicion: String(field(r, ['Información detallada de la composición de las baterías:']) || '').trim(),
+        saeeEficiencia: String(field(r, ['Eficiencia de las baterías y capacidad de carga/descarga:']) || '').trim(),
+        saeeTiempoCarga: String(field(r, ['Tiempo de carga de las baterías:']) || '').trim(),
+        saeeTiempoDesag: String(field(r, ['Tiempo de desagregación de las baterías:']) || '').trim(),
+        saeeCiclos: String(field(r, ['Número óptimo de ciclos de carga y descarga anuales:']) || '').trim(),
+        saeeCapMinCenace: String(field(r, ['La capacidad mínima del SAEE es determinada por el CENACE:']) || '').trim(),
+        saeeNumEstudios: String(field(r, ['Número de estudios de almacenamiento:']) || '').trim(),
+        saeeDentroPredio: String(field(r, ['¿El SAEE está ubicado dentro del predio del Proyecto de autoconsumo?']) || '').trim(),
+        // banderas heredadas
+        sustitucion: false,
+        noConsiderar: false,
+        firme: !RENEWABLE_TIPOS.test(`${tipoBase} ${sub}`),
+        mes: ''
+      };
+    }
+    function cleanVal(s) {
+      const v = String(s ?? '').trim();
+      return v === 'SIN INFORMACIÓN' || v === 'SIN INFORMACION' ? '' : v;
+    }
+    function mapRowFromPositionalArray(row, idx) {
+      const col = i => cleanVal(row?.[i]);
+      const tipoBase = col(11);            // Tipo Tecnología
+      const sub = col(12);                 // Subtecnología
+      const tipo = sub || tipoBase;
+      const cod = col(53);                 // Fecha prevista entrada operación comercial
+      const anio = parseDateYear(cod);
+      const mwInstalada = num(col(59));    // Capacidad Instalada
+      const mwGeneracion = num(col(58));   // Capacidad Generación
+      const mwNeta = num(col(60));         // Capacidad Instalada Neta
+      const coords = parseCoords(col(71)); // Vértice A (polígono proyecto)
+      return {
+        id: idx,
+        status: col(120) || 'Sin estatus', // Registro (trámite)
+        nombre: col(8),                    // Proyecto
+        empresa: col(7),                   // Nombre
+        folio: col(4),                     // Folio Proyecto
+        descripcion: col(9),
+        anio: anio,
+        codFecha: cod,
+        tipo: tipo,
+        tipoBase: tipoBase,
+        subtec: sub,
+        renovable: deriveRenovable(tipoBase, sub),
+        mwInstalada, mwGeneracion, mwNeta,
+        mw: mwInstalada,
+        generacionAnual: num(col(62)),     // Generación Anual Estimada
+        inversion: col(66),                // Inversión MDD
+        gerencia: /SUR/i.test(col(20)) ? 'BAJA CALIFORNIA SUR' : col(19), // corrige BCS (CSV los pone en BC)
+        region: col(1),                    // Región_v2
+        municipio: col(68),                // Municipio/Alcaldía
+        domicilio: col(69),
+        ef: col(20),                       // Entidad Federativa
+        subestacion: col(18),
+        tension: col(22),
+        repre: col(23),
+        email: col(26),
+        kmz: col(72),                      // Archivo KMZ
+        coords: coords,
+        // estatus desglose
+        estatusIndicativo: col(113),
+        estatusMia: col(108),
+        folioMia: col(109),
+        tieneMia: col(107),
+        estatusEvis: col(103),
+        folioEvis: col(104),
+        estatusImpacto: col(114),
+        estatusInstalaciones: col(115),
+        tieneEstudios: col(110),
+        anexo4: col(112),
+        definicionTerreno: col(116),
+        restriccion: col(117),
+        pctImpl: col(105),
+        // SAEE
+        saeeMW: num(col(77)),              // Potencia SAEE
+        saeeAlm: num(col(76)),             // Capacidad Almacenamiento
+        saeeTec: col(75),
+        saeeRed: col(74),
+        // ===== MÁXIMO DETALLE (índices Papa: celdas multilínea entre comillas colapsan) =====
+        // Identificación / contacto
+        rfc: col(5),
+        preFolio: col(3),
+        hibrida: col(10),                  // Es configuración Híbrida
+        otraTec: col(17),
+        puntoInterconexion: col(21),
+        oir: col(24),
+        capturista: col(25),
+        telefono: col(27),
+        personaEscuchar: col(28),
+        domFiscal: col(29),
+        domNotif: col(30),
+        // Capacidad / técnico
+        capacidadContratada: num(col(61)), // Capacidad Contratada
+        capacidadGenPermiso: num(col(111)),// Capacidad Generación Permiso
+        numEquipos: col(63),               // Número Equipos
+        montoInversionTotal: col(64),      // Monto inversión total
+        inversionDolares: col(65),         // Inversión Dólares
+        numVertices: col(70),              // Número de vértices
+        montoInversionSocial: col(106),    // Monto inversión social
+        // Interconexión extra
+        cenaceGerencia: col(46),           // gerencia control regional CENACE
+        distanciaSE: col(49),              // distancia proyecto-subestación
+        respaldoIntermitente: col(50),     // respaldo generadora intermitente
+        cuencasHidro: col(45),             // cuencas hidrológicas
+        // Inversores
+        invFabricante: col(100),
+        invModelo: col(101),
+        invCapacidadKw: col(102),
+        // Fechas trámite
+        fechaInicioRegistro: col(118),
+        fechaFirmaProyecto: col(119),
+        // Perfiles de producción (texto/resumen)
+        energiaBrutaMensual: col(31) || col(40),
+        irradiacionSolar: col(37),
+        tempAmbiente: col(39) || col(43),
+        velocidadViento: col(42),
+        densidadViento: col(44),
+        // SAEE detallado
+        saeeRespaldo: col(73),             // ¿incorporar SAEE?
+        saeeTiempoResp: col(78),
+        saeeVelCarga: col(79),
+        saeeVelDescarga: col(80),
+        saeeDOD: col(81),
+        saeePerfilPot: col(82),
+        saeeCorrienteFalla: col(83),
+        saeeModos: col(84),
+        saeeMetodoCarga: col(85),
+        saeeComposicion: col(86),
+        saeeEficiencia: col(87),
+        saeeTiempoCarga: col(88),
+        saeeTiempoDesag: col(89),
+        saeeCiclos: col(90),
+        saeeCapMinCenace: col(91),
+        saeeNumEstudios: col(92),
+        saeeDentroPredio: col(94),
+        sustitucion: false,
+        noConsiderar: false,
+        firme: !RENEWABLE_TIPOS.test(`${tipoBase} ${sub}`),
+        mes: ''
+      };
+    }
+    function getYearRange() {
+      const fallbackFrom = 2026;
+      const fallbackTo = 2030;
+      let from = parseInt(document.getElementById('yearFrom')?.value, 10);
+      let to = parseInt(document.getElementById('yearTo')?.value, 10);
+      if (!Number.isFinite(from)) from = fallbackFrom;
+      if (!Number.isFinite(to)) to = fallbackTo;
+      if (from > to) [from, to] = [to, from];
+      return { from, to };
+    }
+    function filteredData() {
+      const statusVal = document.getElementById('statusSelect')?.value || '__ALL__';
+      const { from, to } = getYearRange();
+      const rows = statusVal === '__ALL__' ? DATA : DATA.filter(r => r.status === statusVal);
+      return rows.filter(r => Number.isFinite(r.anio) && r.anio >= from && r.anio <= to);
+    }
+    function filteredDataByEfAndStatus() {
+      const efVal = document.getElementById('efSelect')?.value || '__ALL__';
+      const rows = filteredData();
+      return efVal === '__ALL__' ? rows : rows.filter(r => r.ef === efVal);
+    }
+    function selectedProjectRows() {
+      const projectVal = document.getElementById('projectSelect')?.value || '__ALL__';
+      return projectVal === '__ALL__' ? null : filteredDataByEfAndStatus().filter(r => String(r.id) === projectVal);
+    }
+    function activeDataForMap() {
+      return selectedProjectRows() || filteredData();
+    }
+    function fileSafe(value) {
+      return String(value || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 90) || 'Sin-nombre';
+    }
+    function getReportBaseName() {
+      const projectRows = selectedProjectRows();
+      if (projectRows?.length) {
+        return `SEGUNDA-CONVOCATORIA-2026_DGMESNIE_Proyecto_${fileSafe(projectRows[0].nombre)}`;
+      }
+
+      const ef = document.getElementById('efSelect')?.value || '__ALL__';
+      const status = document.getElementById('statusSelect')?.value || '__ALL__';
+      const { from, to } = getYearRange();
+      const parts = ['SEGUNDA-CONVOCATORIA-2026', 'DGMESNIE'];
+      parts.push(ef === '__ALL__' ? 'Nacional' : `EF_${fileSafe(ef)}`);
+      if (status !== '__ALL__') parts.push(`Estatus_${fileSafe(status)}`);
+      parts.push(`Periodo_${from}-${to}`);
+      return parts.join('_');
+    }
+    function updateDocumentTitle() {
+      document.title = getReportBaseName();
+    }
+    function classifyOwner(status) {
+      return /^CFE/i.test(String(status || '').trim()) ? 'CFE' : 'Particulares';
+    }
+    function techLabel(tipo) {
+      const raw = String(tipo || '').trim().toUpperCase();
+      if (!raw) return '—';
+      if (/SOLAR FOTOVOLT/.test(raw)) return 'Solar Fotovoltaica';
+      if (/SOLAR TÉRMIC|SOLAR TERMIC/.test(raw)) return 'Solar Térmica';
+      if (/SOLAR/.test(raw)) return 'Solar';
+      if (/EÓLIC|EOLIC/.test(raw)) return 'Eólica';
+      if (/HIDR/.test(raw)) return 'Hidráulica';
+      if (/GEOTÉRM|GEOTERM/.test(raw)) return 'Geotérmica';
+      if (/BIO/.test(raw)) return 'Bioenergía';
+      if (/CICLO COMB/.test(raw)) return 'Ciclo combinado';
+      if (/TURBOG/.test(raw)) return 'Turbogas';
+      if (/COMB INT/.test(raw)) return 'Combustión interna';
+      if (/NUCLEAR/.test(raw)) return 'Nuclear';
+      if (/TÉRMIC|TERMIC/.test(raw)) return 'Térmica';
+      return tipo ? String(tipo).trim() : '—';
+    }
+    function printReport() {
+      updateDocumentTitle();
+      window.print();
+    }
+    function isValidSheetEditUrl(url) {
+      return /^https:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+\/edit/i.test(String(url || '').trim());
+    }
+    function normalizeSheetEditUrl(url) {
+      const raw = String(url || '').trim();
+      if (!raw) return '';
+      // Permite pegar links de compartir; nos quedamos con la ruta /edit si existe.
+      const m = raw.match(/^(https:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+\/edit[^\s]*)/i);
+      return m ? m[1] : raw;
+    }
+    function getConfiguredEditUrl() {
+      const fromConst = normalizeSheetEditUrl(SHEET_EDIT_URL);
+      if (isValidSheetEditUrl(fromConst)) return fromConst;
+      const fromStorage = normalizeSheetEditUrl(localStorage.getItem(SHEET_EDIT_URL_KEY));
+      if (isValidSheetEditUrl(fromStorage)) return fromStorage;
+      return '';
+    }
+    function openSheetEditor() {
+      let edit = getConfiguredEditUrl();
+      if (!edit) {
+        const input = prompt('Pega la URL de edicion de Google Sheets (debe contener /edit):', '');
+        if (!input) {
+          window.open(SHEET_VIEW_URL, '_blank', 'noopener');
+          return;
+        }
+        edit = normalizeSheetEditUrl(input);
+        if (!isValidSheetEditUrl(edit)) {
+          alert('La URL no parece editable. Debe ser del tipo: https://docs.google.com/spreadsheets/d/.../edit');
+          window.open(SHEET_VIEW_URL, '_blank', 'noopener');
+          return;
+        }
+        try { localStorage.setItem(SHEET_EDIT_URL_KEY, edit); } catch (_) { }
+      }
+
+      const win = window.open(edit, '_blank', 'noopener');
+      if (!win) window.location.href = edit;
+    }
+
+    function setStatus(msg) {
+      const el = document.getElementById('preloaderMsg');
+      if (el) el.textContent = msg;
+      console.log('[STATUS]', msg);
+    }
+    function showPreloader(msg) {
+      const p = document.getElementById('preloader');
+      if (!p) return;
+      if (msg) setStatus(msg);
+      p.style.display = 'flex';
+      p.classList.remove('hidden');
+    }
+    function hidePreloader() {
+      const p = document.getElementById('preloader');
+      if (p) { p.classList.add('hidden'); setTimeout(() => p.style.display = 'none', 400); }
+    }
+    function setReloadingState(isLoading) {
+      const btn = document.getElementById('btnReload');
+      if (!btn) return;
+      if (!btn.dataset.defaultLabel) btn.dataset.defaultLabel = btn.textContent || 'Recargar';
+      btn.disabled = isLoading;
+      btn.textContent = isLoading ? 'Recargando…' : btn.dataset.defaultLabel;
+      btn.style.opacity = isLoading ? '0.7' : '';
+      btn.style.cursor = isLoading ? 'wait' : '';
+    }
+
+    function withCacheBuster(url, token) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}_ts=${encodeURIComponent(token)}`;
+    }
+
+    async function tryFetch(url, ms = 9000) {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), ms);
+      try {
+        const r = await fetch(url, {
+          redirect: 'follow',
+          signal: ctl.signal,
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, max-age=0',
+            'Pragma': 'no-cache'
+          }
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return await r.text();
+      } finally { clearTimeout(t); }
+    }
+
+    let isLoadingData = false;
+    async function loadData(showLoader = false) {
+      if (isLoadingData) return;
+      isLoadingData = true;
+      setReloadingState(true);
+      if (showLoader) showPreloader('Recargando datos…');
+      let text;
+      const token = String(Date.now());
+      const freshCsvUrl = withCacheBuster(CSV_URL, token);
+      const proxies = [
+        CSV_URL,
+        freshCsvUrl,
+        'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(CSV_URL),
+        'https://corsproxy.io/?' + encodeURIComponent(CSV_URL),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL)
+      ];
+      try {
+        let lastErr;
+        for (let i = 0; i < proxies.length; i++) {
+          const url = proxies[i];
+          setStatus(`Cargando fuente ${i + 1}/${proxies.length}…`);
+          try {
+            text = await tryFetch(url);
+            setStatus(`Datos recibidos (${text.length} bytes). Procesando…`);
+            break;
+          } catch (e) { lastErr = e; console.warn('Fail', i, e.message); }
+        }
+        if (!text) {
+          setStatus('Todas las fuentes fallaron. Abre consola (F12) para detalle. Último error: ' + (lastErr?.message || 'desconocido'));
+          throw lastErr || new Error('No data — todas las fuentes fallaron');
+        }
+        // Parseo POSICIONAL por índice: el CSV trae headers duplicados
+        // (Entidad Federativa, Registro, Vértice A aparecen 2 veces),
+        // header:true los colapsa y rompe el mapeo. Usamos índices.
+        const parsed = Papa.parse(text, { header: false, skipEmptyLines: true });
+        const allRows = parsed.data || [];
+        const headerIdx = allRows.findIndex(r => Array.isArray(r) && r.map(cleanHeader).includes('Folio Proyecto'));
+        const dataRows = allRows.slice(headerIdx >= 0 ? headerIdx + 1 : 1);
+        DATA = dataRows.map(mapRowFromPositionalArray).filter(r => r.anio && r.nombre);
+        applyMwMetric();
+
+        populateEFSelect();
+        populateStatusSelect();
+        populateProjectSelect();
+        render();
+        initMap().catch(e => console.warn('Mapa no cargo:', e));
+        hidePreloader();
+      } finally {
+        isLoadingData = false;
+        setReloadingState(false);
+      }
+    }
+
+    function populateEFSelect() {
+      const efs = [...new Set(DATA.map(r => r.ef))].sort();
+      const sel = document.getElementById('efSelect');
+      sel.innerHTML = `<option value="__ALL__">Todos (Nacional)</option>` + efs.map(e => `<option>${e}</option>`).join('');
+      sel.value = '__ALL__';
+    }
+
+    function populateStatusSelect() {
+      const statuses = [...new Set(DATA.map(r => r.status).filter(Boolean))].sort();
+      const sel = document.getElementById('statusSelect');
+      sel.innerHTML = `<option value="__ALL__">Todos</option>` + statuses.map(s => `<option>${s}</option>`).join('');
+      sel.value = '__ALL__';
+      renderStatusButtons();
+      syncStatusButtons();
+    }
+
+    function renderStatusButtons() {
+      const sel = document.getElementById('statusSelect');
+      const box = document.getElementById('statusButtons');
+      if (!sel || !box) return;
+      const options = [...sel.options]
+        .filter(o => String(o.value || '').trim() !== '')
+        .map(o => ({ value: o.value, label: o.textContent }));
+      box.innerHTML = options.map(o => `<button type="button" class="filter-chip" data-status="${o.value}">${o.label}</button>`).join('');
+    }
+
+    function syncStatusButtons() {
+      const active = document.getElementById('statusSelect')?.value || '__ALL__';
+      document.querySelectorAll('#statusButtons .filter-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.status === active);
+      });
+    }
+
+    function syncYearPresetButtons() {
+      const { from, to } = getYearRange();
+      document.querySelectorAll('#yearPresetButtons .year-chip').forEach(btn => {
+        const bFrom = parseInt(btn.dataset.from, 10);
+        const bTo = parseInt(btn.dataset.to, 10);
+        btn.classList.toggle('active', bFrom === from && bTo === to);
+      });
+    }
+
+    function applyYearPreset(from, to) {
+      document.getElementById('yearFrom').value = String(from);
+      document.getElementById('yearTo').value = String(to);
+      populateProjectSelect();
+      render();
+      syncYearPresetButtons();
+    }
+
+    function populateProjectSelect() {
+      const current = document.getElementById('projectSelect')?.value || '__ALL__';
+      const candidates = filteredDataByEfAndStatus();
+      const nameCounts = candidates.reduce((acc, r) => {
+        if (r.nombre) acc[r.nombre] = (acc[r.nombre] || 0) + 1;
+        return acc;
+      }, {});
+      const projects = candidates
+        .filter(r => r.nombre)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es-MX'));
+      const sel = document.getElementById('projectSelect');
+      sel.innerHTML = `<option value="__ALL__">Todos</option>` + projects.map(p => {
+        const label = nameCounts[p.nombre] > 1
+          ? `${p.nombre} · ${p.ef || '—'} · ${p.tipo || '—'} · ${p.anio || '—'} · ${fmt(p.mw, 1)} MW`
+          : p.nombre;
+        return `<option value="${p.id}">${label}</option>`;
+      }).join('');
+      sel.value = [...sel.options].some(o => o.value === current) ? current : '__ALL__';
+    }
+
+    function render() {
+      const efVal = document.getElementById('efSelect').value;
+      const projectRows = selectedProjectRows();
+      const isProject = !!projectRows;
+      const isAll = !isProject && efVal === '__ALL__';
+      const ef = isProject ? projectRows[0]?.nombre || 'Proyecto' : isAll ? 'Nacional' : efVal;
+      const statusVal = document.getElementById('statusSelect')?.value || '__ALL__';
+      const { from, to } = getYearRange();
+      updateDocumentTitle();
+      document.getElementById('coverScopeLabel').textContent = isProject ? 'Proyecto' : 'Entidad Federativa';
+      document.querySelector('#coverEf strong').textContent = ef;
+      const coverPeriod = document.getElementById('coverPeriod');
+      if (coverPeriod) {
+        const strong = coverPeriod.querySelector('strong');
+        if (strong) strong.textContent = `${from}-${to}`;
+      }
+      const coverStatus = document.getElementById('coverStatus');
+      if (coverStatus) {
+        if (statusVal !== '__ALL__') {
+          coverStatus.style.display = '';
+          const strong = coverStatus.querySelector('strong');
+          if (strong) strong.textContent = statusVal;
+        } else {
+          coverStatus.style.display = 'none';
+        }
+      }
+      document.getElementById('contEf').textContent = ef;
+      CURRENT_FOCUS_EF = isProject ? (projectRows[0]?.ef || null) : isAll ? null : ef;
+      if ((geoDataEf || geoDataGerencias) && mapInstance) {
+        populateMapTipoSelect();
+        drawMap();
+      }
+
+      const all = isProject ? DATA : filteredData();
+      const rows = isProject ? projectRows : filteredDataByEfAndStatus();
+
+      const saeeLabel = '__SAEE_SEPARATE__';
+      const totalMW = rows.reduce((s, r) => s + r.mw, 0);
+      const grossMW = totalMW;
+      const saeeMW = rows.reduce((s, r) => s + (r.saeeMW || 0), 0);
+      const totalProj = rows.length;
+      const nacionalMW = (isProject ? DATA : filteredData()).reduce((s, r) => s + r.mw, 0);
+      const pct = nacionalMW ? (totalMW / nacionalMW * 100) : 0;
+      const years = rows.map(r => r.anio).filter(Boolean);
+      const yMin = Math.min(...years), yMax = Math.max(...years);
+
+      document.getElementById('kpiMW').textContent = fmt(totalMW, 1);
+      document.getElementById('kpiProj').textContent = isProject ? 1 : totalProj;
+      document.getElementById('kpiPct').textContent = fmt(pct, 2) + '%';
+      document.getElementById('kpiHorizon').textContent = isFinite(yMin) ? `${yMin}-${yMax}` : '—';
+
+      // Narrative
+      const tipos = {};
+      rows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo] || 0) + r.mw; });
+      const topTipo = Object.entries(tipos).sort((a, b) => b[1] - a[1])[0];
+      const stats = {};
+      rows.forEach(r => { stats[r.status] = (stats[r.status] || 0) + r.mw; });
+      const topStatus = Object.entries(stats).sort((a, b) => b[1] - a[1])[0];
+      const firmes = rows.filter(r => r.firme);
+      const firmesMW = firmes.reduce((s, r) => s + r.mw, 0);
+      const capacityRows = rows.filter(r => techLabel(r.tipo) !== saeeLabel);
+      const ownerMW = rows.reduce((acc, r) => {
+        const bucket = classifyOwner(r.status);
+        if (techLabel(r.tipo) !== saeeLabel) acc[bucket] = (acc[bucket] || 0) + r.mw;
+        return acc;
+      }, {});
+      const techMW = capacityRows.reduce((acc, r) => {
+        const label = techLabel(r.tipo);
+        acc[label] = (acc[label] || 0) + r.mw;
+        return acc;
+      }, {});
+      const batMW = saeeMW;
+      const techEntries = Object.entries(techMW).filter(([label]) => label !== saeeLabel);
+      const topTechs = techEntries.sort((a, b) => b[1] - a[1]).slice(0, 3);
+      const topTechsMW = topTechs.reduce((sum, [, mw]) => sum + mw, 0);
+      const topTechsPct = totalMW ? (topTechsMW / totalMW * 100) : 0;
+      const saeePct = grossMW ? (batMW / grossMW * 100) : 0;
+      document.getElementById('narrative').innerHTML = isProject && rows.length ?
+        `El proyecto <strong>${ef}</strong> se ubica en <strong>${rows[0].municipio || '—'}, ${rows[0].ef || '—'}</strong>, con <strong>${fmt(totalMW, 1)} MW netos</strong> registrados para <strong>${yMin || '—'}</strong>. Su estatus PVIRCE es <strong>${rows[0].status || '—'}</strong>; tecnología: <strong>${[...new Set(capacityRows.map(r => techLabel(r.tipo)).filter(Boolean))].join(', ') || '—'}</strong>; condición firme: <strong>${firmes.length ? 'Sí' : 'No'}</strong>.` :
+        topTipo && topStatus && topTechs.length >= 1 ?
+          `La cartera de la <strong>Segunda Convocatoria 2026</strong> en <strong>${ef}</strong> suma <strong>${fmt(totalMW, 0)} MW</strong> (${getMwMetric()}) distribuidos en <strong>${totalProj} proyectos</strong>. Las tecnologías principales: ${topTechs.slice(0, 3).map(t => `<strong>${t[0]} ${fmt(t[1], 0)} MW</strong>`).join(', ')} — concentran <strong>${fmt(topTechsPct, 1)}%</strong> del total. SAEE asociado: <strong>${fmt(batMW, 0)} MW</strong> (${fmt(saeePct, 1)}%).` :
+          `Sin datos para ${ef}.`;
+
+      // Trayectoria anual stacked col
+      const allYears = [...new Set(capacityRows.map(r => r.anio))].sort();
+      const allTipos = [...new Set(capacityRows.map(r => r.tipo))].sort();
+      const series = allTipos.map(t => ({
+        name: t,
+        data: allYears.map(y => +capacityRows.filter(r => r.anio === y && r.tipo === t).reduce((s, r) => s + r.mw, 0).toFixed(2))
+      }));
+
+      if (typeof Highcharts !== 'undefined') {
+        Highcharts.chart('chartTrayectoria', {
+          chart: { type: 'column', backgroundColor: 'transparent' },
+          xAxis: { categories: allYears, lineColor: '#E5E5E5', labels: { style: { fontSize: '10px' } } },
+          yAxis: { title: { text: 'MW', style: { fontSize: '10px' } }, gridLineColor: '#f0f0f0', labels: { style: { fontSize: '9px' } } },
+          legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
+          plotOptions: { column: { stacking: 'normal', borderWidth: 0, dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: 'bold' }, formatter: function () { return this.y > 30 ? this.y + ' MW' : ''; } } } },
+          series: series,
+          tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:.2f} MW<br>' }
+        });
+
+        // Tech table sin SAEE, para mantenerlo separado en su propio recuadro
+        let techRunningMW = 0;
+        const techRows = Object.entries(tipos)
+          .filter(([t]) => techLabel(t) !== saeeLabel)
+          .sort((a, b) => b[1] - a[1])
+          .map(([t, m]) => {
+            techRunningMW += m;
+            const pctEf = totalMW ? (m / totalMW * 100) : 0;
+            const techRunningPct = totalMW ? (techRunningMW / totalMW * 100) : 0;
+            return `<tr><td>${techLabel(t)}</td><td class="mw">${fmt(m, 1)}</td><td class="mw">${fmt(pctEf, 1)}%</td><td class="mw">${fmt(techRunningMW, 1)}</td><td class="mw">${fmt(techRunningPct, 1)}%</td></tr>`;
+          }).join('');
+        const techTotalMW = Object.entries(tipos)
+          .filter(([t]) => techLabel(t) !== saeeLabel)
+          .reduce((sum, [, m]) => sum + m, 0);
+        const techTotalPct = totalMW ? (techTotalMW / totalMW * 100) : 0;
+        document.getElementById('techTable').innerHTML = `<table class="tech">
+    <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% EF</th><th class="mw">Acumulado MW</th><th class="mw">Acumulado %</th></tr></thead>
+    <tbody>${techRows}</tbody>
+    <tfoot><tr style="border-top:2px solid var(--guinda);font-weight:700;background:#faf3f5">
+      <td>TOTAL sin SAEE</td><td class="mw">${fmt(techTotalMW, 1)}</td><td class="mw">${fmt(techTotalPct, 1)}%</td><td class="mw">${fmt(techTotalMW, 1)}</td><td class="mw">${fmt(techTotalPct, 1)}%</td>
+    </tr></tfoot>
+  </table>`;
+        const saeeMWEl = document.getElementById('saeeMW');
+        const saeePctEl = document.getElementById('saeePct');
+        if (saeeMWEl) saeeMWEl.textContent = `${fmt(batMW, 0)} MW`;
+        if (saeePctEl) saeePctEl.textContent = `${fmt(saeePct, 1)}% del bruto`;
+
+        // Top N (10 + caption con total)
+        const sorted = [...capacityRows].sort((a, b) => b.mw - a.mw);
+        const top = sorted.slice(0, 10);
+        const remaining = sorted.length - top.length;
+        const remainingMW = sorted.slice(10).reduce((s, r) => s + r.mw, 0);
+        const extraRow = remaining > 0
+          ? `<tr style="background:#f7f7f8;font-style:italic"><td colspan="4">+ ${remaining} proyectos restantes</td><td class="mw">${fmt(remainingMW, 0)}</td><td>—</td></tr>`
+          : '';
+        document.getElementById('topPanelTitle').textContent = isProject ? 'Ficha del proyecto seleccionado' : 'Top 10 proyectos por capacidad instalada';
+        const p0 = rows[0] || {};
+        const kmzLink = p0.kmz ? `<a href="${p0.kmz}" target="_blank" style="color:var(--guinda);font-weight:700">Descargar KMZ ↗</a>` : '—';
+
+        // Helpers para repartir la ficha del proyecto en las 3 columnas de la lámina 2
+        const setPanelTitle = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+        const showChart = (panelId, chartId, show) => {
+          const ch = document.getElementById(chartId);
+          if (ch) ch.style.display = show ? '' : 'none';
+        };
+
+        if (isProject && rows.length) {
+          // --- CENTRO: identidad + capacidades ---
+          document.getElementById('topTable').innerHTML = `
+    <table class="proyectos">
+      <tbody>
+        <tr><th>Proyecto</th><td colspan="3">${p0.nombre || '—'}</td></tr>
+        <tr><th>Folio</th><td>${p0.folio || '—'}</td><th>Registro</th><td><strong style="color:var(--guinda)">${p0.status || '—'}</strong></td></tr>
+        <tr><th>Empresa</th><td colspan="3">${p0.empresa || '—'}</td></tr>
+        <tr><th>Representante</th><td>${p0.repre || '—'}</td><th>Tensión kV</th><td>${p0.tension || '—'}</td></tr>
+        <tr><th>Entidad</th><td>${p0.ef || '—'}</td><th>Municipio</th><td>${p0.municipio || '—'}</td></tr>
+        <tr><th>Gerencia</th><td>${p0.gerencia || '—'}</td><th>Región</th><td>${p0.region || '—'}</td></tr>
+        <tr><th>Tecnología</th><td colspan="3">${p0.tipoBase || '—'} · ${p0.subtec || '—'} (${p0.renovable || '—'})</td></tr>
+        <tr><th>Subestación</th><td colspan="3">${p0.subestacion || '—'}</td></tr>
+        <tr><th class="mw">Cap. Instalada</th><td class="mw">${fmt(p0.mwInstalada, 2)} MW</td><th class="mw">Cap. Generación</th><td class="mw">${fmt(p0.mwGeneracion, 2)} MW</td></tr>
+        <tr><th class="mw">Cap. Inst. Neta</th><td class="mw">${fmt(p0.mwNeta, 2)} MW</td><th class="mw">Gen. Anual</th><td class="mw">${fmt(p0.generacionAnual, 0)} GWh</td></tr>
+        <tr><th>Fecha COD</th><td>${p0.codFecha || '—'}</td><th>Inversión MDD</th><td>${p0.inversion || '—'}</td></tr>
+        <tr><th>Implementación</th><td colspan="3">${p0.pctImpl || '—'}%</td></tr>
+      </tbody>
+    </table>`;
+
+          // --- IZQUIERDA inferior: desglose regulatorio ---
+          showChart('panelTrayectoria', 'chartTrayectoria', true);
+          setPanelTitle('h3Tech', 'Desglose de estatus regulatorios');
+          document.getElementById('techTable').innerHTML = `
+    <table class="proyectos">
+      <tbody>
+        <tr><th>Indicativo</th><td>${p0.estatusIndicativo || '—'}</td></tr>
+        <tr><th>Anexo 4</th><td>${p0.anexo4 || '—'}</td></tr>
+        <tr><th>MIA</th><td>${p0.estatusMia || '—'}${p0.folioMia ? ' · ' + p0.folioMia : ''} (${p0.tieneMia || '—'})</td></tr>
+        <tr><th>EVIS</th><td>${p0.estatusEvis || '—'}${p0.folioEvis ? ' · ' + p0.folioEvis : ''}</td></tr>
+        <tr><th>Impacto Social</th><td>${p0.estatusImpacto || '—'}</td></tr>
+        <tr><th>Instalaciones</th><td>${p0.estatusInstalaciones || '—'}</td></tr>
+        <tr><th>Estudios Interconex.</th><td>${p0.tieneEstudios || '—'}</td></tr>
+        <tr><th>Definición Terreno</th><td>${p0.definicionTerreno || '—'}</td></tr>
+        <tr><th>Restricción</th><td>${p0.restriccion || '—'}</td></tr>
+      </tbody>
+    </table>`;
+
+          // --- DERECHA: ubicación/KMZ + SAEE ---
+          setPanelTitle('h3Donut', 'Ubicación y polígono');
+          showChart('panelDonut', 'chartDonut', false);
+          let donutHost = document.getElementById('chartDonut');
+          donutHost.insertAdjacentHTML('afterend', '');
+          let locBox = document.getElementById('projLocBox');
+          if (!locBox) {
+            locBox = document.createElement('div');
+            locBox.id = 'projLocBox';
+            locBox.style.cssText = 'padding:8px 12px;font-size:11px';
+            donutHost.parentNode.appendChild(locBox);
+          }
+          locBox.style.display = '';
+          locBox.innerHTML = `
+    <table class="proyectos">
+      <tbody>
+        <tr><th>Domicilio</th><td>${p0.domicilio || '—'}</td></tr>
+        <tr><th>Coordenadas</th><td>${p0.coords ? `<strong>${p0.coords[0].toFixed(5)}, ${p0.coords[1].toFixed(5)}</strong>` : '—'}</td></tr>
+        <tr><th>KMZ / Polígono</th><td>${kmzLink}</td></tr>
+        <tr><th>Email</th><td style="word-break:break-all">${p0.email || '—'}</td></tr>
+      </tbody>
+    </table>`;
+
+          setPanelTitle('h3Bar', 'Almacenamiento (SAEE)');
+          showChart('panelBar', 'chartBar', false);
+          let saeeHost = document.getElementById('chartBar');
+          let saeeBox = document.getElementById('projSaeeBox');
+          if (!saeeBox) {
+            saeeBox = document.createElement('div');
+            saeeBox.id = 'projSaeeBox';
+            saeeBox.style.cssText = 'padding:8px 12px;font-size:11px';
+            saeeHost.parentNode.appendChild(saeeBox);
+          }
+          saeeBox.style.display = '';
+          saeeBox.innerHTML = p0.saeeMW > 0 ? `
+    <table class="proyectos">
+      <tbody>
+        <tr><th>Potencia SAEE</th><td>${fmt(p0.saeeMW, 2)} MW</td></tr>
+        <tr><th>Almacenamiento</th><td>${fmt(p0.saeeAlm, 2)} MW</td></tr>
+        <tr><th>Tecnología</th><td>${p0.saeeTec || '—'}</td></tr>
+        <tr><th>Inyecta a</th><td>${p0.saeeRed || '—'}</td></tr>
+      </tbody>
+    </table>` : '<div style="color:var(--gris);font-style:italic">Sin SAEE asociado.</div>';
+        } else {
+          // --- MODO AGREGADO: restaura títulos/charts y oculta cajas de proyecto ---
+          setPanelTitle('h3Tech', 'Capacidad instalada por tecnología');
+          setPanelTitle('h3Donut', 'Generación por participación');
+          setPanelTitle('h3Bar', 'Adiciones por año, proyectos y acumulado');
+          showChart('panelDonut', 'chartDonut', true);
+          showChart('panelBar', 'chartBar', true);
+          ['projLocBox', 'projSaeeBox'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
+          document.getElementById('topTable').innerHTML = `<table class="proyectos top-list">
+    <thead><tr><th>Proyecto</th><th>Año</th><th>Municipio</th><th>Tipo</th><th class="mw">MW</th><th>Estatus</th></tr></thead>
+    <tbody>${top.map(r => `<tr><td>${r.nombre}</td><td>${r.anio}</td><td>${r.municipio || '—'}</td><td>${techLabel(r.tipo)}</td><td class="mw">${fmt(r.mw, 0)}</td><td>${r.status}</td></tr>`).join('')}${extraRow}</tbody>
+  </table>`;
+        }
+
+        // Donut by status
+        const donutData = Object.entries(stats).map(([k, v]) => ({ name: k, y: +v.toFixed(2) }));
+        Highcharts.chart('chartDonut', {
+          chart: { type: 'pie', backgroundColor: 'transparent' },
+          plotOptions: { pie: { innerSize: '60%', borderWidth: 1, dataLabels: { enabled: true, style: { fontSize: '9px' }, format: '<b>{point.name}</b><br>{point.percentage:.2f}% · {point.y:.2f} MW' } } },
+          series: [{ name: 'MW', data: donutData }],
+          tooltip: { pointFormat: '<b>{point.y:.2f} MW</b> ({point.percentage:.2f}%)' }
+        });
+
+        // Adiciones anuales + acumulado neto
+        const yearSeries = [...new Set(capacityRows.map(r => r.anio).filter(Boolean))].sort((a, b) => a - b);
+        const annualMW = yearSeries.map(y => +capacityRows.filter(r => r.anio === y).reduce((s, r) => s + r.mw, 0).toFixed(2));
+        const annualProjects = yearSeries.map(y => capacityRows.filter(r => r.anio === y).length);
+        const cumulativeMW = annualMW.reduce((acc, mw, idx) => {
+          acc.push((idx ? acc[idx - 1] : 0) + mw);
+          return acc;
+        }, []);
+
+        Highcharts.chart('chartBar', {
+          chart: { backgroundColor: 'transparent', spacingTop: 10 },
+          title: { text: null },
+          xAxis: {
+            categories: yearSeries,
+            crosshair: true,
+            lineColor: '#E5E5E5',
+            labels: { style: { fontSize: '9px' } }
+          },
+          yAxis: [{
+            title: { text: 'MW', style: { fontSize: '9px' } },
+            gridLineColor: '#f0f0f0',
+            labels: { style: { fontSize: '9px' } }
+          }, {
+            title: { text: 'Proyectos', style: { fontSize: '9px' } },
+            labels: { style: { fontSize: '9px' } },
+            opposite: true,
+            gridLineWidth: 0
+          }],
+          tooltip: { shared: true },
+          plotOptions: {
+            column: {
+              borderWidth: 0,
+              color: 'rgba(155, 34, 71, .78)',
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: 'bold' },
+                formatter: function () { return this.y > 0 ? fmt(this.y, 0) : ''; }
+              }
+            },
+            line: {
+              marker: { enabled: true, radius: 3 },
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: 'bold' },
+                formatter: function () { return this.point.index === this.series.data.length - 1 ? fmt(this.y, 0) : ''; }
+              }
+            },
+            series: {
+              states: { inactive: { opacity: 1 } }
+            }
+          },
+          legend: { itemStyle: { fontSize: '9px' }, margin: 5, padding: 2 },
+          series: [
+            {
+              type: 'column',
+              name: 'Adición anual neta',
+              data: annualMW,
+              yAxis: 0
+            },
+            {
+              type: 'line',
+              name: 'Acumulado neto',
+              data: cumulativeMW,
+              color: '#1E5B4F',
+              lineWidth: 2.5,
+              yAxis: 0
+            },
+            {
+              type: 'column',
+              name: 'Proyectos por año',
+              data: annualProjects,
+              color: 'rgba(165, 127, 44, .72)',
+              borderWidth: 0,
+              pointPadding: 0.25,
+              groupPadding: 0.18,
+              maxPointWidth: 18,
+              yAxis: 1,
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: 'bold' },
+                formatter: function () { return this.y > 0 ? this.y : ''; }
+              },
+              tooltip: { valueSuffix: ' proyectos' }
+            }
+          ]
+        });
+      }
+    }
+
+    // =================== MAPA ===================
+    const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
+    const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
+    const SATELLITE_TILES_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    let mapInstance = null, geoLayer = null, geoDataEf = null, geoDataGerencias = null, satelliteLayer = null;
+    let mapResizeRaf = null, mapResizeTimer = null;
+    const RAMP = ['#f7e3ea', '#e6b8c9', '#d28aa6', '#b85979', '#9B2247', '#6a172f'];
+
+    function scheduleMapResize() {
+      if (!mapInstance) return;
+      if (mapResizeRaf) cancelAnimationFrame(mapResizeRaf);
+      if (mapResizeTimer) clearTimeout(mapResizeTimer);
+
+      mapResizeRaf = requestAnimationFrame(() => {
+        mapInstance.invalidateSize({ pan: false, animate: false });
+        mapResizeTimer = setTimeout(() => {
+          if (mapInstance) mapInstance.invalidateSize({ pan: false, animate: false });
+        }, 140);
+      });
+    }
+
+    // Catálogo de aliases EF: clave normalizada (cualquier variante) -> nombre canónico CSV
+    const EF_ALIAS = {
+      'mexico': 'Estado de México',
+      'estadodemexico': 'Estado de México',
+      'edomex': 'Estado de México',
+      'coahuila': 'Coahuila de Zaragoza',
+      'coahuiladezaragoza': 'Coahuila de Zaragoza',
+      'veracruz': 'Veracruz de Ignacio de la Llave',
+      'veracruzdeignaciodelallave': 'Veracruz de Ignacio de la Llave',
+      'michoacan': 'Michoacán de Ocampo',
+      'michoacandeocampo': 'Michoacán de Ocampo',
+      'cdmx': 'Ciudad de México',
+      'ciudaddemexico': 'Ciudad de México',
+      'distritofederal': 'Ciudad de México',
+      'df': 'Ciudad de México',
+      'bajacalifornia': 'Baja California',
+      'bajacaliforniasur': 'Baja California Sur',
+      'bcs': 'Baja California Sur',
+      'bc': 'Baja California',
+      'nuevoleon': 'Nuevo León',
+      'sanluispotosi': 'San Luis Potosí',
+      'slp': 'San Luis Potosí',
+      'quintanaroo': 'Quintana Roo'
+    };
+
+    function normEf(s) {
+      return (s || '').toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/^estado de /, '')
+        .replace(/ de zaragoza| de ignacio de la llave| de la llave| de hidalgo| de arteaga| de juarez| de ocampo/g, '')
+        .replace(/[^a-z]/g, '').trim();
+    }
+
+    // Resuelve nombre del geo a EF canónico del CSV
+    function resolveEf(geoName, csvIndex) {
+      const n = normEf(geoName);
+      // 1. match directo en index del CSV
+      if (csvIndex[n]) return csvIndex[n];
+      // 2. alias explícito
+      if (EF_ALIAS[n] && csvIndex[normEf(EF_ALIAS[n])]) return EF_ALIAS[n];
+      // 3. devuelve el nombre tal cual (no match)
+      return geoName;
+    }
+
+    const GERENCIA_FEATURE_TO_CODE = {
+      'gerenciadecontrolregionalpeninsular': 'PEN',
+      'gerenciadecontrolregionalbajacaliforniasur': 'BCS',
+      'gerenciadecontrolregionaloriental': 'ORI',
+      'gerenciadecontrolregionalcentral': 'CEL',
+      'gerenciadecontrolregionaloccidental': 'OCC',
+      'gerenciadecontrolregionalmulege': 'MUL',
+      'gerenciadecontrolregionalnoroeste': 'NOR',
+      'gerenciadecontrolregionalbajacalifornia': 'BC',
+      'gerenciadecontrolregionalnorte': 'NTE',
+      'gerenciadecontrolregionalnoreste': 'NES'
+    };
+
+    const CSV_GERENCIA_TO_CODE = {
+      'CENTRAL': 'CEL', 'ORIENTAL': 'ORI', 'OCCIDENTAL': 'OCC', 'OCCIDENTE': 'OCC',
+      'NORESTE': 'NES', 'NOROESTE': 'NOR', 'NORTE': 'NTE',
+      'PENINSULAR': 'PEN', 'BAJACALIFORNIA': 'BC',
+      'BAJACALIFORNIASUR': 'BCS', 'MULEGE': 'MUL', 'MULEGÉ': 'MUL'
+    };
+    function normGerencia(s) {
+      const up = (s || '').toUpperCase().trim().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '');
+      return CSV_GERENCIA_TO_CODE[up] || up;
+    }
+
+    function getGerenciaNameFromFeature(f) {
+      const p = f.properties || {};
+      return p.Field1 || p.field1 || p.NOMBRE || p.name || p.NAME || '';
+    }
+
+    function resolveGerencia(geoName, csvIndex) {
+      const normalized = normEf(geoName);
+      const code = GERENCIA_FEATURE_TO_CODE[normalized] || '';
+      if (code && csvIndex[normGerencia(code)]) return code;
+      return code || geoName;
+    }
+
+    function getMapScope() {
+      return document.getElementById('mapScope')?.value === 'gerencia' ? 'gerencia' : 'ef';
+    }
+
+    function getScopeLabel(scope) {
+      return scope === 'gerencia' ? 'Gerencia de control' : 'Entidad Federativa';
+    }
+
+    function rowsForScope(scope, key) {
+      if (!key) return [];
+      // nivel de ámbito (NO depende del proyecto seleccionado) para que la cartera
+      // y el detalle de EF/gerencia siempre listen todos los proyectos del ámbito.
+      const rows = filteredData();
+      if (scope === 'gerencia') {
+        const target = normGerencia(key);
+        return rows.filter(r => normGerencia(r.gerencia) === target);
+      }
+      return rows.filter(r => r.ef === key);
+    }
+
+    function getEfNameFromFeature(f) {
+      const p = f.properties || {};
+      return p.NOM_ENT || p.NOMGEO || p.ENTIDAD || p.nom_ent || p.estado || p.name || p.NAME || '';
+    }
+
+    function metricForScope(scope, key, metric, tipo) {
+      let rows = rowsForScope(scope, key);
+      if (tipo && tipo !== '__ALL__') rows = rows.filter(r => r.tipo === tipo);
+      switch (metric) {
+        case 'proyectos': return rows.length;
+        case 'firmesMW': return rows.filter(r => r.firme).reduce((s, r) => s + r.mw, 0);
+        case 'renovableMW': return rows.filter(r => /renov/i.test(r.renovable)).reduce((s, r) => s + r.mw, 0);
+        case 'capacidad':
+        default: return rows.reduce((s, r) => s + r.mw, 0);
+      }
+    }
+
+    function colorScale(value, min, max) {
+      if (max === min || value <= 0) return '#f4f6f8';
+      const t = (value - min) / (max - min);
+      const idx = Math.min(RAMP.length - 1, Math.floor(t * RAMP.length));
+      return RAMP[idx];
+    }
+
+    async function loadMap(scope) {
+      if (scope === 'gerencia') {
+        if (geoDataGerencias) return geoDataGerencias;
+        const rg = await fetch(GEOJSON_GERENCIAS_URL);
+        geoDataGerencias = await rg.json();
+        return geoDataGerencias;
+      }
+      if (geoDataEf) return geoDataEf;
+      const r = await fetch(GEOJSON_EF_URL);
+      geoDataEf = await r.json();
+      return geoDataEf;
+    }
+
+    async function initMap() {
+      await loadMap(getMapScope());
+      if (!mapInstance) {
+        const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
+        mapInstance = L.map('mapa', {
+          zoomControl: true,
+          attributionControl: true,
+          preferCanvas: true,
+          minZoom: 5,
+          maxBounds: MEXICO_BOUNDS,
+          maxBoundsViscosity: 1.0
+        });
+        satelliteLayer = L.tileLayer(SATELLITE_TILES_URL, {
+          maxZoom: 19,
+          attribution: 'Tiles &copy; Esri'
+        }).addTo(mapInstance);
+        mapInstance.setView([24, -102], 5);
+      }
+      populateMapTipoSelect();
+      drawMap();
+      document.getElementById('mapMetric').addEventListener('change', drawMap);
+      document.getElementById('mapTipo').addEventListener('change', drawMap);
+      document.getElementById('mapScope').addEventListener('change', async () => {
+        CURRENT_FOCUS_EF = null;
+        CURRENT_FOCUS_GERENCIA = null;
+        resetMapProjectSelect();
+        await loadMap(getMapScope());
+        drawMap();
+      });
+    }
+
+    function populateMapTipoSelect() {
+      const tipos = [...new Set(activeDataForMap().map(r => r.tipo).filter(Boolean))].sort();
+      const selT = document.getElementById('mapTipo');
+      const current = selT.value || '__ALL__';
+      selT.innerHTML = '<option value="__ALL__">Todas</option>' + tipos.map(t => `<option>${t}</option>`).join('');
+      selT.value = [...selT.options].some(o => o.value === current) ? current : '__ALL__';
+    }
+
+    let CURRENT_FOCUS_EF = null; // null = nacional
+    let CURRENT_FOCUS_GERENCIA = null; // null = nacional
+
+    function drawMap() {
+      const scope = getMapScope();
+      const geoData = scope === 'gerencia' ? geoDataGerencias : geoDataEf;
+      if (!geoData) return;
+      const metric = document.getElementById('mapMetric').value;
+      const tipo = document.getElementById('mapTipo').value;
+      const index = {};
+      if (scope === 'gerencia') {
+        [...new Set(DATA.map(r => normGerencia(r.gerencia)).filter(Boolean))].forEach(g => { index[g] = g; });
+      } else {
+        [...new Set(DATA.map(r => r.ef))].forEach(ef => { index[normEf(ef)] = ef; });
+      }
+
+      const values = {};
+      geoData.features.forEach(f => {
+        const geoName = scope === 'gerencia' ? getGerenciaNameFromFeature(f) : getEfNameFromFeature(f);
+        const matchedKey = scope === 'gerencia' ? resolveGerencia(geoName, index) : resolveEf(geoName, index);
+        values[geoName] = { key: matchedKey, value: metricForScope(scope, matchedKey, metric, tipo) };
+      });
+      const allVals = Object.values(values).map(v => v.value).filter(v => v > 0);
+      const min = Math.min(...allVals, 0);
+      const max = Math.max(...allVals, 1);
+
+      const focusKey = scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF;
+      const focusNorm = focusKey ? (scope === 'gerencia' ? normGerencia(focusKey) : normEf(focusKey)) : null;
+
+      if (geoLayer) mapInstance.removeLayer(geoLayer);
+      geoLayer = L.geoJSON(geoData, {
+        style: f => {
+          const geoName = scope === 'gerencia' ? getGerenciaNameFromFeature(f) : getEfNameFromFeature(f);
+          const v = values[geoName];
+          const geoNorm = scope === 'gerencia' ? normGerencia(v?.key || '') : normEf(geoName);
+          const isFocus = focusNorm && geoNorm === focusNorm;
+          if (focusNorm && !isFocus) {
+            return { fillColor: '#e8e8ea', weight: 0.4, color: '#bbb', fillOpacity: 0.25, opacity: 0.4 };
+          }
+          return {
+            fillColor: colorScale(v?.value || 0, min, max),
+            weight: isFocus ? 2.5 : 0.8,
+            color: isFocus ? '#9B2247' : '#666',
+            fillOpacity: 0.88,
+            opacity: 1
+          };
+        },
+        onEachFeature: (f, lyr) => {
+          const geoName = scope === 'gerencia' ? getGerenciaNameFromFeature(f) : getEfNameFromFeature(f);
+          const v = values[geoName];
+          const focusValue = v?.key || geoName;
+          const fmtV = metric === 'proyectos' ? (v?.value || 0) : fmt(v?.value || 0, 1) + ' MW';
+          lyr.bindTooltip(`<strong>${focusValue}</strong>${fmtV}`, { className: 'ef-tip', sticky: true });
+          lyr.on('mouseover', () => {
+            if (focusNorm) {
+              const hoverNorm = scope === 'gerencia' ? normGerencia(v?.key || '') : normEf(geoName);
+              if (hoverNorm !== focusNorm) return;
+            }
+            lyr.setStyle({ weight: 2.5, color: '#9B2247' });
+          });
+          lyr.on('mouseout', () => geoLayer.resetStyle(lyr));
+          lyr.on('click', () => {
+            if (scope === 'gerencia') CURRENT_FOCUS_GERENCIA = focusValue;
+            else CURRENT_FOCUS_EF = focusValue;
+            drawMap();
+          });
+          lyr.on('dblclick', () => {
+            if (scope !== 'ef') return;
+            const sel = document.getElementById('efSelect');
+            if ([...sel.options].some(o => o.value === focusValue || o.textContent === focusValue)) {
+              sel.value = focusValue; render();
+            }
+          });
+        }
+      }).addTo(mapInstance);
+
+      // zoom: focus → fit selected; nacional → full bounds
+      try {
+        if (focusNorm) {
+          const focusFeat = geoData.features.find(f => {
+            if (scope === 'gerencia') {
+              const name = getGerenciaNameFromFeature(f);
+              const key = resolveGerencia(name, index);
+              return normGerencia(key) === focusNorm;
+            }
+            return normEf(getEfNameFromFeature(f)) === focusNorm;
+          });
+          if (focusFeat) {
+            const tmp = L.geoJSON(focusFeat);
+            mapInstance.fitBounds(tmp.getBounds(), { padding: [20, 20] });
+          }
+        } else {
+          mapInstance.fitBounds(geoLayer.getBounds(), { padding: [10, 10] });
+        }
+      } catch (e) { }
+
+      // toolbar + title + body class swap
+      const slideEl = document.querySelector('.map-slide');
+      const titleEl = document.getElementById('mapSlideTitle');
+      const tbN = document.getElementById('mapToolbarNacional');
+      const tbE = document.getElementById('mapToolbarEf');
+      const focusModeLabel = document.getElementById('mapFocusModeLabel');
+      if (focusModeLabel) focusModeLabel.textContent = scope === 'gerencia' ? 'Detalle Gerencia' : 'Detalle EF';
+      if (focusKey) {
+        slideEl.classList.add('focused');
+        titleEl.textContent = `${focusKey} — detalle`;
+        tbN.style.display = 'none';
+        tbE.style.display = 'flex';
+        document.getElementById('mapEfBadge').textContent = focusKey;
+      } else {
+        slideEl.classList.remove('focused');
+        titleEl.textContent = 'Vista nacional';
+        tbN.style.display = 'flex';
+        tbE.style.display = 'none';
+      }
+
+      if (focusKey) {
+        populateMapProjectSelect(scope, focusKey);
+        const projectSel = document.getElementById('mapProjectSelect');
+        if (projectSel && projectSel.value !== '__ALL__') showMapProjectDetail(scope, focusKey, projectSel.value);
+        else showScopeDetail(scope, focusKey);
+      } else {
+        resetMapProjectSelect();
+        showNacionalSummary(scope, metric, tipo, min, max, values);
+      }
+
+      updateProjectMarkers();
+      // Asegura que Leaflet se recalcule después de cambios de layout/panel.
+      scheduleMapResize();
+    }
+
+    let kmlReqId = 0;          // generación: cancela loaders/hides obsoletos
+    function showKmlLoader(show, sub, fail) {
+      const el = document.getElementById('mapKmlLoader');
+      if (!el) return;
+      el.style.display = show ? 'flex' : 'none';
+      const s = document.getElementById('mapKmlLoaderSub');
+      if (s && sub != null) {
+        s.innerHTML = fail
+          ? `${sub}${fail.url ? `<br><a href="${fail.url}" target="_blank" style="color:#fff;text-decoration:underline">Abrir KMZ manualmente ↗</a>` : ''}`
+          : sub;
+      }
+    }
+    function fetchTimeout(url, ms) {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), ms);
+      return fetch(url, { redirect: 'follow', signal: ctl.signal }).finally(() => clearTimeout(t));
+    }
+    let kmzLayer = null;
+    async function loadKmzOnMap(url) {
+      if (!url || !mapInstance) return;
+      const myReq = ++kmlReqId;
+      const isCurrent = () => myReq === kmlReqId;
+      if (kmzLayer) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
+      showKmlLoader(true, 'Descargando archivo…');
+      try {
+        const e = encodeURIComponent(url);
+        const proxies = [
+          'https://api.allorigins.win/raw?url=' + e,
+          'https://corsproxy.io/?url=' + e,
+          'https://api.codetabs.com/v1/proxy/?quest=' + e,
+          'https://thingproxy.freeboard.io/fetch/' + url,
+          url
+        ];
+        let buf;
+        for (let i = 0; i < proxies.length; i++) {
+          if (!isCurrent()) return;            // otra selección tomó el control
+          showKmlLoader(true, `Descargando archivo… (fuente ${i + 1}/${proxies.length})`);
+          try {
+            const r = await fetchTimeout(proxies[i], 12000);
+            if (!r.ok) continue;
+            const b = await r.arrayBuffer();
+            if (b && b.byteLength > 40) { buf = b; break; }
+          } catch (err) { console.warn('KMZ fetch fail', proxies[i], err.message); }
+        }
+        if (!isCurrent()) return;
+        if (!buf) {
+          console.warn('KMZ no descargable', url);
+          showKmlLoader(true, 'No se pudo cargar el polígono (servidor sin CORS).', { url });
+          setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 4000);
+          return;
+        }
+        showKmlLoader(true, 'Procesando polígono…');
+        let kmlText;
+        const head = new Uint8Array(buf.slice(0, 4));
+        if (head[0] === 0x50 && head[1] === 0x4B) {
+          const zip = await JSZip.loadAsync(buf);
+          const kmlEntry = Object.values(zip.files).find(f => /\.kml$/i.test(f.name));
+          if (!kmlEntry) { showKmlLoader(true, 'KMZ sin archivo .kml', { url }); setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000); return; }
+          kmlText = await kmlEntry.async('string');
+        } else {
+          kmlText = new TextDecoder().decode(buf);
+        }
+        if (!isCurrent()) return;
+        const dom = new DOMParser().parseFromString(kmlText, 'application/xml');
+        const gj = (window.toGeoJSON || window.togeojson).kml(dom);
+        if (!gj || !gj.features || !gj.features.length) {
+          showKmlLoader(true, 'El archivo no contiene geometría válida.', { url });
+          setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000);
+          return;
+        }
+        kmzLayer = L.geoJSON(gj, {
+          style: { color: '#9B2247', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.35 },
+          pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 5, color: '#9B2247', fillColor: '#A57F2C', fillOpacity: 0.9 })
+        }).addTo(mapInstance);
+        try { mapInstance.fitBounds(kmzLayer.getBounds(), { padding: [30, 30] }); } catch (e2) { }
+        showKmlLoader(false);
+      } catch (e) {
+        console.warn('KMZ error', e.message);
+        if (isCurrent()) { showKmlLoader(true, 'Error al procesar KML', { url }); setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000); }
+      }
+    }
+    let projectMarkersLayer = null;
+    function colorForTech(t) {
+      const lbl = techLabel(t);
+      if (/Solar/.test(lbl)) return '#A57F2C';
+      if (/Eólica/.test(lbl)) return '#1E5B4F';
+      if (/Hidrá/.test(lbl)) return '#2a6f97';
+      if (/Geo/.test(lbl)) return '#c1440e';
+      if (/Bio/.test(lbl)) return '#588157';
+      if (/Ciclo/.test(lbl)) return '#6c5b7b';
+      return '#9B2247';
+    }
+    function updateProjectMarkers() {
+      if (!mapInstance) return;
+      if (projectMarkersLayer) { mapInstance.removeLayer(projectMarkersLayer); projectMarkersLayer = null; }
+      const scope = getMapScope();
+      const focusKey = scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF;
+      // 1) proyecto seleccionado → solo ese. 2) foco EF/gerencia → solo ese ámbito. 3) nacional → todos.
+      let rows;
+      const projRows = selectedProjectRows();
+      if (projRows) rows = projRows;
+      else if (focusKey) rows = rowsForScope(scope, focusKey);
+      else rows = filteredData();
+      // aplica filtro de tecnología del mapa (mapTipo)
+      const tipo = document.getElementById('mapTipo')?.value || '__ALL__';
+      if (!projRows && tipo !== '__ALL__') rows = rows.filter(r => r.tipo === tipo);
+      rows = rows.filter(r => r.coords);
+      if (!rows.length) return;
+      const maxMW = Math.max(...rows.map(r => r.mw || 0), 1);
+      projectMarkersLayer = L.layerGroup();
+      rows.forEach(r => {
+        const radius = 3 + Math.sqrt((r.mw || 0) / maxMW) * 9;
+        const m = L.circleMarker(r.coords, {
+          radius: radius,
+          color: '#fff',
+          weight: 1,
+          fillColor: colorForTech(r.tipoBase || r.tipo),
+          fillOpacity: 0.85
+        });
+        m.bindTooltip(`<strong>${r.nombre || 'Proyecto'}</strong>${techLabel(r.tipo)} · ${fmt(r.mw, 1)} MW<br>${r.municipio || ''}${r.municipio ? ', ' : ''}${r.ef || ''}`, { className: 'ef-tip' });
+        m.on('click', () => {
+          const efSel = document.getElementById('efSelect');
+          const sel = document.getElementById('projectSelect');
+          // fija la EF del proyecto para que su opción exista en el dropdown global
+          if (efSel && r.ef && efSel.value !== r.ef) {
+            if ([...efSel.options].some(o => o.value === r.ef)) efSel.value = r.ef;
+            populateProjectSelect();
+          }
+          if (sel && [...sel.options].some(o => o.value === String(r.id))) {
+            sel.value = String(r.id);
+            sel.dispatchEvent(new Event('change'));
+          }
+        });
+        projectMarkersLayer.addLayer(m);
+      });
+      projectMarkersLayer.addTo(mapInstance);
+    }
+
+    function showNacionalSummary(scope, metric, tipo, min, max, values) {
+      document.querySelector('.map-slide')?.classList.remove('project-detail');
+      clearFichaSlides();
+      const total = Object.values(values).reduce((s, v) => s + (v.value || 0), 0);
+      const ranked = Object.values(values).filter(v => v.value > 0).sort((a, b) => b.value - a.value);
+      const top5 = ranked.slice(0, 5);
+      const tipoLbl = tipo === '__ALL__' ? 'todas las tecnologías' : tipo;
+      const metricLbl = { capacidad: 'MW capacidad instalada', proyectos: 'proyectos', firmesMW: 'MW firmes', renovableMW: 'MW renovables' }[metric];
+      document.getElementById('mapEfTitle').textContent = 'Vista nacional';
+      document.getElementById('mapHint').style.display = '';
+      document.getElementById('mapHint').textContent = `Métrica: ${metricLbl} · ${tipoLbl}. Click una ${scope === 'gerencia' ? 'gerencia' : 'entidad'} para detalle.`;
+      document.getElementById('mapStats').innerHTML = `
+    <div class="stat"><span>Total nacional</span><strong>${metric === 'proyectos' ? total : fmt(total, 1) + ' MW'}</strong></div>
+    <div class="stat"><span>${scope === 'gerencia' ? 'Gerencias' : 'Entidades'} con datos</span><strong>${ranked.length}</strong></div>
+    <div class="stat"><span>Máximo</span><strong>${ranked[0]?.key || '—'}</strong></div>
+    <div class="stat"><span>Mínimo (>0)</span><strong>${ranked[ranked.length - 1]?.key || '—'}</strong></div>
+    <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:.1em;text-transform:uppercase">Top 5</div>
+    ${top5.map((v, i) => `<div class="stat"><span>${i + 1}. ${v.key}</span><strong>${metric === 'proyectos' ? v.value : fmt(v.value, 0) + ' MW'}</strong></div>`).join('')}
+  `;
+    }
+
+    function resetMapProjectSelect() {
+      const sel = document.getElementById('mapProjectSelect');
+      if (!sel) return;
+      sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>';
+      sel.value = '__ALL__';
+      sel.dataset.ef = '';
+      sel.disabled = true;
+    }
+
+    function populateMapProjectSelect(scope, key) {
+      const sel = document.getElementById('mapProjectSelect');
+      if (!sel) return;
+      const rows = rowsForScope(scope, key)
+        .filter(r => r.nombre)
+        .sort((a, b) => b.mw - a.mw || a.nombre.localeCompare(b.nombre, 'es-MX'));
+
+      const currentEf = sel.dataset.ef || '';
+      const previous = currentEf === `${scope}:${key}` ? sel.value : '__ALL__';
+      sel.innerHTML = '<option value="__ALL__">Todos los proyectos</option>' + rows.map(r => {
+        const label = `${r.nombre} · ${r.anio || '—'} · ${fmt(r.mw, 2)} MW`;
+        return `<option value="${r.id}">${label}</option>`;
+      }).join('');
+      sel.dataset.ef = `${scope}:${key}`;
+      sel.disabled = rows.length === 0;
+      sel.value = [...sel.options].some(o => o.value === previous) ? previous : '__ALL__';
+    }
+
+    function showMapProjectDetail(scope, focusKey, projectId) {
+      const rows = activeDataForMap().filter(r => String(r.id) === String(projectId));
+      if (!rows.length) {
+        showScopeDetail(scope, focusKey);
+        return;
+      }
+      const p = rows[0];
+      const kmzLink = p.kmz ? `<a href="${p.kmz}" target="_blank" style="color:var(--guinda);font-weight:700">Descargar KMZ ↗</a>` : '—';
+
+      document.querySelector('.map-slide')?.classList.add('project-detail');
+      document.getElementById('mapEfTitle').textContent = `${p.nombre || 'Proyecto'}`;
+      document.getElementById('mapHint').style.display = 'none';
+      // COSTADO: mini-cards + identificación
+      document.getElementById('mapStats').innerHTML = `
+    <div class="ef-detail-grid">
+      <div class="ef-mini-card"><div class="lbl">Cap. Instalada</div><div class="val">${fmt(p.mwInstalada, 2)}</div><div class="sub">MW</div></div>
+      <div class="ef-mini-card"><div class="lbl">Cap. Generación</div><div class="val">${fmt(p.mwGeneracion, 2)}</div><div class="sub">MW</div></div>
+      <div class="ef-mini-card"><div class="lbl">Cap. Neta</div><div class="val">${fmt(p.mwNeta, 2)}</div><div class="sub">MW</div></div>
+      <div class="ef-mini-card"><div class="lbl">COD</div><div class="val" style="font-size:13px">${p.anio || '—'}</div><div class="sub">${p.codFecha || '—'}</div></div>
+    </div>
+
+    <div class="ef-section-title">Identificación</div>
+    <div class="kv-list">
+      <div class="kv-row"><span class="kv-k">Folio</span><span class="kv-v">${p.folio || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Empresa</span><span class="kv-v">${p.empresa || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Tecnología</span><span class="kv-v">${p.tipoBase || '—'} · ${p.subtec || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Renovable</span><span class="kv-v">${p.renovable || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Entidad / Municipio</span><span class="kv-v">${p.ef || '—'} · ${p.municipio || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Gerencia</span><span class="kv-v">${p.gerencia || '—'}</span></div>
+      <div class="kv-row"><span class="kv-k">Subestación</span><span class="kv-v">${p.subestacion || '—'} (${p.tension || '—'} kV)</span></div>
+      <div class="kv-row"><span class="kv-k">Gen. Anual</span><span class="kv-v">${fmt(p.generacionAnual, 0)} GWh</span></div>
+      <div class="kv-row"><span class="kv-k">Inversión</span><span class="kv-v">${p.inversion || '—'} MDD</span></div>
+      <div class="kv-row"><span class="kv-k">Registro</span><span class="kv-v">${p.status || '—'} · ${p.pctImpl || '—'}%</span></div>
+    </div>
+  `;
+      // FRANJA INFERIOR: regulatorios + ubicación + SAEE en columnas
+      const bottom = document.getElementById('mapBottomFicha');
+      if (bottom) bottom.innerHTML = `
+    <div class="bf-col">
+      <div class="ef-section-title">Estatus regulatorios</div>
+      <div class="kv-list">
+        <div class="kv-row"><span class="kv-k">Indicativo</span><span class="kv-v">${p.estatusIndicativo || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Anexo 4</span><span class="kv-v">${p.anexo4 || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">MIA</span><span class="kv-v">${p.estatusMia || '—'}${p.folioMia ? ' · ' + p.folioMia : ''} (${p.tieneMia || '—'})</span></div>
+        <div class="kv-row"><span class="kv-k">EVIS</span><span class="kv-v">${p.estatusEvis || '—'}${p.folioEvis ? ' · ' + p.folioEvis : ''}</span></div>
+        <div class="kv-row"><span class="kv-k">Impacto Social</span><span class="kv-v">${p.estatusImpacto || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Instalaciones</span><span class="kv-v">${p.estatusInstalaciones || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Estudios Interconex.</span><span class="kv-v">${p.tieneEstudios || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Definición Terreno</span><span class="kv-v">${p.definicionTerreno || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Restricción</span><span class="kv-v">${p.restriccion || '—'}</span></div>
+      </div>
+    </div>
+    <div class="bf-col">
+      <div class="ef-section-title">Ubicación y polígono</div>
+      <div class="kv-list">
+        <div class="kv-row"><span class="kv-k">Coordenadas</span><span class="kv-v">${p.coords ? p.coords[0].toFixed(5) + ', ' + p.coords[1].toFixed(5) : '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">KMZ</span><span class="kv-v">${kmzLink}</span></div>
+        <div class="kv-row"><span class="kv-k">Domicilio</span><span class="kv-v">${p.domicilio || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Email</span><span class="kv-v" style="word-break:break-all">${p.email || '—'}</span></div>
+      </div>
+    </div>
+    <div class="bf-col">
+      <div class="ef-section-title">Almacenamiento (SAEE)</div>
+      ${p.saeeMW > 0 ? `<div class="kv-list">
+        <div class="kv-row"><span class="kv-k">Potencia</span><span class="kv-v">${fmt(p.saeeMW, 2)} MW</span></div>
+        <div class="kv-row"><span class="kv-k">Almacenamiento</span><span class="kv-v">${fmt(p.saeeAlm, 2)} MW</span></div>
+        <div class="kv-row"><span class="kv-k">Tecnología</span><span class="kv-v">${p.saeeTec || '—'}</span></div>
+        <div class="kv-row"><span class="kv-k">Inyecta a</span><span class="kv-v">${p.saeeRed || '—'}</span></div>
+      </div>` : '<div style="color:var(--gris);font-style:italic;font-size:10px">Sin SAEE asociado.</div>'}
+    </div>
+  `;
+      scheduleMapResize();
+      renderFichaSlides(p);
+    }
+
+    // ===================== FICHAS DE PROYECTO (2 láminas) =====================
+    function fkv(k, v, opts = {}) {
+      const raw = (v === 0 || v) ? String(v).trim() : '';
+      const empty = !raw || raw === '—';
+      const cls = empty ? 'v muted' : 'v';
+      const val = empty ? 'Sin información' : raw;
+      return `<div class="ficha-kv"><span class="k">${k}</span><span class="${cls}">${val}</span></div>`;
+    }
+    function fkpi(lbl, val, sub) {
+      return `<div class="fk"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div></div>`;
+    }
+    function trunc(s, n = 140) {
+      const str = String(s || '').trim();
+      if (!str || str === 'SIN INFORMACIÓN') return '';
+      return str.length > n ? str.slice(0, n) + '…' : str;
+    }
+    function clearFichaSlides() {
+      ['slideFichaA', 'slideFichaB'].forEach(id => document.getElementById(id)?.classList.add('ficha-hidden'));
+    }
+    function renderFichaSlides(p) {
+      if (!p) { clearFichaSlides(); return; }
+      const a = document.getElementById('slideFichaA');
+      const b = document.getElementById('slideFichaB');
+      if (!a || !b) return;
+      a.classList.remove('ficha-hidden');
+      b.classList.remove('ficha-hidden');
+
+      const titleTxt = p.nombre || 'Proyecto';
+      const subTxt = `${p.empresa || '—'} · ${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
+      document.getElementById('fichaATitle').textContent = titleTxt;
+      document.getElementById('fichaBTitle').textContent = titleTxt;
+      document.getElementById('fichaASub').textContent = subTxt;
+      document.getElementById('fichaBSub').textContent = `${p.tipoBase || '—'}${p.subtec ? ' · ' + p.subtec : ''}`;
+      document.getElementById('fichaAFolio').textContent = `Folio: ${p.folio || '—'}`;
+      document.getElementById('fichaBFolio').textContent = `Folio: ${p.folio || '—'}`;
+
+      // ---- FICHA A: KPIs ----
+      document.getElementById('fichaAKpis').innerHTML = [
+        fkpi('Cap. Instalada', fmt(p.mwInstalada, 2), 'MW'),
+        fkpi('Cap. Generación', fmt(p.mwGeneracion, 2), 'MW'),
+        fkpi('Cap. Neta', fmt(p.mwNeta, 2), 'MW'),
+        fkpi('Cap. Contratada', fmt(p.capacidadContratada || 0, 2), 'MW'),
+        fkpi('Entrada COD', p.anio || '—', p.codFecha || ''),
+        fkpi('Inversión', p.inversion || '—', 'MDD')
+      ].join('');
+
+      // ---- FICHA A: cuerpo ----
+      const colIdent = `
+        <div class="ficha-sec">Identificación</div>
+        ${fkv('Folio proyecto', p.folio)}
+        ${fkv('Pre-folio', p.preFolio)}
+        ${fkv('RFC', p.rfc)}
+        ${fkv('Empresa', p.empresa)}
+        ${fkv('Representante', p.repre)}
+        ${fkv('Email', p.email)}
+        ${fkv('Teléfono', p.telefono)}
+        ${fkv('OIR', p.oir)}
+        ${fkv('Capturista', p.capturista)}
+        ${fkv('Persona a escuchar', p.personaEscuchar)}
+        ${fkv('Estatus registro', p.status)}
+      `;
+      const colTech = `
+        <div class="ficha-sec verde">Tecnología e inversión</div>
+        ${fkv('Tipo tecnología', p.tipoBase)}
+        ${fkv('Subtecnología', p.subtec)}
+        ${fkv('Renovable', p.renovable)}
+        ${fkv('Config. híbrida', p.hibrida)}
+        ${fkv('Otra tecnología', p.otraTec)}
+        ${fkv('N° de equipos', p.numEquipos)}
+        ${fkv('Gen. anual est.', p.generacionAnual ? fmt(p.generacionAnual, 0) + ' GWh' : '')}
+        ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? fmt(p.capacidadGenPermiso, 2) + ' MW' : '')}
+        ${fkv('Inversión (MDD)', p.inversion)}
+        ${fkv('Inversión (USD)', p.inversionDolares)}
+        ${fkv('Monto total', p.montoInversionTotal)}
+        ${fkv('Inversión social', p.montoInversionSocial)}
+      `;
+      const coords = p.coords ? p.coords[0].toFixed(5) + ', ' + p.coords[1].toFixed(5) : '';
+      const kmz = p.kmz ? `<a href="${p.kmz}" target="_blank" style="color:var(--guinda);font-weight:700">Descargar KMZ ↗</a>` : '';
+      const colLoc = `
+        <div class="ficha-sec dorado">Interconexión y ubicación</div>
+        ${fkv('Subestación', p.subestacion)}
+        ${fkv('Punto interconex.', p.puntoInterconexion)}
+        ${fkv('Nivel de tensión', p.tension ? p.tension + ' kV' : '')}
+        ${fkv('Gerencia CENACE', p.cenaceGerencia)}
+        ${fkv('Distancia a SE', p.distanciaSE)}
+        ${fkv('Entidad federativa', p.ef)}
+        ${fkv('Municipio', p.municipio)}
+        ${fkv('Gerencia regional', p.gerencia)}
+        ${fkv('Región', p.region)}
+        ${fkv('Domicilio', p.domicilio)}
+        ${fkv('N° de vértices', p.numVertices)}
+        ${fkv('Coordenadas', coords)}
+        <div class="ficha-kv"><span class="k">Archivo KMZ</span><span class="${kmz ? 'v' : 'v muted'}">${kmz || 'Sin información'}</span></div>
+      `;
+      document.getElementById('fichaABody').innerHTML =
+        `<div class="ficha-col">${colIdent}</div><div class="ficha-col">${colTech}</div><div class="ficha-col">${colLoc}</div>`;
+
+      // ---- FICHA B: KPIs ----
+      const hasSaee = p.saeeMW > 0 || p.saeeAlm > 0;
+      document.getElementById('fichaBKpis').innerHTML = [
+        fkpi('SAEE Potencia', hasSaee ? fmt(p.saeeMW, 2) : '—', 'MW'),
+        fkpi('SAEE Almacen.', hasSaee ? fmt(p.saeeAlm, 2) : '—', 'MW'),
+        fkpi('Prof. descarga', p.saeeDOD || '—', 'DOD'),
+        fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', ''),
+        fkpi('Estatus indic.', trunc(p.estatusIndicativo, 18) || '—', ''),
+        fkpi('Inversión social', p.montoInversionSocial || '—', '')
+      ].join('');
+
+      // ---- FICHA B: cuerpo ----
+      const colReg = `
+        <div class="ficha-sec">Estatus regulatorios</div>
+        ${fkv('Registro (trámite)', p.status)}
+        ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
+        ${fkv('Indicativo', p.estatusIndicativo)}
+        ${fkv('Anexo 4', p.anexo4)}
+        ${fkv('¿Tiene MIA?', p.tieneMia)}
+        ${fkv('Estatus MIA', p.estatusMia)}
+        ${fkv('Folio MIA', p.folioMia)}
+        ${fkv('Estatus EVIS', p.estatusEvis)}
+        ${fkv('Folio EVIS', p.folioEvis)}
+        ${fkv('Impacto social', p.estatusImpacto)}
+        ${fkv('Instalaciones', p.estatusInstalaciones)}
+        ${fkv('¿Estudios interc.?', p.tieneEstudios)}
+        ${fkv('Definición terreno', p.definicionTerreno)}
+        ${fkv('Restricción', p.restriccion)}
+        ${fkv('Inicio registro', p.fechaInicioRegistro)}
+        ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
+      `;
+      const colSaee = hasSaee ? `
+        <div class="ficha-sec verde">Almacenamiento (SAEE)</div>
+        ${fkv('¿Incorporar SAEE?', p.saeeRespaldo)}
+        ${fkv('Inyecta a', p.saeeRed)}
+        ${fkv('Tecnología', p.saeeTec)}
+        ${fkv('Potencia', fmt(p.saeeMW, 2) + ' MW')}
+        ${fkv('Almacenamiento', fmt(p.saeeAlm, 2) + ' MW')}
+        ${fkv('Prof. descarga (DOD)', p.saeeDOD)}
+        ${fkv('Tiempo respuesta', p.saeeTiempoResp)}
+        ${fkv('Vel. carga', p.saeeVelCarga)}
+        ${fkv('Vel. descarga', p.saeeVelDescarga)}
+        ${fkv('Corriente de falla', p.saeeCorrienteFalla)}
+        ${fkv('Modos operación', trunc(p.saeeModos, 90))}
+        ${fkv('Método de carga', p.saeeMetodoCarga)}
+        ${fkv('Composición bat.', trunc(p.saeeComposicion, 80))}
+        ${fkv('Eficiencia', trunc(p.saeeEficiencia, 60))}
+        ${fkv('Tiempo carga', p.saeeTiempoCarga)}
+        ${fkv('Tiempo desagreg.', p.saeeTiempoDesag)}
+        ${fkv('Ciclos anuales', p.saeeCiclos)}
+        ${fkv('Cap. mín. CENACE', p.saeeCapMinCenace)}
+        ${fkv('N° estudios', p.saeeNumEstudios)}
+        ${fkv('Dentro del predio', p.saeeDentroPredio)}
+      ` : `<div class="ficha-sec verde">Almacenamiento (SAEE)</div>
+        <div class="ficha-kv"><span class="v muted">Proyecto sin SAEE asociado.</span></div>`;
+      const colTec2 = `
+        <div class="ficha-sec dorado">Inversores y perfil de producción</div>
+        ${fkv('Fabricante inversores', p.invFabricante)}
+        ${fkv('Modelo inversores', p.invModelo)}
+        ${fkv('Cap. inversor (kW)', p.invCapacidadKw)}
+        ${fkv('Energía bruta mensual', trunc(p.energiaBrutaMensual, 70))}
+        ${fkv('Irradiación solar', trunc(p.irradiacionSolar, 70))}
+        ${fkv('Velocidad de viento', trunc(p.velocidadViento, 70))}
+        ${fkv('Densidad de viento', trunc(p.densidadViento, 70))}
+        ${fkv('Temp. ambiente', trunc(p.tempAmbiente, 70))}
+        ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 70))}
+        ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 70))}
+        <div class="ficha-sec dorado" style="margin-top:8px">Descripción</div>
+        <div style="font-size:9.5px;line-height:1.4;color:var(--text)">${trunc(p.descripcion, 360) || '<span style="color:var(--gris);font-style:italic">Sin información</span>'}</div>
+      `;
+      document.getElementById('fichaBBody').innerHTML =
+        `<div class="ficha-col">${colReg}</div><div class="ficha-col">${colSaee}</div><div class="ficha-col">${colTec2}</div>`;
+    }
+
+    function showScopeDetail(scope, key) {
+      document.querySelector('.map-slide')?.classList.remove('project-detail');
+      clearFichaSlides();
+      const rows = rowsForScope(scope, key);
+      document.getElementById('mapEfTitle').textContent = key;
+      if (!rows.length) {
+        document.getElementById('mapHint').style.display = '';
+        document.getElementById('mapHint').textContent = `Sin proyectos en esta ${scope === 'gerencia' ? 'gerencia' : 'entidad'}.`;
+        document.getElementById('mapStats').innerHTML = '';
+        return;
+      }
+      const saeeLabel = 'SAEE Asociado a Centrales Eléctricas';
+      const capacityRows = rows.filter(r => techLabel(r.tipo) !== saeeLabel);
+      const totalMW = capacityRows.reduce((s, r) => s + r.mw, 0);
+      const firmes = capacityRows.filter(r => r.firme);
+      const firmesMW = firmes.reduce((s, r) => s + r.mw, 0);
+      const ren = capacityRows.filter(r => /renov/i.test(r.renovable)).reduce((s, r) => s + r.mw, 0);
+      const noRen = totalMW - ren;
+
+      const nacionalMW = activeDataForMap().filter(r => techLabel(r.tipo) !== saeeLabel).reduce((s, r) => s + r.mw, 0);
+      const pctNal = nacionalMW ? (totalMW / nacionalMW * 100) : 0;
+
+      const tipos = {};
+      capacityRows.forEach(r => { tipos[r.tipo] = (tipos[r.tipo] || 0) + r.mw; });
+      const tiposSorted = Object.entries(tipos).sort((a, b) => b[1] - a[1]);
+      const maxTipoMW = tiposSorted[0]?.[1] || 1;
+
+      const stats = {};
+      capacityRows.forEach(r => { stats[r.status] = (stats[r.status] || 0) + r.mw; });
+      const statsSorted = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+
+      const munis = {};
+      capacityRows.forEach(r => { if (r.municipio) munis[r.municipio] = (munis[r.municipio] || 0) + r.mw; });
+      const munisSorted = Object.entries(munis).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+      const years = capacityRows.map(r => r.anio).filter(Boolean);
+      const horizonte = `${Math.min(...years)}–${Math.max(...years)}`;
+
+      const byYear = {};
+      capacityRows.forEach(r => { byYear[r.anio] = (byYear[r.anio] || 0) + r.mw; });
+      const yearsSorted = Object.keys(byYear).sort();
+      const maxYearMW = Math.max(...Object.values(byYear), 1);
+
+      document.getElementById('mapHint').style.display = 'none';
+      document.getElementById('mapStats').innerHTML = `
+    <div class="ef-detail-grid">
+      <div class="ef-mini-card"><div class="lbl">Capacidad instalada</div><div class="val">${fmt(totalMW, 1)}</div><div class="sub">MW · ${fmt(pctNal, 2)}% nacional</div></div>
+      <div class="ef-mini-card"><div class="lbl">Proyectos</div><div class="val">${rows.length}</div><div class="sub">${firmes.length} firmes</div></div>
+      <div class="ef-mini-card"><div class="lbl">Renovable</div><div class="val">${fmt(ren / totalMW * 100, 1)}%</div><div class="sub">${fmt(ren, 0)} MW</div></div>
+      <div class="ef-mini-card"><div class="lbl">Horizonte</div><div class="val" style="font-size:14px">${horizonte}</div><div class="sub">${yearsSorted.length} años</div></div>
+    </div>
+
+    <div class="ef-section-title">Tecnologías</div>
+    ${tiposSorted.map(([t, m]) => `
+      <div class="ef-bar-row">
+        <span class="name">${t}</span>
+        <span class="bar"><span style="width:${(m / maxTipoMW * 100).toFixed(1)}%"></span></span>
+        <span class="num">${fmt(m, 0)} MW</span>
+      </div>`).join('')}
+
+    <div class="ef-section-title">Estatus / participación</div>
+    ${statsSorted.map(([s, m]) => `
+      <div class="ef-bar-row">
+        <span class="name" style="width:auto;flex:0 0 auto;font-size:9.5px;letter-spacing:0">${s}</span>
+        <span class="bar"><span style="width:${(m / totalMW * 100).toFixed(1)}%;background:var(--verde)"></span></span>
+        <span class="num">${fmt(m / totalMW * 100, 1)}%</span>
+      </div>`).join('')}
+
+    <div class="ef-section-title">MW programados por año</div>
+    ${yearsSorted.map(y => `
+      <div class="ef-bar-row">
+        <span class="name">${y}</span>
+        <span class="bar"><span style="width:${(byYear[y] / maxYearMW * 100).toFixed(1)}%;background:var(--dorado)"></span></span>
+        <span class="num">${fmt(byYear[y], 0)} MW</span>
+      </div>`).join('')}
+
+    ${scope === 'ef' && munisSorted.length ? `<div class="ef-section-title">Top 5 municipios</div>
+    ${munisSorted.map(([m, v], i) => `
+      <div class="ef-bar-row">
+        <span class="name" style="width:auto;flex:1;text-align:left;font-weight:600;font-size:10.5px">${i + 1}. ${m}</span>
+        <span class="num">${fmt(v, 0)} MW</span>
+      </div>`).join('')}` : ''}
+  `;
+    }
+
+    document.getElementById('efSelect').addEventListener('change', () => {
+      if (document.getElementById('efSelect').value === '__ALL__') {
+        const projectSel = document.getElementById('projectSelect');
+        if (projectSel) projectSel.value = '__ALL__';
+      }
+      populateProjectSelect();
+      render();
+    });
+    document.getElementById('statusSelect').addEventListener('change', () => {
+      syncStatusButtons();
+      populateProjectSelect();
+      render();
+    });
+    document.getElementById('yearFrom').addEventListener('change', () => {
+      populateProjectSelect();
+      render();
+      syncYearPresetButtons();
+    });
+    document.getElementById('yearTo').addEventListener('change', () => {
+      populateProjectSelect();
+      render();
+      syncYearPresetButtons();
+    });
+    document.getElementById('statusButtons').addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.filter-chip');
+      if (!btn) return;
+      const sel = document.getElementById('statusSelect');
+      sel.value = btn.dataset.status || '__ALL__';
+      sel.dispatchEvent(new Event('change'));
+    });
+    document.getElementById('yearPresetButtons').addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.year-chip');
+      if (!btn) return;
+      applyYearPreset(parseInt(btn.dataset.from, 10), parseInt(btn.dataset.to, 10));
+    });
+    document.getElementById('projectSelect').addEventListener('change', () => {
+      const rows = selectedProjectRows();
+      if (rows?.length) document.getElementById('efSelect').value = rows[0].ef;
+      populateProjectSelect();
+      render();
+      flyToSelectedProject();
+      if (rows?.length && rows[0].kmz) loadKmzOnMap(rows[0].kmz);
+      else if (kmzLayer && mapInstance) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
+    });
+
+    function flyToSelectedProject() {
+      const rows = selectedProjectRows();
+      if (!rows?.length || !mapInstance) return;
+      const p = rows[0];
+      // foco de gerencia/EF en mapa para que el panel muestre ficha completa del proyecto
+      const scope = getMapScope();
+      if (scope === 'gerencia') CURRENT_FOCUS_GERENCIA = normGerencia(p.gerencia);
+      else CURRENT_FOCUS_EF = p.ef;
+      drawMap();
+      const projSel = document.getElementById('mapProjectSelect');
+      if (projSel && [...projSel.options].some(o => o.value === String(p.id))) {
+        projSel.value = String(p.id);
+        showMapProjectDetail(scope, scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF, String(p.id));
+      }
+      if (p.coords) {
+        setTimeout(() => mapInstance.flyTo(p.coords, 11, { duration: 1.1 }), 150);
+      }
+    }
+    document.getElementById('mapClearEf').addEventListener('click', () => {
+      CURRENT_FOCUS_GERENCIA = null;
+      document.getElementById('efSelect').value = '__ALL__';
+      document.getElementById('projectSelect').value = '__ALL__';
+      render();
+    });
+    document.getElementById('mapProjectSelect').addEventListener('change', (ev) => {
+      const value = ev.target.value || '__ALL__';
+      const globalSel = document.getElementById('projectSelect');
+      if (value === '__ALL__') {
+        // volver: deselecciona proyecto, mantiene foco EF/gerencia → markers restauran
+        if (globalSel) globalSel.value = '__ALL__';
+        if (kmzLayer && mapInstance) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
+        const scope = getMapScope();
+        const focusKey = scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF;
+        drawMap();
+        if (focusKey) showScopeDetail(scope, focusKey);
+        return;
+      }
+      // aísla el proyecto seleccionado en todo (mapa + ficha lámina 2)
+      const prow = DATA.find(r => String(r.id) === value);
+      const efSel = document.getElementById('efSelect');
+      if (prow && efSel && prow.ef && efSel.value !== prow.ef) {
+        if ([...efSel.options].some(o => o.value === prow.ef)) efSel.value = prow.ef;
+        populateProjectSelect();
+      }
+      if (globalSel && [...globalSel.options].some(o => o.value === value)) {
+        globalSel.value = value;
+        globalSel.dispatchEvent(new Event('change'));
+      }
+    });
+
+    // =================== PRESENTACION ===================
+    let presentationMode = false;
+    let presentationIndex = 0;
+    let presentationSlides = [];
+    const PRESENTATION_ZOOM_FACTOR = 1.0;
+
+    function setPresentationControls(visible) {
+      const controls = document.getElementById('presentationControls');
+      if (controls) {
+        controls.style.display = visible ? 'flex' : 'none';
+        controls.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      }
+      const cb = document.getElementById('commandBar');
+      if (cb) cb.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      if (visible) syncCommandBar();
+    }
+
+    function fitActiveSlide() {
+      if (!presentationMode || !presentationSlides.length) return;
+      const active = presentationSlides[presentationIndex];
+      if (!active) return;
+
+      const baseW = active.offsetWidth || 1280;
+      const baseH = active.offsetHeight || 720;
+      // Reservar espacio para command bar (arriba) y controles de navegación (abajo).
+      const availW = window.innerWidth - 24;
+      const availH = window.innerHeight - 104;
+      const baseScale = Math.min(availW / baseW, availH / baseH);
+      const scale = Math.max(0.2, baseScale * PRESENTATION_ZOOM_FACTOR);
+      active.style.setProperty('--presentation-scale', scale.toFixed(4));
+
+      // Reflow de charts al entrar/cambiar slide en modo presentación.
+      if (window.Highcharts && Array.isArray(window.Highcharts.charts)) {
+        const chartHosts = active.querySelectorAll('[data-highcharts-chart]');
+        chartHosts.forEach(host => {
+          const idx = Number(host.getAttribute('data-highcharts-chart'));
+          const chart = Number.isFinite(idx) ? window.Highcharts.charts[idx] : null;
+          if (chart && typeof chart.reflow === 'function') {
+            try { chart.reflow(); } catch (_) { }
+          }
+        });
+      }
+
+      if (active.querySelector('#mapa') && mapInstance) {
+        setTimeout(() => mapInstance.invalidateSize({ pan: false, animate: false }), 120);
+      }
+    }
+
+    function renderPresentationState() {
+      if (!presentationSlides.length) return;
+      presentationSlides.forEach(slide => {
+        slide.classList.remove('slide-has-zoom');
+        slide.querySelectorAll('.panel.panel-zoomed').forEach(p => p.classList.remove('panel-zoomed'));
+      });
+      presentationSlides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === presentationIndex);
+        if (idx !== presentationIndex) slide.style.removeProperty('--presentation-scale');
+      });
+      const counter = document.getElementById('presentationCounter');
+      if (counter) counter.textContent = `${presentationIndex + 1}/${presentationSlides.length}`;
+      fitActiveSlide();
+    }
+
+    // Deck virtual: incluye fichas de proyecto solo cuando hay un proyecto seleccionado.
+    function buildPresentationDeck() {
+      return [...document.querySelectorAll('.deck > .slide')]
+        .filter(s => !s.classList.contains('ficha-hidden'));
+    }
+
+    // Recalcula la lista de slides en caliente (al cambiar de ámbito/proyecto desde la command bar)
+    // manteniendo visible el slide activo si sigue existiendo.
+    function refreshPresentationDeck(preferEl) {
+      if (!presentationMode) return;
+      const prevActive = preferEl || presentationSlides[presentationIndex];
+      presentationSlides = buildPresentationDeck();
+      if (!presentationSlides.length) return;
+      let idx = presentationSlides.indexOf(prevActive);
+      if (idx < 0) idx = Math.min(presentationIndex, presentationSlides.length - 1);
+      presentationIndex = idx;
+      renderPresentationState();
+    }
+
+    async function enterPresentation(startAt = 0) {
+      presentationSlides = buildPresentationDeck();
+      if (!presentationSlides.length) return;
+      presentationMode = true;
+      presentationIndex = Math.min(Math.max(startAt, 0), presentationSlides.length - 1);
+      document.body.classList.add('presentation-mode');
+      setPresentationControls(true);
+      renderPresentationState();
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        try { await document.documentElement.requestFullscreen(); } catch (_) { }
+      }
+      requestAnimationFrame(fitActiveSlide);
+    }
+
+    async function exitPresentation() {
+      if (!presentationMode) return;
+      presentationMode = false;
+      document.body.classList.remove('present-black');
+      document.querySelectorAll('.slide.slide-has-zoom').forEach(s => s.classList.remove('slide-has-zoom'));
+      document.querySelectorAll('.panel.panel-zoomed').forEach(p => p.classList.remove('panel-zoomed'));
+      document.body.classList.remove('presentation-mode');
+      presentationSlides.forEach(slide => {
+        slide.classList.remove('active');
+        slide.style.removeProperty('--presentation-scale');
+      });
+      setPresentationControls(false);
+      if (document.fullscreenElement && document.exitFullscreen) {
+        try { await document.exitFullscreen(); } catch (_) { }
+      }
+    }
+
+    function nextPresentationSlide() {
+      if (!presentationMode) return;
+      presentationIndex = Math.min(presentationSlides.length - 1, presentationIndex + 1);
+      renderPresentationState();
+    }
+
+    function prevPresentationSlide() {
+      if (!presentationMode) return;
+      presentationIndex = Math.max(0, presentationIndex - 1);
+      renderPresentationState();
+    }
+
+    document.getElementById('btnPresent').addEventListener('click', () => enterPresentation(0));
+    document.getElementById('btnPrevSlide').addEventListener('click', prevPresentationSlide);
+    document.getElementById('btnNextSlide').addEventListener('click', nextPresentationSlide);
+    document.getElementById('btnExitPresentation').addEventListener('click', () => { userExitingPresentation = true; exitPresentation(); });
+
+    window.addEventListener('resize', fitActiveSlide);
+    window.addEventListener('resize', scheduleMapResize);
+    function normalizeChartSize(chart) {
+      if (!chart || !chart.renderTo) return;
+      const host = chart.renderTo;
+      host.style.removeProperty('width');
+      host.style.removeProperty('height');
+      const container = host.querySelector('.highcharts-container');
+      if (container) {
+        container.style.removeProperty('width');
+        container.style.removeProperty('height');
+      }
+      try { chart.setSize(null, null, false); chart.reflow(); } catch (_) { }
+    }
+    function reflowChartsInSlide(slide) {
+      if (!slide || !(window.Highcharts && Array.isArray(window.Highcharts.charts))) return;
+      const chartHosts = slide.querySelectorAll('[data-highcharts-chart]');
+      chartHosts.forEach(host => {
+        const idx = Number(host.getAttribute('data-highcharts-chart'));
+        const chart = Number.isFinite(idx) ? window.Highcharts.charts[idx] : null;
+        if (chart && typeof chart.reflow === 'function') {
+          normalizeChartSize(chart);
+        }
+      });
+    }
+    // Zoom de panel dentro del slide (sin Fullscreen API → no rompe el transform:scale)
+    function togglePanelZoom(chart) {
+      const panel = chart.renderTo && chart.renderTo.closest('.panel');
+      if (!panel) return;
+      const slide = panel.closest('.slide');
+      const isZoomed = panel.classList.toggle('panel-zoomed');
+      if (slide) slide.classList.toggle('slide-has-zoom', isZoomed);
+      // si abrimos uno, cerrar otros
+      if (isZoomed) {
+        (slide || document).querySelectorAll('.panel.panel-zoomed').forEach(p => { if (p !== panel) p.classList.remove('panel-zoomed'); });
+      }
+      const doReflow = () => {
+        reflowChartsInSlide(slide || (presentationSlides[presentationIndex] || null));
+        fitActiveSlide();
+      };
+      requestAnimationFrame(() => {
+        doReflow();
+        setTimeout(doReflow, 180);
+        setTimeout(doReflow, 420);
+        setTimeout(doReflow, 800);
+      });
+    }
+    let userExitingPresentation = false;
+    function reflowActiveCharts() {
+      if (window.Highcharts && Array.isArray(window.Highcharts.charts)) {
+        window.Highcharts.charts.forEach(c => {
+          if (c && typeof c.reflow === 'function') {
+            try { c.setSize(null, null, false); c.reflow(); } catch (_) { }
+          }
+        });
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      if (!presentationMode) return;
+      if (document.fullscreenElement) return; // entered (Highcharts maximize o root)
+      if (userExitingPresentation) { exitPresentation(); userExitingPresentation = false; return; }
+      // Salió de fullscreen de un gráfico Highcharts pero sigue en presentación (CSS).
+      // El restore lo maneja el evento fullscreenClose del propio gráfico (render()).
+      // Aquí solo recalculamos por si fue el root fullscreen.
+      requestAnimationFrame(() => { reflowActiveCharts(); fitActiveSlide(); });
+    });
+    // ===================== COMMAND BAR + SPOTLIGHT + NAVEGACIÓN =====================
+    function normTxt(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+
+    function presentationGoTo(selector) {
+      if (!presentationMode) return;
+      const el = document.querySelector(selector);
+      const idx = presentationSlides.indexOf(el);
+      if (idx >= 0) { presentationIndex = idx; renderPresentationState(); }
+    }
+
+    function cbScopeList(scope) {
+      const key = scope === 'gerencia' ? 'gerencia' : 'ef';
+      return [...new Set(DATA.map(r => r[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es-MX'));
+    }
+
+    function updateBreadcrumb() {
+      const el = document.querySelector('#commandBar .cb-brand');
+      if (!el) return;
+      const scope = getMapScope();
+      const parts = ['Nacional'];
+      if (scope === 'gerencia' && CURRENT_FOCUS_GERENCIA) parts.push('GCR ' + CURRENT_FOCUS_GERENCIA);
+      const efv = document.getElementById('efSelect')?.value;
+      if (scope === 'ef' && efv && efv !== '__ALL__') parts.push(efv);
+      const rows0 = selectedProjectRows();
+      if (rows0?.length) parts.push(rows0[0].nombre);
+      const data = activeDataForMap();
+      const saeeLabel = 'SAEE Asociado a Centrales Eléctricas';
+      const cap = data.filter(r => techLabel(r.tipo) !== saeeLabel);
+      const mw = cap.reduce((s, r) => s + r.mw, 0);
+      el.innerHTML = parts.map((p, i) => i === parts.length - 1
+        ? `<strong style="color:var(--dorado)">${p}</strong>` : p)
+        .join(' <span style="opacity:.45">›</span> ') +
+        ` <span style="opacity:.6;font-weight:400">· ${fmt(mw, 0)} MW · ${cap.length} proy</span>`;
+    }
+
+    function syncCommandBar() {
+      const cbN = document.getElementById('cbNivel');
+      const cbS = document.getElementById('cbScope');
+      const cbP = document.getElementById('cbProject');
+      if (!cbN || !cbS || !cbP || !DATA.length) return;
+      const scope = getMapScope();
+      cbN.value = scope;
+      document.getElementById('cbScopeLbl').textContent = scope === 'gerencia' ? 'Gerencia' : 'Entidad';
+      const list = cbScopeList(scope);
+      cbS.innerHTML = '<option value="__ALL__">Nacional (todas)</option>' +
+        list.map(v => `<option value="${v}">${v}</option>`).join('');
+      if (scope === 'gerencia') {
+        const cur = CURRENT_FOCUS_GERENCIA;
+        const opt = cur ? [...cbS.options].find(o => normGerencia(o.value) === normGerencia(cur)) : null;
+        cbS.value = opt ? opt.value : '__ALL__';
+      } else {
+        const cur = document.getElementById('efSelect')?.value || '__ALL__';
+        cbS.value = [...cbS.options].some(o => o.value === cur) ? cur : '__ALL__';
+      }
+      const src = document.getElementById('projectSelect');
+      if (src) { cbP.innerHTML = src.innerHTML; cbP.value = src.value; cbP.disabled = src.disabled; }
+      updateBreadcrumb();
+    }
+
+    function goNacional() {
+      const projSel = document.getElementById('projectSelect');
+      if (projSel) projSel.value = '__ALL__';
+      document.getElementById('efSelect').value = '__ALL__';
+      CURRENT_FOCUS_EF = null;
+      CURRENT_FOCUS_GERENCIA = null;
+      render();
+      if (presentationMode) { syncCommandBar(); refreshPresentationDeck(); presentationGoTo('.slide.content'); }
+    }
+
+    function selectEf(ef) {
+      const mapScope = document.getElementById('mapScope');
+      if (mapScope && mapScope.value !== 'ef') { mapScope.value = 'ef'; mapScope.dispatchEvent(new Event('change')); }
+      const efSel = document.getElementById('efSelect');
+      const projSel = document.getElementById('projectSelect');
+      if (projSel) projSel.value = '__ALL__';
+      if (efSel) {
+        efSel.value = (ef && [...efSel.options].some(o => o.value === ef)) ? ef : '__ALL__';
+        efSel.dispatchEvent(new Event('change'));
+      }
+      if (presentationMode) { syncCommandBar(); refreshPresentationDeck(); presentationGoTo('.slide.content'); }
+    }
+
+    async function selectGerencia(ger) {
+      const mapScope = document.getElementById('mapScope');
+      const projSel = document.getElementById('projectSelect');
+      if (projSel) projSel.value = '__ALL__';
+      document.getElementById('efSelect').value = '__ALL__';
+      if (mapScope && mapScope.value !== 'gerencia') {
+        mapScope.value = 'gerencia';
+        mapScope.dispatchEvent(new Event('change'));
+        await new Promise(r => setTimeout(r, 450));
+      }
+      CURRENT_FOCUS_GERENCIA = (ger && ger !== '__ALL__') ? normGerencia(ger) : null;
+      drawMap();
+      if (CURRENT_FOCUS_GERENCIA) showScopeDetail('gerencia', CURRENT_FOCUS_GERENCIA);
+      render();
+      if (presentationMode) { syncCommandBar(); refreshPresentationDeck(); presentationGoTo('.map-slide'); }
+    }
+
+    function selectProjectById(id) {
+      const sel = document.getElementById('projectSelect');
+      if (!sel) return;
+      const prow = DATA.find(r => String(r.id) === String(id));
+      if (prow) {
+        const efSel = document.getElementById('efSelect');
+        if (efSel && prow.ef && efSel.value !== prow.ef && [...efSel.options].some(o => o.value === prow.ef)) {
+          efSel.value = prow.ef;
+          populateProjectSelect();
+        }
+      }
+      if ([...sel.options].some(o => o.value === String(id))) {
+        sel.value = String(id);
+        sel.dispatchEvent(new Event('change'));
+      }
+      if (presentationMode) {
+        syncCommandBar();
+        refreshPresentationDeck(document.getElementById('slideFichaA'));
+        presentationGoTo('#slideFichaA');
+      }
+    }
+
+    document.getElementById('cbNivel').addEventListener('change', (e) => {
+      if (e.target.value === 'gerencia') selectGerencia('__ALL__');
+      else selectEf('__ALL__');
+    });
+    document.getElementById('cbScope').addEventListener('change', (e) => {
+      if (getMapScope() === 'gerencia') selectGerencia(e.target.value);
+      else selectEf(e.target.value);
+    });
+    document.getElementById('cbProject').addEventListener('change', (e) => {
+      if (e.target.value === '__ALL__') {
+        const sel = document.getElementById('projectSelect');
+        if (sel) { sel.value = '__ALL__'; sel.dispatchEvent(new Event('change')); }
+        if (presentationMode) { syncCommandBar(); refreshPresentationDeck(); presentationGoTo('.map-slide'); }
+      } else selectProjectById(e.target.value);
+    });
+    document.getElementById('cbHome').addEventListener('click', goNacional);
+    document.getElementById('cbSearch').addEventListener('focus', () => openSpotlight(document.getElementById('cbSearch').value));
+    document.getElementById('cbSpotlight').addEventListener('click', () => openSpotlight(''));
+
+    // ---- Spotlight ----
+    let spotlightItems = [], spotlightSel = 0, SPOT_INDEX = [];
+    function buildSpotlightIndex() {
+      const items = [];
+      cbScopeList('ef').forEach(ef => items.push({ type: 'ef', label: ef, sub: 'Entidad Federativa', key: ef }));
+      cbScopeList('gerencia').forEach(g => items.push({ type: 'ger', label: g, sub: 'Gerencia de control', key: g }));
+      [...new Set(DATA.map(r => r.tipo).filter(Boolean))].sort().forEach(t => items.push({ type: 'tec', label: t, sub: 'Tecnología', key: t }));
+      DATA.filter(r => r.nombre).sort((a, b) => b.mw - a.mw).forEach(r => items.push({
+        type: 'prj', label: r.nombre,
+        sub: `${r.empresa || '—'} · ${r.ef || '—'} · ${fmt(r.mw, 1)} MW`,
+        key: String(r.id), hay: normTxt(`${r.nombre} ${r.empresa} ${r.folio} ${r.rfc} ${r.ef} ${r.municipio}`)
+      }));
+      return items;
+    }
+    function openSpotlight(q = '') {
+      if (!DATA.length) return;
+      SPOT_INDEX = buildSpotlightIndex();
+      const sp = document.getElementById('spotlight');
+      sp.classList.add('open'); sp.setAttribute('aria-hidden', 'false');
+      const inp = document.getElementById('spotlightInput');
+      inp.value = q; spotlightSel = 0;
+      renderSpotlight(q);
+      setTimeout(() => { inp.focus(); inp.select(); }, 20);
+    }
+    function closeSpotlight() {
+      const sp = document.getElementById('spotlight');
+      sp.classList.remove('open'); sp.setAttribute('aria-hidden', 'true');
+    }
+    function renderSpotlight(q) {
+      const nq = normTxt(q);
+      const res = !nq ? SPOT_INDEX.slice(0, 40)
+        : SPOT_INDEX.filter(it => (it.hay || normTxt(it.label + ' ' + it.sub)).includes(nq)).slice(0, 50);
+      spotlightItems = res;
+      if (spotlightSel >= res.length) spotlightSel = Math.max(0, res.length - 1);
+      const box = document.getElementById('spotlightResults');
+      if (!res.length) { box.innerHTML = '<div class="sr-empty">Sin coincidencias.</div>'; return; }
+      const badge = { ef: 'EF', ger: 'GER', tec: 'TEC', prj: 'PRJ' };
+      box.innerHTML = res.map((it, i) =>
+        `<div class="sr ${i === spotlightSel ? 'active' : ''}" data-i="${i}"><span class="badge ${it.type}">${badge[it.type]}</span><div class="txt"><div class="t1">${it.label}</div><div class="t2">${it.sub}</div></div></div>`
+      ).join('');
+    }
+    function scrollSpotActive() {
+      document.querySelector('.spotlight-results .sr.active')?.scrollIntoView({ block: 'nearest' });
+    }
+    function execSpotlight(it) {
+      if (!it) return;
+      closeSpotlight();
+      if (!presentationMode) enterPresentation(0);
+      if (it.type === 'ef') selectEf(it.key);
+      else if (it.type === 'ger') selectGerencia(it.key);
+      else if (it.type === 'prj') selectProjectById(it.key);
+      else if (it.type === 'tec') {
+        const mt = document.getElementById('mapTipo');
+        if (mt) { mt.value = [...mt.options].some(o => o.value === it.key) ? it.key : '__ALL__'; drawMap(); }
+        if (presentationMode) { syncCommandBar(); presentationGoTo('.map-slide'); }
+      }
+    }
+    const spInput = document.getElementById('spotlightInput');
+    spInput.addEventListener('input', (e) => { spotlightSel = 0; renderSpotlight(e.target.value); });
+    spInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); spotlightSel = Math.min(spotlightItems.length - 1, spotlightSel + 1); renderSpotlight(spInput.value); scrollSpotActive(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); spotlightSel = Math.max(0, spotlightSel - 1); renderSpotlight(spInput.value); scrollSpotActive(); }
+      else if (e.key === 'Enter') { e.preventDefault(); execSpotlight(spotlightItems[spotlightSel]); }
+      else if (e.key === 'Escape') { e.preventDefault(); closeSpotlight(); }
+    });
+    document.getElementById('spotlightResults').addEventListener('click', (e) => {
+      const row = e.target.closest('.sr');
+      if (row) execSpotlight(spotlightItems[+row.dataset.i]);
+    });
+    document.getElementById('spotlight').addEventListener('click', (e) => { if (e.target.id === 'spotlight') closeSpotlight(); });
+
+    // Ctrl/Cmd+K abre spotlight en cualquier momento
+    document.addEventListener('keydown', (ev) => {
+      if ((ev.ctrlKey || ev.metaKey) && (ev.key === 'k' || ev.key === 'K')) {
+        ev.preventDefault();
+        document.getElementById('spotlight').classList.contains('open') ? closeSpotlight() : openSpotlight('');
+      }
+    });
+
+    // ---- Atajos de presentación ----
+    document.addEventListener('keydown', (ev) => {
+      if (!presentationMode) return;
+      if (document.getElementById('spotlight').classList.contains('open')) return;
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      const tag = (ev.target.tagName || '').toLowerCase();
+      const typing = tag === 'input' || tag === 'select' || tag === 'textarea';
+      if (ev.key === '/' && !typing) { ev.preventDefault(); document.getElementById('cbSearch')?.focus(); return; }
+      if (typing) { if (ev.key === 'Escape') ev.target.blur(); return; }
+      if (['ArrowRight', 'PageDown', ' '].includes(ev.key)) { ev.preventDefault(); nextPresentationSlide(); }
+      else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(ev.key)) { ev.preventDefault(); prevPresentationSlide(); }
+      else if (ev.key === 'Home') { ev.preventDefault(); presentationIndex = 0; renderPresentationState(); }
+      else if (ev.key === 'End') { ev.preventDefault(); presentationIndex = Math.max(0, presentationSlides.length - 1); renderPresentationState(); }
+      else if (ev.key === 'Escape') { ev.preventDefault(); userExitingPresentation = true; exitPresentation(); }
+      else if (ev.key === 'n' || ev.key === 'N') { ev.preventDefault(); goNacional(); }
+      else if (ev.key === 'e' || ev.key === 'E') {
+        ev.preventDefault();
+        if (getMapScope() !== 'ef') { const n = document.getElementById('cbNivel'); n.value = 'ef'; n.dispatchEvent(new Event('change')); }
+        setTimeout(() => document.getElementById('cbScope')?.focus(), 60);
+      }
+      else if (ev.key === 'g' || ev.key === 'G') {
+        ev.preventDefault();
+        const n = document.getElementById('cbNivel');
+        if (getMapScope() !== 'gerencia') { n.value = 'gerencia'; n.dispatchEvent(new Event('change')); }
+        setTimeout(() => document.getElementById('cbScope')?.focus(), 480);
+      }
+      else if (ev.key === 'p' || ev.key === 'P') { ev.preventDefault(); document.getElementById('cbProject')?.focus(); }
+      else if (ev.key === 'm' || ev.key === 'M') { ev.preventDefault(); presentationGoTo('.map-slide'); }
+      else if (ev.key === 'k' || ev.key === 'K') { ev.preventDefault(); presentationGoTo('.slide.content'); }
+      else if (ev.key === '.') { ev.preventDefault(); document.body.classList.toggle('present-black'); }
+    });
+
+    let lastFocusReloadAt = 0;
+    window.addEventListener('focus', () => {
+      if (presentationMode) return;
+      const now = Date.now();
+      if (now - lastFocusReloadAt < 4000) return;
+      lastFocusReloadAt = now;
+      loadData().catch(e => console.warn('Focus reload fail:', e.message));
+    });
+
+    // =================== EXPORT PPT ===================
+    const _imgCache = {};
+    async function urlToDataURL(url) {
+      if (_imgCache[url]) return _imgCache[url];
+      const r = await fetch(url, { mode: 'cors' });
+      const blob = await r.blob();
+      return _imgCache[url] = await new Promise((res, rej) => {
+        const fr = new FileReader();
+        fr.onload = () => res(fr.result);
+        fr.onerror = rej;
+        fr.readAsDataURL(blob);
+      });
+    }
+
+    async function inlineRemoteAssets() {
+      const imgs = document.querySelectorAll('img[src^="http"]');
+      for (const img of imgs) {
+        if (img.src.startsWith('data:')) continue;
+        try {
+          const data = await urlToDataURL(img.src);
+          img.dataset.origSrc = img.src;
+          img.src = data;
+        } catch (e) { console.warn('inline img fail', img.src, e.message); }
+      }
+      // bg-image en .cover
+      const cover = document.querySelector('.slide.cover');
+      if (cover && !cover.dataset.bgInlined) {
+        const bg = getComputedStyle(cover).backgroundImage;
+        const m = bg.match(/url\(["']?(https?:[^"')]+)/);
+        if (m) {
+          try {
+            const data = await urlToDataURL(m[1]);
+            cover.style.backgroundImage = bg.replace(m[1], data);
+            cover.dataset.bgInlined = '1';
+          } catch (e) { console.warn('inline bg fail', e.message); }
+        }
+      }
+    }
+
+    async function captureSlide(slideEl) {
+      if (slideEl.querySelector('#mapa') && mapInstance) {
+        mapInstance.invalidateSize();
+        await new Promise(r => setTimeout(r, 400));
+      }
+      const canvas = await html2canvas(slideEl, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        width: slideEl.offsetWidth,
+        height: slideEl.offsetHeight
+      });
+      return canvas.toDataURL('image/png');
+    }
+
+    async function exportPPT() {
+      const btn = document.getElementById('btnPpt');
+      const originalLabel = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Generando…';
+      try {
+        btn.textContent = 'Preparando imágenes…';
+        await inlineRemoteAssets();
+
+        const pptx = new PptxGenJS();
+        pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5 in
+        pptx.author = 'DGMESNIE — SENER';
+        pptx.company = 'Secretaría de Energía';
+        pptx.title = 'Segunda Convocatoria 2026';
+
+        const slides = [...document.querySelectorAll('.deck > .slide')]
+          .filter(s => !s.classList.contains('ficha-hidden'));
+        for (let i = 0; i < slides.length; i++) {
+          btn.textContent = `Slide ${i + 1}/${slides.length}…`;
+          const dataUrl = await captureSlide(slides[i]);
+          const slide = pptx.addSlide();
+          slide.background = { color: 'FFFFFF' };
+          slide.addImage({ data: dataUrl, x: 0, y: 0, w: 13.333, h: 7.5 });
+        }
+
+        const fname = `${getReportBaseName()}.pptx`;
+        await pptx.writeFile({ fileName: fname });
+        btn.textContent = '✓ Descargado';
+        setTimeout(() => { btn.textContent = originalLabel; btn.disabled = false; }, 2000);
+      } catch (e) {
+        console.error(e);
+        alert('Error generando PPT: ' + e.message);
+        btn.textContent = originalLabel;
+        btn.disabled = false;
+      }
+    }
+
+    function applyMwMetric() {
+      const m = getMwMetric();
+      DATA.forEach(r => { r.mw = m === 'generacion' ? r.mwGeneracion : (m === 'neta' ? r.mwNeta : r.mwInstalada); });
+    }
+    document.getElementById('mwMetric')?.addEventListener('change', () => {
+      applyMwMetric();
+      populateProjectSelect();
+      render();
+      if (mapInstance) drawMap();
+    });
+    document.getElementById('btnPpt').addEventListener('click', exportPPT);
+    syncYearPresetButtons();
+    setStatus('Iniciando…');
+    if (typeof Papa === 'undefined') {
+      setStatus('ERROR: PapaParse no cargó (sandbox iframe bloquea CDN). Abre el HTML directo en navegador.');
+    } else {
+      loadData().catch(e => setStatus('Error cargando datos: ' + e.message));
+    }
+  </script>
+
+</body>
+
+</html>
