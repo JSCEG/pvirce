@@ -1005,7 +1005,7 @@
     // Mapeo posicional exacto basado en SEGUNDA-CONVOCATORIA-DGMESNIE.html
     function mapRowPositional(row, idx) {
       const col = i => String(row?.[i] || '').trim();
-      const num = x => { const n = parseFloat(String(x).replace(/,/g, '')); return isNaN(n) ? 0 : n; };
+      const num = x => { const n = parseFloat(String(x || '').replace(/[\$,\s]/g, '')); return isNaN(n) ? 0 : n; };
       
       const rawGcr = col(19);
       const ef = col(20);
