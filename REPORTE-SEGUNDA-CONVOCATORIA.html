@@ -1666,8 +1666,10 @@
         maxBoundsViscosity: 1.0
       });
 
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Esri'
+      L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: 'Google Satellite'
       }).addTo(mapInstance);
 
       mapInstance.setView([23.5, -102.2], 4.5);
@@ -1701,9 +1703,9 @@
             });
             return {
               fillColor: fill,
-              fillOpacity: 0.5,
-              color: '#A0AEC0',
-              weight: 1
+              fillOpacity: 0.2,
+              color: '#ffffff',
+              weight: 1.2
             };
           }
         }).addTo(mapInstance);
@@ -2325,15 +2327,17 @@
           attributionControl: false
         });
         
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-          maxZoom: 19
+        L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+          attribution: 'Google Satellite'
         }).addTo(fichaMapInstance);
         
         // Pintar capas de límites si están disponibles
         if (estadosGeo) {
           try {
             L.geoJSON(estadosGeo, {
-              style: { color: '#CBD5E0', weight: 1, fill: false, interactive: false }
+              style: { color: '#ffffff', weight: 1, opacity: 0.5, fill: false, interactive: false }
             }).addTo(fichaMapInstance);
           } catch (e) {
             console.warn('No se pudo pintar el GeoJSON de estados en la ficha:', e);
@@ -2343,7 +2347,7 @@
         if (gerenciasGeo) {
           try {
             L.geoJSON(gerenciasGeo, {
-              style: { color: '#A0AEC0', weight: 1, dashArray: '2, 3', fillColor: '#EDF2F7', fillOpacity: 0.05, interactive: false }
+              style: { color: '#FFA500', weight: 1.2, dashArray: '3, 4', fill: false, interactive: false }
             }).addTo(fichaMapInstance);
           } catch (e) {
             console.warn('No se pudo pintar el GeoJSON de gerencias en la ficha:', e);
