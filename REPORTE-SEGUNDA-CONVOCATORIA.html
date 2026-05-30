@@ -1180,11 +1180,14 @@
     // ==========================================
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2Ffre2ItozEiKEj0Omx5X_2fSiopFjc1lGlBugXZZ6AxhFSwb7BXS8Ufs4qvHGOqcKxUU9thg_nkE/pub?output=csv';
     const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
+    const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
     
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
     let mapInstance = null;
+    let cachedGerenciasGeoJSON = null;
+    let cachedEstadosGeoJSON = null;
 
     // Colores para el mapa por tecnología
     const TECH_COLORS = {
@@ -1381,6 +1384,9 @@
         contratoFirmaFecha: '',
         contratoDoc: '',
         
+        projectVertices: parseVertices(row, 71, num(col(70))),
+        saeeVertices: parseVertices(row, 96, 3),
+        
         descripcion: col(9)
       };
     }
@@ -1396,6 +1402,19 @@
         }
       }
       return null;
+    }
+
+    function parseVertices(row, startCol, count) {
+      const list = [];
+      const col = i => String(row?.[i] || '').trim();
+      for (let i = 0; i < count; i++) {
+        const val = col(startCol + i);
+        if (val && val !== 'SIN INFORMACIÓN' && val !== 'NO APLICA' && val !== '—') {
+          const c = parseCoords(val);
+          if (c) list.push(c);
+        }
+      }
+      return list;
     }
 
     const BCS_MUNI = ['LAPAZ', 'LOSCABOS', 'COMONDU', 'LORETO'];
@@ -1653,8 +1672,12 @@
 
       // Cargar límites GCR y pintarlos
       try {
-        const res = await fetch(GEOJSON_GERENCIAS_URL);
-        const geojson = await res.json();
+        let geojson = cachedGerenciasGeoJSON;
+        if (!geojson) {
+          const res = await fetch(GEOJSON_GERENCIAS_URL);
+          geojson = await res.json();
+          cachedGerenciasGeoJSON = geojson;
+        }
         
         // Colores pastel para distinguir gerencias
         const gcrColors = {
@@ -2121,8 +2144,56 @@
       return `<span class="v">${val}</span>`;
     }
 
+    function isValidMexicoCoord(lat, lng) {
+      return (
+        typeof lat === 'number' && !isNaN(lat) &&
+        typeof lng === 'number' && !isNaN(lng) &&
+        lat >= 12 && lat <= 36 &&
+        lng >= -123 && lng <= -83
+      );
+    }
+
+    function resolveCenterAndGeometries(coords, projectVertices, saeeVertices) {
+      let center = null;
+      if (coords && Array.isArray(coords) && coords.length >= 2 && isValidMexicoCoord(coords[0], coords[1])) {
+        center = coords;
+      }
+      
+      const validProject = [];
+      if (Array.isArray(projectVertices)) {
+        projectVertices.forEach(v => {
+          if (v && Array.isArray(v) && v.length >= 2 && isValidMexicoCoord(v[0], v[1])) {
+            validProject.push(v);
+          }
+        });
+      }
+      
+      const validSaee = [];
+      if (Array.isArray(saeeVertices)) {
+        saeeVertices.forEach(v => {
+          if (v && Array.isArray(v) && v.length >= 2 && isValidMexicoCoord(v[0], v[1])) {
+            validSaee.push(v);
+          }
+        });
+      }
+      
+      if (!center && validProject.length > 0) {
+        center = validProject[0];
+      }
+      if (!center && validSaee.length > 0) {
+        center = validSaee[0];
+      }
+      
+      return {
+        center,
+        projectPol: validProject,
+        saeePol: validSaee,
+        isValid: !!center
+      };
+    }
+
     let fichaMapInstance = null;
-    function initFichaMiniMap(coords, title) {
+    function initFichaMiniMap(coords, title, projectVertices, saeeVertices) {
       if (fichaMapInstance) {
         fichaMapInstance.remove();
         fichaMapInstance = null;
@@ -2131,35 +2202,161 @@
       const mapDiv = document.getElementById('fichaMiniMap');
       if (!mapDiv) return;
       
-      if (!coords || !Array.isArray(coords) || coords.length < 2 || isNaN(coords[0]) || isNaN(coords[1])) {
+      // Mostrar preloader de cargando
+      mapDiv.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#f8f9fa; border-radius:6px; flex-direction:column; gap:8px; font-family:'Outfit',sans-serif; color:var(--color-text-dark, #2D3748);">
+          <div style="width:24px; height:24px; border:3px solid rgba(105,27,49,0.1); border-top-color:var(--color-guinda, #691B31); border-radius:50%; animation:spin 0.8s infinite linear;"></div>
+          <span style="font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Cargando mapa y capas…</span>
+        </div>`;
+        
+      const geom = resolveCenterAndGeometries(coords, projectVertices, saeeVertices);
+      
+      if (!geom.isValid) {
         mapDiv.innerHTML = `
-          <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#f8f9fa; color:#6c757d; font-size:10px; border-radius:6px; flex-direction:column; gap:4px; border: 1px dashed var(--color-gris-claro);">
-            <span style="font-size:14px;">📍</span>
-            <span>Ubicación no disponible</span>
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#FFF5F5; color:#C53030; font-family:'Outfit',sans-serif; font-size:10px; border-radius:6px; flex-direction:column; gap:6px; border: 1px dashed #FEB2B2; padding:15px; text-align:center;">
+            <span style="font-size:18px;">⚠️</span>
+            <strong style="font-size:11px; text-transform:uppercase;">Geometría Inválida</strong>
+            <span style="font-size:9.5px; opacity:0.85;">No se encontraron coordenadas válidas dentro del territorio nacional o el formato es incorrecto.</span>
           </div>`;
         return;
       }
       
-      mapDiv.innerHTML = '';
-      
-      fichaMapInstance = L.map('fichaMiniMap', {
-        zoomControl: true,
-        attributionControl: false
-      }).setView(coords, 12);
-      
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19
-      }).addTo(fichaMapInstance);
-      
-      L.marker(coords).addTo(fichaMapInstance)
-        .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">${title}</strong>`)
-        .openPopup();
+      // Cargar capas y renderizar
+      Promise.all([
+        (async () => {
+          if (!cachedGerenciasGeoJSON) {
+            try {
+              const res = await fetch(GEOJSON_GERENCIAS_URL);
+              cachedGerenciasGeoJSON = await res.json();
+            } catch (e) {
+              console.warn('Error cargando límites de gerencias:', e);
+            }
+          }
+          return cachedGerenciasGeoJSON;
+        })(),
+        (async () => {
+          if (!cachedEstadosGeoJSON) {
+            try {
+              const res = await fetch(GEOJSON_EF_URL);
+              cachedEstadosGeoJSON = await res.json();
+            } catch (e) {
+              console.warn('Error cargando límites de estados:', e);
+            }
+          }
+          return cachedEstadosGeoJSON;
+        })()
+      ]).then(([gerenciasGeo, estadosGeo]) => {
+        // Limpiar el preloader
+        mapDiv.innerHTML = '';
         
-      setTimeout(() => {
-        if (fichaMapInstance) {
-          fichaMapInstance.invalidateSize();
+        // Crear mapa
+        fichaMapInstance = L.map('fichaMiniMap', {
+          zoomControl: true,
+          attributionControl: false
+        });
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19
+        }).addTo(fichaMapInstance);
+        
+        // Pintar capas de límites si están disponibles
+        if (estadosGeo) {
+          try {
+            L.geoJSON(estadosGeo, {
+              style: {
+                color: '#CBD5E0',
+                weight: 1,
+                fill: false,
+                interactive: false
+              }
+            }).addTo(fichaMapInstance);
+          } catch (e) {
+            console.warn('No se pudo pintar el GeoJSON de estados en la ficha:', e);
+          }
         }
-      }, 250);
+        
+        if (gerenciasGeo) {
+          try {
+            L.geoJSON(gerenciasGeo, {
+              style: {
+                color: '#A0AEC0',
+                weight: 1,
+                dashArray: '2, 3',
+                fillColor: '#EDF2F7',
+                fillOpacity: 0.05,
+                interactive: false
+              }
+            }).addTo(fichaMapInstance);
+          } catch (e) {
+            console.warn('No se pudo pintar el GeoJSON de gerencias en la ficha:', e);
+          }
+        }
+        
+        // Polígono del proyecto
+        if (geom.projectPol.length > 0) {
+          try {
+            L.polygon(geom.projectPol, {
+              color: '#691B31', // Guinda
+              fillColor: '#691B31',
+              fillOpacity: 0.25,
+              weight: 2
+            }).addTo(fichaMapInstance)
+              .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono del Proyecto</strong>`);
+          } catch (e) {
+            console.warn('No se pudo pintar el polígono del proyecto:', e);
+          }
+        }
+        
+        // Polígono SAEE
+        if (geom.saeePol.length > 0) {
+          try {
+            L.polygon(geom.saeePol, {
+              color: '#2F855A', // Verde
+              fillColor: '#48BB78',
+              fillOpacity: 0.15,
+              weight: 2,
+              dashArray: '4, 4'
+            }).addTo(fichaMapInstance)
+              .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono SAEE (Almacenamiento)</strong>`);
+          } catch (e) {
+            console.warn('No se pudo pintar el polígono SAEE:', e);
+          }
+        }
+        
+        // Marcador de ubicación
+        L.marker(geom.center).addTo(fichaMapInstance)
+          .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">${title}</strong>`)
+          .openPopup();
+          
+        // Ajustar vista
+        const bounds = L.latLngBounds([]);
+        if (geom.projectPol.length > 0) bounds.extend(geom.projectPol);
+        if (geom.saeePol.length > 0) bounds.extend(geom.saeePol);
+        if (geom.center) bounds.extend(geom.center);
+        
+        if (bounds.isValid()) {
+          fichaMapInstance.fitBounds(bounds, {
+            padding: [20, 20],
+            maxZoom: 14
+          });
+        } else {
+          fichaMapInstance.setView(geom.center, 12);
+        }
+        
+        // Forzar redibujo por problemas de escalado de Leaflet en modales
+        setTimeout(() => {
+          if (fichaMapInstance) {
+            fichaMapInstance.invalidateSize();
+          }
+        }, 250);
+      }).catch(err => {
+        console.error('Error inicializando el mapa de la ficha:', err);
+        mapDiv.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#f8f9fa; color:#e53e3e; font-size:10px; border-radius:6px; flex-direction:column; gap:4px; border: 1px dashed #feb2b2;">
+            <span style="font-size:14px;">❌</span>
+            <span>Error al cargar el mapa</span>
+          </div>`;
+      });
     }
 
     function trunc(s, n = 140) {
@@ -2385,8 +2582,8 @@
       document.getElementById('fichaModal').style.display = 'flex';
       fitSlides();
       
-      // Inicializar el minimapa Leaflet
-      initFichaMiniMap(p.coords, titleTxt);
+      // Inicializar el minimapa Leaflet en base a las coordenadas del proyecto y la batería
+      initFichaMiniMap(p.coords, titleTxt, p.projectVertices, p.saeeVertices);
     }
 
     window.addEventListener('resize', fitSlides);
