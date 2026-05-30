@@ -832,7 +832,41 @@
       flex-direction: column;
       flex-grow: 1;
       min-height: 0;
-      overflow: hidden;
+      overflow: visible;
+    }
+
+    /* Estilos Premium para el Control de Capas Leaflet */
+    .leaflet-control-layers {
+      background: rgba(255, 255, 255, 0.85) !important;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(105, 27, 49, 0.2) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 10px !important;
+      color: var(--color-text-dark, #2D3748) !important;
+      padding: 8px 12px !important;
+      transition: all 0.3s ease;
+    }
+    .leaflet-control-layers-expanded {
+      padding: 10px 14px !important;
+    }
+    .leaflet-control-layers label {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .leaflet-control-layers label:last-child {
+      margin-bottom: 0;
+    }
+    .leaflet-control-layers input[type="checkbox"] {
+      accent-color: var(--color-guinda, #691B31);
+      width: 12px;
+      height: 12px;
+      cursor: pointer;
     }
     .modal-nav-bar {
       display: flex;
@@ -1190,6 +1224,8 @@
     let mapInstance = null;
     let cachedGerenciasGeoJSON = null;
     let cachedEstadosGeoJSON = null;
+    let layerGerencias = null;
+    let layerEstados = null;
 
     // Colores para el mapa por tecnología
     const TECH_COLORS = {
@@ -1707,7 +1743,7 @@
           'BAJA CALIFORNIA SUR': '#FAF5FF'
         };
 
-        L.geoJSON(geojson, {
+        layerGerencias = L.geoJSON(geojson, {
           style: (feature) => {
             const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
             let fill = '#EDF2F7';
@@ -1724,6 +1760,37 @@
         }).addTo(mapInstance);
       } catch (e) {
         console.warn('No se pudo cargar el GeoJSON de gerencias en el mapa:', e);
+      }
+
+      // Cargar límites de Estados (Entidades Federativas)
+      try {
+        let geojsonEf = cachedEstadosGeoJSON;
+        if (!geojsonEf) {
+          const res = await fetch(GEOJSON_EF_URL);
+          geojsonEf = await res.json();
+          cachedEstadosGeoJSON = geojsonEf;
+        }
+
+        layerEstados = L.geoJSON(geojsonEf, {
+          style: {
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            color: '#ffffff',
+            weight: 1.0,
+            dashArray: '2, 3'
+          }
+        });
+      } catch (e) {
+        console.warn('No se pudo cargar el GeoJSON de estados en el mapa:', e);
+      }
+
+      // Agregar control de capas al mapa
+      if (layerGerencias || layerEstados) {
+        const overlayMaps = {};
+        if (layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = layerGerencias;
+        if (layerEstados) overlayMaps["Límites Estatales"] = layerEstados;
+        
+        L.control.layers(null, overlayMaps, { collapsed: false, position: 'topright' }).addTo(mapInstance);
       }
 
       // Dibujar marcadores de proyectos
@@ -2524,7 +2591,11 @@
 
     function openFichaModal(projectId) {
       const p = DATA.find(x => String(x.id) === String(projectId));
-      if (!p) return;
+      if (!p) {
+        console.warn(`[FichaModal] Proyecto no encontrado para el ID: "${projectId}"`);
+        return;
+      }
+      console.log(`[FichaModal] Abriendo proyecto ID: "${projectId}", Nombre: "${p.nombre}", Folio: "${p.folio}"`);
       
       const titleTxt = p.nombre || 'Proyecto';
       const subTxt = `${p.empresa || '—'} · ${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
