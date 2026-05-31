@@ -2346,12 +2346,21 @@
 
     function makeClickableIfUrl(val) {
       if (!val || val === '—' || val === 'Sin información') return val || '—';
-      const trimmed = String(val).trim();
-      if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-        return `<a href="${trimmed}" target="_blank" style="color:var(--color-guinda);text-decoration:underline;word-break:break-all">${trimmed}</a>`;
+      let str = String(val).trim();
+      
+      // Limpiar comillas iniciales y finales habituales en celdas de CSV
+      str = str.replace(/^["']|["']$/g, '').trim();
+
+      // Expresión regular para capturar URLs en el texto
+      const urlRegex = /(https?:\/\/[^\s"'><]+)/gi;
+      if (urlRegex.test(str)) {
+        return str.replace(urlRegex, (url) => {
+          return `<a href="${url}" target="_blank" style="color:var(--color-guinda);text-decoration:underline;word-break:break-all">${url}</a>`;
+        });
       }
-      if (trimmed.includes('@') && !trimmed.includes(' ') && !trimmed.includes('http')) {
-        return `<a href="mailto:${trimmed}" style="color:var(--color-guinda);text-decoration:underline;word-break:break-all">${trimmed}</a>`;
+
+      if (str.includes('@') && !str.includes(' ') && !str.includes('http')) {
+        return `<a href="mailto:${str}" style="color:var(--color-guinda);text-decoration:underline;word-break:break-all">${str}</a>`;
       }
       return val;
     }
