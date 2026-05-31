@@ -1017,6 +1017,143 @@
       font-weight: 400;
       font-style: italic;
     }
+
+    /* Estilos del Buscador Spotlight */
+    .search-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 12000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 100px;
+      backdrop-filter: blur(5px);
+      transition: opacity 0.2s ease;
+    }
+    .search-modal-content {
+      width: 620px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(105, 27, 49, 0.25);
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      max-height: 420px;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      animation: spotlightDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes spotlightDown {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .search-modal-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1.5px solid rgba(105, 27, 49, 0.15);
+      background: #fafafa;
+    }
+    .search-icon {
+      font-size: 18px;
+      color: var(--color-guinda, #691B31);
+      margin-right: 12px;
+    }
+    #searchInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      color: var(--color-text-dark, #2D3748);
+      font-weight: 500;
+    }
+    #searchInput::placeholder {
+      color: var(--color-gris, #a0aec0);
+      font-weight: 400;
+    }
+    .search-close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--color-guinda, #691B31);
+      cursor: pointer;
+      margin-left: 8px;
+      line-height: 1;
+      transition: transform 0.2s;
+    }
+    .search-close-btn:hover {
+      transform: scale(1.15);
+    }
+    .search-results-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+      max-height: 350px;
+    }
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: background 0.15s, border-left-color 0.15s;
+      border-left: 3px solid transparent;
+      gap: 12px;
+    }
+    .search-result-item:hover {
+      background: rgba(105, 27, 49, 0.05);
+      border-left-color: var(--color-guinda, #691B31);
+    }
+    .search-result-main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+    .search-result-name {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--color-guinda, #691B31);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-result-desc {
+      font-size: 9px;
+      color: var(--color-text-dark, #2D3748);
+      opacity: 0.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .search-result-badge {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #b7791f;
+      background: #fefcbf;
+      border: 1px solid #ecc94b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .search-result-empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--color-gris, #718096);
+      font-size: 11px;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
@@ -1159,6 +1296,7 @@
     <span id="slideCounter">1 / 2</span>
     <button class="control-btn" id="btnNext" onclick="nextSlide()">▶</button>
     <button class="control-btn" id="btnFs" onclick="toggleFullscreen()" title="Pantalla completa">⛶</button>
+    <button class="control-btn" id="btnSearch" onclick="openSearchModal()" title="Buscar proyecto (F)">🔍</button>
   </div>
   <!-- MODAL DE FICHA DETALLADA (ESTILO SEGUNDA-CONVOCATORIA-DGMESNIE) -->
   <div id="fichaModal" class="ficha-modal" style="display: none;">
@@ -1200,6 +1338,18 @@
       </div>
       
       <div class="slide-footer" style="margin-bottom: -35px;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL DE BÚSQUEDA INTELIGENTE -->
+  <div id="searchModal" class="search-modal" style="display: none;">
+    <div class="search-modal-content">
+      <div class="search-modal-header">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar por Nombre, Folio o Empresa..." oninput="handleSearchInput(this.value)" autocomplete="off">
+        <button class="search-close-btn" onclick="closeSearchModal()">×</button>
+      </div>
+      <div id="searchResults" class="search-results-list"></div>
     </div>
   </div>
 
@@ -2784,6 +2934,113 @@
       // Inicializar el minimapa Leaflet en base a las coordenadas del proyecto y la batería
       initFichaMiniMap(p.coords, titleTxt, p.projectVertices, p.saeeVertices, p.kmzProj, p.kmzLinea, p.saeeKml);
     }
+
+    // ==========================================
+    // BUSCADOR SPOTLIGHT DE PROYECTOS
+    // ==========================================
+    function openSearchModal() {
+      const modal = document.getElementById('searchModal');
+      const input = document.getElementById('searchInput');
+      const resultsDiv = document.getElementById('searchResults');
+      
+      modal.style.display = 'flex';
+      input.value = '';
+      resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeSearchModal() {
+      document.getElementById('searchModal').style.display = 'none';
+    }
+
+    function handleSearchInput(query) {
+      const resultsDiv = document.getElementById('searchResults');
+      const cleanQuery = query.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+      
+      if (!cleanQuery) {
+        resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
+        return;
+      }
+      
+      const matched = DATA.filter(p => {
+        const name = String(p.nombre || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        const folio = String(p.folio || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        const preFolio = String(p.preFolio || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        const dev = String(p.empresa || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        const gie = String(p.gie || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        
+        return name.includes(cleanQuery) || 
+               folio.includes(cleanQuery) || 
+               preFolio.includes(cleanQuery) || 
+               dev.includes(cleanQuery) || 
+               gie.includes(cleanQuery);
+      });
+      
+      if (matched.length === 0) {
+        resultsDiv.innerHTML = '<div class="search-result-empty">No se encontraron proyectos coincidentes.</div>';
+        return;
+      }
+      
+      // Mostrar máximo los primeros 10 resultados para evitar lentitud
+      const limit = matched.slice(0, 10);
+      resultsDiv.innerHTML = limit.map(p => {
+        const textTech = p.techBase || p.tecnologia || 'OTRA';
+        const labelLoc = `${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
+        const labelFolio = p.folio || p.preFolio || 'Sin Folio';
+        
+        return `
+          <div class="search-result-item" onclick="selectSearchResult('${p.id}')">
+            <div class="search-result-main">
+              <span class="search-result-name">${p.nombre}</span>
+              <span class="search-result-desc">${textTech} · ${p.empresa || '—'} · ${labelLoc}</span>
+            </div>
+            <span class="search-result-badge">${labelFolio}</span>
+          </div>
+        `;
+      }).join('');
+      
+      if (matched.length > 10) {
+        resultsDiv.innerHTML += `
+          <div class="search-result-empty" style="padding: 10px; border-top: 1px dashed rgba(105,27,49,0.1); font-size: 9.5px; opacity:0.8;">
+            Mostrando 10 de ${matched.length} coincidencias. Refina tu búsqueda.
+          </div>
+        `;
+      }
+    }
+
+    function selectSearchResult(projectId) {
+      closeSearchModal();
+      openFichaModal(projectId);
+    }
+
+    // Atajos de teclado del Buscador
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('searchModal');
+      const isSearchOpen = modal && modal.style.display === 'flex';
+      
+      // Abrir con tecla 'F' (sólo si no se está escribiendo en un campo)
+      if (!isSearchOpen && (e.key === 'f' || e.key === 'F')) {
+        const activeEl = document.activeElement;
+        const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable);
+        if (!isInput) {
+          e.preventDefault();
+          openSearchModal();
+        }
+      }
+      
+      // Cerrar con tecla Esc
+      if (isSearchOpen && e.key === 'Escape') {
+        closeSearchModal();
+      }
+    });
+
+    // Cerrar modal al hacer clic en el fondo gris del buscador
+    window.addEventListener('click', (e) => {
+      const modal = document.getElementById('searchModal');
+      if (e.target === modal) {
+        closeSearchModal();
+      }
+    });
 
     window.addEventListener('resize', fitSlides);
 
