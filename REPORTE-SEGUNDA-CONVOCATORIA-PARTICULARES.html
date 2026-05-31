@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segunda Convocatoria - Reporte de Proyectos Particulares</title>
-  
+
   <!-- Hojas de estilo y Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
   <style>
     @font-face {
       font-family: 'Patria';
@@ -31,8 +35,10 @@
     /* VARIABLES DE DISEÑO (Identidad de Marca - SENER Guinda/Dorado) */
     :root {
       --color-guinda: #9B2247;
+      --color-guinda-light: #B24C6C;
       --color-verde: #1E5B4F;
       --color-dorado: #A57F2C;
+      --color-dorado-light: #D6B46A;
       --color-gris: #98989A;
       --color-gris-claro: #E5E5E5;
       --color-bg-dark: #1E1E1E;
@@ -77,18 +83,25 @@
       font-family: 'Outfit', sans-serif;
       transition: opacity 0.5s ease;
     }
+
     .spinner {
       width: 50px;
       height: 50px;
-      border: 5px solid rgba(255,255,255,0.1);
+      border: 5px solid rgba(255, 255, 255, 0.1);
       border-top-color: var(--color-dorado);
       border-radius: 50%;
       animation: spin 1s infinite linear;
       margin-bottom: 20px;
     }
+
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     /* DECK DE DIAPOSITIVAS */
@@ -133,7 +146,8 @@
       flex-direction: column;
       padding: 35px 45px;
       transform-origin: center center;
-      border-bottom: none; /* No border, we use slide-footer for the tricolor band */
+      border-bottom: none;
+      /* No border, we use slide-footer for the tricolor band */
     }
 
     /* BARRA DE HEADER DE LA DIAPOSITIVA PREMIUM */
@@ -222,7 +236,7 @@
       padding: 8px 18px;
       border-radius: 30px;
       z-index: 1000;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       gap: 15px;
       color: #ffffff;
       font-family: 'Outfit', sans-serif;
@@ -245,13 +259,20 @@
     }
 
     .control-btn:hover {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .control-btn:disabled {
       color: #666;
       cursor: not-allowed;
-    }    /* DIAPOSITIVA 1: PORTADA PREMIUM COPIADA DEL ORIGINAL */
+    }
+
+    .control-btn i {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* DIAPOSITIVA 1: PORTADA PREMIUM COPIADA DEL ORIGINAL */
     .slide.cover .slide-container {
       background: #6a172f;
       color: white;
@@ -344,8 +365,8 @@
     .slide.cover h1 {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-weight: 700;
-      font-size: 52px;
-      line-height: 1.05;
+      font-size: 64px;
+      line-height: 1.0;
       max-width: 900px;
       color: white;
       text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
@@ -353,23 +374,68 @@
 
     .slide.cover .unidad {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 18px;
+      font-weight: 300;
+      font-size: 28px;
       line-height: 1.3;
       color: white;
       max-width: 720px;
-      border-left: 3px solid var(--color-dorado);
-      padding-left: 14px;
+      padding-left: 0;
       text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
-      margin-bottom: 5px;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    .slide.cover .unidad-sub {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, .92);
+      max-width: 720px;
+      padding-left: 0;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+      margin-top: 8px;
+      margin-bottom: 6px;
+    }
+
+    .slide.cover .unidad-sub-dgmesnie {
+      margin-top: 10px;
+      padding: 8px 14px 10px;
+      max-width: 860px;
+      font-size: 19px;
+      line-height: 1.45;
+      background: rgba(0, 0, 0, 0.28);
+      border-left: 4px solid var(--color-dorado);
+      border-radius: 0 8px 8px 0;
+      backdrop-filter: blur(1px);
+    }
+
+    .slide.cover .unidad-sub-dgmesnie .acronym {
+      color: var(--color-dorado);
+      font-weight: 700;
+      letter-spacing: .04em;
     }
 
     .slide.cover .subtitle {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-weight: 300;
-      font-size: 24px;
-      color: rgba(255, 255, 255, .92);
-      max-width: 800px;
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 1.12;
+      color: #ffffff;
+      margin-top: 24px;
+      text-align: right;
+      letter-spacing: .01em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .32);
+    }
+
+    .slide.cover .subtitle .period-label,
+    .slide.cover .subtitle .period-value {
+      display: inline-block;
+      vertical-align: baseline;
+    }
+
+    .slide.cover .subtitle .period-label {
+      margin-right: 6px;
     }
 
     .slide.cover .subtitle-status {
@@ -380,20 +446,41 @@
     }
 
     .slide.cover .meta {
-      margin-top: 15px;
-      display: flex;
-      gap: 32px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, .85);
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 24px;
+      justify-content: flex-end;
+      align-items: start;
+      margin-left: auto;
     }
 
-    .slide.cover .meta strong {
-      color: var(--color-dorado);
+    .slide.cover .meta-item {
+      min-width: 110px;
+      text-align: right;
+    }
+
+    .slide.cover .meta-item .meta-label {
       display: block;
-      font-size: 12px;
-      letter-spacing: .15em;
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .09em;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      color: rgba(165, 127, 44, .92);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .slide.cover .meta-item .meta-value {
+      display: block;
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .95);
+      line-height: 1.14;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, .28);
+      white-space: nowrap;
     }
 
     .slide.cover .bottom-band {
@@ -475,6 +562,16 @@
       padding-bottom: 5px;
     }
 
+    .tech-card .tech-total {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-text-light);
+      margin-top: -3px;
+      margin-bottom: 4px;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: .02em;
+    }
+
     .tech-item {
       display: flex;
       align-items: center;
@@ -494,17 +591,25 @@
       color: var(--color-guinda);
     }
 
+    .tech-item .icon-bg i {
+      font-size: 15px;
+      line-height: 1;
+    }
+
     .tech-item .t-info {
       flex-grow: 1;
     }
+
     .tech-item .t-info .t-name {
       font-weight: 600;
       color: var(--color-text-dark);
     }
+
     .tech-item .t-info .t-sub {
       font-size: 10px;
       color: var(--color-text-light);
     }
+
     .tech-item .t-val {
       font-weight: 700;
       color: var(--color-guinda);
@@ -555,6 +660,7 @@
       padding: 4px 8px;
       border-bottom: 1px solid #E2E8F0;
     }
+
     .gcr-minitable tr:last-child td {
       font-weight: 700;
       background: var(--color-bg-light);
@@ -599,6 +705,7 @@
       height: 310px;
       position: relative;
     }
+
     #miniMap {
       width: 100%;
       height: 100%;
@@ -611,7 +718,7 @@
       top: 15px;
       left: 15px;
       z-index: 100;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.9);
       padding: 4px 10px;
       border-radius: 4px;
       font-size: 11px;
@@ -631,7 +738,7 @@
       border-radius: 8px;
       font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       font-family: 'Outfit', sans-serif;
       pointer-events: none;
     }
@@ -688,9 +795,398 @@
       color: var(--color-guinda);
       margin-top: 2px;
     }
+
     .status-box .s-mw {
       font-size: 9px;
       color: var(--color-text-light);
+    }
+
+    /* ESTILO ESPECIFICO PARA SLIDE 2 (NUMERALIA) */
+    #slide-1 .slide-container {
+      background: linear-gradient(180deg, #f8f9fb 0%, #f3f5f7 100%);
+    }
+
+    #slide-1 .slide-header,
+    .tabular-slide .slide-header {
+      background: #ffffff;
+      border-bottom: 2px solid #b71e4f;
+      grid-template-columns: 1.25fr 1.9fr 1fr;
+      box-shadow: 0 4px 10px rgba(16, 24, 40, 0.06);
+      margin-bottom: 18px;
+    }
+
+    .tabular-slide .slide-header {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    #slide-1 .slide-header .brand-left,
+    .tabular-slide .slide-header .brand-left {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.05;
+      color: var(--color-guinda);
+      font-size: 0;
+      position: relative;
+      padding-left: 12px;
+    }
+
+    #slide-1 .slide-header .brand-left::before,
+    .tabular-slide .slide-header .brand-left::before {
+      width: 3px;
+      height: 42px;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      background: #b71e4f;
+    }
+
+    #slide-1 .brand-line-1,
+    .tabular-slide .brand-line-1 {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: none;
+    }
+
+    #slide-1 .brand-line-2,
+    .tabular-slide .brand-line-2 {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: none;
+    }
+
+    #slide-1 .slide-header .ef-title,
+    .tabular-slide .slide-header .ef-title {
+      font-size: 26px;
+      letter-spacing: .02em;
+      line-height: 1.1;
+      color: #202733;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .tabular-slide .slide-header .ef-title .table-slide-page {
+      display: block;
+      font-size: 14px;
+      line-height: 1.05;
+      letter-spacing: .05em;
+      margin-top: 2px;
+      color: #2f3b4e;
+    }
+
+    .tabular-slide .table-container {
+      height: calc(100% - 50px);
+    }
+
+    .tabular-slide .report-table {
+      font-size: 9px;
+    }
+
+    .tabular-slide .report-table th {
+      font-size: 9px;
+      padding: 4px 5px;
+      line-height: 1.15;
+      text-align: center !important;
+    }
+
+    .tabular-slide .report-table td {
+      padding: 3px 5px;
+      line-height: 1.15;
+    }
+
+    #slide-1 .slide-header .ef-title::before,
+    #slide-1 .slide-header .ef-title::after,
+    .tabular-slide .slide-header .ef-title::before,
+    .tabular-slide .slide-header .ef-title::after {
+      margin: 0 10px;
+      color: var(--color-dorado);
+    }
+
+    #slide-1 .slide-header .logo-sener,
+    .tabular-slide .slide-header .logo-sener {
+      height: 42px;
+      opacity: 0.95;
+    }
+
+    #slide-1 .numeralia-grid {
+      grid-template-columns: 276px 1fr 410px;
+      gap: 16px;
+      height: calc(100% - 64px);
+    }
+
+    #slide-1 .kpi-card-main,
+    #slide-1 .tech-card,
+    #slide-1 .gcr-table-card,
+    #slide-1 .group-chart-card,
+    #slide-1 .map-card,
+    #slide-1 .status-card {
+      border-radius: 14px;
+      border: 1px solid #d6dbe1;
+      box-shadow: 0 6px 14px rgba(16, 24, 40, 0.07);
+    }
+
+    #slide-1 .kpi-card-main {
+      background: linear-gradient(160deg, #a11f4d 0%, #6f1433 100%);
+      min-height: 210px;
+      padding: 20px;
+      justify-content: flex-start;
+      gap: 6px;
+    }
+
+    #slide-1 .kpi-card-main .lbl {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 13px;
+      letter-spacing: .07em;
+      line-height: 1.05;
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    #slide-1 .kpi-card-main .val-main {
+      font-size: 74px;
+      line-height: .95;
+      color: #ffffff;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    #slide-1 .kpi-card-main .val-sub {
+      font-size: 20px;
+      line-height: 1.12;
+      color: #f7dca1;
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 700;
+      letter-spacing: .01em;
+      display: block;
+      margin-top: 2px;
+    }
+
+    #slide-1 .kpi-card-main .val-sub .mw-line {
+      display: block;
+    }
+
+    #slide-1 .kpi-card-main .val-sub .mw-asterisk {
+      font-size: .78em;
+      vertical-align: super;
+    }
+
+    #slide-1 .tech-card,
+    #slide-1 .gcr-table-card,
+    #slide-1 .group-chart-card,
+    #slide-1 .status-card {
+      background: #fbfbfc;
+    }
+
+    #slide-1 .tech-card h3,
+    #slide-1 .gcr-table-card h3,
+    #slide-1 .group-chart-card h3,
+    #slide-1 .status-card h3 {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 18px;
+      color: #b71e4f;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #dfe3e8;
+      padding-bottom: 8px;
+    }
+
+    #slide-1 .gcr-minitable {
+      font-size: 10px;
+    }
+
+    #slide-1 .gcr-minitable th {
+      font-size: 10px;
+      background: #eef1f4;
+    }
+
+    #slide-1 .gcr-table-card {
+      height: 252px;
+      padding: 12px 14px;
+    }
+
+    #slide-1 .gcr-table-card h3 {
+      font-size: 15px;
+      line-height: 1.12;
+      letter-spacing: .02em;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+    }
+
+    #slide-1 .gcr-minitable {
+      font-size: 9px;
+      line-height: 1.15;
+      table-layout: fixed;
+    }
+
+    #slide-1 .gcr-minitable th,
+    #slide-1 .gcr-minitable td {
+      padding: 3px 6px;
+      vertical-align: middle;
+    }
+
+    #slide-1 .gcr-minitable th:nth-child(1),
+    #slide-1 .gcr-minitable td:nth-child(1) {
+      width: 54%;
+    }
+
+    #slide-1 .gcr-minitable th:nth-child(2),
+    #slide-1 .gcr-minitable td:nth-child(2) {
+      width: 15%;
+    }
+
+    #slide-1 .gcr-minitable th:nth-child(3),
+    #slide-1 .gcr-minitable td:nth-child(3) {
+      width: 18%;
+    }
+
+    #slide-1 .gcr-minitable th:nth-child(4),
+    #slide-1 .gcr-minitable td:nth-child(4) {
+      width: 13%;
+    }
+
+    #slide-1 .gcr-minitable th:first-child,
+    #slide-1 .gcr-minitable td:first-child {
+      text-align: left;
+    }
+
+    #slide-1 .gcr-minitable th:not(:first-child),
+    #slide-1 .gcr-minitable td:not(:first-child) {
+      text-align: right;
+    }
+
+    #slide-1 .gcr-name-cell {
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    #slide-1 .gcr-chip {
+      display: inline-block;
+      max-width: 100%;
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      font-size: 8px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #slide-1 .gcr-chip.gcr-noreste {
+      background: #d7f1ea;
+      border-color: #9dd5c5;
+      color: #1f6f5e;
+    }
+
+    #slide-1 .gcr-chip.gcr-occidente {
+      background: #fbe7cf;
+      border-color: #f0c690;
+      color: #8a4b16;
+    }
+
+    #slide-1 .gcr-chip.gcr-peninsular {
+      background: #e2ebfb;
+      border-color: #b8c9ee;
+      color: #314f8f;
+    }
+
+    #slide-1 .gcr-chip.gcr-norte {
+      background: #efe7fd;
+      border-color: #ccb9f4;
+      color: #5f3d99;
+    }
+
+    #slide-1 .gcr-chip.gcr-oriental {
+      background: #fde5ee;
+      border-color: #f3bfd4;
+      color: #9c2f63;
+    }
+
+    #slide-1 .gcr-chip.gcr-central {
+      background: #e8ecf2;
+      border-color: #c9d2dd;
+      color: #34465e;
+    }
+
+    #slide-1 .gcr-chip.gcr-baja-california {
+      background: #e0f0ff;
+      border-color: #b2d7fb;
+      color: #1f5f99;
+    }
+
+    #slide-1 .gcr-chip.gcr-baja-california-sur {
+      background: #fff1d9;
+      border-color: #f3d19a;
+      color: #8c5c19;
+    }
+
+    #slide-1 .gcr-chip.gcr-otro {
+      background: #f0f2f5;
+      border-color: #d8dde5;
+      color: #4b5563;
+    }
+
+    #slide-1 .map-card {
+      padding: 9px;
+      height: 312px;
+      background: #f9fafb;
+    }
+
+    #slide-1 .map-lbl {
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 8px;
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 14px;
+      padding: 6px 12px;
+      border: 1px solid #d6dbe1;
+      color: #2a2f37;
+    }
+
+    #slide-1 .invest-lbl {
+      background: #b71e4f;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 21px;
+      letter-spacing: .01em;
+    }
+
+    #slide-1 .status-grid {
+      gap: 9px;
+    }
+
+    #slide-1 .status-box {
+      border: 1px solid #e3e6eb;
+      background: #f1f3f6;
+      min-height: 86px;
+      padding: 9px 11px;
+    }
+
+    #slide-1 .status-box .s-lbl {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 10px;
+      letter-spacing: .03em;
+      color: #4a5565;
+    }
+
+    #slide-1 .status-box .s-val {
+      font-size: 43px;
+      line-height: 1;
+      color: #b71e4f;
+    }
+
+    #slide-1 .status-box .s-mw {
+      font-size: 18px;
+      line-height: 1.1;
+      color: #1f2937;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
     }
 
     /* DIAPOSITIVAS DE TABLAS DETALLADAS */
@@ -732,6 +1228,7 @@
     .report-table tr:nth-child(even) {
       background-color: #fdfdfd;
     }
+
     .report-table tr:hover {
       background-color: #f1f3f5;
     }
@@ -740,6 +1237,7 @@
       background-color: #f1f3f5 !important;
       font-weight: 700;
     }
+
     .report-table tr.total-row td {
       border-top: 2px solid var(--color-guinda);
       border-bottom: 2px double var(--color-guinda);
@@ -747,9 +1245,14 @@
     }
 
     /* Estilos específicos para celdas */
-    .col-center-text { text-align: center; }
-    .col-right-text { text-align: right; }
-    
+    .col-center-text {
+      text-align: center;
+    }
+
+    .col-right-text {
+      text-align: right;
+    }
+
     .badge-status {
       display: inline-block;
       padding: 1px 4px;
@@ -758,9 +1261,21 @@
       font-weight: 700;
       text-transform: uppercase;
     }
-    .badge-si { background: #d4edda; color: #155724; }
-    .badge-no { background: #f8d7da; color: #721c24; }
-    .badge-tramite { background: #fff3cd; color: #856404; }
+
+    .badge-si {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge-no {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .badge-tramite {
+      background: #fff3cd;
+      color: #856404;
+    }
 
     /* ENLACES INTERACTIVOS */
     .clickable-link {
@@ -768,6 +1283,7 @@
       text-decoration: underline;
       cursor: pointer;
     }
+
     .clickable-link:hover {
       color: var(--color-guinda);
     }
@@ -786,6 +1302,7 @@
       align-items: center;
       backdrop-filter: blur(5px);
     }
+
     .ficha-modal-content {
       background: #ffffff;
       position: relative;
@@ -793,6 +1310,7 @@
       flex-direction: column;
       padding: 35px 45px;
     }
+
     .modal-close-btn {
       position: absolute;
       top: 10px;
@@ -806,9 +1324,11 @@
       z-index: 10100;
       transition: transform 0.2s;
     }
+
     .modal-close-btn:hover {
       transform: scale(1.2);
     }
+
     .ficha-page-badge {
       font-family: 'Outfit', sans-serif;
       font-size: 11px;
@@ -820,6 +1340,7 @@
       letter-spacing: .08em;
       white-space: nowrap;
     }
+
     .ficha-subtitle {
       font-size: 11px;
       color: var(--color-gris);
@@ -827,6 +1348,7 @@
       margin-bottom: 8px;
       letter-spacing: .02em;
     }
+
     .modal-page {
       display: flex;
       flex-direction: column;
@@ -848,9 +1370,22 @@
       padding: 8px 12px !important;
       transition: all 0.3s ease;
     }
+
     .leaflet-control-layers-expanded {
       padding: 10px 14px !important;
     }
+
+    .leaflet-control-layers-toggle {
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 8px !important;
+      background-size: 18px 18px !important;
+      background-position: center !important;
+      background-color: rgba(255, 255, 255, 0.92) !important;
+      border: 1px solid rgba(105, 27, 49, 0.25) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    }
+
     .leaflet-control-layers label {
       margin-bottom: 5px;
       display: flex;
@@ -859,15 +1394,36 @@
       cursor: pointer;
       font-weight: 500;
     }
+
     .leaflet-control-layers label:last-child {
       margin-bottom: 0;
     }
+
     .leaflet-control-layers input[type="checkbox"] {
       accent-color: var(--color-guinda, #691B31);
       width: 12px;
       height: 12px;
       cursor: pointer;
     }
+
+    /* Resalte visual para geometrías KML/vertices sobre base satelital */
+    .leaflet-overlay-pane path.kml-project {
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 5px rgba(255, 31, 90, 0.9));
+    }
+
+    .leaflet-overlay-pane path.kml-linea {
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 5px rgba(0, 229, 255, 0.9));
+    }
+
+    .leaflet-overlay-pane path.kml-saee {
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 5px rgba(0, 210, 106, 0.9));
+    }
+
+    .leaflet-overlay-pane path.vertex-project,
+    .leaflet-overlay-pane path.vertex-saee {
+      filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+    }
+
     .modal-nav-bar {
       display: flex;
       justify-content: center;
@@ -877,6 +1433,7 @@
       border-top: 1px solid var(--color-gris-claro);
       background: #fff;
     }
+
     .modal-nav-btn {
       background: var(--color-guinda);
       color: #fff;
@@ -889,9 +1446,11 @@
       font-family: 'Outfit', sans-serif;
       transition: background 0.2s;
     }
+
     .modal-nav-btn:hover {
       background: #7a1534;
     }
+
     .modal-nav-btn:disabled {
       background: var(--color-gris-claro);
       color: var(--color-text-light);
@@ -907,6 +1466,7 @@
       padding-bottom: 8px;
       border-bottom: 1px solid var(--color-gris-claro);
     }
+
     .ficha-kpis .fk {
       background: white;
       border: 1px solid var(--color-gris-claro);
@@ -915,6 +1475,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .ficha-kpis .fk::before {
       content: '';
       position: absolute;
@@ -924,11 +1485,26 @@
       width: 3px;
       background: var(--color-guinda);
     }
-    .ficha-kpis .fk:nth-child(2)::before { background: var(--color-verde); }
-    .ficha-kpis .fk:nth-child(3)::before { background: var(--color-dorado); }
-    .ficha-kpis .fk:nth-child(4)::before { background: var(--color-gris); }
-    .ficha-kpis .fk:nth-child(5)::before { background: var(--color-verde); }
-    .ficha-kpis .fk:nth-child(6)::before { background: var(--color-dorado); }
+
+    .ficha-kpis .fk:nth-child(2)::before {
+      background: var(--color-verde);
+    }
+
+    .ficha-kpis .fk:nth-child(3)::before {
+      background: var(--color-dorado);
+    }
+
+    .ficha-kpis .fk:nth-child(4)::before {
+      background: var(--color-gris);
+    }
+
+    .ficha-kpis .fk:nth-child(5)::before {
+      background: var(--color-verde);
+    }
+
+    .ficha-kpis .fk:nth-child(6)::before {
+      background: var(--color-dorado);
+    }
 
     .ficha-kpis .fk .lbl {
       font-size: 7.5px;
@@ -938,6 +1514,7 @@
       font-weight: 700;
       line-height: 1.1;
     }
+
     .ficha-kpis .fk .val {
       font-family: 'Outfit', sans-serif;
       font-size: 15px;
@@ -946,11 +1523,41 @@
       line-height: 1.05;
       margin-top: 2px;
     }
+
     .ficha-kpis .fk .sub {
       font-size: 8px;
       color: var(--color-text-dark);
       margin-top: 1px;
     }
+
+    .ficha-kpis .fk .src {
+      margin-top: 3px;
+      min-height: 11px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      line-height: 1;
+    }
+
+    .ficha-kpis .fk .src .ficha-source-meta {
+      font-size: 7px;
+      color: #667085;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .ficha-kpis .fk .src .ficha-source-link {
+      font-size: 8px;
+      flex: 0 0 auto;
+    }
+
+    .ficha-kpis .fk .src .ficha-source-cell {
+      font-size: 7px;
+      padding: 0 3px;
+    }
+
     .ficha-body {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -959,6 +1566,7 @@
       min-height: 0;
       overflow: hidden;
     }
+
     .ficha-col {
       min-height: 0;
       overflow-y: auto;
@@ -967,16 +1575,20 @@
       gap: 4px;
       padding-right: 4px;
     }
+
     .ficha-col::-webkit-scrollbar {
       width: 4px;
     }
+
     .ficha-col::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+
     .ficha-col::-webkit-scrollbar-thumb {
       background: var(--color-guinda);
       border-radius: 2px;
     }
+
     .ficha-sec {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 9.5px;
@@ -988,9 +1600,20 @@
       padding-bottom: 3px;
       border-bottom: 1px solid var(--color-guinda);
     }
-    .ficha-sec:first-child { margin-top: 0; }
-    .ficha-sec.verde { color: var(--color-verde); border-bottom-color: var(--color-verde); }
-    .ficha-sec.dorado { color: var(--color-dorado); border-bottom-color: var(--color-dorado); }
+
+    .ficha-sec:first-child {
+      margin-top: 0;
+    }
+
+    .ficha-sec.verde {
+      color: var(--color-verde);
+      border-bottom-color: var(--color-verde);
+    }
+
+    .ficha-sec.dorado {
+      color: var(--color-dorado);
+      border-bottom-color: var(--color-dorado);
+    }
 
     .ficha-kv {
       display: grid;
@@ -1002,20 +1625,75 @@
       line-height: 1.3;
       border-bottom: 1px solid #f2f2f2;
     }
+
     .ficha-kv .k {
       color: var(--color-text-dark);
       font-weight: 700;
     }
+
     .ficha-kv .v {
       color: var(--color-guinda);
       font-weight: 700;
       word-break: break-word;
       min-width: 0;
     }
+
     .ficha-kv .v.muted {
       color: var(--color-gris);
       font-weight: 400;
       font-style: italic;
+    }
+
+    .ficha-kv-source {
+      margin: -2px 0 5px 118px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 12px;
+    }
+
+    .ficha-source-meta {
+      font-size: 8px;
+      color: #667085;
+      line-height: 1.1;
+    }
+
+    .ficha-source-cell {
+      font-size: 8px;
+      color: #475467;
+      background: #f2f4f7;
+      border: 1px solid #e4e7ec;
+      border-radius: 3px;
+      padding: 0 4px;
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    .ficha-source-cell-link {
+      text-decoration: none;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .ficha-source-cell-link:hover .ficha-source-cell {
+      background: #e9eef7;
+      border-color: #d0d5dd;
+    }
+
+    .ficha-source-link {
+      font-size: 10px;
+      color: var(--color-guinda);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      opacity: .9;
+    }
+
+    .ficha-source-link:hover {
+      opacity: 1;
+      transform: translateY(-1px);
     }
 
     /* Estilos del Buscador Spotlight */
@@ -1034,6 +1712,7 @@
       backdrop-filter: blur(5px);
       transition: opacity 0.2s ease;
     }
+
     .search-modal-content {
       width: 620px;
       background: rgba(255, 255, 255, 0.95);
@@ -1048,10 +1727,19 @@
       font-family: 'Outfit', sans-serif;
       animation: spotlightDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     @keyframes spotlightDown {
-      from { transform: translateY(-30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
+
     .search-modal-header {
       display: flex;
       align-items: center;
@@ -1059,11 +1747,13 @@
       border-bottom: 1.5px solid rgba(105, 27, 49, 0.15);
       background: #fafafa;
     }
+
     .search-icon {
       font-size: 18px;
       color: var(--color-guinda, #691B31);
       margin-right: 12px;
     }
+
     #searchInput {
       flex: 1;
       border: none;
@@ -1074,10 +1764,12 @@
       color: var(--color-text-dark, #2D3748);
       font-weight: 500;
     }
+
     #searchInput::placeholder {
       color: var(--color-gris, #a0aec0);
       font-weight: 400;
     }
+
     .search-close-btn {
       background: none;
       border: none;
@@ -1089,15 +1781,18 @@
       line-height: 1;
       transition: transform 0.2s;
     }
+
     .search-close-btn:hover {
       transform: scale(1.15);
     }
+
     .search-results-list {
       flex: 1;
       overflow-y: auto;
       padding: 8px 0;
       max-height: 350px;
     }
+
     .search-result-item {
       display: flex;
       align-items: center;
@@ -1108,16 +1803,19 @@
       border-left: 3px solid transparent;
       gap: 12px;
     }
+
     .search-result-item:hover {
       background: rgba(105, 27, 49, 0.05);
       border-left-color: var(--color-guinda, #691B31);
     }
+
     .search-result-main {
       display: flex;
       flex-direction: column;
       min-width: 0;
       flex: 1;
     }
+
     .search-result-name {
       font-size: 11.5px;
       font-weight: 700;
@@ -1126,6 +1824,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .search-result-desc {
       font-size: 9px;
       color: var(--color-text-dark, #2D3748);
@@ -1135,6 +1834,7 @@
       text-overflow: ellipsis;
       margin-top: 2px;
     }
+
     .search-result-badge {
       font-size: 8.5px;
       font-weight: 700;
@@ -1147,6 +1847,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+
     .search-result-empty {
       padding: 24px;
       text-align: center;
@@ -1156,6 +1857,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- LOADING PRELOADER -->
@@ -1166,13 +1868,13 @@
 
   <!-- DECK PRINCIPAL DE SLIDES -->
   <div id="deck">
-    
+
     <!-- SLIDE 1: PORTADA -->
     <section class="slide cover active" id="slide-0">
       <div class="slide-container">
         <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
         <div class="cover-overlay"></div>
-        
+
         <div class="top-band">
           <img class="gob" src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
           <div class="divider"></div>
@@ -1181,14 +1883,29 @@
         </div>
 
         <div class="body">
-          <div class="eyebrow">Seguimiento de la Segunda Convocatoria — Particulares</div>
-          <h1>Proyectos de Generación Eléctrica Particulares — Segunda Convocatoria</h1>
-          <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
-          <div class="subtitle" id="coverPeriod">Periodo: <strong>2026-2035</strong></div>
+          <div class="eyebrow">Seguimiento de la Segunda Convocatoria</div>
+          <h1>Proyectos Privados de Generación</h1>
+          <div class="unidad">Subsecretaría de Planeación y Transición Energética</div>
+          <div class="unidad-sub">Unidad del Sistema Nacional de Información Energética</div>
+          <div class="unidad-sub unidad-sub-dgmesnie">Dirección General de Metodologías y Estadísticas del Sistema
+            Nacional de Información
+            Energética - <span class="acronym">DGMESNIE</span></div>
+          <div class="subtitle" id="coverPeriod">
+            <span class="period-label">Periodo:</span><span class="period-value" id="coverPeriodValue">—</span>
+          </div>
           <div class="meta">
-            <div><strong>Versión</strong>2026 · v1.0</div>
-            <div><strong>Fecha</strong>Mayo 2026</div>
-            <div><strong>Fuente</strong>SNIE — DGMESNIE</div>
+            <div class="meta-item">
+              <span class="meta-label">Versión</span>
+              <span class="meta-value" id="coverVersion">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fecha</span>
+              <span class="meta-value" id="coverFecha">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fuente</span>
+              <span class="meta-value">SNIE — DGMESNIE</span>
+            </div>
           </div>
         </div>
 
@@ -1200,11 +1917,15 @@
     <section class="slide" id="slide-1">
       <div class="slide-container">
         <div class="slide-header">
-          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
           <div class="ef-title">Numeralia de Proyectos</div>
-          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png"
+              alt="SENER"></div>
         </div>
-        
+
         <div class="numeralia-grid">
           <!-- Columna Izquierda: KPIs y Tecnologías -->
           <div class="col-left">
@@ -1213,15 +1934,16 @@
               <span class="val-main" id="kpiTotalCount">0</span>
               <span class="val-sub" id="kpiTotalMw">0 MW</span>
             </div>
-            
+
             <div class="tech-card">
               <h3>Tipo de Tecnología</h3>
+              <div class="tech-total" id="techTotalProjects">0 proyectos totales</div>
               <div id="techList" style="display: flex; flex-direction: column; gap: 8px;">
                 <!-- Rellenado dinámicamente -->
               </div>
             </div>
           </div>
-          
+
           <!-- Columna Central: GCR y Grupos Económicos -->
           <div class="col-center">
             <div class="gcr-table-card">
@@ -1240,13 +1962,13 @@
                 </tbody>
               </table>
             </div>
-            
+
             <div class="group-chart-card">
               <h3>Proyectos por Grupo Económico (MW)</h3>
               <div id="chartGrupo"></div>
             </div>
           </div>
-          
+
           <!-- Columna Derecha: Mapa y Trámites -->
           <div class="col-right">
             <div class="map-card">
@@ -1254,7 +1976,7 @@
               <div class="invest-lbl" id="kpiTotalInversion">0 MDD</div>
               <div id="miniMap"></div>
             </div>
-            
+
             <div class="status-card">
               <h3>Avance en Trámites y Estudios</h3>
               <div class="status-grid">
@@ -1292,24 +2014,26 @@
 
   <!-- PANEL DE NAVEGACIÓN -->
   <div id="presentationControls">
-    <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()">◀</button>
+    <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
     <span id="slideCounter">1 / 2</span>
-    <button class="control-btn" id="btnNext" onclick="nextSlide()">▶</button>
-    <button class="control-btn" id="btnFs" onclick="toggleFullscreen()" title="Pantalla completa">⛶</button>
-    <button class="control-btn" id="btnSearch" onclick="openSearchModal()" title="Buscar proyecto (F)">🔍</button>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+    <button class="control-btn" id="btnFs" onclick="toggleFullscreen()" title="Pantalla completa"><i
+        class="bi bi-arrows-fullscreen"></i></button>
+    <button class="control-btn" id="btnSearch" onclick="openSearchModal()" title="Buscar proyecto (F)"><i
+        class="bi bi-search"></i></button>
   </div>
   <!-- MODAL DE FICHA DETALLADA (ESTILO SEGUNDA-CONVOCATORIA-DGMESNIE) -->
   <div id="fichaModal" class="ficha-modal" style="display: none;">
     <div class="slide-container ficha-modal-content">
       <button class="modal-close-btn" onclick="closeFichaModal()">×</button>
-      
+
       <!-- Ficha Page 1 -->
       <div id="modalPage1" class="modal-page">
         <div class="slide-header" style="margin-top: -35px;">
           <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
           <div class="ef-title" id="mFichaTitle1">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 1/2 · Generales e Interconexión</span>
+            <span class="ficha-page-badge">Ficha 2/4 · Ubicación y Contacto</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub1">Subtítulo</div>
@@ -1323,7 +2047,7 @@
           <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
           <div class="ef-title" id="mFichaTitle2">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 2/2 · Regulación y SAEE</span>
+            <span class="ficha-page-badge">Ficha 3/4 · Características y SAEE</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub2">Subtítulo</div>
@@ -1331,12 +2055,42 @@
         <div class="ficha-body" id="mFichaBody2"></div>
       </div>
 
+      <!-- Ficha Page 3 -->
+      <div id="modalPage3" class="modal-page" style="display: none;">
+        <div class="slide-header" style="margin-top: -35px;">
+          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+          <div class="ef-title" id="mFichaTitle3">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 4/4 · Trámites y Fases Finales</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub3">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis3"></div>
+        <div class="ficha-body" id="mFichaBody3"></div>
+      </div>
+
+      <!-- Ficha Page 4 -->
+      <div id="modalPage4" class="modal-page" style="display: none;">
+        <div class="slide-header" style="margin-top: -35px;">
+          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+          <div class="ef-title" id="mFichaTitle4">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 1/4 · Mapa de Análisis y Capas</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub4">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis4"></div>
+        <div class="ficha-body" id="mFichaBody4"></div>
+      </div>
+
       <!-- Modal Footer / Navigation -->
       <div class="modal-nav-bar">
-        <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage(1)" disabled>◀ Página Anterior (Generales)</button>
-        <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage(2)">Siguiente Página (Regulación y SAEE) ▶</button>
+        <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage((window._fichaPage || 1) - 1)" disabled>◀
+          Página Anterior</button>
+        <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage((window._fichaPage || 1) + 1)">Siguiente
+          Página ▶</button>
       </div>
-      
+
       <div class="slide-footer" style="margin-bottom: -35px;"></div>
     </div>
   </div>
@@ -1345,8 +2099,9 @@
   <div id="searchModal" class="search-modal" style="display: none;">
     <div class="search-modal-content">
       <div class="search-modal-header">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Buscar por Nombre, Folio o Empresa..." oninput="handleSearchInput(this.value)" autocomplete="off">
+        <span class="search-icon"><i class="bi bi-search"></i></span>
+        <input type="text" id="searchInput" placeholder="Buscar por Nombre, Folio o Empresa..."
+          oninput="handleSearchInput(this.value)" autocomplete="off">
         <button class="search-close-btn" onclick="closeSearchModal()">×</button>
       </div>
       <div id="searchResults" class="search-results-list"></div>
@@ -1359,15 +2114,16 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
-  
+
   <script>
     // ==========================================
     // CONFIGURACIÓN GENERAL Y VARIABLES GLOBALES
     // ==========================================
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9QhQpXdFeh9ZkNh2WqA28v61ySMz4pISGX0hbZl5QAEU8LTypjCprVndMnkWPok1JdgjujmTV9p9i/pub?output=csv';
+    const SHEET_PUBHTML_URL = CSV_URL.replace('/pub?output=csv', '/pubhtml');
     const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
     const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
-    
+
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
@@ -1376,6 +2132,159 @@
     let cachedEstadosGeoJSON = null;
     let layerGerencias = null;
     let layerEstados = null;
+    let SHEET_HEADER_ROW_IDX = 0;
+    let SHEET_COL_INDEX = {};
+    let SHEET_COL_INDEX_ALL = {};
+    let currentFichaProject = null;
+
+    // Mapeo etiqueta ficha -> columnas de Google Sheets.
+    // Si una columna se repite, preferLast usa la última ocurrencia.
+    const FICHA_SOURCE_MAP = {
+      'Folio proyecto': [{ name: 'Folio Proyecto' }],
+      'Pre-folio': [{ name: 'Pre Folio' }],
+      'RFC': [{ name: 'RFC' }],
+      'Empresa desarrolladora': [{ name: 'Nombre' }],
+      'Grupo de interés (GIE)': [{ name: 'Grupo de Interés' }],
+      'Representante legal': [{ name: 'Representante' }],
+      'Email': [{ name: 'Email' }],
+      'Teléfono': [{ name: 'Teléfono' }],
+      'OIR': [{ name: 'Oir' }],
+      'Capturista': [{ name: 'Capturista' }],
+      'Persona a escuchar': [{ name: 'Persona Escuchar' }],
+      'Estatus registro': [{ name: 'Registro' }],
+      'Domicilio fiscal': [{ name: 'Domicilio Fiscal' }],
+      'Domicilio notificaciones': [{ name: 'Domicilio Notificaciones' }],
+      'Tipo tecnología': [{ name: 'Tipo Tecnología' }],
+      'Subtecnología': [{ name: 'Subtecnología' }],
+      'Cap. instalada': [{ name: 'Capacidad Instalada' }],
+      'Cap. contratada': [{ name: 'Capacidad Contratada' }],
+      'Entrada COD': [{ name: 'Fecha prevista para entrada en operación comercial:' }],
+      'Entidad federativa': [{ name: 'Entidad Federativa' }],
+      'Municipio': [{ name: 'Municipio/Alcaldía' }],
+      'Gerencia regional': [{ name: 'Gerencia Regional' }],
+      'Domicilio': [{ name: 'Domicilio' }],
+      'N° de vértices': [{ name: 'Número de vértices:' }],
+      'Archivo KMZ Proyecto': [{ name: 'Archivo KMZ' }],
+      'Archivo KMZ Línea': [{ name: 'Archivo KMZ', preferLast: true }],
+      'Registro (trámite)': [{ name: 'Registro' }],
+      'Registro cumple': [{ name: 'El registro cumple con lo requerido' }],
+      'Fecha prev. registro': [{ name: 'Fecha de emisión de prevención' }],
+      'Fecha límite prevención': [{ name: 'Fecha límite de atender prevención' }],
+      'Fecha desahogo': [{ name: 'Fecha de desahogo' }],
+      'Desahogo correcto': [{ name: 'Desahogo de manera correcta' }],
+      'Anexo 4': [{ name: 'Anexo 4' }],
+      '¿Tiene MIA?': [{ name: '¿Tiene MIA?' }],
+      'Estatus MIA': [{ name: 'Estatus MIA' }],
+      'Folio MIA': [{ name: 'Folio MIA' }],
+      'Estatus EVIS': [{ name: 'Estatus EVIS' }],
+      'Folio EVIS': [{ name: 'Folio EVIS' }],
+      'Impacto social': [{ name: 'Estatus Impacto' }],
+      'Instalaciones': [{ name: 'Estatus Instalaciones' }],
+      '¿Estudios interc.?': [{ name: '¿Tiene estudios de interconexión?' }],
+      'Definición terreno': [{ name: 'Definición Terreno', preferLast: true }],
+      'Restricción': [{ name: 'Restricción' }],
+      'Inicio registro': [{ name: 'Fecha Inicio Registro' }],
+      'Firma proyecto': [{ name: 'Fecha Firma Proyecto' }],
+      'Validación CENACE': [{ name: 'Estatus Validación CENACE' }],
+      'Estatus de Pago': [{ name: 'Estatus de Pago' }],
+      'Folio OPE': [{ name: 'Folio OPE' }],
+      'CRE estatus (presentada)': [{ name: 'Estatus de la solicitud de permiso (Sin información / Presentada)' }],
+      'CRE estatus (prevención)': [{ name: 'Estatus de la solicitud de permiso (Sin información / Con prevención)' }],
+      'CRE fecha recepción': [{ name: 'Fecha de recepción de la solicitud' }],
+      'CRE fecha emisión prev.': [{ name: 'Fecha de emisión de la prevención' }],
+      'CRE desahogo prev.': [{ name: 'Desahogo s de la prevención (Sin información / Atendida / Cumple / Desechada)' }],
+      'CRE fecha recepción desahogo': [{ name: 'Fecha de recepción del desahogo' }],
+      'Solicitud Permiso CRE': [{ name: 'Estatus de la solicitud de permiso (Sin información / Presen' }],
+      'Fecha Resolución CRE': [{ name: 'Fecha de resolución' }],
+      'Resultados Estudios': [{ name: 'Resultados de los estudios (Sin información / Terminados)' }],
+      'Monto Obras Refuerzo': [{ name: 'Monto de obras de refuerzos y las obras de interconexión (Si' }],
+      'Tipo de Garantía': [{ name: 'Tipo de garantía' }],
+      'Monto Garantía': [{ name: 'Monto de la garantía' }],
+      'Fecha Resp. CENACE': [{ name: 'Fecha de respuesta del CENACE' }],
+      'Estatus Contrato CFE': [{ name: 'Estatus' }],
+      'Fecha Firma Contrato': [{ name: 'Fecha de firma de contrato' }],
+      'Contrato de Interconex.': [{ name: 'Contrato de interconexion' }],
+
+      'Config. híbrida': [{ name: 'Es configuración Hibrida' }],
+      'Otra tecnología': [{ name: 'Otra tecnología' }],
+      'N° de equipos': [{ name: 'Número Equipos' }],
+      'Cap. gen. permiso': [{ name: 'Capacidad Generación Permiso' }],
+      'Cap. Neta': [{ name: 'Capacidad Neta' }, { name: 'Capacidad Generación Permiso' }],
+      'Gen. anual est.': [{ name: 'Generación Anual Estimada' }],
+      'Inversión reportada': [{ name: 'Monto de inversión total del proyecto:' }],
+      'Inversión social': [{ name: 'Monto de inversión social destinado al proyecto' }],
+      'Energía bruta mensual': [{ name: 'Energía bruta en MWh estimada a producir mensualmente:' }],
+      'Irradiación solar': [{ name: 'La irradiación solar global y difusa horizontal en W/m2:' }],
+      'Velocidad del viento': [{ name: 'La velocidad de viento cinco minutal durante un año:' }],
+      'Densidad del viento': [{ name: 'El perfil horario de la densidad del viento promedio mensual:' }],
+      'Temp. ambiente': [{ name: 'El perfil horario de la temperatura ambiente promedio por mes:' }],
+      'Cuencas hidrológicas': [{ name: '¿En qué cuentas hidrológicas se encuentra el sistema?' }],
+      'Respaldo intermitente': [{ name: 'Indicar el respaldo en caso de ser generadora intermitente:' }],
+      'Coordenadas (A)': [{ name: 'Vértice A' }],
+
+      '% Implementación': [{ name: 'Porcentaje Implementación' }],
+      'Indicativo': [{ name: 'Estatus Indicativo' }],
+      '¿Incorporar SAEE?': [{ name: 'El proyecto ya cuenta con respaldo; indicar si se desea inco' }],
+      'Inyecta a': [{ name: '¿El SAEE inyectará energía eléctrica a la RNT o a las RGD?' }],
+      'Tecnología': [{ name: 'Tecnología que utiliza el SAEE:' }],
+      'Potencia': [{ name: 'Indicar Potencia del SAEE (MW):' }],
+      'Almacenamiento': [{ name: 'Capacidad de Almacenamiento (MW):' }],
+      'Prof. descarga (DOD)': [{ name: 'Profundidad de Descarga (DOD):' }],
+      'Tiempo respuesta': [{ name: 'Tiempo de respuesta (seg)' }],
+      'Vel. carga': [{ name: 'Velocidad de carga (MW/min)' }],
+      'Vel. descarga': [{ name: 'Velocidad de descarga (MW/min)' }],
+      'Corriente de falla': [{ name: 'Indicar corriente de falla que soporta el SAEE:' }],
+      'Modos operación': [{ name: 'Seleccionar el(los) modo(s) de operación para elaboración de' }],
+      'Método de carga': [{ name: 'Indicar método de carga del SAEE:' }],
+      'Composición bat.': [{ name: 'Información detallada de la composición de las baterías:' }],
+      'Eficiencia': [{ name: 'Eficiencia de las baterías y capacidad de carga/descarga:' }],
+      'Tiempo carga': [{ name: 'Tiempo de carga de las baterías:' }],
+      'Tiempo desagreg.': [{ name: 'Tiempo de desagregación de las baterías:' }],
+      'Ciclos anuales': [{ name: 'Número óptimo de ciclos de carga y descarga anuales:' }],
+      'Cap. mín. CENACE': [{ name: 'La capacidad mínima del SAEE es determinada por el CENACE:' }],
+      'N° estudios': [{ name: 'Número de estudios de almacenamiento:' }],
+      'Dentro del predio': [{ name: '¿El SAEE está ubicado dentro del predio del Proyecto de auto' }],
+      'Plano KML SAEE': [{ name: 'Plano georreferenciado de la ubicación del SAEE en formato K' }],
+
+      'CRE solicitud doc': [{ name: 'Solicitud de permiso (documento)' }],
+      'CRE oficio prevención': [{ name: 'Oficio de prevención (documento)' }],
+      'CRE resolución prevención': [{ name: 'Resolución de la prevención (Documento)' }],
+      'Carta de aceptación': [{ name: 'Carta de Aceptación' }],
+      'Acuerdos de sesión': [{ name: 'Acuerdos de la sesión (Documento)' }],
+
+      'Fabricante inversores': [{ name: 'Fabricante(s) de los inversores' }],
+      'Modelo inversores': [{ name: 'Modelo(s) de los inversores' }],
+      'Cap. inversor (kW)': [{ name: 'Capacidad del inversor en kW' }],
+      'Subestación': [{ name: 'Subestación Eléctrica de Interconexión' }],
+      'Punto interconex.': [{ name: 'Punto Interconexión' }],
+      'Nivel de tensión': [{ name: 'Nivel de tensión (kV):' }],
+      'Gerencia CENACE': [{ name: '¿A qué gerencia de control regional del CENACE estará interconectado?' }],
+      'Distancia a SE': [{ name: '¿Cuál es la distancia que hay entre el proyecto y la subestación?' }],
+
+      'KMZ proyecto': [{ name: 'Archivo KMZ' }],
+      'KMZ línea': [{ name: 'Archivo KMZ', preferLast: true }],
+      'KML SAEE': [{ name: 'Plano georreferenciado de la ubicación del SAEE en formato K' }],
+      'Contrato interconexión': [{ name: 'Contrato de interconexion' }],
+      'CRE solicitud': [{ name: 'Solicitud de permiso (documento)' }],
+      'Acuerdos sesión': [{ name: 'Acuerdos de la sesión (Documento)' }],
+
+      'Proyecto': [{ name: 'Proyecto' }],
+      'Empresa': [{ name: 'Nombre' }],
+      'Folio': [{ name: 'Folio Proyecto' }],
+
+      '¿Tiene MIA? (mostrado)': [{ name: '¿Tiene MIA?' }],
+      'Estatus MIA (mostrado)': [{ name: 'Estatus MIA' }],
+      'Estatus EVIS (mostrado)': [{ name: 'Estatus EVIS' }],
+      'Definición terreno (mostrado)': [{ name: 'Definición Terreno', preferLast: true }],
+      'CRE estatus presentada': [{ name: 'Estatus de la solicitud de permiso (Sin información / Presentada)' }],
+      'CRE estatus prevención': [{ name: 'Estatus de la solicitud de permiso (Sin información / Con prevención)' }],
+      'CRE estatus solicitud': [{ name: 'Estatus de la solicitud de permiso (Sin información / Presen' }],
+      'Estatus CRE KPI': [
+        { name: 'Estatus de la solicitud de permiso (Sin información / Con prevención)' },
+        { name: 'Estatus de la solicitud de permiso (Sin información / Presentada)' },
+        { name: 'Estatus de la solicitud de permiso (Sin información / Presen' }
+      ]
+    };
 
     // Colores para el mapa por tecnología
     const TECH_COLORS = {
@@ -1406,6 +2315,172 @@
       }
     }
 
+    // Normalizador de texto para búsquedas y comparación
+    function normText(s) {
+      return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    }
+
+    function colNumToLetter(colNum) {
+      let n = Number(colNum) + 1;
+      if (isNaN(n) || n <= 0) return 'A';
+      let out = '';
+      while (n > 0) {
+        const rem = (n - 1) % 26;
+        out = String.fromCharCode(65 + rem) + out;
+        n = Math.floor((n - 1) / 26);
+      }
+      return out;
+    }
+
+    function resolveSourceColumn(label) {
+      const candidates = FICHA_SOURCE_MAP[label] || [];
+      for (const c of candidates) {
+        const colName = c.name;
+        const idxList = SHEET_COL_INDEX_ALL[colName] || [];
+        if (idxList.length) {
+          const idx = c.preferLast ? idxList[idxList.length - 1] : idxList[0];
+          return { name: colName, idx };
+        }
+      }
+      return null;
+    }
+
+    function getSourceCellRef(label, rowNumber) {
+      const source = resolveSourceColumn(label);
+      const row = Number(rowNumber || (SHEET_HEADER_ROW_IDX + 2));
+      const colIdx = source ? source.idx : 0;
+      const a1 = `${colNumToLetter(colIdx)}${row}`;
+      return { source, row, colIdx, a1 };
+    }
+
+    function buildSheetCellUrl(label, rowNumber) {
+      const ref = getSourceCellRef(label, rowNumber);
+      // En enlaces publicados /d/e/.../pubhtml, Google rechaza gid/range en query (400).
+      // Usamos fragmento; range A1:A1 + cell mejora el salto al dato puntual.
+      return `${SHEET_PUBHTML_URL}#gid=0&range=${ref.a1}:${ref.a1}&cell=${ref.a1}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str);
+    }
+
+    function openFilteredSourceById(label, projectId) {
+      const p = DATA.find(x => String(x.id) === String(projectId));
+      if (!p) return false;
+
+      const ref = getSourceCellRef(label, p._sheetRowNumber);
+      const sourceName = ref?.source?.name || 'No mapeado';
+      const sheetLink = buildSheetCellUrl(label, p._sheetRowNumber);
+
+      const rows = [
+        ['ID', p.id],
+        ['Proyecto', p.nombre],
+        ['Folio', p.folio],
+        ['Empresa', p.empresa],
+        ['Entidad', p.ef],
+        ['Municipio', p.municipio],
+        ['Etiqueta solicitada', label],
+        ['Columna origen', sourceName],
+        ['Celda', ref.a1],
+        ['Fila Sheet', p._sheetRowNumber]
+      ];
+
+      const rowsHtml = rows.map(([k, v]) => `
+        <tr>
+          <td style="padding:8px 10px;border-bottom:1px solid #eaecf0;font-weight:700;color:#344054;width:180px;">${escapeHtml(k)}</td>
+          <td style="padding:8px 10px;border-bottom:1px solid #eaecf0;color:#101828;">${escapeHtml(v || '—')}</td>
+        </tr>`).join('');
+
+      const html = `<!doctype html><html lang="es"><head><meta charset="utf-8" />
+        <title>Vista filtrada por ID</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+          body{font-family:Outfit,Segoe UI,Arial,sans-serif;margin:0;background:#f8fafc;color:#111827}
+          .wrap{max-width:900px;margin:24px auto;padding:0 16px}
+          .card{background:#fff;border:1px solid #e4e7ec;border-radius:12px;box-shadow:0 6px 20px rgba(16,24,40,.06);overflow:hidden}
+          .head{padding:14px 16px;background:#691B31;color:#fff;font-weight:700}
+          .sub{padding:10px 16px;background:#fef6f7;color:#7f1d1d;border-bottom:1px solid #f2d0d5;font-size:13px}
+          table{width:100%;border-collapse:collapse}
+          .actions{padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap}
+          .btn{background:#691B31;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:700;font-size:13px}
+          .btn.sec{background:#0f766e}
+        </style></head><body><div class="wrap"><div class="card">
+          <div class="head">Vista filtrada por ID</div>
+          <div class="sub">Solo muestra la información del registro solicitado (sin exponer toda la hoja).</div>
+          <table>${rowsHtml}</table>
+          <div class="actions">
+            <a class="btn" href="${sheetLink}" target="_blank" rel="noopener noreferrer">Abrir celda exacta en Google Sheets</a>
+            <a class="btn sec" href="${SHEET_PUBHTML_URL}" target="_blank" rel="noopener noreferrer">Abrir hoja publicada completa</a>
+          </div>
+        </div></div></bo` + `dy></ht` + `ml>`;
+
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const w = window.open(url, '_blank');
+      if (w) {
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      }
+      return false;
+    }
+
+    document.addEventListener('click', (e) => {
+      const cellLink = e.target.closest('.ficha-source-cell-link[data-source-label][data-project-id]');
+      if (!cellLink) return;
+      e.preventDefault();
+      const label = cellLink.dataset.sourceLabel || '';
+      const projectId = cellLink.dataset.projectId || '';
+      openFilteredSourceById(label, projectId);
+    });
+
+    function getSourceMetaHtml(label, project) {
+      const source = resolveSourceColumn(label);
+      const sourceName = source ? source.name : 'No mapeado';
+      const link = buildSheetCellUrl(label, project?._sheetRowNumber);
+      const ref = getSourceCellRef(label, project?._sheetRowNumber);
+      const pid = project ? String(project.id || '') : '';
+      const safeLabel = escapeAttr(String(label || ''));
+      const safePid = escapeAttr(pid);
+      const safeRef = escapeAttr(ref.a1);
+      const safeLink = escapeAttr(link);
+      const safeSourceName = escapeHtml(sourceName);
+      return '<span class="ficha-source-meta">Origen: ' + safeSourceName + '</span>' +
+        '<a class="ficha-source-cell-link" href="#" data-source-label="' + safeLabel + '" data-project-id="' + safePid + '" title="Ver registro filtrado por ID (' + safeRef + ')">' +
+        '<span class="ficha-source-cell">' + safeRef + '</span>' +
+        '</a>' +
+        '<a class="ficha-source-link" href="' + safeLink + '" target="_blank" rel="noopener noreferrer" title="Abrir Google Sheets en la celda ' + safeRef + '">' +
+        '<i class="bi bi-box-arrow-up-right"></i>' +
+        '</a>';
+    }
+
+    function getSourceMetaCompactHtml(label, project) {
+      const source = resolveSourceColumn(label);
+      const sourceName = source ? source.name : 'No mapeado';
+      const link = buildSheetCellUrl(label, project?._sheetRowNumber);
+      const ref = getSourceCellRef(label, project?._sheetRowNumber);
+      const pid = project ? String(project.id || '') : '';
+      const safeLabel = escapeAttr(String(label || ''));
+      const safePid = escapeAttr(pid);
+      const safeRef = escapeAttr(ref.a1);
+      const safeLink = escapeAttr(link);
+      const safeSourceName = escapeHtml(sourceName);
+      return '<span class="ficha-source-meta" title="Origen: ' + safeSourceName + '">' + safeSourceName + '</span>' +
+        '<a class="ficha-source-cell-link" href="#" data-source-label="' + safeLabel + '" data-project-id="' + safePid + '" title="Ver registro filtrado por ID (' + safeRef + ')">' +
+        '<span class="ficha-source-cell">' + safeRef + '</span>' +
+        '</a>' +
+        '<a class="ficha-source-link" href="' + safeLink + '" target="_blank" rel="noopener noreferrer" title="Abrir Google Sheets en la celda ' + safeRef + '">' +
+        '<i class="bi bi-box-arrow-up-right"></i>' +
+        '</a>';
+    }
+
     async function loadData() {
       const freshCsvUrl = withCacheBuster(CSV_URL);
       const proxies = [
@@ -1418,7 +2493,7 @@
 
       let csvText = null;
       let lastErr = null;
-      
+
       for (let i = 0; i < proxies.length; i++) {
         try {
           document.getElementById('loaderText').innerText = `Descargando datos (Intento ${i + 1}/${proxies.length})…`;
@@ -1437,14 +2512,287 @@
         throw lastErr || new Error("No se pudo obtener el archivo CSV de Google Sheets.");
       }
 
-      // Parsear
-      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: true });
+      // Parsear con PapaParse — mantiene filas exactamente como vienen
+      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: false });
       const allRows = parsed.data || [];
-      const headerIdx = allRows.findIndex(r => Array.isArray(r) && r.map(h => String(h).trim()).includes('Folio Proyecto'));
-      const dataRows = allRows.slice(headerIdx >= 0 ? headerIdx + 1 : 1);
-      
-      DATA = dataRows.map(mapRowPositional).filter(r => r.nombre && r.mw > 0);
+
+      // Buscar fila donde "Folio Proyecto" aparece como nombre de columna
+      const headerRowIdx = allRows.findIndex(r =>
+        Array.isArray(r) && r.some(h => String(h || '').trim() === 'Folio Proyecto')
+      );
+
+      if (headerRowIdx < 0) {
+        throw new Error("No se encontró fila de headers 'Folio Proyecto'.");
+      }
+
+      const headerRow = allRows[headerRowIdx].map((h, i) => String(h || '').trim());
+
+      // Construir mapa: nombre columna → índice (primera ocurrencia)
+      const colIndex = {};
+      const colIndexAll = {};
+      headerRow.forEach((name, idx) => {
+        if (name && !colIndex.hasOwnProperty(name)) {
+          colIndex[name] = idx;
+        }
+        if (name) {
+          if (!colIndexAll[name]) colIndexAll[name] = [];
+          colIndexAll[name].push(idx);
+        }
+      });
+
+      SHEET_HEADER_ROW_IDX = headerRowIdx;
+      SHEET_COL_INDEX = colIndex;
+      SHEET_COL_INDEX_ALL = colIndexAll;
+
+      // Filas de datos (después del header)
+      const dataRows = allRows.slice(headerRowIdx + 1);
+
+      DATA = dataRows
+        .map((row, idx) => mapRowByHeader(row, colIndex, colIndexAll, idx, headerRowIdx))
+        .filter(r => r.nombre && r.mw > 0);
+
       console.log(`Total de proyectos mapeados: ${DATA.length}`);
+      if (DATA.length > 0) {
+        console.log('Primer proyecto:', DATA[0].nombre, DATA[0].mw, 'MW');
+      }
+    }
+
+    // Mapeo por nombre de columna — robusto contra reordenamiento de columnas en Google Sheets
+    function mapRowByHeader(row, colIndex, colIndexAll, idx, sheetHeaderRowIdx) {
+      const col = name => {
+        const i = colIndex[name];
+        return String(row?.[i] || '').trim();
+      };
+      const colLast = name => {
+        const indexes = colIndexAll?.[name];
+        if (!indexes || !indexes.length) return col(name);
+        const i = indexes[indexes.length - 1];
+        return String(row?.[i] || '').trim();
+      };
+      const colAny = names => {
+        for (const name of names) {
+          const value = col(name);
+          if (value && value !== 'SIN INFORMACIÓN' && value !== 'NO APLICA') return value;
+        }
+        return '';
+      };
+      const num = x => {
+        const n = parseFloat(String(x || '').replace(/[\$,\s]/g, ''));
+        return isNaN(n) ? 0 : n;
+      };
+
+      // Resolver GCR y ubicación
+      const gerenciaRaw = col('Gerencia Regional');
+      const efRaw = col('Entidad Federativa');
+      const muniRaw = col('Municipio/Alcaldía');
+      const gieRaw = col('Grupo de Interés');
+      const developer = col('Nombre');
+
+      // MW: buscar Capacidad Instalada, si no existe buscar Capacidad Generación, si no Capacidad Instalada Neta
+      let mw = num(col('Capacidad Instalada'));
+      if (mw === 0) mw = num(col('Capacidad Generación'));
+      if (mw === 0) mw = num(col('Capacidad Instalada Neta'));
+
+      // Inversión: conservar valor textual reportado (con unidad original)
+      const rawInv = col('Monto de inversión total del proyecto:');
+      const inversionRaw = rawInv || 'SIN INFORMACIÓN';
+      const inversion = parseInversionToMdd(rawInv);
+
+      // FEOC: buscar "Fecha prevista para entrada en operación" (primera aparición)
+      const feoc = col('Fecha prevista para entrada en operación comercial:');
+
+      // SAEE: buscar columnas por nombre
+      const saeePotencia = colAny(['Indicar Potencia del SAEE (MW):', 'Indicar Potencia del SAEE (MW)']);
+      const saeeAlmacenamiento = colAny(['Capacidad de Almacenamiento (MW):', 'Capacidad de Almacenamiento (MW)']);
+
+      // Definición Terreno aparece duplicada en el sheet; usar la última ocurrencia (bloque regulatorio).
+      const tierrasStatus =
+        colAny(['Estatus Tierras', 'Propiedad de Tierras', 'Estatus trámite de tierras']) ||
+        colLast('Definición Terreno') ||
+        col('Definición Terreno');
+
+      const kmzProyecto = col('Archivo KMZ');
+      const kmzLineaCandidate = colLast('Archivo KMZ');
+
+      // Vertices proyecto: buscar número de vértices y vértices
+      const numVertices = col('Número de vértices:');
+      const verticeA = col('Vértice A');
+
+      return {
+        rowNum: col('ID'),
+        id: 'p_' + idx,
+        _sheetRowNumber: (sheetHeaderRowIdx + 2 + idx),
+        folio: col('Folio Proyecto'),
+        nombre: col('Proyecto'),
+        gie: (gieRaw && gieRaw !== 'SIN INFORMACIÓN') ? gieRaw : (developer || 'NO IDENTIFICADO'),
+        origenGie: colAny(['Origen GIE', 'Origen del GIE', 'País de Origen GIE', 'Pais de Origen GIE']) || 'MÉXICO',
+        mw,
+        tecnologia: col('Subtecnología') || col('Tipo Tecnología') || 'OTRA',
+        techBase: col('Tipo Tecnología'),
+        subtech: col('Subtecnología'),
+        hibrida: col('Es configuración Hibrida'),
+        otraTec: col('Otra tecnología'),
+        ef: efRaw,
+        municipio: muniRaw,
+        domicilio: col('Domicilio'),
+        inversion,
+        inversionRaw,
+        feoc: feoc || 'SIN INFORMACIÓN',
+        tierras: tierrasStatus || 'SIN INFORMACIÓN',
+        misse: colAny(['Estatus EVIS', 'Estatus EVIS/MISSE', 'Estatus MISSE']) || 'SIN INFORMACIÓN',
+        mia: colAny(['Estatus MIA', '¿Tiene MIA?', 'MIA']) || 'SIN INFORMACIÓN',
+        tieneMia: colAny(['¿Tiene MIA?', 'Tiene MIA']) || 'SIN INFORMACIÓN',
+        estatusMia: colAny(['Estatus MIA', 'MIA']) || 'SIN INFORMACIÓN',
+        folioMia: col('Folio MIA') || 'SIN INFORMACIÓN',
+        folioEvis: col('Folio EVIS') || 'SIN INFORMACIÓN',
+        anexo4: col('Anexo 4') || 'SIN INFORMACIÓN',
+        rawTieneMia: col('¿Tiene MIA?'),
+        rawEstatusMia: col('Estatus MIA'),
+        rawEstatusEvis: col('Estatus EVIS'),
+        rawTierras: colLast('Definición Terreno') || col('Definición Terreno'),
+        cenace: colAny(['¿Tiene estudios de interconexión?', 'Estudios CENACE', 'Estatus Estudios CENACE']) || 'SIN INFORMACIÓN',
+        coords: parseCoords(verticeA),
+        gerencia: resolveMappedGcr(efRaw, muniRaw, gerenciaRaw),
+
+        // Identificación extendida
+        empresa: developer,
+        rfc: col('RFC'),
+        repre: col('Representante'),
+        email: col('Email'),
+        telefono: col('Teléfono'),
+        oir: col('Oir'),
+        capturista: col('Capturista'),
+        personaEscuchar: col('Persona Escuchar'),
+        domFiscal: col('Domicilio Fiscal'),
+        domNotif: col('Domicilio Notificaciones'),
+        mwInstalada: num(col('Capacidad Instalada')),
+        mwGeneracion: num(col('Capacidad Generación')),
+        mwNeta: num(col('Capacidad Instalada Neta')),
+        capacidadContratada: num(col('Capacidad Contratada')),
+        capacidadGenPermiso: num(col('Capacidad Generación Permiso')),
+        numEquipos: col('Número Equipos'),
+        generacionAnual: num(col('Generación Anual Estimada')),
+        inversionSocial: col('Monto de inversión social destinado al proyecto'),
+        subestacion: col('Subestación Eléctrica de Interconexión'),
+        puntoInterconexion: col('Punto Interconexión'),
+        tension: col('Nivel de tensión (kV):'),
+        cenaceGerencia: col('¿A qué gerencia de control regional del CENACE estará interconectado?'),
+        distanciaSE: col('¿Cuál es la distancia que hay entre el proyecto y la subestación?'),
+        respaldoIntermitente: col('Indicar el respaldo en caso de ser generadora intermitente:'),
+        cuencasHidro: col('¿En qué cuentas hidrológicas se encuentra el sistema?'),
+        invFabricante: col('Fabricante(s) de los inversores'),
+        invModelo: col('Modelo(s) de los inversores'),
+        invCapacidadKw: col('Capacidad del inversor en kW'),
+        pctImpl: col('Porcentaje Implementación'),
+        estatusIndicativo: col('Estatus Indicativo'),
+        estatusImpacto: col('Estatus Impacto'),
+        estatusInstalaciones: col('Estatus Instalaciones'),
+        restriccion: col('Restricción'),
+        fechaInicioRegistro: col('Fecha Inicio Registro'),
+        fechaFirmaProyecto: col('Fecha Firma Proyecto'),
+        status: col('Registro'),
+        registroCumple: col('El registro cumple con lo requerido'),
+        fechaPrevencionRegistro: col('Fecha de emisión de prevención'),
+        fechaLimitePrevencion: col('Fecha límite de atender prevención'),
+        fechaDesahogoPrevencion: col('Fecha de desahogo'),
+        desahogoCorrecto: col('Desahogo de manera correcta'),
+        energiaBrutaMensual: col('Energía bruta en MWh estimada a producir mensualmente:'),
+        irradiacionSolar: col('La irradiación solar global y difusa horizontal en W/m2:'),
+        tempAmbiente: col('El perfil horario de la temperatura ambiente promedio por mes:'),
+        velocidadViento: col('La velocidad de viento cinco minutal durante un año:'),
+        densidadViento: col('El perfil horario de la densidad del viento promedio mensual:'),
+        numVertices,
+        preFolio: col('Pre Folio'),
+        kmzProj: kmzProyecto,
+        kmzLinea: kmzLineaCandidate !== kmzProyecto ? kmzLineaCandidate : '',
+
+        // SAEE fields
+        saeeRespaldo: col('El proyecto ya cuenta con respaldo; indicar si se desea inco'),
+        saeeRed: col('¿El SAEE inyectará energía eléctrica a la RNT o a las RGD?'),
+        saeeTec: col('Tecnología que utiliza el SAEE:'),
+        saeeMW: num(saeePotencia),
+        saeeAlm: num(saeeAlmacenamiento),
+        saeeDOD: col('Profundidad de Descarga (DOD):'),
+        saeeTiempoResp: col('Tiempo de respuesta (seg)'),
+        saeeVelCarga: col('Velocidad de carga (MW/min)'),
+        saeeVelDescarga: col('Velocidad de descarga (MW/min)'),
+        saeeCorrienteFalla: col('Indicar corriente de falla que soporta el SAEE:'),
+        saeeModos: col('Seleccionar el(los) modo(s) de operación para elaboración de'),
+        saeeMetodoCarga: col('Indicar método de carga del SAEE:'),
+        saeeComposicion: col('Información detallada de la composición de las baterías:'),
+        saeeEficiencia: col('Eficiencia de las baterías y capacidad de carga/descarga:'),
+        saeeTiempoCarga: col('Tiempo de carga de las baterías:'),
+        saeeTiempoDesag: col('Tiempo de desagregación de las baterías:'),
+        saeeCiclos: col('Número óptimo de ciclos de carga y descarga anuales:'),
+        saeeCapMinCenace: col('La capacidad mínima del SAEE es determinada por el CENACE:'),
+        saeeNumEstudios: col('Número de estudios de almacenamiento:'),
+        saeeDentroPredio: col('¿El SAEE está ubicado dentro del predio del Proyecto de auto'),
+        saeeKml: col('Plano georreferenciado de la ubicación del SAEE en formato K'),
+
+        // Fases finales
+        cenaceVal: col('Estatus Validación CENACE'),
+        pagoStatus: col('Estatus de Pago'),
+        noCumpleObs: col('Estatus no Cumple Observaciones'),
+        fechaValidacionPago: col('Fecha de validación de pago'),
+        motivoRechazo: col('Motivos de rechazo'),
+        folioOpe: col('Folio OPE'),
+        creStatusPresentada: col('Estatus de la solicitud de permiso (Sin información / Presentada)'),
+        creStatusPrevencion: col('Estatus de la solicitud de permiso (Sin información / Con prevención)'),
+        creFechaRecepcion: col('Fecha de recepción de la solicitud'),
+        creFechaEmisionPrevencion: col('Fecha de emisión de la prevención'),
+        creDesahogoPrevencion: col('Desahogo s de la prevención (Sin información / Atendida / Cumple / Desechada)'),
+        creFechaRecepcionDesahogo: col('Fecha de recepción del desahogo'),
+        rawCrePresentada: col('Estatus de la solicitud de permiso (Sin información / Presentada)'),
+        rawCrePrevencion: col('Estatus de la solicitud de permiso (Sin información / Con prevención)'),
+        rawCreSolicitud: col('Estatus de la solicitud de permiso (Sin información / Presen'),
+        creSolicitudDoc: col('Solicitud de permiso (documento)'),
+        creOficioPrevencionDoc: col('Oficio de prevención (documento)'),
+        creResolucionPrevencionDoc: col('Resolución de la prevención (Documento)'),
+        creStatus: col('Estatus de la solicitud de permiso (Sin información / Presen'),
+        creFechaRes: col('Fecha de resolución'),
+        estudiosResult: col('Resultados de los estudios (Sin información / Terminados)'),
+        obrasMonto: col('Monto de obras de refuerzos y las obras de interconexión (Si'),
+        cartaAceptacion: col('Carta de Aceptación'),
+        garantiaTipo: col('Tipo de garantía'),
+        garantiaMonto: col('Monto de la garantía'),
+        acuerdosSesionDoc: col('Acuerdos de la sesión (Documento)'),
+        cenaceRespuestaFecha: col('Fecha de respuesta del CENACE'),
+        contratoStatus: col('Estatus'),
+        contratoFirmaFecha: col('Fecha de firma de contrato'),
+        contratoDoc: col('Contrato de interconexion'),
+
+        projectVertices: parseVerticesFromHeader(row, colIndex, 'Vértice A', numVertices),
+        saeeVertices: parseVerticesFromHeader(row, colIndex, 'Vértice A', 3),
+
+        descripcion: col('Descripción Proyecto')
+      };
+    }
+
+    function parseVerticesFromHeader(row, colIndex, baseColName, count) {
+      const list = [];
+      const baseIdx = colIndex[baseColName];
+      if (baseIdx === undefined) return list;
+      for (let i = 0; i < count; i++) {
+        const val = String(row?.[baseIdx + i] || '').trim();
+        if (val && val !== 'SIN INFORMACIÓN' && val !== 'NO APLICA' && val !== '—' && val !== '') {
+          const c = parseCoords(val);
+          if (c) list.push(c);
+        }
+      }
+      return list;
+    }
+
+    function parseCoords(str) {
+      if (!str) return null;
+      const m = str.match(/(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+      if (m) {
+        let lat = parseFloat(m[1]), lng = parseFloat(m[2]);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          if (lng > 0) lng = -lng;
+          return [lat, lng];
+        }
+      }
+      return null;
     }
 
     function parseInversionToMdd(val) {
@@ -1464,17 +2812,18 @@
     }
 
     // Mapeo posicional exacto para Proyectos Particulares
+    // DESACTIVO — reemplazado por mapRowByHeader (mapeo por nombre de columna)
     function mapRowPositional(row, idx) {
       const col = i => String(row?.[i] || '').trim();
       const num = x => { const n = parseFloat(String(x || '').replace(/[\$,\s]/g, '')); return isNaN(n) ? 0 : n; };
-      
+
       const rawGcr = col(15);
       const ef = col(16);
       const muni = col(63);
       const name = col(5);
       const techBase = col(8);
       const subtech = col(9);
-      
+
       const rawGie = col(19);
       const developer = col(4);
       const gie = (rawGie && rawGie !== 'SIN INFORMACIÓN') ? rawGie : (developer || 'NO IDENTIFICADO');
@@ -1499,7 +2848,7 @@
         cenace: col(526) || 'SIN INFORMACIÓN',
         coords: parseCoords(col(66)), // Vértice A para Leaflet
         gerencia: resolveMappedGcr(ef, muni, rawGcr),
-        
+
         // Campos adicionales para la ficha
         empresa: developer,
         rfc: col(3),
@@ -1547,7 +2896,7 @@
         anexo4: col(528),
         kmzProj: col(456),
         kmzLinea: col(488),
-        
+
         // SAEE
         saeeRespaldo: col(489),
         saeeRed: col(490),
@@ -1570,7 +2919,7 @@
         saeeNumEstudios: col(508),
         saeeDentroPredio: col(510),
         saeeKml: col(515),
-        
+
         // Fases Finales
         cenaceVal: col(542),
         pagoStatus: col(548),
@@ -1585,10 +2934,10 @@
         contratoStatus: col(583),
         contratoFirmaFecha: col(596),
         contratoDoc: col(597),
-        
+
         projectVertices: parseVertices(row, 66, num(col(65))),
         saeeVertices: parseVertices(row, 512, 3),
-        
+
         descripcion: col(6)
       };
     }
@@ -1633,19 +2982,21 @@
     }
 
     function getTechGroup(p) {
-      const name = p.nombre || '';
-      const tech = p.tecnologia || '';
-      const techBase = p.techBase || '';
-      if (/ALMACENAMIE/i.test(name) || /ALMACENA/i.test(tech) || /BATERI/i.test(tech)) {
+      const name = normText(p.nombre);
+      const tech = normText(p.tecnologia);
+      const techBase = normText(p.techBase);
+      const combined = `${name} ${tech} ${techBase}`;
+
+      if (combined.includes('ALMACEN') || combined.includes('BATERI') || combined.includes('SAEE')) {
         return 'Almacenamiento';
       }
-      if (/FOTOVOL/i.test(tech) || /SOLAR/i.test(tech) || /SOLAR/i.test(techBase)) {
+      if (combined.includes('FOTOVOL') || combined.includes('SOLAR')) {
         return 'Fotovoltaica';
       }
-      if (/EOL/i.test(tech) || /EOL/i.test(techBase)) {
+      if (combined.includes('EOLICA') || combined.includes('EOL')) {
         return 'Eólica';
       }
-      if (/HIDR/i.test(tech) || /HIDR/i.test(techBase)) {
+      if (combined.includes('HIDRO')) {
         return 'Hidroeléctrica';
       }
       return 'Otro';
@@ -1665,6 +3016,91 @@
     function formatMdd(n) {
       return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MDD';
     }
+    function formatInt(n) {
+      return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function classifyStatus(raw) {
+      const value = normText(raw);
+      if (!value || value === '—' || value === 'SIN INFORMACION' || value === 'NO APLICA' || value === 'SIN PROCESO') {
+        return 'EMPTY';
+      }
+
+      if (
+        value === 'SI' ||
+        value === 'APROBADA' ||
+        value === 'AUTORIZADA' ||
+        value === 'RESUELTA' ||
+        value === 'TERMINADOS' ||
+        value === 'TERMINADO'
+      ) {
+        return 'SI';
+      }
+
+      if (
+        value === 'NO' ||
+        value.includes('SIN SOLICITUD') ||
+        value.includes('NO INICIADO') ||
+        value.includes('NO PRESENTADO')
+      ) {
+        return 'NO';
+      }
+
+      if (
+        value.includes('TRAMITE') ||
+        value.includes('PROCESO') ||
+        value.includes('PREVENCION') ||
+        value.includes('AUTORIZADA CONDICIONADA') ||
+        value.includes('INICIADO') ||
+        value.includes('PRESENTADO')
+      ) {
+        return 'TRAMITE';
+      }
+
+      return 'OTHER';
+    }
+
+    function toGcrClassName(gcrName) {
+      const normalized = String(gcrName || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      if (normalized.includes('noreste')) return 'gcr-noreste';
+      if (normalized.includes('occidente')) return 'gcr-occidente';
+      if (normalized === 'norte' || normalized.includes('gcr-norte')) return 'gcr-norte';
+      if (normalized.includes('peninsular')) return 'gcr-peninsular';
+      if (normalized.includes('oriental')) return 'gcr-oriental';
+      if (normalized.includes('central')) return 'gcr-central';
+      if (normalized.includes('baja-california-sur')) return 'gcr-baja-california-sur';
+      if (normalized.includes('baja-california')) return 'gcr-baja-california';
+      return 'gcr-otro';
+    }
+
+    function extractYearFromProjectDate(rawDate) {
+      const text = String(rawDate || '').trim();
+      if (!text || text === 'SIN INFORMACIÓN' || text === 'NO APLICA' || text === '—') {
+        return null;
+      }
+
+      // Caso principal: fechas con año de 4 dígitos en cualquier posición.
+      const yearMatches = text.match(/\b(19\d{2}|20\d{2})\b/g);
+      if (yearMatches && yearMatches.length) {
+        const y = parseInt(yearMatches[yearMatches.length - 1], 10);
+        if (!isNaN(y) && y >= 1900 && y <= 2100) return y;
+      }
+
+      // Fallback para formatos con año de 2 dígitos: dd/mm/yy o dd-mm-yy.
+      const shortYearMatch = text.match(/(?:^|\D)(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})(?:\D|$)/);
+      if (shortYearMatch) {
+        const yy = parseInt(shortYearMatch[3], 10);
+        if (!isNaN(yy)) return yy >= 80 ? 1900 + yy : 2000 + yy;
+      }
+
+      return null;
+    }
 
     function renderNumeralia() {
       // 1. Totales Generales
@@ -1673,14 +3109,40 @@
       // En nuestro CSV: tenemos N registros totales.
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
-      
+
+      // Actualizar portada con datos dinámicos
+      document.getElementById('coverPeriodValue').textContent = '2026-2030';
+
+      const now = new Date();
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      document.getElementById('coverFecha').textContent = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+      document.getElementById('coverVersion').textContent = `${now.getFullYear()} · v1.0`;
+
       const totalCount = DATA.length;
       const totalMw = genProjects.reduce((sum, p) => sum + p.mw, 0);
       const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
       const totalInversion = DATA.reduce((sum, p) => sum + p.inversion, 0);
 
+      const getContractedMw = p => {
+        const contracted = Number(p.capacidadContratada || 0);
+        if (!isNaN(contracted) && contracted > 0) return contracted;
+        const fallback = Number(p.mw || 0);
+        return isNaN(fallback) ? 0 : fallback;
+      };
+      const totalMwContracted = genProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
+      const storageMwContracted = storageProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
+
       document.getElementById('kpiTotalCount').innerText = totalCount;
-      document.getElementById('kpiTotalMw').innerText = `${formatMw(totalMw)} + ${storageMw} MW Almacenamiento*`;
+      document.getElementById('techTotalProjects').textContent = `${formatInt(totalCount)} proyectos totales`;
+      const totalMwCard = Math.round(totalMwContracted).toLocaleString('es-MX');
+      const storageMwCard = Math.round(storageMwContracted).toLocaleString('es-MX');
+      const genCountCard = formatInt(genProjects.length);
+      const storageCountCard = formatInt(storageProjects.length);
+      document.getElementById('kpiTotalMw').innerHTML = `
+        <span class="mw-line">${totalMwCard} MW (${genCountCard} proyectos) +</span>
+        <span class="mw-line">${storageMwCard} MW</span>
+        <span class="mw-line">Almacenamiento<span class="mw-asterisk">*</span> (${storageCountCard} proyectos)</span>
+      `;
       document.getElementById('kpiTotalInversion').innerText = formatMdd(totalInversion);
 
       // 2. Desglose de Tecnologías
@@ -1698,10 +3160,10 @@
       });
 
       const techIcons = {
-        'Fotovoltaica': '☀️',
-        'Eólica': '🌬️',
-        'Almacenamiento': '🔋',
-        'Hidroeléctrica': '💧'
+        'Fotovoltaica': '<i class="bi bi-sun-fill" aria-hidden="true"></i>',
+        'Eólica': '<i class="bi bi-wind" aria-hidden="true"></i>',
+        'Almacenamiento': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+        'Hidroeléctrica': '<i class="bi bi-droplet-fill" aria-hidden="true"></i>'
       };
 
       const techListContainer = document.getElementById('techList');
@@ -1710,7 +3172,7 @@
           <div class="icon-bg">${techIcons[t]}</div>
           <div class="t-info">
             <div class="t-name">${t}</div>
-            <div class="t-sub">${techCounts[t]} Proyectos</div>
+            <div class="t-sub">${formatInt(techCounts[t])} proyectos</div>
           </div>
           <div class="t-val">${formatMw(techMws[t])}</div>
         </div>
@@ -1727,16 +3189,17 @@
         gcrData[gcr].mw += p.mw;
       });
 
-      const sortedGcr = Object.keys(gcrData).sort((a,b) => gcrData[b].mw - gcrData[a].mw);
+      const sortedGcr = Object.keys(gcrData).sort((a, b) => gcrData[b].mw - gcrData[a].mw);
       const gcrTableBody = document.getElementById('gcrMiniTableBody');
-      
+
       let gcrRowsHtml = sortedGcr.map(gcr => {
         const pct = (gcrData[gcr].mw / totalMw) * 100;
+        const gcrClass = toGcrClassName(gcr);
         return `
           <tr>
-            <td style="font-weight: 600;">GCR ${gcr}</td>
+            <td class="gcr-name-cell"><span class="gcr-chip ${gcrClass}">GCR ${gcr}</span></td>
             <td class="col-right-text">${gcrData[gcr].count}</td>
-            <td class="col-right-text" style="font-weight: 600;">${gcrData[gcr].mw.toFixed(0)}</td>
+            <td class="col-right-text" style="font-weight: 600;">${formatInt(gcrData[gcr].mw)}</td>
             <td class="col-right-text">${pct.toFixed(0)}%</td>
           </tr>
         `;
@@ -1747,7 +3210,7 @@
         <tr>
           <td>TOTALES</td>
           <td class="col-right-text">${genProjects.length}</td>
-          <td class="col-right-text">${totalMw.toFixed(0)}</td>
+          <td class="col-right-text">${formatInt(totalMw)}</td>
           <td class="col-right-text">100%</td>
         </tr>
       `;
@@ -1760,24 +3223,24 @@
       let cenaceCount = 0, cenaceMw = 0;
 
       DATA.forEach(p => {
-        const mia = normText(p.mia);
-        const evis = normText(p.misse);
-        const terreno = normText(p.tierras);
-        const cenace = normText(p.cenace);
+        const miaStatus = classifyStatus(p.mia);
+        const evisStatus = classifyStatus(p.misse);
+        const terrenoStatus = classifyStatus(p.tierras);
+        const cenaceStatus = classifyStatus(p.cenace);
 
-        if (mia.includes('TRAMITE') || mia.includes('PROCESO') || mia.includes('INICIADO')) {
+        if (miaStatus === 'TRAMITE') {
           miaCount++;
           miaMw += p.mw;
         }
-        if (evis.includes('RESUELTA') || evis.includes('AUTORIZADA') || evis.includes('APROBADA')) {
+        if (evisStatus === 'SI') {
           evisCount++;
           evisMw += p.mw;
         }
-        if (terreno === 'SI' || terreno.includes('TRAMITE')) {
+        if (terrenoStatus === 'SI') {
           tierrasCount++;
           tierrasMw += p.mw;
         }
-        if (cenace === 'SI') {
+        if (cenaceStatus === 'SI') {
           cenaceCount++;
           cenaceMw += p.mw;
         }
@@ -1806,7 +3269,7 @@
       // Ordenar y tomar los top 12
       const sortedGroups = Object.keys(groups)
         .map(name => ({ name, y: groups[name] }))
-        .sort((a,b) => b.y - a.y)
+        .sort((a, b) => b.y - a.y)
         .slice(0, 12);
 
       Highcharts.chart('chartGrupo', {
@@ -1854,7 +3317,7 @@
     // ==========================================
     async function initMiniMap() {
       if (mapInstance) return;
-      
+
       const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
       mapInstance = L.map('miniMap', {
         zoomControl: false,
@@ -1882,7 +3345,7 @@
           geojson = await res.json();
           cachedGerenciasGeoJSON = geojson;
         }
-        
+
         // Colores pastel para distinguir gerencias
         const gcrColors = {
           'NORESTE': '#FED7D7',
@@ -1940,8 +3403,8 @@
         const overlayMaps = {};
         if (layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = layerGerencias;
         if (layerEstados) overlayMaps["Límites Estatales"] = layerEstados;
-        
-        L.control.layers(null, overlayMaps, { collapsed: false, position: 'topright' }).addTo(mapInstance);
+
+        L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(mapInstance);
       }
 
       // Dibujar marcadores de proyectos
@@ -1949,7 +3412,7 @@
         if (p.coords) {
           const tGroup = getTechGroup(p);
           const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
-          
+
           const marker = L.circleMarker(p.coords, {
             radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
             fillColor: col,
@@ -1963,7 +3426,7 @@
               <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
               <strong>GIE:</strong> ${p.gie}<br>
               <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${tGroup})<br>
-              <strong>Inversión:</strong> ${p.inversion > 0 ? p.inversion.toFixed(1) + ' MDD' : 'Sin datos'}
+              <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}
             </div>
           `);
         }
@@ -1977,20 +3440,81 @@
       if (val === undefined || val === null || val === '') return '—';
       const cleanVal = String(val).trim();
       if (cleanVal === 'SIN INFORMACIÓN' || cleanVal === 'SIN PROCESO' || cleanVal === 'NO APLICA') return '—';
-      
+
       if (type === 'status') {
-        const norm = normText(cleanVal);
-        if (norm === 'SI' || norm.includes('RESUELTA') || norm.includes('APROBADA') || norm.includes('AUTORIZADA')) {
+        const status = classifyStatus(cleanVal);
+        if (status === 'SI') {
           return `<span class="badge-status badge-si">SI</span>`;
         }
-        if (norm === 'NO' || norm.includes('SIN SOLICITUD')) {
+        if (status === 'NO') {
           return `<span class="badge-status badge-no">NO</span>`;
         }
-        if (norm.includes('TRAMITE') || norm.includes('PROCESO') || norm.includes('PREVENCION') || norm.includes('AUTORIZADA CONDICIONADA')) {
+        if (status === 'TRAMITE') {
           return `<span class="badge-status badge-tramite">TRÁMITE</span>`;
         }
       }
       return cleanVal;
+    }
+
+    function formatFeoc(feoc) {
+      const raw = String(feoc || '').trim();
+      if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return '—';
+
+      const iso = raw.match(/(20\d{2})-(\d{2})-(\d{2})/);
+      if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+
+      const latam = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+      if (latam) {
+        const yy = latam[3].length === 2 ? `20${latam[3]}` : latam[3];
+        const mm = latam[2].padStart(2, '0');
+        const dd = latam[1].padStart(2, '0');
+        return `${yy}-${mm}-${dd}`;
+      }
+
+      return raw.length > 10 ? raw.substring(0, 10) : raw;
+    }
+
+    function formatInvestmentReported(rawInv) {
+      const raw = String(rawInv || '').trim();
+      if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return '—';
+
+      const formatNumericToken = token => {
+        const compact = String(token || '').replace(/\s+/g, '');
+        const digitCount = compact.replace(/\D/g, '').length;
+        if (digitCount < 4) return token;
+
+        let decimalSep = '';
+        if (compact.includes('.') && compact.includes(',')) {
+          decimalSep = compact.lastIndexOf('.') > compact.lastIndexOf(',') ? '.' : ',';
+        } else if (compact.includes('.') || compact.includes(',')) {
+          const sep = compact.includes('.') ? '.' : ',';
+          const idx = compact.lastIndexOf(sep);
+          const right = compact.length - idx - 1;
+          if (right > 0 && right <= 2) decimalSep = sep;
+        }
+
+        let integerRaw = compact;
+        let decimalsRaw = '';
+        if (decimalSep) {
+          const parts = compact.split(decimalSep);
+          integerRaw = parts.shift() || '';
+          decimalsRaw = parts.join('');
+        }
+
+        const integerDigits = integerRaw.replace(/\D/g, '');
+        if (!integerDigits) return token;
+
+        const formattedInteger = Number(integerDigits).toLocaleString('es-MX', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+
+        const decimalsDigits = decimalsRaw.replace(/\D/g, '');
+        if (decimalsDigits) return `${formattedInteger}${decimalSep || '.'}${decimalsDigits}`;
+        return formattedInteger;
+      };
+
+      return raw.replace(/\d[\d.,\s]*/g, m => formatNumericToken(m));
     }
 
     // Helper para detectar links y correos
@@ -1998,7 +3522,7 @@
       if (!val) return '—';
       const str = String(val).trim();
       if (str.startsWith('http://') || str.startsWith('https://')) {
-        return `<span class="clickable-link" onclick="window.open('${str}', '_blank')">Link</span>`;
+        return `<a class="clickable-link" href="${str}" target="_blank" rel="noopener noreferrer">Link</a>`;
       }
       if (str.includes('@') && !str.includes(' ')) {
         return `<a class="clickable-link" href="mailto:${str}">${str}</a>`;
@@ -2007,10 +3531,17 @@
     }
 
     function generateGcrTables() {
+      const getTableMw = p => {
+        const contracted = Number(p.capacidadContratada || 0);
+        if (!isNaN(contracted) && contracted > 0) return contracted;
+        const fallback = Number(p.mw || 0);
+        return isNaN(fallback) ? 0 : fallback;
+      };
+
       // 1. Agrupar proyectos de generación por GCR
       const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
       const groups = {};
-      
+
       genProjects.forEach(p => {
         const gcr = p.gerencia || 'OTRO';
         groups[gcr] = groups[gcr] || [];
@@ -2040,16 +3571,16 @@
         // Ordenar alfabéticamente por nombre de proyecto
         const projs = rawProjs.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        // Paginación dinámica (máximo 14 filas por diapositiva para evitar desbordamiento)
-        const rowsPerSlide = 14;
+        // Paginación dinámica (más filas por lámina para aprovechar el área útil)
+        const rowsPerSlide = 18;
         const totalPages = Math.ceil(projs.length / rowsPerSlide);
 
         for (let pIdx = 0; pIdx < totalPages; pIdx++) {
           const slice = projs.slice(pIdx * rowsPerSlide, (pIdx + 1) * rowsPerSlide);
           const isLastPage = (pIdx === totalPages - 1);
-          
+
           const slide = document.createElement('section');
-          slide.className = 'slide';
+          slide.className = 'slide tabular-slide';
           slide.id = `slide-${slideIdx}`;
 
           const pageIndicator = totalPages > 1 ? ` (${pIdx + 1}/${totalPages})` : '';
@@ -2067,11 +3598,11 @@
                 </td>
                 <td style="max-width:120px;">${p.gie}</td>
                 <td class="col-center-text">${p.origenGie}</td>
-                <td class="col-right-text" style="font-weight:600;">${p.mw.toFixed(0)}</td>
+                <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
                 <td style="max-width:110px;">${formatCell(p.tecnologia)}</td>
-                <td style="max-width:110px;">${p.ef}</td>
-                <td class="col-right-text">${p.inversion > 0 ? p.inversion.toFixed(0) : '—'}</td>
-                <td class="col-center-text">${p.feoc.substring(0, 10)}</td>
+                <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
+                <td class="col-right-text">${formatInvestmentReported(p.inversionRaw)}</td>
+                <td class="col-center-text">${formatFeoc(p.feoc)}</td>
                 <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
                 <td class="col-center-text">${formatCell(p.misse, 'status')}</td>
                 <td class="col-center-text">${formatCell(p.mia, 'status')}</td>
@@ -2082,14 +3613,13 @@
 
           // Si es el último slide del GCR, inyectamos la fila de sumatoria total
           if (isLastPage) {
-            const sumMw = projs.reduce((s, p) => s + p.mw, 0);
-            const sumInv = projs.reduce((s, p) => s + p.inversion, 0);
+            const sumMw = projs.reduce((s, p) => s + getTableMw(p), 0);
             rowsHtml += `
               <tr class="total-row">
                 <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ${gcrInfo.title.toUpperCase()}</td>
-                <td class="col-right-text">${sumMw.toFixed(0)}</td>
+                <td class="col-right-text">${formatInt(sumMw)}</td>
                 <td colspan="2"></td>
-                <td class="col-right-text">${sumInv > 0 ? sumInv.toFixed(0) : '—'}</td>
+                <td class="col-right-text">N/A*</td>
                 <td colspan="5"></td>
               </tr>
             `;
@@ -2098,8 +3628,14 @@
           slide.innerHTML = `
             <div class="slide-container">
               <div class="slide-header">
-                <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
-                <div class="ef-title">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})${pageIndicator}</div>
+                <div class="brand-left">
+                  <span class="brand-line-1">Segunda Convocatoria 2026</span>
+                  <span class="brand-line-2">Particulares</span>
+                </div>
+                <div class="ef-title">
+                  <span class="title-main">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})</span>
+                  <span class="table-slide-page">${pIdx + 1}/${totalPages}</span>
+                </div>
                 <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
               </div>
               <div class="table-container">
@@ -2110,10 +3646,10 @@
                       <th style="width:180px;">Proyecto</th>
                       <th style="width:120px;">GIE</th>
                       <th style="width:50px; text-align:center;">Origen</th>
-                      <th style="width:40px; text-align:right;">MW</th>
+                      <th style="width:60px; text-align:right;">MW (Contr.)</th>
                       <th style="width:110px;">Tecnología</th>
-                      <th style="width:110px;">Ubicación</th>
-                      <th style="width:45px; text-align:right;">Inversión</th>
+                      <th style="width:125px;">Ubicación</th>
+                      <th style="width:90px; text-align:right;">Inversión reportada</th>
                       <th style="width:65px; text-align:center;">FEOC</th>
                       <th style="width:45px; text-align:center;">Tierras</th>
                       <th style="width:45px; text-align:center;">MISSE</th>
@@ -2139,9 +3675,9 @@
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       if (storageProjects.length > 0) {
         const sortedStorage = storageProjects.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        
+
         const slide = document.createElement('section');
-        slide.className = 'slide';
+        slide.className = 'slide tabular-slide';
         slide.id = `slide-${slideIdx}`;
 
         const rowsHtml = sortedStorage.map((p, i) => `
@@ -2155,11 +3691,11 @@
             </td>
             <td style="max-width:120px;">${p.gie}</td>
             <td class="col-center-text">${p.origenGie}</td>
-            <td class="col-right-text" style="font-weight:600;">${p.mw.toFixed(0)}</td>
+            <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
             <td style="max-width:110px;">ALMACENAMIENTO</td>
-            <td style="max-width:110px;">${p.ef}</td>
-            <td class="col-right-text">${p.inversion > 0 ? p.inversion.toFixed(0) : '—'}</td>
-            <td class="col-center-text">${p.feoc.substring(0, 10)}</td>
+            <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
+            <td class="col-right-text">${formatInvestmentReported(p.inversionRaw)}</td>
+            <td class="col-center-text">${formatFeoc(p.feoc)}</td>
             <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
             <td class="col-center-text">${formatCell(p.misse, 'status')}</td>
             <td class="col-center-text">${formatCell(p.mia, 'status')}</td>
@@ -2167,13 +3703,15 @@
           </tr>
         `).join('');
 
-        const sumMw = sortedStorage.reduce((s, p) => s + p.mw, 0);
-        const sumInv = sortedStorage.reduce((s, p) => s + p.inversion, 0);
+        const sumMw = sortedStorage.reduce((s, p) => s + getTableMw(p), 0);
 
         slide.innerHTML = `
           <div class="slide-container">
             <div class="slide-header">
-              <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+              <div class="brand-left">
+                <span class="brand-line-1">Segunda Convocatoria 2026</span>
+                <span class="brand-line-2">Particulares</span>
+              </div>
               <div class="ef-title">Sistemas de Almacenamiento (BESS)</div>
               <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
             </div>
@@ -2185,10 +3723,10 @@
                     <th style="width:180px;">Proyecto</th>
                     <th style="width:120px;">GIE</th>
                     <th style="width:50px; text-align:center;">Origen</th>
-                    <th style="width:40px; text-align:right;">MW</th>
+                    <th style="width:60px; text-align:right;">MW (Contr.)</th>
                     <th style="width:110px;">Tecnología</th>
-                    <th style="width:110px;">Ubicación</th>
-                    <th style="width:45px; text-align:right;">Inversión</th>
+                    <th style="width:125px;">Ubicación</th>
+                    <th style="width:90px; text-align:right;">Inversión reportada</th>
                     <th style="width:65px; text-align:center;">FEOC</th>
                     <th style="width:45px; text-align:center;">Tierras</th>
                     <th style="width:45px; text-align:center;">MISSE</th>
@@ -2200,9 +3738,9 @@
                   ${rowsHtml}
                   <tr class="total-row">
                     <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ALMACENAMIENTO</td>
-                    <td class="col-right-text">${sumMw.toFixed(0)}</td>
+                    <td class="col-right-text">${formatInt(sumMw)}</td>
                     <td colspan="2"></td>
-                    <td class="col-right-text">${sumInv > 0 ? sumInv.toFixed(0) : '—'}</td>
+                    <td class="col-right-text">N/A*</td>
                     <td colspan="5"></td>
                   </tr>
                 </tbody>
@@ -2224,12 +3762,12 @@
     // ==========================================
     function showSlide(index) {
       if (index < 0 || index >= slidesCount) return;
-      
+
       const slides = document.querySelectorAll('.slide');
       slides.forEach((slide, i) => {
         slide.classList.toggle('active', i === index);
       });
-      
+
       currentSlideIndex = index;
       updateControls();
 
@@ -2279,16 +3817,16 @@
     function fitSlides() {
       const baseW = 1333;
       const baseH = 750;
-      
+
       const availW = window.innerWidth;
       const availH = window.innerHeight;
-      
+
       // Encontrar la escala que encaje en el espacio disponible
       const scale = Math.min(availW / baseW, availH / baseH);
-      
+
       // Asignar variable CSS
       document.documentElement.style.setProperty('--scale', scale.toFixed(4));
-      
+
       const containers = document.querySelectorAll('.slide-container');
       containers.forEach(container => {
         container.style.transform = `scale(${scale.toFixed(4)})`;
@@ -2308,12 +3846,12 @@
         }
         if (['ArrowRight', 'PageDown', ' '].includes(e.key)) {
           e.preventDefault();
-          showModalPage(2);
+          showModalPage(modalPage + 1);
           return;
         }
         if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) {
           e.preventDefault();
-          showModalPage(1);
+          showModalPage(modalPage - 1);
           return;
         }
         return; // Detener navegación del slide deck si el modal está abierto
@@ -2348,7 +3886,12 @@
     function makeClickableIfUrl(val) {
       if (!val || val === '—' || val === 'Sin información') return val || '—';
       let str = String(val).trim();
-      
+
+      // Si ya viene con HTML (ej. enlaces KMZ generados), no volver a procesar.
+      if (/<[a-z][\s\S]*>/i.test(str)) {
+        return str;
+      }
+
       // Limpiar comillas iniciales y finales habituales en celdas de CSV
       str = str.replace(/^["']|["']$/g, '').trim();
 
@@ -2356,7 +3899,7 @@
       const urlRegex = /(https?:\/\/[^\s"'><]+)/gi;
       if (urlRegex.test(str)) {
         return str.replace(urlRegex, (url) => {
-          return `<a href="${url}" target="_blank" style="color:var(--color-guinda);text-decoration:underline;word-break:break-all">${url}</a>`;
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:var(--color-guinda);text-decoration:underline;word-break:break-all">${url}</a>`;
         });
       }
 
@@ -2372,11 +3915,23 @@
       const cls = empty ? 'v muted' : 'v';
       let val = empty ? 'Sin información' : raw;
       if (!empty) val = makeClickableIfUrl(val);
-      return `<div class="ficha-kv"><span class="k">${k}</span><span class="${cls}">${val}</span></div>`;
+      const sourceMeta = getSourceMetaHtml(k, currentFichaProject);
+      return `<div class="ficha-kv"><span class="k">${k}</span><span class="${cls}">${val}</span></div>
+        <div class="ficha-kv-source">${sourceMeta}</div>`;
     }
 
-    function fkpi(lbl, val, sub) {
-      return `<div class="fk"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div></div>`;
+    function fkvAudit(k, valueShown, sourceLabel, rawValue) {
+      const shown = fkv(k, valueShown);
+      const raw = String(rawValue || '').trim() || 'Sin información';
+      return `${shown}<div style="margin:-2px 0 6px 118px; font-size:8px; color:#667085; line-height:1.25;">
+        <strong style="color:#475467;">Origen:</strong> ${sourceLabel}<br>
+        <strong style="color:#475467;">Valor crudo:</strong> ${raw}
+      </div>`;
+    }
+
+    function fkpi(lbl, val, sub, sourceLabel) {
+      const sourceMeta = getSourceMetaCompactHtml(sourceLabel || lbl, currentFichaProject);
+      return `<div class="fk"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div><div class="src">${sourceMeta}</div></div>`;
     }
 
     function formatKmzLink(val, label = 'Descargar Archivo') {
@@ -2402,7 +3957,7 @@
       if (coords && Array.isArray(coords) && coords.length >= 2 && isValidMexicoCoord(coords[0], coords[1])) {
         center = coords;
       }
-      
+
       const validProject = [];
       if (Array.isArray(projectVertices)) {
         projectVertices.forEach(v => {
@@ -2411,7 +3966,7 @@
           }
         });
       }
-      
+
       const validSaee = [];
       if (Array.isArray(saeeVertices)) {
         saeeVertices.forEach(v => {
@@ -2420,14 +3975,14 @@
           }
         });
       }
-      
+
       if (!center && validProject.length > 0) {
         center = validProject[0];
       }
       if (!center && validSaee.length > 0) {
         center = validSaee[0];
       }
-      
+
       return {
         center,
         projectPol: validProject,
@@ -2440,7 +3995,7 @@
       if (!url) return null;
       const cleanUrl = String(url).trim();
       if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) return null;
-      
+
       const e = encodeURIComponent(cleanUrl);
       const proxies = [
         'https://api.allorigins.win/raw?url=' + e,
@@ -2449,7 +4004,7 @@
         'https://thingproxy.freeboard.io/fetch/' + cleanUrl,
         cleanUrl
       ];
-      
+
       let buf = null;
       for (let i = 0; i < proxies.length; i++) {
         try {
@@ -2468,9 +4023,9 @@
           console.warn('KMZ fetch fail proxy', i + 1, err.message);
         }
       }
-      
+
       if (!buf) return null;
-      
+
       try {
         let kmlText;
         const head = new Uint8Array(buf.slice(0, 4));
@@ -2482,7 +4037,7 @@
         } else {
           kmlText = new TextDecoder().decode(buf);
         }
-        
+
         const dom = new DOMParser().parseFromString(kmlText, 'application/xml');
         const gj = (window.toGeoJSON || window.togeojson).kml(dom);
         return gj;
@@ -2494,40 +4049,37 @@
 
     let fichaMapInstance = null;
     let currentMapReqId = 0;
-    function initFichaMiniMap(coords, title, projectVertices, saeeVertices, kmzProj, kmzLinea, saeeKml) {
+    let modalPage = 1;
+    let pendingMapPayload = null;
+    const MODAL_TOTAL_PAGES = 4;
+    const MODAL_PAGE_ORDER = [4, 1, 2, 3];
+    const MODAL_PAGE_LABELS = ['Mapa', 'Ubicación', 'Características', 'Trámites'];
+    function initFichaMiniMap(coords, title, projectVertices, saeeVertices, kmzProj, kmzLinea, saeeKml, elementId = 'fichaMiniMap') {
       if (fichaMapInstance) {
         fichaMapInstance.remove();
         fichaMapInstance = null;
       }
-      
-      const mapDiv = document.getElementById('fichaMiniMap');
+
+      const mapDiv = document.getElementById(elementId);
       if (!mapDiv) return;
-      
+
       const myReqId = ++currentMapReqId;
       const isCurrent = () => myReqId === currentMapReqId;
-      
+
       // Mostrar preloader de cargando
       mapDiv.innerHTML = `
         <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#f8f9fa; border-radius:6px; flex-direction:column; gap:8px; font-family:'Outfit',sans-serif; color:var(--color-text-dark, #2D3748);">
           <div style="width:24px; height:24px; border:3px solid rgba(105,27,49,0.1); border-top-color:var(--color-guinda, #691B31); border-radius:50%; animation:spin 0.8s infinite linear;"></div>
           <span style="font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Cargando mapa y polígonos…</span>
         </div>`;
-        
+
       const geom = resolveCenterAndGeometries(coords, projectVertices, saeeVertices);
-      const hasKmz = (kmzProj && String(kmzProj).startsWith('http')) || 
-                     (kmzLinea && String(kmzLinea).startsWith('http')) || 
-                     (saeeKml && String(saeeKml).startsWith('http'));
-                     
-      if (!geom.isValid && !hasKmz) {
-        mapDiv.innerHTML = `
-          <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#FFF5F5; color:#C53030; font-family:'Outfit',sans-serif; font-size:10px; border-radius:6px; flex-direction:column; gap:6px; border: 1px dashed #FEB2B2; padding:15px; text-align:center;">
-            <span style="font-size:18px;">⚠️</span>
-            <strong style="font-size:11px; text-transform:uppercase;">Geometría Inválida</strong>
-            <span style="font-size:9.5px; opacity:0.85;">No se encontraron coordenadas válidas dentro del territorio nacional o el formato es incorrecto.</span>
-          </div>`;
-        return;
-      }
-      
+      const hasKmz = (kmzProj && String(kmzProj).startsWith('http')) ||
+        (kmzLinea && String(kmzLinea).startsWith('http')) ||
+        (saeeKml && String(saeeKml).startsWith('http'));
+
+      const noGeometryData = !geom.isValid && !hasKmz;
+
       // Cargar capas y renderizar
       Promise.all([
         (async () => {
@@ -2557,52 +4109,72 @@
         fetchAndParseKml(saeeKml)
       ]).then(([gerenciasGeo, estadosGeo, projGj, lineaGj, saeeGj]) => {
         if (!isCurrent()) return;
-        
+
         // Limpiar el preloader
         mapDiv.innerHTML = '';
-        
+
         // Crear mapa
-        fichaMapInstance = L.map('fichaMiniMap', {
+        fichaMapInstance = L.map(elementId, {
           zoomControl: true,
           attributionControl: false
         });
-        
+
         L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
           maxZoom: 20,
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
           attribution: 'Google Satellite'
         }).addTo(fichaMapInstance);
-        
+
+        const overlayLayers = {};
+
+        // Vista base por defecto (México) para que el mapa siempre sea visible.
+        fichaMapInstance.setView([23.5, -102.2], 5);
+
         // Pintar capas de límites si están disponibles
         if (estadosGeo) {
           try {
-            L.geoJSON(estadosGeo, {
+            const estadosLayer = L.geoJSON(estadosGeo, {
               style: { color: '#ffffff', weight: 1, opacity: 0.5, fill: false, interactive: false }
             }).addTo(fichaMapInstance);
+            overlayLayers['Límites estatales'] = estadosLayer;
           } catch (e) {
             console.warn('No se pudo pintar el GeoJSON de estados en la ficha:', e);
           }
         }
-        
+
         if (gerenciasGeo) {
           try {
-            L.geoJSON(gerenciasGeo, {
+            const gcrLayer = L.geoJSON(gerenciasGeo, {
               style: { color: '#FFA500', weight: 1.2, dashArray: '3, 4', fill: false, interactive: false }
             }).addTo(fichaMapInstance);
+            overlayLayers['Límites GCR'] = gcrLayer;
           } catch (e) {
             console.warn('No se pudo pintar el GeoJSON de gerencias en la ficha:', e);
           }
         }
-        
+
         const bounds = L.latLngBounds([]);
-        
+
         // Polígono del proyecto
         if (projGj) {
           try {
             const layer = L.geoJSON(projGj, {
-              style: { color: '#691B31', fillColor: '#691B31', fillOpacity: 0.35, weight: 2 }
+              filter: (feature) => {
+                const t = feature && feature.geometry ? feature.geometry.type : '';
+                return t !== 'Point' && t !== 'MultiPoint';
+              },
+              style: {
+                color: '#FF1F5A',
+                fillColor: '#FF5C8A',
+                fillOpacity: 0.22,
+                weight: 3,
+                opacity: 1,
+                dashArray: '10, 6',
+                className: 'kml-project'
+              }
             }).addTo(fichaMapInstance)
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono de Proyecto (KML)</strong>`);
+            overlayLayers['Polígono proyecto'] = layer;
             bounds.extend(layer.getBounds());
           } catch (e) {
             console.warn('Error pintando projGj:', e);
@@ -2610,38 +4182,66 @@
         } else if (geom.projectPol.length > 0) {
           try {
             const layer = L.polygon(geom.projectPol, {
-              color: '#691B31', // Guinda
-              fillColor: '#691B31',
-              fillOpacity: 0.25,
-              weight: 2
+              color: '#FF1F5A',
+              fillColor: '#FF5C8A',
+              fillOpacity: 0.2,
+              weight: 3,
+              opacity: 1,
+              dashArray: '10, 6',
+              className: 'kml-project'
             }).addTo(fichaMapInstance)
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono de Proyecto (Vértices)</strong>`);
+            overlayLayers['Polígono proyecto'] = layer;
             bounds.extend(layer.getBounds());
           } catch (e) {
             console.warn('No se pudo pintar el polígono del proyecto:', e);
           }
         }
-        
+
         // Línea de transmisión
         if (lineaGj) {
           try {
             const layer = L.geoJSON(lineaGj, {
-              style: { color: '#D69E2E', weight: 3, dashArray: '5, 5' }
+              filter: (feature) => {
+                const t = feature && feature.geometry ? feature.geometry.type : '';
+                return t !== 'Point' && t !== 'MultiPoint';
+              },
+              style: {
+                color: '#00E5FF',
+                weight: 4,
+                opacity: 1,
+                dashArray: '12, 8',
+                className: 'kml-linea'
+              }
             }).addTo(fichaMapInstance)
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Línea de Transmisión (KML)</strong>`);
+            overlayLayers['Línea transmisión'] = layer;
             bounds.extend(layer.getBounds());
           } catch (e) {
             console.warn('Error pintando lineaGj:', e);
           }
         }
-        
+
         // Polígono SAEE
         if (saeeGj) {
           try {
             const layer = L.geoJSON(saeeGj, {
-              style: { color: '#2F855A', fillColor: '#48BB78', fillOpacity: 0.2, weight: 2, dashArray: '4, 4' }
+              filter: (feature) => {
+                const t = feature && feature.geometry ? feature.geometry.type : '';
+                return t !== 'Point' && t !== 'MultiPoint';
+              },
+              style: {
+                color: '#00D26A',
+                fillColor: '#00FF95',
+                fillOpacity: 0.16,
+                weight: 3,
+                opacity: 1,
+                dashArray: '6, 6',
+                className: 'kml-saee'
+              }
             }).addTo(fichaMapInstance)
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">SAEE (KML)</strong>`);
+            overlayLayers['SAEE'] = layer;
             bounds.extend(layer.getBounds());
           } catch (e) {
             console.warn('Error pintando saeeGj:', e);
@@ -2649,27 +4249,90 @@
         } else if (geom.saeePol.length > 0) {
           try {
             const layer = L.polygon(geom.saeePol, {
-              color: '#2F855A', // Verde
-              fillColor: '#48BB78',
-              fillOpacity: 0.15,
-              weight: 2,
-              dashArray: '4, 4'
+              color: '#00D26A',
+              fillColor: '#00FF95',
+              fillOpacity: 0.14,
+              weight: 3,
+              opacity: 1,
+              dashArray: '6, 6',
+              className: 'kml-saee'
             }).addTo(fichaMapInstance)
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono SAEE (Vértices)</strong>`);
+            overlayLayers['SAEE'] = layer;
             bounds.extend(layer.getBounds());
           } catch (e) {
             console.warn('No se pudo pintar el polígono SAEE:', e);
           }
         }
-        
-        // Marcador de ubicación
+
+        // Capa opcional de marcadores de vértices para evitar que tapen los KML.
+        const vertexMarkersLayer = L.layerGroup();
+        let hasVertexMarkers = false;
+
+        if (geom.projectPol.length > 0) {
+          geom.projectPol.forEach((pt, idx) => {
+            L.circleMarker(pt, {
+              radius: 5.5,
+              color: '#ffffff',
+              weight: 1.8,
+              fillColor: '#B4235D',
+              fillOpacity: 1,
+              className: 'vertex-project'
+            }).bindTooltip(`V${idx + 1} Proyecto`, { direction: 'top', offset: [0, -6] }).addTo(vertexMarkersLayer);
+            hasVertexMarkers = true;
+          });
+        }
+
+        if (geom.saeePol.length > 0) {
+          geom.saeePol.forEach((pt, idx) => {
+            L.circleMarker(pt, {
+              radius: 5.5,
+              color: '#ffffff',
+              weight: 1.8,
+              fillColor: '#10996B',
+              fillOpacity: 1,
+              className: 'vertex-saee'
+            }).bindTooltip(`V${idx + 1} SAEE`, { direction: 'top', offset: [0, -6] }).addTo(vertexMarkersLayer);
+            hasVertexMarkers = true;
+          });
+        }
+
+        if (hasVertexMarkers) {
+          overlayLayers['Marcadores de vértices'] = vertexMarkersLayer;
+          const shouldShowVertices = !projGj && !saeeGj;
+          if (shouldShowVertices) {
+            vertexMarkersLayer.addTo(fichaMapInstance);
+          }
+        }
+
+        // Marcador de ubicación (pin azul): dejarlo opcional para que no tape KML/polígonos.
         if (geom.center) {
-          L.marker(geom.center).addTo(fichaMapInstance)
-            .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">${title}</strong>`)
-            .openPopup();
+          const markerLayer = L.marker(geom.center)
+            .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">${title}</strong>`);
+
+          const markerLayerGroup = L.layerGroup([markerLayer]);
+          overlayLayers['Pin de ubicación'] = markerLayerGroup;
+
+          const hasMainGeometry = !!(
+            projGj ||
+            lineaGj ||
+            saeeGj ||
+            (geom.projectPol && geom.projectPol.length > 0) ||
+            (geom.saeePol && geom.saeePol.length > 0)
+          );
+
+          if (!hasMainGeometry) {
+            markerLayerGroup.addTo(fichaMapInstance);
+            markerLayer.openPopup();
+          }
+
           bounds.extend(geom.center);
         }
-        
+
+        if (Object.keys(overlayLayers).length > 0) {
+          L.control.layers({}, overlayLayers, { collapsed: true, position: 'topright' }).addTo(fichaMapInstance);
+        }
+
         // Si no pudimos cargar KMLs y no hay centro, la geometría es inválida
         if (!geom.center && !bounds.isValid()) {
           mapDiv.innerHTML = `
@@ -2684,7 +4347,7 @@
           }
           return;
         }
-        
+
         // Ajustar vista
         if (bounds.isValid()) {
           fichaMapInstance.fitBounds(bounds, {
@@ -2693,8 +4356,13 @@
           });
         } else if (geom.center) {
           fichaMapInstance.setView(geom.center, 12);
+        } else if (noGeometryData) {
+          L.popup({ closeButton: false, autoClose: false, closeOnClick: false })
+            .setLatLng([23.5, -102.2])
+            .setContent('<div style="font-family:Outfit,sans-serif;font-size:10px;color:#7a1534;"><strong>Sin geometría del proyecto</strong><br>Se muestra vista general de México.</div>')
+            .openOn(fichaMapInstance);
         }
-        
+
         // Forzar redibujo por problemas de escalado de Leaflet en modales
         setTimeout(() => {
           if (fichaMapInstance) {
@@ -2720,21 +4388,59 @@
     }
 
     function showModalPage(pageNum) {
-      if (pageNum === 1) {
-        document.getElementById('modalPage1').style.display = 'flex';
-        document.getElementById('modalPage2').style.display = 'none';
-        document.getElementById('mBtnPrevPage').disabled = true;
-        document.getElementById('mBtnNextPage').disabled = false;
-      } else {
-        document.getElementById('modalPage1').style.display = 'none';
-        document.getElementById('modalPage2').style.display = 'flex';
-        document.getElementById('mBtnPrevPage').disabled = false;
-        document.getElementById('mBtnNextPage').disabled = true;
+      modalPage = Math.max(1, Math.min(MODAL_TOTAL_PAGES, Number(pageNum) || 1));
+      window._fichaPage = modalPage;
+
+      for (let i = 1; i <= MODAL_TOTAL_PAGES; i++) {
+        const page = document.getElementById(`modalPage${i}`);
+        if (page) page.style.display = 'none';
+      }
+
+      const actualPage = MODAL_PAGE_ORDER[modalPage - 1] || 1;
+      const visiblePage = document.getElementById(`modalPage${actualPage}`);
+      if (visiblePage) {
+        visiblePage.style.display = 'flex';
+      }
+
+      const prevBtn = document.getElementById('mBtnPrevPage');
+      const nextBtn = document.getElementById('mBtnNextPage');
+      if (prevBtn) prevBtn.disabled = (modalPage === 1);
+      if (nextBtn) nextBtn.disabled = (modalPage === MODAL_TOTAL_PAGES);
+      if (prevBtn) {
+        const prevLabel = MODAL_PAGE_LABELS[Math.max(0, modalPage - 2)] || 'Anterior';
+        prevBtn.innerHTML = `◀ Anterior: ${prevLabel}`;
+      }
+      if (nextBtn) {
+        const nextLabel = MODAL_PAGE_LABELS[Math.min(MODAL_TOTAL_PAGES - 1, modalPage)] || 'Siguiente';
+        nextBtn.innerHTML = `Siguiente: ${nextLabel} ▶`;
+      }
+
+      if (modalPage === 1) {
+        if (pendingMapPayload) {
+          initFichaMiniMap(
+            pendingMapPayload.coords,
+            pendingMapPayload.title,
+            pendingMapPayload.projectVertices,
+            pendingMapPayload.saeeVertices,
+            pendingMapPayload.kmzProj,
+            pendingMapPayload.kmzLinea,
+            pendingMapPayload.saeeKml,
+            'fichaMegaMap'
+          );
+          pendingMapPayload = null;
+        }
+        if (fichaMapInstance) {
+          setTimeout(() => {
+            if (fichaMapInstance) fichaMapInstance.invalidateSize();
+          }, 120);
+        }
       }
     }
 
     function closeFichaModal() {
       document.getElementById('fichaModal').style.display = 'none';
+      currentFichaProject = null;
+      pendingMapPayload = null;
       if (fichaMapInstance) {
         fichaMapInstance.remove();
         fichaMapInstance = null;
@@ -2755,24 +4461,29 @@
         console.warn(`[FichaModal] Proyecto no encontrado para el ID: "${projectId}"`);
         return;
       }
+      currentFichaProject = p;
       console.log(`[FichaModal] Abriendo proyecto ID: "${projectId}", Nombre: "${p.nombre}", Folio: "${p.folio}"`);
-      
+
       const titleTxt = p.nombre || 'Proyecto';
       const subTxt = `${p.empresa || '—'} · ${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
-      
+
       document.getElementById('mFichaTitle1').textContent = titleTxt;
       document.getElementById('mFichaTitle2').textContent = titleTxt;
+      document.getElementById('mFichaTitle3').textContent = titleTxt;
+      document.getElementById('mFichaTitle4').textContent = titleTxt;
       document.getElementById('mFichaSub1').textContent = subTxt;
       document.getElementById('mFichaSub2').textContent = `${p.techBase || '—'}${p.subtech ? ' · ' + p.subtech : ''}`;
-      
+      document.getElementById('mFichaSub3').textContent = `Trámites y fases del proyecto · ${p.folio || 'Sin folio'}`;
+      document.getElementById('mFichaSub4').textContent = `Mapa ampliado para análisis de capas · ${p.ef || 'México'}`;
+
       // Página 1: KPIs
       document.getElementById('mFichaKpis1').innerHTML = [
-        fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', ''),
-        fkpi('Cap. Generación', formatNumber(p.mwGeneracion) + ' MW', ''),
-        fkpi('Cap. Neta', formatNumber(p.mwNeta) + ' MW', ''),
-        fkpi('Cap. Contratada', formatNumber(p.capacidadContratada) + ' MW', ''),
-        fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', ''),
-        fkpi('Inversión', p.inversion > 0 ? p.inversion.toFixed(1) + ' MDD' : '—', '')
+        fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', '', 'Cap. instalada'),
+        fkpi('Cap. Generación', formatNumber(p.mwGeneracion) + ' MW', '', 'Cap. gen. permiso'),
+        fkpi('Cap. Neta', formatNumber(p.mwNeta) + ' MW', '', 'Cap. Neta'),
+        fkpi('Cap. Contratada', formatNumber(p.capacidadContratada) + ' MW', '', 'Cap. contratada'),
+        fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', '', 'Entrada COD'),
+        fkpi('Inversión', formatInvestmentReported(p.inversionRaw), '', 'Inversión reportada')
       ].join('');
 
       // Página 1: Columnas
@@ -2790,10 +4501,16 @@
         ${fkv('Capturista', p.capturista)}
         ${fkv('Persona a escuchar', p.personaEscuchar)}
         ${fkv('Estatus registro', p.status)}
+        ${fkv('Tipo tecnología', p.techBase)}
+        ${fkv('Subtecnología', p.subtech)}
+        ${fkv('Cap. instalada', p.mwInstalada ? formatNumber(p.mwInstalada) + ' MW' : '—')}
+        ${fkv('Cap. contratada', p.capacidadContratada ? formatNumber(p.capacidadContratada) + ' MW' : '—')}
+        ${fkv('Inversión reportada', formatInvestmentReported(p.inversionRaw))}
+        ${fkv('Entrada COD', formatFeoc(p.feoc))}
         ${fkv('Domicilio fiscal', p.domFiscal)}
         ${fkv('Domicilio notificaciones', p.domNotif)}
       `;
-      
+
       const colTech = `
         <div class="ficha-sec verde">Tecnología e inversión</div>
         ${fkv('Tipo tecnología', p.techBase)}
@@ -2803,7 +4520,7 @@
         ${fkv('N° de equipos', p.numEquipos)}
         ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? formatNumber(p.capacidadGenPermiso) + ' MW' : '—')}
         ${fkv('Gen. anual est.', p.generacionAnual ? formatNumber(p.generacionAnual) + ' GWh' : '—')}
-        ${fkv('Inversión (MDD)', p.inversion > 0 ? p.inversion.toFixed(2) : '—')}
+        ${fkv('Inversión reportada', formatInvestmentReported(p.inversionRaw))}
         ${fkv('Inversión social', p.inversionSocial)}
         <div class="ficha-sec verde" style="margin-top:8px">Perfil de producción y Clima</div>
         ${fkv('Energía bruta mensual', trunc(p.energiaBrutaMensual, 60))}
@@ -2814,7 +4531,7 @@
         ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 60))}
         ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 60))}
       `;
-      
+
       const coords = p.coords ? p.coords[0].toFixed(5) + ', ' + p.coords[1].toFixed(5) : '';
       const colLoc = `
         <div class="ficha-sec dorado">Ubicación y Georreferenciación</div>
@@ -2826,31 +4543,33 @@
         ${fkv('Coordenadas (A)', coords)}
         ${fkv('Archivo KMZ Proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ'))}
         ${fkv('Archivo KMZ Línea', formatKmzLink(p.kmzLinea, 'Descargar KMZ Línea'))}
-        <div class="ficha-sec dorado" style="margin-top:8px">Ubicación en Mapa</div>
-        <div id="fichaMiniMap" style="width:100%; height:160px; border-radius:6px; border:1px solid var(--color-gris-claro); margin-top:6px; z-index:10; background:#f8f9fa;"></div>
       `;
-      
+
       document.getElementById('mFichaBody1').innerHTML = `
         <div class="ficha-col">${colIdent}</div>
-        <div class="ficha-col">${colTech}</div>
-        <div class="ficha-col">${colLoc}</div>
+        <div class="ficha-col" style="grid-column: span 2;">${colLoc}</div>
       `;
 
       // Página 2: KPIs
       const hasSaee = p.saeeMW > 0 || p.saeeAlm > 0;
       document.getElementById('mFichaKpis2').innerHTML = [
-        fkpi('SAEE Potencia', hasSaee ? formatNumber(p.saeeMW) + ' MW' : '—', ''),
-        fkpi('SAEE Almacen.', hasSaee ? formatNumber(p.saeeAlm) + ' MWh' : '—', ''),
-        fkpi('Prof. descarga', p.saeeDOD || '—', ''),
-        fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', ''),
-        fkpi('Estatus indic.', trunc(p.estatusIndicativo, 18) || '—', ''),
-        fkpi('Inversión social', p.inversionSocial || '—', '')
+        fkpi('SAEE Potencia', hasSaee ? formatNumber(p.saeeMW) + ' MW' : '—', '', 'Potencia'),
+        fkpi('SAEE Almacen.', hasSaee ? formatNumber(p.saeeAlm) + ' MWh' : '—', '', 'Almacenamiento'),
+        fkpi('Prof. descarga', p.saeeDOD || '—', '', 'Prof. descarga (DOD)'),
+        fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
+        fkpi('Estatus indic.', trunc(p.estatusIndicativo, 18) || '—', '', 'Indicativo'),
+        fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
       ].join('');
 
       // Página 2: Columnas
       const colReg = `
         <div class="ficha-sec">Estatus regulatorios</div>
         ${fkv('Registro (trámite)', p.status)}
+        ${fkv('Registro cumple', p.registroCumple)}
+        ${fkv('Fecha prev. registro', p.fechaPrevencionRegistro)}
+        ${fkv('Fecha límite prevención', p.fechaLimitePrevencion)}
+        ${fkv('Fecha desahogo', p.fechaDesahogoPrevencion)}
+        ${fkv('Desahogo correcto', p.desahogoCorrecto)}
         ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
         ${fkv('Indicativo', p.estatusIndicativo)}
         ${fkv('Anexo 4', p.anexo4)}
@@ -2897,17 +4616,41 @@
       `;
 
       // Sección con los pasos avanzados de CENACE, CRE y CFE
-      const advancedSteps = p.cenaceVal || p.pagoStatus || p.creStatus || p.contratoStatus ? `
+      const advancedSteps =
+        p.cenaceVal ||
+          p.pagoStatus ||
+          p.creStatus ||
+          p.creStatusPresentada ||
+          p.creStatusPrevencion ||
+          p.creFechaRecepcion ||
+          p.creFechaEmisionPrevencion ||
+          p.creDesahogoPrevencion ||
+          p.creFechaRecepcionDesahogo ||
+          p.contratoStatus ? `
         <div class="ficha-sec dorado" style="margin-top:8px">Fases Finales (CRE, CENACE y CFE)</div>
         ${fkv('Validación CENACE', p.cenaceVal)}
         ${fkv('Estatus de Pago', p.pagoStatus)}
+        ${fkv('Estatus no cumple obs.', p.noCumpleObs)}
+        ${fkv('Fecha validación pago', p.fechaValidacionPago)}
+        ${fkv('Motivos rechazo', p.motivoRechazo)}
         ${fkv('Folio OPE', p.folioOpe)}
+        ${fkv('CRE estatus (presentada)', p.creStatusPresentada)}
+        ${fkv('CRE estatus (prevención)', p.creStatusPrevencion)}
+        ${fkv('CRE fecha recepción', p.creFechaRecepcion)}
+        ${fkv('CRE fecha emisión prev.', p.creFechaEmisionPrevencion)}
+        ${fkv('CRE desahogo prev.', p.creDesahogoPrevencion)}
+        ${fkv('CRE fecha recepción desahogo', p.creFechaRecepcionDesahogo)}
+        ${fkv('CRE solicitud doc', formatKmzLink(p.creSolicitudDoc, 'Descargar solicitud CRE'))}
+        ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio CRE'))}
+        ${fkv('CRE resolución prevención', formatKmzLink(p.creResolucionPrevencionDoc, 'Descargar resolución CRE'))}
         ${fkv('Solicitud Permiso CRE', p.creStatus)}
         ${fkv('Fecha Resolución CRE', p.creFechaRes)}
         ${fkv('Resultados Estudios', p.estudiosResult)}
         ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
+        ${fkv('Carta de aceptación', p.cartaAceptacion)}
         ${fkv('Tipo de Garantía', p.garantiaTipo)}
         ${fkv('Monto Garantía', p.garantiaMonto)}
+        ${fkv('Acuerdos de sesión', formatKmzLink(p.acuerdosSesionDoc, 'Descargar acuerdos'))}
         ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
         ${fkv('Estatus Contrato CFE', p.contratoStatus)}
         ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
@@ -2925,24 +4668,114 @@
         ${fkv('Gerencia CENACE', p.cenaceGerencia)}
         ${fkv('Distancia a SE', p.distanciaSE)}
         ${fkv('Respaldo intermitente', p.respaldoIntermitente)}
-        ${advancedSteps}
         <div class="ficha-sec dorado" style="margin-top:8px">Descripción</div>
         <div style="font-size:9.5px;line-height:1.4;color:var(--color-text-dark)">${trunc(p.descripcion, 360) || '<span style="color:var(--color-gris);font-style:italic">Sin información</span>'}</div>
       `;
 
       document.getElementById('mFichaBody2').innerHTML = `
-        <div class="ficha-col">${colReg}</div>
+        <div class="ficha-col">${colTech}</div>
         <div class="ficha-col">${colSaee}</div>
         <div class="ficha-col">${colTec2}</div>
       `;
-      
+
+      // Página 3: KPIs y detalle de trámites
+      document.getElementById('mFichaKpis3').innerHTML = [
+        fkpi('¿Tiene MIA?', p.tieneMia || '—', '', '¿Tiene MIA?'),
+        fkpi('Estatus MIA', p.estatusMia || '—', '', 'Estatus MIA'),
+        fkpi('Estatus EVIS', p.misse || '—', '', 'Estatus EVIS'),
+        fkpi('Def. Terreno', p.tierras || '—', '', 'Definición terreno'),
+        fkpi('Estudios CENACE', p.cenace || '—', '', '¿Estudios interc.?'),
+        fkpi('Estatus CRE', p.creStatusPrevencion || p.creStatusPresentada || p.creStatus || '—', '', 'Estatus CRE KPI')
+      ].join('');
+
+      const colRegDetalle = `
+        <div class="ficha-sec">Bloque Registro / MISSE / MIA</div>
+        ${colReg}
+      `;
+
+      const colFinalDetalle = `
+        <div class="ficha-sec dorado">Bloque CRE / CENACE / CFE</div>
+        ${advancedSteps || '<div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>'}
+      `;
+
+      const colDocs = `
+        <div class="ficha-sec verde">Documentos y evidencias</div>
+        ${fkv('KMZ proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ proyecto'))}
+        ${fkv('KMZ línea', formatKmzLink(p.kmzLinea, 'Descargar KMZ línea'))}
+        ${fkv('KML SAEE', formatKmzLink(p.saeeKml, 'Descargar KML SAEE'))}
+        ${fkv('Contrato interconexión', formatKmzLink(p.contratoDoc, 'Descargar contrato'))}
+        ${fkv('CRE solicitud', formatKmzLink(p.creSolicitudDoc, 'Descargar solicitud'))}
+        ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio'))}
+        ${fkv('CRE resolución prevención', formatKmzLink(p.creResolucionPrevencionDoc, 'Descargar resolución'))}
+        ${fkv('Acuerdos sesión', formatKmzLink(p.acuerdosSesionDoc, 'Descargar acuerdos'))}
+        <div class="ficha-sec verde" style="margin-top:10px">Auditoría de mapeo (Google Sheets)</div>
+        ${fkvAudit('¿Tiene MIA? (mostrado)', p.tieneMia, '¿Tiene MIA?', p.rawTieneMia)}
+        ${fkvAudit('Estatus MIA (mostrado)', p.estatusMia, 'Estatus MIA', p.rawEstatusMia)}
+        ${fkvAudit('Estatus EVIS (mostrado)', p.misse, 'Estatus EVIS', p.rawEstatusEvis)}
+        ${fkvAudit('Definición terreno (mostrado)', p.tierras, 'Definición Terreno (última ocurrencia)', p.rawTierras)}
+        ${fkvAudit('CRE estatus presentada', p.creStatusPresentada, 'Estatus permiso (Presentada)', p.rawCrePresentada)}
+        ${fkvAudit('CRE estatus prevención', p.creStatusPrevencion, 'Estatus permiso (Con prevención)', p.rawCrePrevencion)}
+        ${fkvAudit('CRE estatus solicitud', p.creStatus, 'Estatus solicitud permiso (campo legacy)', p.rawCreSolicitud)}
+      `;
+
+      document.getElementById('mFichaBody3').innerHTML = `
+        <div class="ficha-col">${colRegDetalle}</div>
+        <div class="ficha-col">${colFinalDetalle}</div>
+        <div class="ficha-col">${colDocs}</div>
+      `;
+
+      // Página 4: mapa ampliado y panel de capas
+      document.getElementById('mFichaKpis4').innerHTML = [
+        fkpi('Entidad', p.ef || '—', '', 'Entidad federativa'),
+        fkpi('Municipio', p.municipio || '—', '', 'Municipio'),
+        fkpi('Gerencia', p.gerencia || '—', '', 'Gerencia regional'),
+        fkpi('Coordenada A', coords || '—', '', 'Coordenadas (A)'),
+        fkpi('Vértices proyecto', p.numVertices || '—', '', 'N° de vértices'),
+        fkpi('Cap. instalada', p.mwInstalada ? formatNumber(p.mwInstalada) + ' MW' : '—', '', 'Cap. instalada')
+      ].join('');
+
+      const mapLegend = `
+        <div class="ficha-sec verde">Capas para análisis</div>
+        <div style="font-size:10px;line-height:1.35;color:var(--color-text-dark);display:flex;flex-direction:column;gap:4px;">
+          <div>• Límites estatales (blanco)</div>
+          <div>• Límites GCR (naranja punteado)</div>
+          <div>• Polígono proyecto (guinda)</div>
+          <div>• Línea de transmisión (dorado)</div>
+          <div>• SAEE (verde punteado)</div>
+          <div>• Marcador de referencia del proyecto</div>
+        </div>
+        <div class="ficha-sec verde" style="margin-top:10px">Referencia rápida</div>
+        ${fkv('Proyecto', p.nombre)}
+        ${fkv('Empresa', p.empresa)}
+        ${fkv('Folio', p.folio)}
+        ${fkv('Subestación', p.subestacion)}
+        ${fkv('Punto interconex.', p.puntoInterconexion)}
+      `;
+
+      document.getElementById('mFichaBody4').innerHTML = `
+        <div class="ficha-col" style="grid-column: span 2;">
+          <div class="ficha-sec dorado">Mapa del Proyecto (Vista Ampliada)</div>
+          <div id="fichaMegaMap" style="width:100%; height:470px; border-radius:10px; border:1px solid var(--color-gris-claro); margin-top:8px; background:#f8f9fa;"></div>
+        </div>
+        <div class="ficha-col">${mapLegend}</div>
+      `;
+
+      pendingMapPayload = {
+        coords: p.coords,
+        title: titleTxt,
+        projectVertices: p.projectVertices,
+        saeeVertices: p.saeeVertices,
+        kmzProj: p.kmzProj,
+        kmzLinea: p.kmzLinea,
+        saeeKml: p.saeeKml
+      };
+
       showModalPage(1);
-      
+
       document.getElementById('fichaModal').style.display = 'flex';
       fitSlides();
-      
-      // Inicializar el minimapa Leaflet en base a las coordenadas del proyecto y la batería
-      initFichaMiniMap(p.coords, titleTxt, p.projectVertices, p.saeeVertices, p.kmzProj, p.kmzLinea, p.saeeKml);
+
+      // El mapa se inicializa al entrar a la página 4 para asegurar render correcto.
     }
 
     // ==========================================
@@ -2952,7 +4785,7 @@
       const modal = document.getElementById('searchModal');
       const input = document.getElementById('searchInput');
       const resultsDiv = document.getElementById('searchResults');
-      
+
       modal.style.display = 'flex';
       input.value = '';
       resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
@@ -2966,38 +4799,38 @@
     function handleSearchInput(query) {
       const resultsDiv = document.getElementById('searchResults');
       const cleanQuery = query.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-      
+
       if (!cleanQuery) {
         resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
         return;
       }
-      
+
       const matched = DATA.filter(p => {
         const name = String(p.nombre || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const folio = String(p.folio || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const preFolio = String(p.preFolio || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const dev = String(p.empresa || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const gie = String(p.gie || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-        
-        return name.includes(cleanQuery) || 
-               folio.includes(cleanQuery) || 
-               preFolio.includes(cleanQuery) || 
-               dev.includes(cleanQuery) || 
-               gie.includes(cleanQuery);
+
+        return name.includes(cleanQuery) ||
+          folio.includes(cleanQuery) ||
+          preFolio.includes(cleanQuery) ||
+          dev.includes(cleanQuery) ||
+          gie.includes(cleanQuery);
       });
-      
+
       if (matched.length === 0) {
         resultsDiv.innerHTML = '<div class="search-result-empty">No se encontraron proyectos coincidentes.</div>';
         return;
       }
-      
+
       // Mostrar máximo los primeros 10 resultados para evitar lentitud
       const limit = matched.slice(0, 10);
       resultsDiv.innerHTML = limit.map(p => {
         const textTech = p.techBase || p.tecnologia || 'OTRA';
         const labelLoc = `${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
         const labelFolio = p.folio || p.preFolio || 'Sin Folio';
-        
+
         return `
           <div class="search-result-item" onclick="selectSearchResult('${p.id}')">
             <div class="search-result-main">
@@ -3008,7 +4841,7 @@
           </div>
         `;
       }).join('');
-      
+
       if (matched.length > 10) {
         resultsDiv.innerHTML += `
           <div class="search-result-empty" style="padding: 10px; border-top: 1px dashed rgba(105,27,49,0.1); font-size: 9.5px; opacity:0.8;">
@@ -3027,7 +4860,7 @@
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('searchModal');
       const isSearchOpen = modal && modal.style.display === 'flex';
-      
+
       // Abrir con tecla 'F' (sólo si no se está escribiendo en un campo)
       if (!isSearchOpen && (e.key === 'f' || e.key === 'F')) {
         const activeEl = document.activeElement;
@@ -3037,7 +4870,7 @@
           openSearchModal();
         }
       }
-      
+
       // Cerrar con tecla Esc
       if (isSearchOpen && e.key === 'Escape') {
         closeSearchModal();
@@ -3063,7 +4896,7 @@
           renderNumeralia();
           generateGcrTables();
           fitSlides();
-          
+
           // Ocultar preloader con fade
           const preloader = document.getElementById('preloader');
           preloader.style.opacity = 0;
@@ -3083,4 +4916,5 @@
     });
   </script>
 </body>
+
 </html>
