@@ -1414,14 +1414,18 @@
     /* Resalte visual para geometrías KML/vertices sobre base satelital */
     .leaflet-overlay-pane path.kml-project {
       filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 5px rgba(255, 31, 90, 0.9));
+      animation: fadeInUp .55s ease both, glowProject 2.4s ease-in-out infinite .55s;
     }
 
     .leaflet-overlay-pane path.kml-linea {
       filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 5px rgba(0, 229, 255, 0.9));
+      stroke-dasharray: 14 8;
+      animation: fadeInUp .55s ease both .25s, dashFlow 1.2s linear infinite .8s;
     }
 
     .leaflet-overlay-pane path.kml-saee {
       filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 5px rgba(0, 210, 106, 0.9));
+      animation: fadeInUp .55s ease both .15s, glowSaee 2.4s ease-in-out infinite .7s;
     }
 
     .leaflet-overlay-pane path.vertex-project,
@@ -1934,14 +1938,139 @@
       min-height: 0;
       width: 100%;
       background: #eef2f6;
+      position: relative;
     }
+
+    .geo-analysis-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 1500;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(3px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      transition: opacity .25s ease;
+    }
+
+    .geo-analysis-loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .geo-analysis-loading .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255, 255, 255, 0.18);
+      border-top-color: #f7dca1;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .geo-analysis-loading .ga-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #f7dca1;
+    }
+
+    .geo-analysis-loading .ga-sub {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 320px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .geo-analysis-loading .ga-step {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.65);
+      letter-spacing: .04em;
+    }
+
+    .geo-summary {
+      list-style: none;
+      padding: 10px 12px;
+      background: linear-gradient(180deg, #fff 0%, #fbfcfe 100%);
+      border: 1px solid #d6dbe1;
+      border-left: 3px solid var(--color-guinda);
+      border-radius: 8px;
+      font-size: 10.5px;
+      color: #1f2937;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .geo-summary .gs-head {
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--color-guinda);
+      border-bottom: 1px solid #eaecf0;
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+    }
+
+    .geo-summary .gs-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .geo-summary .gs-label {
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .geo-summary .gs-count {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--color-guinda);
+    }
+
+    .geo-summary .gs-types {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .geo-summary .gs-chip {
+      font-size: 9px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      border: 1px solid #d6dbe1;
+      color: #334155;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .geo-summary .gs-chip.aut { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+    .geo-summary .gs-chip.tra { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+    .geo-summary .gs-chip.pre { background: #ede9fe; border-color: #c4b5fd; color: #5b21b6; }
+    .geo-summary .gs-chip.def { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
+    .geo-summary .gs-chip.hi  { background: #dbeafe; border-color: #93c5fd; color: #1e3a8a; }
+    .geo-summary .gs-chip.md  { background: #e0f2fe; border-color: #7dd3fc; color: #075985; }
+    .geo-summary .gs-chip.lo  { background: #f0fdfa; border-color: #99f6e4; color: #115e59; }
 
     .geo-analysis-side {
       border-left: 1px solid #eaecf0;
       display: flex;
       flex-direction: column;
       min-width: 0;
+      min-height: 0;
       background: #fbfcfe;
+      overflow: hidden;
     }
 
     .geo-analysis-side-head {
@@ -1975,6 +2104,10 @@
       margin: 0;
       padding: 10px 14px 18px;
       overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: 100%;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -1983,6 +2116,11 @@
       color: #334155;
     }
 
+    .geo-analysis-list::-webkit-scrollbar { width: 7px; }
+    .geo-analysis-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    .geo-analysis-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .geo-analysis-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
     .geo-analysis-list li {
       list-style: none;
       background: #fff;
@@ -1990,6 +2128,52 @@
       border-left: 3px solid var(--color-guinda);
       border-radius: 7px;
       padding: 8px 9px;
+      transition: background .15s ease, border-color .15s ease, transform .12s ease, box-shadow .15s ease;
+    }
+
+    .geo-analysis-list li[data-focus-key] {
+      cursor: pointer;
+    }
+
+    .geo-analysis-list li[data-focus-key]:hover {
+      background: #fff7fa;
+      border-left-color: #f7dca1;
+      transform: translateX(-2px);
+      box-shadow: -3px 3px 12px rgba(155, 34, 71, 0.12);
+    }
+
+    .geo-analysis-list li[data-focus-key].active {
+      background: linear-gradient(90deg, rgba(155,34,71,.08) 0%, #fff 80%);
+      border-left-color: #f7dca1;
+      border-left-width: 5px;
+      box-shadow: -2px 4px 14px rgba(155, 34, 71, 0.18);
+    }
+
+    .geo-analysis-list li.geo-summary,
+    .geo-analysis-list li.geo-summary:hover {
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .geo-item-hint {
+      margin-top: 5px;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .geo-analysis-list li[data-focus-key]:hover .geo-item-hint {
+      color: var(--color-guinda);
+    }
+
+    .gs-chip.gs-band {
+      font-weight: 800;
     }
 
     .geo-analysis-focus-btn {
@@ -2015,12 +2199,323 @@
       color: #1f2937;
       font-size: 10px;
       font-weight: 700;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       border: 1px solid #cbd5e1;
       border-radius: 4px;
-      padding: 1px 4px;
+      padding: 1px 5px;
       white-space: nowrap;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+    }
+
+    .leaflet-tooltip.geo-label-gcr {
+      background: rgba(155, 34, 71, 0.92);
+      color: #fff;
+      border: 1px solid #7a1534;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      white-space: nowrap;
+    }
+
+    .leaflet-tooltip.geo-label-gcr::before { display: none; }
+
+    .leaflet-tooltip.geo-label-ef {
+      background: rgba(255, 255, 255, 0.94);
+      color: #1e293b;
+      border: 1px solid #94a3b8;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+      white-space: nowrap;
+    }
+
+    .leaflet-tooltip.geo-label-ef::before { display: none; }
+
+    .leaflet-tooltip.geo-label-proj {
+      background: linear-gradient(135deg, #ff1f5a 0%, #c2185b 100%);
+      color: #fff;
+      border: 1.5px solid #fff;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(194, 24, 91, 0.45);
+      white-space: nowrap;
+    }
+
+    .leaflet-tooltip.geo-label-proj::before { border-top-color: #c2185b; border-bottom-color: #c2185b; }
+
+    .leaflet-tooltip.geo-label-saee {
+      background: linear-gradient(135deg, #00d26a 0%, #00875a 100%);
+      color: #fff;
+      border: 1.5px solid #fff;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(0, 135, 90, 0.45);
+      white-space: nowrap;
+    }
+
+    .leaflet-tooltip.geo-label-saee::before { border-top-color: #00875a; border-bottom-color: #00875a; }
+
+    .leaflet-tooltip.geo-label-sub {
+      background: rgba(46, 125, 50, 0.95);
+      color: #fff;
+      border: 1px solid #1b5e20;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+      white-space: nowrap;
+    }
+
+    .leaflet-tooltip.geo-label-sub::before { display: none; }
+
+    /* ==== EFECTOS REVEAL DE CAPAS GEOESPACIALES ==== */
+    @keyframes glowProject {
+      0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 31, 90, 0.75)); }
+      50%      { filter: drop-shadow(0 0 12px rgba(255, 92, 138, 1)); }
+    }
+
+    @keyframes glowSaee {
+      0%, 100% { filter: drop-shadow(0 0 3px rgba(0, 210, 106, 0.7)); }
+      50%      { filter: drop-shadow(0 0 12px rgba(0, 255, 149, 1)); }
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -40; }
+    }
+
+    @keyframes pulseSub {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(1.35); opacity: 0.85; }
+    }
+
+    @keyframes bouncePermiso {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-4px); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px) scale(0.92); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .reveal-project {
+      animation: fadeInUp .5s ease both, glowProject 2.4s ease-in-out infinite .5s;
+    }
+
+    .reveal-saee {
+      animation: fadeInUp .5s ease both, glowSaee 2.4s ease-in-out infinite .5s;
+    }
+
+    .reveal-linea {
+      animation: fadeInUp .5s ease both;
+      stroke-dasharray: 14 8;
+      animation-name: fadeInUp, dashFlow;
+      animation-duration: .5s, 1.2s;
+      animation-timing-function: ease, linear;
+      animation-iteration-count: 1, infinite;
+      animation-delay: 0s, .4s;
+      animation-fill-mode: both, none;
+    }
+
+    .reveal-sub circle,
+    circle.reveal-sub {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: fadeInUp .5s ease both, pulseSub 1.6s ease-in-out infinite .5s;
+    }
+
+    @keyframes fadeOpacity {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .reveal-permiso {
+      animation: fadeOpacity .45s ease both;
+    }
+
+    .reveal-permiso > div {
+      animation: bouncePermiso 1.4s ease-in-out infinite .45s;
+    }
+
+    /* ==== TOAST SECUENCIA REVEAL ==== */
+    .geo-reveal-toast {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 1400;
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      border: 1px solid rgba(247, 220, 161, 0.4);
+      border-left: 4px solid #f7dca1;
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .geo-reveal-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .geo-reveal-toast .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulseSub 1.2s ease-in-out infinite;
+    }
+
+    .toast-dot.proj { background: #ff5c8a; }
+    .toast-dot.saee { background: #00ff95; }
+    .toast-dot.line { background: #00e5ff; }
+    .toast-dot.sub  { background: #66bb6a; }
+    .toast-dot.perm { background: #ffca28; }
+
+    /* ==== SPOTLIGHT TOUR (Gaby-style pulse-ring) ==== */
+    @keyframes spotlightRing {
+      0%   { transform: scale(0.75); opacity: 0.7; filter: drop-shadow(0 0 2px rgba(155, 34, 71, 0.9)); }
+      70%  { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 16px rgba(247, 220, 161, 0.9)) drop-shadow(0 0 10px rgba(155, 34, 71, 0.8)); }
+      100% { transform: scale(0.75); opacity: 0.7; filter: drop-shadow(0 0 2px rgba(155, 34, 71, 0.5)); }
+    }
+
+    .leaflet-overlay-pane path.spotlight-pulse {
+      animation: spotlightRing 1.6s ease-in-out infinite;
+      filter: drop-shadow(0 0 6px rgba(155, 34, 71, 0.9)) drop-shadow(0 0 14px rgba(247, 220, 161, 0.6));
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    .leaflet-marker-pane .spotlight-marker-wrap {
+      animation: spotlightRing 1.6s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .leaflet-popup.spotlight-popup .leaflet-popup-content-wrapper {
+      background: linear-gradient(135deg, rgba(155, 34, 71, 0.96) 0%, rgba(106, 23, 47, 0.96) 100%);
+      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(247, 220, 161, 0.7);
+      padding: 0;
+    }
+
+    .leaflet-popup.spotlight-popup .leaflet-popup-content {
+      margin: 10px 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+
+    .leaflet-popup.spotlight-popup .leaflet-popup-tip {
+      background: rgba(106, 23, 47, 0.96);
+    }
+
+    .leaflet-popup.spotlight-popup .sp-cat {
+      display: block;
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #f7dca1;
+      margin-bottom: 3px;
+    }
+
+    .leaflet-popup.spotlight-popup .sp-meta {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.82);
+      margin-top: 3px;
+    }
+
+    .geo-tour-btn {
+      background: #a57f2c;
+      color: #fff;
+      border: 1px solid #8a6720;
+      border-radius: 6px;
+      height: 30px;
+      padding: 0 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .geo-tour-btn:hover { background: #8a6720; }
+    .geo-tour-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .geo-tour-btn.playing { background: #b91c1c; color: #fff; border-color: #991b1b; }
+
+    .geo-tour-progress {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1450;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(247, 220, 161, 0.5);
+      border-radius: 999px;
+      padding: 7px 16px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .geo-tour-progress.show { display: inline-flex; }
+    .geo-tour-progress .gtp-step { color: #f7dca1; font-weight: 800; }
+    .geo-tour-progress .gtp-cancel {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 9px;
+      cursor: pointer;
+      letter-spacing: .06em;
     }
 
     .geo-analysis-open-btn {
@@ -2301,6 +2796,9 @@
       <div class="modal-nav-bar">
         <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage((window._fichaPage || 1) - 1)" disabled>◀
           Página Anterior</button>
+        <button id="btnOpenGeoAnalysis" class="modal-nav-btn geo-analysis-open-btn" onclick="openGeoSpatialAnalysisModal()" disabled style="background:#a57f2c;border-color:#8a6720;">
+          <i class="bi bi-globe-americas"></i> Análisis geoespacial
+        </button>
         <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage((window._fichaPage || 1) + 1)">Siguiente
           Página ▶</button>
       </div>
@@ -2330,8 +2828,9 @@
           <div class="title" id="geoAnalysisTitle">Análisis geoespacial avanzado</div>
           <label class="geo-analysis-control">Mapa base
             <select id="geoBasemapSelect">
+              <option value="none" selected>Sin mapa base</option>
               <option value="satellite">Satélite</option>
-              <option value="osm" selected>Calles (OSM)</option>
+              <option value="osm">Calles (OSM)</option>
               <option value="terrain">Topográfico</option>
             </select>
           </label>
@@ -2342,8 +2841,27 @@
               <option value="100">100 km</option>
             </select>
           </label>
+          <button type="button" id="geoTourBtn" class="geo-tour-btn" onclick="toggleGeoSpotlightTour()">
+            <i class="bi bi-play-circle-fill"></i> Presentar elementos
+          </button>
         </div>
-        <div id="geoAnalysisMap" class="geo-analysis-map"></div>
+        <div id="geoAnalysisMap" class="geo-analysis-map">
+          <div id="geoAnalysisLoading" class="geo-analysis-loading">
+            <div class="spinner-ring"></div>
+            <div class="ga-title">Analizando…</div>
+            <div class="ga-sub" id="geoAnalysisLoadingSub">Recortando capas dentro del radio de acción del proyecto.</div>
+            <div class="ga-step" id="geoAnalysisLoadingStep">Cargando capas geoespaciales…</div>
+          </div>
+          <div id="geoRevealToast" class="geo-reveal-toast">
+            <span class="toast-dot proj"></span>
+            <span id="geoRevealToastText">Polígono del proyecto</span>
+          </div>
+          <div id="geoTourProgress" class="geo-tour-progress">
+            <span class="gtp-step" id="geoTourStepNum">1/1</span>
+            <span id="geoTourStepLabel">—</span>
+            <button type="button" class="gtp-cancel" onclick="stopGeoSpotlightTour()">✕ Detener</button>
+          </div>
+        </div>
       </div>
       <aside class="geo-analysis-side">
         <div class="geo-analysis-side-head">
@@ -2371,14 +2889,14 @@
     // ==========================================
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9QhQpXdFeh9ZkNh2WqA28v61ySMz4pISGX0hbZl5QAEU8LTypjCprVndMnkWPok1JdgjujmTV9p9i/pub?output=csv';
     const SHEET_PUBHTML_URL = CSV_URL.replace('/pub?output=csv', '/pubhtml');
-    const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
+    const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_gerencias.json';
     const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
     const GEO_ANALYSIS_BUFFER_KM = 20;
     const GEO_ANALYSIS_RENDER_LIMITS = {
-      lineas: 12,
-      subestaciones: 20,
-      permisos: 30,
-      comunidades: 8
+      lineas: 60,
+      subestaciones: 80,
+      permisos: 500,
+      comunidades: 30
     };
     const GEO_ANALYSIS_STYLE_SYSTEM = {
       project: { color: '#C2185B', fillColor: '#EC407A', fillOpacity: 0.14, weight: 2.5, dashArray: '8, 6' },
@@ -2394,10 +2912,22 @@
         'BAJA CALIFORNIA SUR': '#FAF5FF',
         'BAJA CALIFORNIA': '#E0F2FE'
       },
+      // Código de colores CFE/CENACE estándar por tensión nominal
       lineVoltage: {
-        high: { color: '#0D47A1', weight: 2.8, opacity: 0.9, dashArray: null, label: 'Linea >= 400 kV' },
-        medium: { color: '#1565C0', weight: 2.4, opacity: 0.85, dashArray: '8, 4', label: 'Linea 161-399 kV' },
-        low: { color: '#42A5F5', weight: 2, opacity: 0.8, dashArray: '3, 6', label: 'Linea <= 160 kV / N/D' }
+        v400: { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null,    label: '400 kV', range: 'extra alta' },
+        v230: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null,    label: '230 kV', range: 'alta' },
+        v161: { color: '#FBC02D', weight: 2.6, opacity: 0.9,  dashArray: '10, 4', label: '161 kV', range: 'alta' },
+        v138: { color: '#7CB342', weight: 2.4, opacity: 0.88, dashArray: '10, 4', label: '138 kV', range: 'subtransmisión' },
+        v115: { color: '#43A047', weight: 2.3, opacity: 0.86, dashArray: '8, 4',  label: '115 kV', range: 'subtransmisión' },
+        v85:  { color: '#26C6DA', weight: 2.1, opacity: 0.84, dashArray: '6, 4',  label: '85 kV',  range: 'subtransmisión' },
+        v69:  { color: '#1976D2', weight: 2,   opacity: 0.82, dashArray: '6, 5',  label: '69 kV',  range: 'subtransmisión' },
+        v34:  { color: '#7E57C2', weight: 1.8, opacity: 0.8,  dashArray: '4, 5',  label: '34.5 kV', range: 'distribución' },
+        v23:  { color: '#AB47BC', weight: 1.6, opacity: 0.78, dashArray: '4, 6',  label: '23 kV',  range: 'distribución' },
+        v13:  { color: '#EC407A', weight: 1.5, opacity: 0.76, dashArray: '3, 6',  label: '13.8 kV', range: 'distribución' },
+        low:  { color: '#90A4AE', weight: 1.4, opacity: 0.7,  dashArray: '2, 6',  label: '<13 kV / N/D', range: 'baja' },
+        // Aliases para legend compatibility
+        high:   { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null,   label: 'Línea ≥ 400 kV' },
+        medium: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null,   label: 'Línea 161-399 kV' }
       },
       subestaciones: { color: '#2E7D32', fillColor: '#66BB6A', fillOpacity: 0.92, weight: 1, radius: 5 },
       permisos: {
@@ -2411,6 +2941,7 @@
     };
     const GEO_ANALYSIS_SOURCES = {
       lineas: [
+        'https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_lt.geojson',
         'https://cdn.sassoapps.com/geojson/L%C3%ADneas_de_Transmisi%C3%B3n.geojson',
         'https://cdn.sassoapps.com/geojson/Lineas_de_Transmision.geojson',
         'https://cdn.sassoapps.com/Mapas/Electricidad/lineasdetransmision.geojson'
@@ -2431,7 +2962,33 @@
         'https://cdn.sassoapps.com/Gabvy/localidades_indigenas.geojson',
         'https://cdn.sassoapps.com/Mapas/comunidades_indigenas.geojson',
         'https://cdn.sassoapps.com/geojson/comunidades_indigenas.geojson'
-      ]
+      ],
+      // Impacto social / patrimonio / ambiental (Gaby)
+      atlas: ['https://cdn.sassoapps.com/Gabvy/atlaspueblosindigenas.geojson'],
+      regiones: ['https://cdn.sassoapps.com/Gabvy/regionesindigenas.geojson'],
+      lenguas: ['https://cdn.sassoapps.com/Gabvy/lenguasindigenas_corregido.geojson'],
+      ran: ['https://cdn.sassoapps.com/Gabvy/RAN_4326.geojson'],
+      anp_estatal: ['https://cdn.sassoapps.com/Gabvy/anp_estatal.geojson'],
+      ramsar: ['https://cdn.sassoapps.com/Gabvy/ramsar.geojson'],
+      za_publico: ['https://cdn.sassoapps.com/Gabvy/ZA_publico.geojson'],
+      za_publico_a: ['https://cdn.sassoapps.com/Gabvy/ZA_publico_a.geojson'],
+      sitio_arqueologico: ['https://cdn.sassoapps.com/Gabvy/sitio_arqueologico.geojson'],
+      z_historicos: ['https://cdn.sassoapps.com/Gabvy/z_historicos.geojson'],
+      rutaWixarika: ['https://cdn.sassoapps.com/Gabvy/rutaWixarika.geojson']
+    };
+
+    const IMPACT_LAYERS = {
+      atlas:              { name: 'Atlas Pueblos Indígenas', color: '#ff00ff', icon: 'bi-flower3',      geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','nom_loc','LOCALIDAD','pueblo','PUEBLO'] },
+      regiones:           { name: 'Regiones Indígenas',      color: '#ffa500', icon: 'bi-globe-americas', geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','REGION','region'] },
+      lenguas:            { name: 'Lenguas Indígenas',       color: '#00bcd4', icon: 'bi-translate',     geomKind: 'point', nameKeys: ['LENGUA','lengua','nombre','NOMBRE','familia'] },
+      ran:                { name: 'Núcleos Agrarios (RAN)',  color: '#8B4513', icon: 'bi-tree',          geomKind: 'poly',  nameKeys: ['Clv_Unica','NOM_NUC','nom_nuc','nombre'] },
+      anp_estatal:        { name: 'ANP Estatal',             color: '#22c55e', icon: 'bi-tree-fill',     geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','anp','ANP'] },
+      ramsar:             { name: 'Sitios Ramsar',           color: '#0ea5e9', icon: 'bi-water',         geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','SITIO','sitio'] },
+      za_publico:         { name: 'Zonas Arq. Públicas',     color: '#ef4444', icon: 'bi-bank',          geomKind: 'point', nameKeys: ['NOMBRE','nombre','zona'] },
+      za_publico_a:       { name: 'Zonas Arq. Públicas (A)', color: '#dc2626', icon: 'bi-bank',          geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','zona'] },
+      sitio_arqueologico: { name: 'Sitios Arqueológicos',    color: '#b91c1c', icon: 'bi-bricks',        geomKind: 'point', nameKeys: ['NOMBRE','nombre','sitio'] },
+      z_historicos:       { name: 'Zonas Históricas',        color: '#d97706', icon: 'bi-building',      geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','zona'] },
+      rutaWixarika:       { name: 'Ruta Wixárika',           color: '#ff8000', icon: 'bi-signpost',      geomKind: 'line',  nameKeys: ['NOMBRE','nombre','ruta','tramo'] }
     };
 
     let DATA = [];
@@ -2455,6 +3012,7 @@
       satellite: null,
       osm: null,
       terrain: null,
+      estados: null,
       gerencias: null,
       gerenciasLabels: null,
       project: null,
@@ -3223,7 +3781,7 @@
         preFolio: col(1),
         anexo4: col(528),
         kmzProj: col(456),
-        kmzLinea: col(488),
+        kmzLinea: (col(488) && col(488) !== col(456)) ? col(488) : '',
 
         // SAEE
         saeeRespaldo: col(489),
@@ -4432,9 +4990,9 @@
 
       const e = encodeURIComponent(cleanUrl);
       const proxies = [
-        'https://api.allorigins.win/raw?url=' + e,
         'https://corsproxy.io/?url=' + e,
         'https://api.codetabs.com/v1/proxy/?quest=' + e,
+        'https://api.allorigins.win/raw?url=' + e,
         'https://thingproxy.freeboard.io/fetch/' + cleanUrl,
         cleanUrl
       ];
@@ -4443,7 +5001,7 @@
       for (let i = 0; i < proxies.length; i++) {
         try {
           const controller = new AbortController();
-          const t = setTimeout(() => controller.abort(), 12000);
+          const t = setTimeout(() => controller.abort(), 7000);
           const r = await fetch(proxies[i], { signal: controller.signal });
           clearTimeout(t);
           if (r.ok) {
@@ -4455,9 +5013,9 @@
           }
         } catch (err) {
           if (err && err.name === 'AbortError') {
-            console.warn('KMZ fetch timeout proxy', i + 1);
+            console.debug('KMZ fetch timeout proxy', i + 1, '(reintentando siguiente)');
           } else {
-            console.warn('KMZ fetch fail proxy', i + 1, err.message);
+            console.debug('KMZ fetch fail proxy', i + 1, err.message);
           }
         }
       }
@@ -4512,16 +5070,17 @@
     async function loadGeoAnalysisDatasets() {
       if (cachedGeoAnalysisDatasets) return cachedGeoAnalysisDatasets;
 
-      const [lineas, subestaciones, permisos, gerencias, comunidades] = await Promise.all([
-        fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES.lineas, 'lineas'),
-        fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES.subestaciones, 'subestaciones'),
-        fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES.permisos, 'permisos'),
-        fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES.gerencias, 'gerencias'),
-        fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES.comunidades, 'comunidades')
-      ]);
+      const baseKeys = ['lineas', 'subestaciones', 'permisos', 'gerencias', 'comunidades'];
+      const impactKeys = Object.keys(IMPACT_LAYERS);
+      const allKeys = [...baseKeys, ...impactKeys];
 
-      cachedGeoAnalysisDatasets = { lineas, subestaciones, permisos, gerencias, comunidades };
-      return cachedGeoAnalysisDatasets;
+      const promises = allKeys.map((k) => fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES[k], k));
+      const results = await Promise.all(promises);
+
+      const datasets = {};
+      allKeys.forEach((k, i) => { datasets[k] = results[i]; });
+      cachedGeoAnalysisDatasets = datasets;
+      return datasets;
     }
 
     function formatDistanceKm(distanceKm) {
@@ -4659,7 +5218,14 @@
     }
 
     function getGerenciaNameFromFeature(feature) {
-      return extractNameFromProps((feature && feature.properties) || {}, ['GCR', 'Gerencia', 'GERENCIA', 'name', 'NOMBRE']);
+      return extractNameFromProps((feature && feature.properties) || {}, ['Field1', 'field1', 'FIELD1', 'GCR', 'Gerencia', 'GERENCIA', 'gerencia', 'Gerencia_de_Control', 'name', 'NOMBRE', 'NAME']);
+    }
+
+    function shortGerenciaLabel(fullName) {
+      return String(fullName || '')
+        .replace(/^Gerencia\s+de\s+Control\s+Regional\s+/i, '')
+        .replace(/^GCR\s+/i, '')
+        .trim() || fullName || 'Sin nombre';
     }
 
     function getGerenciaStyle(feature) {
@@ -4686,11 +5252,36 @@
     }
 
     function getLineVoltageStyle(lineItem) {
+      const lv = GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage;
       const kv = getNumericVoltageKv(lineItem && lineItem.tension);
-      if (kv == null) return GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage.low;
-      if (kv >= 400) return GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage.high;
-      if (kv >= 161) return GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage.medium;
-      return GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage.low;
+      if (kv == null) return lv.low;
+      if (kv >= 400) return lv.v400;
+      if (kv >= 230) return lv.v230;
+      if (kv >= 161) return lv.v161;
+      if (kv >= 138) return lv.v138;
+      if (kv >= 115) return lv.v115;
+      if (kv >= 85)  return lv.v85;
+      if (kv >= 69)  return lv.v69;
+      if (kv >= 30)  return lv.v34;
+      if (kv >= 20)  return lv.v23;
+      if (kv >= 13)  return lv.v13;
+      return lv.low;
+    }
+
+    function getLineBandKey(lineItem) {
+      const kv = getNumericVoltageKv(lineItem && lineItem.tension);
+      if (kv == null) return 'low';
+      if (kv >= 400) return 'v400';
+      if (kv >= 230) return 'v230';
+      if (kv >= 161) return 'v161';
+      if (kv >= 138) return 'v138';
+      if (kv >= 115) return 'v115';
+      if (kv >= 85)  return 'v85';
+      if (kv >= 69)  return 'v69';
+      if (kv >= 30)  return 'v34';
+      if (kv >= 20)  return 'v23';
+      if (kv >= 13)  return 'v13';
+      return 'low';
     }
 
     function getPermisoStatus(item) {
@@ -4714,7 +5305,7 @@
     function createPermisoIcon(statusKey) {
       const token = GEO_ANALYSIS_STYLE_SYSTEM.permisos[statusKey] || GEO_ANALYSIS_STYLE_SYSTEM.permisos.default;
       return L.divIcon({
-        className: 'geo-permiso-icon',
+        className: 'geo-permiso-icon reveal-permiso',
         iconSize: [18, 18],
         iconAnchor: [9, 9],
         popupAnchor: [0, -9],
@@ -4788,7 +5379,8 @@
           feature,
           distanceKm: distancePointToLineKm(centerPoint, feature),
           name: extractNameFromProps(feature.properties || {}, ['nombre_lt', 'NOMBRE_LT', 'nombre', 'NOMBRE', 'linea']),
-          tension: extractNameFromProps(feature.properties || {}, ['tension_kv', 'TENSION_KV', 'tension', 'Tension', 'kv'])
+          tension: extractNameFromProps(feature.properties || {}, ['voltaje_KV', 'voltaje_kv', 'VOLTAJE_KV', 'voltaje', 'Voltaje', 'tension_kv', 'TENSION_KV', 'tension', 'Tension', 'kv', 'caracteris', 'caracteristicas']),
+          categoria: extractNameFromProps(feature.properties || {}, ['categoria', 'CATEGORIA', 'Categoria'])
         }));
 
       output.nearestLinea = lineCandidates
@@ -4812,8 +5404,7 @@
           };
         })
         .filter((item) => Number.isFinite(item.distanceKm) && item.distanceKm <= radiusKm)
-        .sort((a, b) => a.distanceKm - b.distanceKm)
-        .slice(0, 12);
+        .sort((a, b) => a.distanceKm - b.distanceKm);
 
       output.gerenciasControl = (datasets.gerencias.features || [])
         .filter((feature) => {
@@ -4880,6 +5471,59 @@
       output.comunidadesIntersect = communities.filter((c) => c.intersects).slice(0, 8);
       output.comunidadesNearby = communities.filter((c) => !c.intersects).slice(0, 8);
 
+      // Impacto social / patrimonio / ambiental
+      output.impacto = {};
+      Object.keys(IMPACT_LAYERS).forEach((key) => {
+        const cfg = IMPACT_LAYERS[key];
+        const dataset = datasets[key];
+        if (!dataset || !Array.isArray(dataset.features)) {
+          output.impacto[key] = { intersect: [], nearby: [], total: 0 };
+          return;
+        }
+
+        const candidates = dataset.features
+          .filter((feature) => featureMayAffectBuffer(feature, bufferBbox))
+          .map((feature) => {
+            const t = feature && feature.geometry ? feature.geometry.type : null;
+            let intersects = false;
+            let distanceKm = Number.POSITIVE_INFINITY;
+
+            if (t === 'Polygon' || t === 'MultiPolygon') {
+              if (projectAreaFeature) {
+                try { intersects = turf.booleanIntersects(projectAreaFeature, feature); } catch (e) { intersects = false; }
+              }
+              if (!intersects) {
+                distanceKm = distancePointToPolygonKm(centerPoint, feature);
+              } else {
+                distanceKm = 0;
+              }
+            } else if (t === 'LineString' || t === 'MultiLineString') {
+              distanceKm = distancePointToLineKm(centerPoint, feature);
+              if (projectAreaFeature) {
+                try { intersects = turf.booleanIntersects(projectAreaFeature, feature); } catch (e) { intersects = false; }
+              }
+            } else {
+              const p = getRepresentativePoint(feature);
+              distanceKm = p ? turf.distance(centerPoint, p, { units: 'kilometers' }) : Number.POSITIVE_INFINITY;
+            }
+
+            return {
+              feature,
+              intersects,
+              distanceKm,
+              name: extractNameFromProps(feature.properties || {}, cfg.nameKeys)
+            };
+          })
+          .filter((item) => item.intersects || (Number.isFinite(item.distanceKm) && item.distanceKm <= radiusKm))
+          .sort((a, b) => a.distanceKm - b.distanceKm);
+
+        output.impacto[key] = {
+          intersect: candidates.filter((c) => c.intersects),
+          nearby: candidates.filter((c) => !c.intersects),
+          total: candidates.length
+        };
+      });
+
       return output;
     }
 
@@ -4941,7 +5585,7 @@
         }
       }
 
-      analysisResult.permisosNearby.slice(0, 6).forEach((item) => {
+      analysisResult.permisosNearby.forEach((item) => {
         const pt = getRepresentativePoint(item.feature);
         if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
         const c = pt.geometry.coordinates;
@@ -5132,14 +5776,34 @@
 
     function applyGeoAnalysisBasemap() {
       if (!geoAnalysisModalMap) return;
-      const selected = document.getElementById('geoBasemapSelect')?.value || 'osm';
+      const selected = document.getElementById('geoBasemapSelect')?.value || 'none';
       const opts = ['satellite', 'osm', 'terrain'];
       opts.forEach((k) => {
         const lyr = geoAnalysisModalLayers[k];
         if (lyr && geoAnalysisModalMap.hasLayer(lyr)) geoAnalysisModalMap.removeLayer(lyr);
       });
+      const mapEl = document.getElementById('geoAnalysisMap');
+      if (selected === 'none') {
+        if (mapEl) mapEl.style.background = '#eaf2f8';
+        return;
+      }
+      if (mapEl) mapEl.style.background = '#eef2f6';
       const selectedLayer = geoAnalysisModalLayers[selected] || geoAnalysisModalLayers.osm;
       if (selectedLayer) selectedLayer.addTo(geoAnalysisModalMap);
+    }
+
+    let geoClickHighlightLayer = null;
+    let geoClickHighlightTimer = null;
+
+    function clearGeoClickHighlight() {
+      if (geoClickHighlightLayer && geoAnalysisModalMap) {
+        geoAnalysisModalMap.removeLayer(geoClickHighlightLayer);
+      }
+      geoClickHighlightLayer = null;
+      if (geoClickHighlightTimer) {
+        clearTimeout(geoClickHighlightTimer);
+        geoClickHighlightTimer = null;
+      }
     }
 
     function focusGeoAnalysisTargetByKey(targetKey) {
@@ -5147,79 +5811,279 @@
       const target = geoAnalysisFocusTargets.get(targetKey);
       if (!target || !target.feature) return;
 
-      try {
-        const focusLayer = L.geoJSON(target.feature);
-        const bounds = focusLayer.getBounds && focusLayer.getBounds();
-        if (bounds && bounds.isValid && bounds.isValid()) {
-          geoAnalysisModalMap.fitBounds(bounds.pad(0.16), { maxZoom: 16, animate: false });
-          return;
-        }
-      } catch (e) {
-        // fallback a punto representativo
+      const list = document.getElementById('geoAnalysisDetails');
+      if (list) {
+        list.querySelectorAll('li.active').forEach((el) => el.classList.remove('active'));
+        const li = list.querySelector(`li[data-focus-key="${targetKey}"]`);
+        if (li) li.classList.add('active');
       }
 
+      clearGeoClickHighlight();
+      const accent = target.accent || '#9B2247';
+
+      // Zoom
+      let didFit = false;
+      try {
+        const tmp = L.geoJSON(target.feature);
+        const bb = tmp.getBounds && tmp.getBounds();
+        if (bb && bb.isValid && bb.isValid()) {
+          geoAnalysisModalMap.flyToBounds(bb.pad(0.4), { duration: 0.7, maxZoom: 16 });
+          didFit = true;
+        }
+      } catch (e) { /* noop */ }
+
       const pt = getRepresentativePoint(target.feature);
-      if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
-      const c = pt.geometry.coordinates;
-      geoAnalysisModalMap.setView([c[1], c[0]], 16, { animate: false });
+      const popupLatLng = pt && pt.geometry && pt.geometry.coordinates
+        ? [pt.geometry.coordinates[1], pt.geometry.coordinates[0]]
+        : null;
+
+      if (!didFit && popupLatLng) {
+        geoAnalysisModalMap.setView(popupLatLng, 15, { animate: true });
+      }
+
+      const geomType = target.feature.geometry ? target.feature.geometry.type : '';
+      const isPoint = geomType === 'Point' || geomType === 'MultiPoint';
+
+      if (isPoint && popupLatLng) {
+        geoClickHighlightLayer = L.circleMarker(popupLatLng, {
+          radius: 16,
+          color: accent,
+          fillColor: accent,
+          fillOpacity: 0.45,
+          weight: 4,
+          className: 'spotlight-pulse'
+        }).addTo(geoAnalysisModalMap);
+      } else {
+        geoClickHighlightLayer = L.geoJSON(target.feature, {
+          pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+            radius: 16, color: accent, fillColor: accent, fillOpacity: 0.45, weight: 4, className: 'spotlight-pulse'
+          }),
+          style: { color: accent, weight: 6, fillColor: accent, fillOpacity: 0.22, className: 'spotlight-pulse' }
+        }).addTo(geoAnalysisModalMap);
+      }
+
+      if (popupLatLng && target.title) {
+        L.popup({ className: 'spotlight-popup', closeButton: false, autoClose: false, autoPan: false, offset: [0, -8] })
+          .setLatLng(popupLatLng)
+          .setContent(`<span class="sp-cat">${escapeHtmlSimple(target.title)}</span><strong>Click en mapa</strong>`)
+          .openOn(geoAnalysisModalMap);
+      }
+
+      geoClickHighlightTimer = setTimeout(() => {
+        clearGeoClickHighlight();
+        if (geoAnalysisModalMap) geoAnalysisModalMap.closePopup();
+      }, 4500);
     }
 
-    function renderGeoAnalysisDetailsPanel(analysisResult) {
+    function buildGeoAnalysisSummaryHTML(analysisResult, radiusKm) {
+      const lineas = analysisResult.lineasNearby || [];
+      const subs = analysisResult.subestacionesNearby || [];
+      const permisos = analysisResult.permisosNearby || [];
+      const gers = analysisResult.gerenciasControl || [];
+
+      const lineBands = new Map();
+      lineas.forEach((l) => {
+        const key = getLineBandKey(l);
+        const style = GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage[key] || GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage.low;
+        const rec = lineBands.get(key) || { count: 0, color: style.color, label: style.label };
+        rec.count++;
+        lineBands.set(key, rec);
+      });
+
+      const permBuckets = { autorizado: 0, tramite: 0, prevencion: 0, default: 0 };
+      permisos.forEach((p) => { permBuckets[getPermisoStatus(p) || 'default']++; });
+
+      const subTypes = new Map();
+      subs.forEach((s) => {
+        const t = isPolygonGeometry(s.feature) ? 'Polígono' : 'Punto';
+        subTypes.set(t, (subTypes.get(t) || 0) + 1);
+      });
+
+      const gerNames = gers.slice(0, 4).map((g) => escapeHtmlSimple(g.name)).join(', ');
+
+      const bandOrder = ['v400','v230','v161','v138','v115','v85','v69','v34','v23','v13','low'];
+      const linesTypes = [];
+      bandOrder.forEach((k) => {
+        const rec = lineBands.get(k);
+        if (rec) {
+          linesTypes.push(`<span class="gs-chip gs-band" style="background:${rec.color}22;border-color:${rec.color};color:${rec.color}">${escapeHtmlSimple(rec.label)} · ${rec.count}</span>`);
+        }
+      });
+
+      const permTypes = [];
+      if (permBuckets.autorizado) permTypes.push(`<span class="gs-chip aut">Autorizadas · ${permBuckets.autorizado}</span>`);
+      if (permBuckets.tramite) permTypes.push(`<span class="gs-chip tra">Trámite · ${permBuckets.tramite}</span>`);
+      if (permBuckets.prevencion) permTypes.push(`<span class="gs-chip pre">Prevención · ${permBuckets.prevencion}</span>`);
+      if (permBuckets.default) permTypes.push(`<span class="gs-chip def">Sin clasificar · ${permBuckets.default}</span>`);
+
+      const subTypeChips = [...subTypes.entries()]
+        .map(([k, v]) => `<span class="gs-chip def">${escapeHtmlSimple(k)} · ${v}</span>`).join('');
+
+      // Impacto social/patrimonio/ambiental
+      let impactoHtml = '';
+      if (analysisResult.impacto) {
+        const rows = [];
+        Object.keys(IMPACT_LAYERS).forEach((key) => {
+          const cfg = IMPACT_LAYERS[key];
+          const b = analysisResult.impacto[key];
+          if (!b || b.total === 0) return;
+          const intCount = b.intersect.length;
+          const tag = intCount > 0 ? `<span class="gs-chip" style="background:${cfg.color}25;border-color:${cfg.color};color:${cfg.color}">${intCount} intersecta · ${b.total} total</span>`
+                                   : `<span class="gs-chip" style="background:${cfg.color}18;border-color:${cfg.color}80;color:${cfg.color}">${b.total} en radio</span>`;
+          rows.push(`<div class="gs-row"><span class="gs-label">${escapeHtmlSimple(cfg.name)}</span><span class="gs-count" style="color:${cfg.color}">${b.total}</span></div><div class="gs-types">${tag}</div>`);
+        });
+        if (rows.length) {
+          impactoHtml = `<div class="gs-head" style="margin-top:8px;color:#7c2d12;border-color:#fed7aa">Impacto social · patrimonio · ambiental</div>${rows.join('')}`;
+        }
+      }
+
+      return `
+        <li class="geo-summary">
+          <div class="gs-head">Resumen en radio ${radiusKm} km</div>
+          <div class="gs-row"><span class="gs-label">Centrales eléctricas (CFE/privadas)</span><span class="gs-count">${permisos.length}</span></div>
+          ${permTypes.length ? `<div class="gs-types">${permTypes.join('')}</div>` : '<div class="gs-types"><span class="gs-chip def">Sin centrales en radio</span></div>'}
+          <div class="gs-row"><span class="gs-label">Líneas de transmisión</span><span class="gs-count">${lineas.length}</span></div>
+          ${linesTypes.length ? `<div class="gs-types">${linesTypes.join('')}</div>` : '<div class="gs-types"><span class="gs-chip def">Sin líneas en radio</span></div>'}
+          <div class="gs-row"><span class="gs-label">Subestaciones</span><span class="gs-count">${subs.length}</span></div>
+          ${subTypeChips ? `<div class="gs-types">${subTypeChips}</div>` : '<div class="gs-types"><span class="gs-chip def">Sin subestaciones en radio</span></div>'}
+          <div class="gs-row"><span class="gs-label">Gerencias de control</span><span class="gs-count">${gers.length}</span></div>
+          ${gerNames ? `<div class="gs-types"><span class="gs-chip def">${gerNames}</span></div>` : ''}
+          ${impactoHtml}
+        </li>`;
+    }
+
+    function showGeoAnalysisLoading(step) {
+      const el = document.getElementById('geoAnalysisLoading');
+      if (!el) return;
+      el.classList.remove('hidden');
+      el.style.display = 'flex';
+      const stepEl = document.getElementById('geoAnalysisLoadingStep');
+      if (stepEl && step) stepEl.textContent = step;
+    }
+
+    function hideGeoAnalysisLoading() {
+      const el = document.getElementById('geoAnalysisLoading');
+      if (!el) return;
+      el.classList.add('hidden');
+      setTimeout(() => { if (el.classList.contains('hidden')) el.style.display = 'none'; }, 260);
+    }
+
+    let geoRevealTimers = [];
+    function clearGeoRevealSequence() {
+      geoRevealTimers.forEach((t) => clearTimeout(t));
+      geoRevealTimers = [];
+      const toast = document.getElementById('geoRevealToast');
+      if (toast) toast.classList.remove('show');
+    }
+
+    function playGeoRevealSequence(analysisResult, context) {
+      clearGeoRevealSequence();
+      const toast = document.getElementById('geoRevealToast');
+      const txt = document.getElementById('geoRevealToastText');
+      if (!toast || !txt) return;
+
+      const steps = [];
+      const hasProject = !!(context && (context.projGj || (context.geom && context.geom.projectPol && context.geom.projectPol.length >= 3) || (context.geom && context.geom.center)));
+      const hasSaee = !!(context && (context.saeeGj || (context.geom && context.geom.saeePol && context.geom.saeePol.length >= 3)));
+      const hasLineaProj = !!(context && context.lineaGj);
+
+      if (hasProject) steps.push({ cls: 'proj', label: 'Polígono del proyecto' });
+      if (hasSaee) steps.push({ cls: 'saee', label: 'Polígono SAEE' });
+      if (hasLineaProj) steps.push({ cls: 'line', label: 'Línea de transmisión del proyecto' });
+      if (analysisResult.lineasNearby && analysisResult.lineasNearby.length) {
+        steps.push({ cls: 'line', label: `${analysisResult.lineasNearby.length} líneas en radio` });
+      }
+      if (analysisResult.subestacionesNearby && analysisResult.subestacionesNearby.length) {
+        steps.push({ cls: 'sub', label: `${analysisResult.subestacionesNearby.length} subestaciones en radio` });
+      }
+      if (analysisResult.permisosNearby && analysisResult.permisosNearby.length) {
+        steps.push({ cls: 'perm', label: `${analysisResult.permisosNearby.length} centrales eléctricas` });
+      }
+
+      if (!steps.length) return;
+
+      const HOLD = 1100;
+      steps.forEach((step, i) => {
+        const t1 = setTimeout(() => {
+          toast.querySelector('.toast-dot').className = `toast-dot ${step.cls}`;
+          txt.textContent = step.label;
+          toast.classList.add('show');
+        }, i * HOLD);
+        geoRevealTimers.push(t1);
+      });
+
+      const tEnd = setTimeout(() => {
+        toast.classList.remove('show');
+      }, steps.length * HOLD + 600);
+      geoRevealTimers.push(tEnd);
+    }
+
+    function renderGeoAnalysisDetailsPanel(analysisResult, radiusKm) {
       const list = document.getElementById('geoAnalysisDetails');
       if (!list) return;
 
       geoAnalysisFocusTargets = new Map();
       const items = [];
+      items.push(buildGeoAnalysisSummaryHTML(analysisResult, radiusKm || GEO_ANALYSIS_BUFFER_KM));
 
-      const addItem = (title, detail, feature) => {
+      const addItem = (title, detail, feature, accent) => {
         const key = `focus-${items.length + 1}`;
-        if (feature) geoAnalysisFocusTargets.set(key, { feature });
-        const btn = feature ? `<button class="geo-analysis-focus-btn" data-focus-key="${key}">Centrar en mapa</button>` : '';
-        items.push(`<li><strong>${escapeHtmlSimple(title)}</strong><br>${detail}${btn}</li>`);
+        if (feature) geoAnalysisFocusTargets.set(key, { feature, title, accent });
+        const dataAttr = feature ? ` data-focus-key="${key}"` : '';
+        const accentStyle = accent ? ` style="border-left-color:${accent}"` : '';
+        const hint = feature ? `<div class="geo-item-hint"><i class="bi bi-crosshair"></i> Click para resaltar en mapa</div>` : '';
+        items.push(`<li${dataAttr}${accentStyle}><strong>${escapeHtmlSimple(title)}</strong><br>${detail}${hint}</li>`);
       };
+
+      const lineAccent = (x) => getLineVoltageStyle(x).color;
 
       if (analysisResult.nearestLinea) {
         addItem(
           'Línea más cercana',
           `${escapeHtmlSimple(analysisResult.nearestLinea.name)} · ${formatDistanceKm(analysisResult.nearestLinea.distanceKm)} · ${escapeHtmlSimple(getLineVoltageLabel(analysisResult.nearestLinea))}`,
-          analysisResult.nearestLinea.feature
+          analysisResult.nearestLinea.feature,
+          lineAccent(analysisResult.nearestLinea)
         );
       }
       if (analysisResult.nearestSubestacion) {
         addItem(
           'Subestación más cercana',
           `${escapeHtmlSimple(analysisResult.nearestSubestacion.name)} · ${formatDistanceKm(analysisResult.nearestSubestacion.distanceKm)}`,
-          analysisResult.nearestSubestacion.feature
+          analysisResult.nearestSubestacion.feature,
+          '#2E7D32'
         );
       }
 
-      analysisResult.lineasNearby.slice(0, 4).forEach((x) => {
+      analysisResult.lineasNearby.slice(0, 6).forEach((x) => {
         addItem(
           'Línea dentro del radio',
           `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)} · ${escapeHtmlSimple(getLineVoltageLabel(x))}`,
-          x.feature
+          x.feature,
+          lineAccent(x)
         );
       });
 
-      analysisResult.subestacionesNearby.slice(0, 4).forEach((x) => {
-        addItem('Subestación cercana', `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)}`, x.feature);
+      analysisResult.subestacionesNearby.slice(0, 6).forEach((x) => {
+        addItem('Subestación cercana', `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)}`, x.feature, '#2E7D32');
       });
 
       if (analysisResult.permisosNearby.length) {
-        analysisResult.permisosNearby.slice(0, 5).forEach((x) => {
-          addItem('Permiso cercano', `${escapeHtmlSimple(x.name)} · ${escapeHtmlSimple(x.permit)} · ${formatDistanceKm(x.distanceKm)}`, x.feature);
+        analysisResult.permisosNearby.slice(0, 8).forEach((x) => {
+          const st = getPermisoStatus(x);
+          const acc = (GEO_ANALYSIS_STYLE_SYSTEM.permisos[st] || GEO_ANALYSIS_STYLE_SYSTEM.permisos.default).bg;
+          addItem('Central eléctrica', `${escapeHtmlSimple(x.name)} · ${escapeHtmlSimple(x.permit)} · ${formatDistanceKm(x.distanceKm)}`, x.feature, acc);
         });
       } else {
-        addItem('Permisos cercanos', 'Sin permisos en el radio seleccionado.', null);
+        addItem('Centrales eléctricas', 'Sin centrales en el radio seleccionado.', null);
       }
 
       if (analysisResult.comunidadesIntersect.length) {
-        analysisResult.comunidadesIntersect.slice(0, 3).forEach((x) => {
-          addItem('Comunidad indígena intersectada', escapeHtmlSimple(x.name), x.feature);
+        analysisResult.comunidadesIntersect.slice(0, 4).forEach((x) => {
+          addItem('Comunidad indígena intersectada', escapeHtmlSimple(x.name), x.feature, '#B91C1C');
         });
       } else if (analysisResult.comunidadesNearby.length) {
-        analysisResult.comunidadesNearby.slice(0, 3).forEach((x) => {
-          addItem('Comunidad indígena cercana', `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)}`, x.feature);
+        analysisResult.comunidadesNearby.slice(0, 4).forEach((x) => {
+          addItem('Comunidad indígena cercana', `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)}`, x.feature, '#EA580C');
         });
       } else {
         addItem('Impacto social (comunidades)', 'Sin capas intersectadas o cercanas en el radio.', null);
@@ -5228,7 +6092,22 @@
       if (analysisResult.gerenciasControl && analysisResult.gerenciasControl.length) {
         analysisResult.gerenciasControl.slice(0, 4).forEach((x) => {
           const desc = x.intersects ? `${escapeHtmlSimple(x.name)} · intersecta` : `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)}`;
-          addItem('Gerencia de control', desc, x.feature);
+          addItem('Gerencia de control', desc, x.feature, '#7A1534');
+        });
+      }
+
+      // Impacto social / patrimonio / ambiental
+      if (analysisResult.impacto) {
+        Object.keys(IMPACT_LAYERS).forEach((key) => {
+          const cfg = IMPACT_LAYERS[key];
+          const b = analysisResult.impacto[key];
+          if (!b || b.total === 0) return;
+          [...b.intersect, ...b.nearby].slice(0, 6).forEach((x) => {
+            const desc = x.intersects
+              ? `${escapeHtmlSimple(x.name)} · INTERSECTA`
+              : `${escapeHtmlSimple(x.name)} · ${formatDistanceKm(x.distanceKm)}`;
+            addItem(cfg.name, desc, x.feature, cfg.color);
+          });
         });
       }
 
@@ -5245,9 +6124,11 @@
         div.style.padding = '8px 10px';
         div.style.borderRadius = '10px';
         div.style.boxShadow = '0 1px 6px rgba(0,0,0,.2)';
-        div.style.fontSize = '11px';
+        div.style.fontSize = '10.5px';
         div.style.lineHeight = '1.3';
-        div.style.maxWidth = '240px';
+        div.style.maxWidth = '260px';
+        div.style.maxHeight = '320px';
+        div.style.overflowY = 'auto';
         div.style.color = '#334155';
 
         const lv = GEO_ANALYSIS_STYLE_SYSTEM.lineVoltage;
@@ -5256,19 +6137,44 @@
         const pTram = GEO_ANALYSIS_STYLE_SYSTEM.permisos.tramite;
         const pPrev = GEO_ANALYSIS_STYLE_SYSTEM.permisos.prevencion;
 
+        const voltageBands = ['v400','v230','v161','v138','v115','v85','v69','v34','v23','v13','low'];
+        const voltageRows = voltageBands.map((k) => {
+          const v = lv[k];
+          return `<div style="display:flex;align-items:center;margin-bottom:2px;"><span style="width:14px;height:3px;background:${v.color};display:inline-block;margin-right:6px;"></span>${v.label}</div>`;
+        }).join('');
+
+        const impactRows = Object.keys(IMPACT_LAYERS).map((k) => {
+          const cfg = IMPACT_LAYERS[k];
+          const swatch = cfg.geomKind === 'point'
+            ? `<span style="width:11px;height:11px;border-radius:50%;background:${cfg.color};border:1.5px solid #fff;box-shadow:0 0 0 1px ${cfg.color};display:inline-block;margin-right:6px;"></span>`
+            : cfg.geomKind === 'line'
+              ? `<span style="width:14px;height:3px;background:${cfg.color};display:inline-block;margin-right:6px;"></span>`
+              : `<span style="width:14px;height:10px;background:${cfg.color}30;border:1.5px solid ${cfg.color};display:inline-block;margin-right:6px;"></span>`;
+          return `<div style="display:flex;align-items:center;margin-bottom:2px;">${swatch}${cfg.name}</div>`;
+        }).join('');
+
+        const sectionHead = (txt, color) =>
+          `<div style="font-weight:800;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:${color};margin:6px 0 4px;border-bottom:1px solid ${color}40;padding-bottom:2px;">${txt}</div>`;
+
         div.innerHTML = `
-          <div style="font-weight:700;margin-bottom:6px;color:#1E293B;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">Simbologia</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:14px;height:10px;background:${GEO_ANALYSIS_STYLE_SYSTEM.gcrDefault.fillColor};border:1px dashed ${GEO_ANALYSIS_STYLE_SYSTEM.gcrDefault.color};display:inline-block;margin-right:6px;"></span>Gerencia de control</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:14px;height:3px;background:${lv.high.color};display:inline-block;margin-right:6px;"></span>${lv.high.label}</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:14px;height:3px;background:${lv.medium.color};display:inline-block;margin-right:6px;"></span>${lv.medium.label}</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:14px;height:3px;background:${lv.low.color};display:inline-block;margin-right:6px;"></span>${lv.low.label}</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:12px;height:12px;border-radius:50%;background:${sub.fillColor};border:1px solid ${sub.color};display:inline-block;margin-right:6px;"></span>Subestaciones</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:12px;height:12px;border-radius:50%;background:${pAuth.bg};border:2px solid ${pAuth.color};display:inline-block;margin-right:6px;"></span>Centrales autorizadas</div>
-          <div style="display:flex;align-items:center;margin-bottom:4px;"><span style="width:12px;height:12px;border-radius:50%;background:${pTram.bg};border:2px solid ${pTram.color};display:inline-block;margin-right:6px;"></span>Centrales en tramite</div>
-          <div style="display:flex;align-items:center;"><span style="width:12px;height:12px;border-radius:50%;background:${pPrev.bg};border:2px solid ${pPrev.color};display:inline-block;margin-right:6px;"></span>Centrales en prevencion</div>
+          <div style="font-weight:700;margin-bottom:4px;color:#1E293B;border-bottom:1px solid #e2e8f0;padding-bottom:4px;font-size:11.5px;">Simbología</div>
+
+          ${sectionHead('Eléctrico', '#9B2247')}
+          <div style="display:flex;align-items:center;margin-bottom:3px;"><span style="width:14px;height:10px;background:${GEO_ANALYSIS_STYLE_SYSTEM.gcrDefault.fillColor};border:1px dashed ${GEO_ANALYSIS_STYLE_SYSTEM.gcrDefault.color};display:inline-block;margin-right:6px;"></span>Gerencia de control</div>
+          <div style="display:flex;align-items:center;margin-bottom:3px;"><span style="width:12px;height:12px;border-radius:50%;background:${sub.fillColor};border:1px solid ${sub.color};display:inline-block;margin-right:6px;"></span>Subestación</div>
+          <div style="display:flex;align-items:center;margin-bottom:3px;"><span style="width:12px;height:12px;border-radius:50%;background:${pAuth.bg};border:2px solid ${pAuth.color};display:inline-block;margin-right:6px;"></span>Central autorizada</div>
+          <div style="display:flex;align-items:center;margin-bottom:3px;"><span style="width:12px;height:12px;border-radius:50%;background:${pTram.bg};border:2px solid ${pTram.color};display:inline-block;margin-right:6px;"></span>Central en trámite</div>
+          <div style="display:flex;align-items:center;margin-bottom:3px;"><span style="width:12px;height:12px;border-radius:50%;background:${pPrev.bg};border:2px solid ${pPrev.color};display:inline-block;margin-right:6px;"></span>Central en prevención</div>
+
+          ${sectionHead('Líneas de transmisión (kV)', '#1976D2')}
+          ${voltageRows}
+
+          ${sectionHead('Impacto social · patrimonio · ambiental', '#7c2d12')}
+          ${impactRows}
         `;
 
         L.DomEvent.disableClickPropagation(div);
+        L.DomEvent.disableScrollPropagation(div);
         return div;
       };
 
@@ -5282,6 +6188,7 @@
         geoAnalysisOverlayControl = null;
       }
       const overlays = {
+        'Entidades federativas': geoAnalysisModalLayers.estados,
         'Gerencias de control': geoAnalysisModalLayers.gerencias,
         'Nombres de gerencias': geoAnalysisModalLayers.gerenciasLabels,
         'Proyecto': geoAnalysisModalLayers.project,
@@ -5297,6 +6204,9 @@
     function renderGeoAnalysisModalMap(context, analysisResult) {
       if (!geoAnalysisModalMap) return;
 
+      if (geoAnalysisModalLayers.estados && geoAnalysisModalMap.hasLayer(geoAnalysisModalLayers.estados)) {
+        geoAnalysisModalMap.removeLayer(geoAnalysisModalLayers.estados);
+      }
       if (geoAnalysisModalLayers.gerencias && geoAnalysisModalMap.hasLayer(geoAnalysisModalLayers.gerencias)) {
         geoAnalysisModalMap.removeLayer(geoAnalysisModalLayers.gerencias);
       }
@@ -5310,12 +6220,27 @@
         geoAnalysisModalMap.removeLayer(geoAnalysisModalLayers.analysis);
       }
 
+      geoAnalysisModalLayers.estados = L.layerGroup();
       geoAnalysisModalLayers.gerencias = L.layerGroup();
       geoAnalysisModalLayers.gerenciasLabels = L.layerGroup();
       geoAnalysisModalLayers.project = L.layerGroup();
       geoAnalysisModalLayers.analysis = L.layerGroup();
 
       const bounds = L.latLngBounds([]);
+
+      if (cachedEstadosGeoJSON && Array.isArray(cachedEstadosGeoJSON.features) && cachedEstadosGeoJSON.features.length) {
+        L.geoJSON(cachedEstadosGeoJSON, {
+          renderer: sharedCanvasRenderer,
+          style: {
+            color: '#94a3b8',
+            weight: 1,
+            opacity: 0.9,
+            fillColor: '#cbd5e1',
+            fillOpacity: 0.55,
+            interactive: false
+          }
+        }).addTo(geoAnalysisModalLayers.estados);
+      }
 
       if (context.datasets && context.datasets.gerencias && Array.isArray(context.datasets.gerencias.features) && context.datasets.gerencias.features.length) {
         L.geoJSON(context.datasets.gerencias, {
@@ -5338,27 +6263,126 @@
             const pt = getRepresentativePoint(f);
             if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
             const c = pt.geometry.coordinates;
-            const label = escapeHtmlSimple(getGerenciaNameFromFeature(f));
-            L.marker([c[1], c[0]], {
+            const label = escapeHtmlSimple(shortGerenciaLabel(getGerenciaNameFromFeature(f)));
+            L.tooltip({
+              permanent: true,
+              direction: 'center',
+              className: 'geo-label-gcr',
               interactive: false,
-              icon: L.divIcon({
-                className: 'geo-gcr-label',
-                html: label,
-                iconSize: null
-              })
-            }).addTo(geoAnalysisModalLayers.gerenciasLabels);
+              opacity: 1
+            })
+              .setLatLng([c[1], c[0]])
+              .setContent(label)
+              .addTo(geoAnalysisModalLayers.gerenciasLabels);
           });
       }
 
+      if (cachedEstadosGeoJSON && Array.isArray(cachedEstadosGeoJSON.features)) {
+        cachedEstadosGeoJSON.features
+          .filter((f) => {
+            const t = f && f.geometry ? f.geometry.type : '';
+            return t === 'Polygon' || t === 'MultiPolygon';
+          })
+          .forEach((f) => {
+            const pt = getRepresentativePoint(f);
+            if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
+            const c = pt.geometry.coordinates;
+            const props = f.properties || {};
+            const name = props.NOMBRE || props.nombre || props.NOM_ENT || props.nom_ent || props.ESTADO || props.estado || props.NAME || '';
+            if (!name) return;
+            L.tooltip({
+              permanent: true,
+              direction: 'center',
+              className: 'geo-label-ef',
+              interactive: false,
+              opacity: 1
+            })
+              .setLatLng([c[1], c[0]])
+              .setContent(escapeHtmlSimple(name))
+              .addTo(geoAnalysisModalLayers.estados);
+          });
+      }
+
+      const projStyle = { ...GEO_ANALYSIS_STYLE_SYSTEM.project, className: 'reveal-project' };
+      let projectCentroid = null;
       if (context.projGj && Array.isArray(context.projGj.features) && context.projGj.features.length) {
-        L.geoJSON(context.projGj, {
-          renderer: sharedCanvasRenderer,
+        const projLayer = L.geoJSON(context.projGj, {
           filter: (f) => {
             const t = f && f.geometry ? f.geometry.type : '';
             return t !== 'Point' && t !== 'MultiPoint';
           },
-          style: GEO_ANALYSIS_STYLE_SYSTEM.project
+          style: projStyle
         }).addTo(geoAnalysisModalLayers.project);
+        try { projectCentroid = projLayer.getBounds().getCenter(); } catch (e) {}
+      } else if (context.geom && Array.isArray(context.geom.projectPol) && context.geom.projectPol.length >= 3) {
+        const projLayer = L.polygon(context.geom.projectPol, projStyle).addTo(geoAnalysisModalLayers.project);
+        try { projectCentroid = projLayer.getBounds().getCenter(); } catch (e) {}
+      } else if (context.geom && context.geom.center) {
+        L.circleMarker(context.geom.center, {
+          radius: 8,
+          color: GEO_ANALYSIS_STYLE_SYSTEM.project.color,
+          fillColor: GEO_ANALYSIS_STYLE_SYSTEM.project.fillColor,
+          fillOpacity: 0.7,
+          weight: 2,
+          className: 'reveal-project'
+        }).addTo(geoAnalysisModalLayers.project);
+        projectCentroid = L.latLng(context.geom.center[0], context.geom.center[1]);
+      }
+
+      if (projectCentroid) {
+        L.tooltip({
+          permanent: true,
+          direction: 'top',
+          className: 'geo-label-proj',
+          interactive: false,
+          opacity: 1,
+          offset: [0, -6]
+        })
+          .setLatLng(projectCentroid)
+          .setContent(escapeHtmlSimple(context.title || 'Proyecto'))
+          .addTo(geoAnalysisModalLayers.project);
+      }
+
+      if (context.lineaGj && Array.isArray(context.lineaGj.features) && context.lineaGj.features.length) {
+        L.geoJSON(context.lineaGj, {
+          style: { color: '#00E5FF', weight: 3, opacity: 1, dashArray: '14,8', className: 'reveal-linea' }
+        }).addTo(geoAnalysisModalLayers.project);
+      }
+
+      let saeeCentroid = null;
+      if (context.saeeGj && Array.isArray(context.saeeGj.features) && context.saeeGj.features.length) {
+        const saeeLayer = L.geoJSON(context.saeeGj, {
+          filter: (f) => {
+            const t = f && f.geometry ? f.geometry.type : '';
+            return t !== 'Point' && t !== 'MultiPoint';
+          },
+          style: { color: '#00D26A', fillColor: '#00FF95', fillOpacity: 0.16, weight: 2, dashArray: '6,6', className: 'reveal-saee' }
+        }).addTo(geoAnalysisModalLayers.project);
+        try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) {}
+      } else if (context.geom && Array.isArray(context.geom.saeePol) && context.geom.saeePol.length >= 3) {
+        const saeeLayer = L.polygon(context.geom.saeePol, {
+          color: '#00D26A',
+          fillColor: '#00FF95',
+          fillOpacity: 0.16,
+          weight: 2,
+          dashArray: '6,6',
+          className: 'reveal-saee'
+        }).addTo(geoAnalysisModalLayers.project);
+        try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) {}
+      }
+
+      if (saeeCentroid) {
+        L.tooltip({
+          permanent: true,
+          direction: 'bottom',
+          className: 'geo-label-saee',
+          interactive: false,
+          opacity: 1,
+          offset: [0, 8]
+        })
+          .setLatLng(saeeCentroid)
+          .setContent('SAEE')
+          .addTo(geoAnalysisModalLayers.project);
       }
 
       if (analysisResult.bufferFeature) {
@@ -5371,48 +6395,71 @@
       analysisResult.lineasNearby.slice(0, GEO_ANALYSIS_RENDER_LIMITS.lineas).forEach((item) => {
         const lineStyle = getLineVoltageStyle(item);
         L.geoJSON(item.feature, {
-          renderer: sharedCanvasRenderer,
           style: {
             color: lineStyle.color,
             weight: lineStyle.weight,
             opacity: lineStyle.opacity,
-            dashArray: lineStyle.dashArray || null
+            dashArray: lineStyle.dashArray || '14,8',
+            className: 'reveal-linea'
           }
         })
           .bindPopup(`<strong>Línea</strong><br>${escapeHtmlSimple(item.name)}<br>Tensión: ${escapeHtmlSimple(getLineVoltageLabel(item))}<br>Distancia: ${formatDistanceKm(item.distanceKm)}`)
           .addTo(geoAnalysisModalLayers.analysis);
       });
 
+      const subLabelOf = (item) => {
+        const n = item && item.name ? String(item.name).trim() : '';
+        return (n && n.toLowerCase() !== 'sin nombre') ? n : 'Subestación';
+      };
+
       analysisResult.subestacionesNearby.slice(0, GEO_ANALYSIS_RENDER_LIMITS.subestaciones).forEach((item) => {
         const subStyle = GEO_ANALYSIS_STYLE_SYSTEM.subestaciones;
+        const labelTxt = subLabelOf(item);
+        let labelLatLng = null;
+
         if (isPolygonGeometry(item.feature)) {
-          L.geoJSON(item.feature, {
-            renderer: sharedCanvasRenderer,
+          const polyLayer = L.geoJSON(item.feature, {
             style: {
               color: subStyle.color,
               weight: Math.max(2, subStyle.weight),
               fillColor: subStyle.fillColor,
-              fillOpacity: 0.16
+              fillOpacity: 0.16,
+              className: 'reveal-sub'
             }
           })
             .bindPopup(`<strong>Subestación</strong><br>${escapeHtmlSimple(item.name)}<br>Distancia: ${formatDistanceKm(item.distanceKm)}`)
             .addTo(geoAnalysisModalLayers.analysis);
-          return;
+          try { labelLatLng = polyLayer.getBounds().getCenter(); } catch (e) {}
+        } else {
+          const pt = getRepresentativePoint(item.feature);
+          if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
+          const c = pt.geometry.coordinates;
+          labelLatLng = L.latLng(c[1], c[0]);
+          L.circleMarker(labelLatLng, {
+            radius: subStyle.radius,
+            color: subStyle.color,
+            fillColor: subStyle.fillColor,
+            fillOpacity: subStyle.fillOpacity,
+            weight: subStyle.weight,
+            className: 'reveal-sub'
+          })
+            .bindPopup(`<strong>Subestación</strong><br>${escapeHtmlSimple(item.name)}<br>Distancia: ${formatDistanceKm(item.distanceKm)}`)
+            .addTo(geoAnalysisModalLayers.analysis);
         }
 
-        const pt = getRepresentativePoint(item.feature);
-        if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
-        const c = pt.geometry.coordinates;
-        L.circleMarker([c[1], c[0]], {
-          renderer: sharedCanvasRenderer,
-          radius: subStyle.radius,
-          color: subStyle.color,
-          fillColor: subStyle.fillColor,
-          fillOpacity: subStyle.fillOpacity,
-          weight: subStyle.weight
-        })
-          .bindPopup(`<strong>Subestación</strong><br>${escapeHtmlSimple(item.name)}<br>Distancia: ${formatDistanceKm(item.distanceKm)}`)
-          .addTo(geoAnalysisModalLayers.analysis);
+        if (labelLatLng) {
+          L.tooltip({
+            permanent: true,
+            direction: 'top',
+            className: 'geo-label-sub',
+            interactive: false,
+            opacity: 1,
+            offset: [0, -8]
+          })
+            .setLatLng(labelLatLng)
+            .setContent(escapeHtmlSimple(labelTxt))
+            .addTo(geoAnalysisModalLayers.analysis);
+        }
       });
 
       analysisResult.permisosNearby.slice(0, GEO_ANALYSIS_RENDER_LIMITS.permisos).forEach((item) => {
@@ -5443,6 +6490,52 @@
           .addTo(geoAnalysisModalLayers.analysis);
       });
 
+      // Capas impacto social / patrimonio / ambiental
+      if (analysisResult.impacto) {
+        Object.keys(IMPACT_LAYERS).forEach((key) => {
+          const cfg = IMPACT_LAYERS[key];
+          const bucket = analysisResult.impacto[key];
+          if (!bucket || bucket.total === 0) return;
+          const all = [...bucket.intersect, ...bucket.nearby].slice(0, 60);
+
+          all.forEach((item) => {
+            const t = item.feature && item.feature.geometry ? item.feature.geometry.type : '';
+            const popup = `<strong>${escapeHtmlSimple(cfg.name)}</strong><br>${escapeHtmlSimple(item.name)}<br>${item.intersects ? 'Intersecta proyecto' : `Distancia: ${formatDistanceKm(item.distanceKm)}`}`;
+
+            if (t === 'Polygon' || t === 'MultiPolygon') {
+              L.geoJSON(item.feature, {
+                renderer: sharedCanvasRenderer,
+                style: {
+                  color: cfg.color,
+                  weight: item.intersects ? 2.5 : 1.5,
+                  fillColor: cfg.color,
+                  fillOpacity: item.intersects ? 0.32 : 0.12,
+                  dashArray: item.intersects ? null : '4,4'
+                }
+              }).bindPopup(popup).addTo(geoAnalysisModalLayers.analysis);
+            } else if (t === 'LineString' || t === 'MultiLineString') {
+              L.geoJSON(item.feature, {
+                renderer: sharedCanvasRenderer,
+                style: { color: cfg.color, weight: 2.6, opacity: 0.9, dashArray: '6,4' }
+              }).bindPopup(popup).addTo(geoAnalysisModalLayers.analysis);
+            } else {
+              const pt = getRepresentativePoint(item.feature);
+              if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
+              const c = pt.geometry.coordinates;
+              L.circleMarker([c[1], c[0]], {
+                renderer: sharedCanvasRenderer,
+                radius: 5,
+                color: '#fff',
+                weight: 1.5,
+                fillColor: cfg.color,
+                fillOpacity: 0.9
+              }).bindPopup(popup).addTo(geoAnalysisModalLayers.analysis);
+            }
+          });
+        });
+      }
+
+      geoAnalysisModalLayers.estados.addTo(geoAnalysisModalMap);
       geoAnalysisModalLayers.gerencias.addTo(geoAnalysisModalMap);
       geoAnalysisModalLayers.gerenciasLabels.addTo(geoAnalysisModalMap);
       geoAnalysisModalLayers.project.addTo(geoAnalysisModalMap);
@@ -5450,25 +6543,22 @@
       ensureGeoAnalysisLegendControl();
       refreshGeoAnalysisOverlayControl();
 
-      geoAnalysisModalLayers.gerencias.eachLayer((layer) => {
-        if (layer.getBounds && layer.getBounds().isValid && layer.getBounds().isValid()) bounds.extend(layer.getBounds());
-        if (layer.getLatLng) bounds.extend(layer.getLatLng());
-      });
-      geoAnalysisModalLayers.gerenciasLabels.eachLayer((layer) => {
-        if (layer.getLatLng) bounds.extend(layer.getLatLng());
-      });
-
+      // Solo extender bounds desde proyecto + buffer (no fondo país)
       geoAnalysisModalLayers.project.eachLayer((layer) => {
         if (layer.getBounds && layer.getBounds().isValid && layer.getBounds().isValid()) bounds.extend(layer.getBounds());
         if (layer.getLatLng) bounds.extend(layer.getLatLng());
       });
-      geoAnalysisModalLayers.analysis.eachLayer((layer) => {
-        if (layer.getBounds && layer.getBounds().isValid && layer.getBounds().isValid()) bounds.extend(layer.getBounds());
-        if (layer.getLatLng) bounds.extend(layer.getLatLng());
-      });
+
+      if (analysisResult.bufferFeature) {
+        try {
+          const bufLayer = L.geoJSON(analysisResult.bufferFeature);
+          const bb = bufLayer.getBounds();
+          if (bb && bb.isValid()) bounds.extend(bb);
+        } catch (e) { /* noop */ }
+      }
 
       if (bounds.isValid()) {
-        geoAnalysisModalMap.fitBounds(bounds.pad(0.02), { maxZoom: 15, animate: false });
+        geoAnalysisModalMap.fitBounds(bounds.pad(0.12), { maxZoom: 13, animate: false });
       } else if (context.geom && context.geom.center) {
         geoAnalysisModalMap.setView(context.geom.center, 11, { animate: false });
       } else {
@@ -5483,19 +6573,27 @@
 
       const radiusKm = Number(document.getElementById('geoRadiusSelect')?.value || GEO_ANALYSIS_BUFFER_KM);
       currentGeoAnalysisContext.radiusKm = radiusKm;
-      let analysisResult = currentGeoAnalysisContext.analysisCache.get(radiusKm);
-      if (!analysisResult) {
-        analysisResult = runGeoSpatialAnalysis({
-          centerPoint: currentGeoAnalysisContext.centerPoint,
-          projectAreaFeature: currentGeoAnalysisContext.projectAreaFeature,
-          datasets: currentGeoAnalysisContext.datasets,
-          radiusKm
-        });
-        currentGeoAnalysisContext.analysisCache.set(radiusKm, analysisResult);
-      }
 
-      renderGeoAnalysisModalMap(currentGeoAnalysisContext, analysisResult);
-      renderGeoAnalysisDetailsPanel(analysisResult);
+      showGeoAnalysisLoading(`Recortando capas en radio ${radiusKm} km…`);
+
+      // Defer heavy work so loader paints first
+      setTimeout(() => {
+        let analysisResult = currentGeoAnalysisContext.analysisCache.get(radiusKm);
+        if (!analysisResult) {
+          analysisResult = runGeoSpatialAnalysis({
+            centerPoint: currentGeoAnalysisContext.centerPoint,
+            projectAreaFeature: currentGeoAnalysisContext.projectAreaFeature,
+            datasets: currentGeoAnalysisContext.datasets,
+            radiusKm
+          });
+          currentGeoAnalysisContext.analysisCache.set(radiusKm, analysisResult);
+        }
+
+        renderGeoAnalysisModalMap(currentGeoAnalysisContext, analysisResult);
+        renderGeoAnalysisDetailsPanel(analysisResult, radiusKm);
+        hideGeoAnalysisLoading();
+        playGeoRevealSequence(analysisResult, currentGeoAnalysisContext);
+      }, 30);
     }
 
     function openGeoSpatialAnalysisModal() {
@@ -5508,6 +6606,7 @@
       if (!modal) return;
       modal.style.display = 'flex';
 
+      showGeoAnalysisLoading('Inicializando mapa…');
       ensureGeoAnalysisModalMap();
       if (!geoAnalysisModalMap) return;
 
@@ -5526,6 +6625,265 @@
     function closeGeoSpatialAnalysisModal() {
       const modal = document.getElementById('geoAnalysisModal');
       if (modal) modal.style.display = 'none';
+      clearGeoRevealSequence();
+      stopGeoSpotlightTour();
+    }
+
+    // ===== SPOTLIGHT TOUR (Gaby-style) =====
+    let geoTourState = {
+      playing: false,
+      timer: null,
+      highlightLayer: null,
+      sequence: [],
+      idx: 0,
+      originalBounds: null
+    };
+
+    function buildSpotlightSequence(context, analysisResult) {
+      const seq = [];
+
+      // 1. Proyecto
+      let projFeature = null;
+      if (context.projGj && context.projGj.features && context.projGj.features.length) {
+        projFeature = { type: 'FeatureCollection', features: context.projGj.features.filter((f) => f.geometry && f.geometry.type !== 'Point' && f.geometry.type !== 'MultiPoint') };
+        if (!projFeature.features.length) projFeature = null;
+      }
+      if (!projFeature && context.geom && Array.isArray(context.geom.projectPol) && context.geom.projectPol.length >= 3) {
+        const coords = context.geom.projectPol.map((p) => [p[1], p[0]]);
+        coords.push(coords[0]);
+        projFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [coords] }, properties: {} };
+      }
+      if (!projFeature && context.geom && context.geom.center) {
+        projFeature = { type: 'Feature', geometry: { type: 'Point', coordinates: [context.geom.center[1], context.geom.center[0]] }, properties: {} };
+      }
+      if (projFeature) {
+        seq.push({
+          cat: 'PROYECTO',
+          name: context.title || 'Polígono del proyecto',
+          meta: 'Área de implantación',
+          feature: projFeature,
+          color: '#FF1F5A'
+        });
+      }
+
+      // 2. SAEE
+      let saeeFeature = null;
+      if (context.saeeGj && context.saeeGj.features && context.saeeGj.features.length) {
+        saeeFeature = context.saeeGj;
+      } else if (context.geom && Array.isArray(context.geom.saeePol) && context.geom.saeePol.length >= 3) {
+        const coords = context.geom.saeePol.map((p) => [p[1], p[0]]);
+        coords.push(coords[0]);
+        saeeFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [coords] }, properties: {} };
+      }
+      if (saeeFeature) {
+        seq.push({
+          cat: 'SAEE',
+          name: 'Sistema de Almacenamiento',
+          meta: 'Polígono SAEE',
+          feature: saeeFeature,
+          color: '#00D26A'
+        });
+      }
+
+      // 3. Línea del proyecto (KMZ)
+      if (context.lineaGj && context.lineaGj.features && context.lineaGj.features.length) {
+        seq.push({
+          cat: 'LÍNEA PROYECTO',
+          name: 'Línea de transmisión del proyecto',
+          meta: `${context.lineaGj.features.length} segmento(s)`,
+          feature: context.lineaGj,
+          color: '#00E5FF'
+        });
+      }
+
+      // 4. Top líneas en radio
+      (analysisResult.lineasNearby || []).slice(0, 3).forEach((l, i) => {
+        seq.push({
+          cat: `LÍNEA ${i + 1} EN RADIO`,
+          name: l.name || 'Línea sin nombre',
+          meta: `${getLineVoltageLabel(l)} · ${formatDistanceKm(l.distanceKm)}`,
+          feature: l.feature,
+          color: getLineVoltageStyle(l).color
+        });
+      });
+
+      // 5. Top subestaciones
+      (analysisResult.subestacionesNearby || []).slice(0, 3).forEach((s, i) => {
+        seq.push({
+          cat: `SUBESTACIÓN ${i + 1}`,
+          name: s.name || 'Subestación sin nombre',
+          meta: formatDistanceKm(s.distanceKm),
+          feature: s.feature,
+          color: '#2E7D32'
+        });
+      });
+
+      // 6. Top centrales
+      (analysisResult.permisosNearby || []).slice(0, 4).forEach((p, i) => {
+        seq.push({
+          cat: `CENTRAL ${i + 1}`,
+          name: p.name || 'Sin nombre',
+          meta: `${p.permit || 'Sin permiso'} · ${formatDistanceKm(p.distanceKm)}`,
+          feature: p.feature,
+          color: '#B71C1C'
+        });
+      });
+
+      // 7. Gerencias intersectadas
+      (analysisResult.gerenciasControl || []).slice(0, 2).forEach((g, i) => {
+        seq.push({
+          cat: 'GERENCIA DE CONTROL',
+          name: shortGerenciaLabel(g.name) || 'Gerencia',
+          meta: g.intersects ? 'Intersecta proyecto' : formatDistanceKm(g.distanceKm),
+          feature: g.feature,
+          color: '#7A1534'
+        });
+      });
+
+      // 8. Impacto social / patrimonio (priorizar intersectantes)
+      if (analysisResult.impacto) {
+        Object.keys(IMPACT_LAYERS).forEach((key) => {
+          const cfg = IMPACT_LAYERS[key];
+          const b = analysisResult.impacto[key];
+          if (!b || b.total === 0) return;
+          const top = [...b.intersect, ...b.nearby].slice(0, 2);
+          top.forEach((x) => {
+            seq.push({
+              cat: cfg.name.toUpperCase(),
+              name: x.name || cfg.name,
+              meta: x.intersects ? 'Intersecta proyecto' : formatDistanceKm(x.distanceKm),
+              feature: x.feature,
+              color: cfg.color
+            });
+          });
+        });
+      }
+
+      return seq;
+    }
+
+    function clearSpotlightHighlight() {
+      if (geoTourState.highlightLayer && geoAnalysisModalMap) {
+        geoAnalysisModalMap.removeLayer(geoTourState.highlightLayer);
+      }
+      geoTourState.highlightLayer = null;
+      if (geoAnalysisModalMap) geoAnalysisModalMap.closePopup();
+    }
+
+    function stopGeoSpotlightTour() {
+      if (geoTourState.timer) {
+        clearTimeout(geoTourState.timer);
+        geoTourState.timer = null;
+      }
+      geoTourState.playing = false;
+      geoTourState.idx = 0;
+      clearSpotlightHighlight();
+      const btn = document.getElementById('geoTourBtn');
+      if (btn) {
+        btn.classList.remove('playing');
+        btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> Presentar elementos';
+      }
+      const prog = document.getElementById('geoTourProgress');
+      if (prog) prog.classList.remove('show');
+      if (geoTourState.originalBounds && geoAnalysisModalMap) {
+        try { geoAnalysisModalMap.fitBounds(geoTourState.originalBounds, { padding: [40, 40], animate: true }); } catch (e) {}
+      }
+    }
+
+    function toggleGeoSpotlightTour() {
+      if (geoTourState.playing) {
+        stopGeoSpotlightTour();
+        return;
+      }
+      playGeoSpotlightTour();
+    }
+
+    function playGeoSpotlightTour() {
+      if (!geoAnalysisModalMap || !currentGeoAnalysisContext) return;
+      const radiusKm = currentGeoAnalysisContext.radiusKm || GEO_ANALYSIS_BUFFER_KM;
+      const analysisResult = currentGeoAnalysisContext.analysisCache.get(radiusKm);
+      if (!analysisResult) return;
+
+      geoTourState.sequence = buildSpotlightSequence(currentGeoAnalysisContext, analysisResult);
+      if (!geoTourState.sequence.length) return;
+
+      geoTourState.playing = true;
+      geoTourState.idx = 0;
+      try { geoTourState.originalBounds = geoAnalysisModalMap.getBounds(); } catch (e) { geoTourState.originalBounds = null; }
+
+      const btn = document.getElementById('geoTourBtn');
+      if (btn) {
+        btn.classList.add('playing');
+        btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> Detener tour';
+      }
+      const prog = document.getElementById('geoTourProgress');
+      if (prog) prog.classList.add('show');
+
+      stepGeoSpotlightTour();
+    }
+
+    function stepGeoSpotlightTour() {
+      if (!geoTourState.playing) return;
+      clearSpotlightHighlight();
+
+      if (geoTourState.idx >= geoTourState.sequence.length) {
+        stopGeoSpotlightTour();
+        return;
+      }
+
+      const item = geoTourState.sequence[geoTourState.idx];
+      geoTourState.idx++;
+
+      const stepNum = document.getElementById('geoTourStepNum');
+      const stepLbl = document.getElementById('geoTourStepLabel');
+      if (stepNum) stepNum.textContent = `${geoTourState.idx}/${geoTourState.sequence.length}`;
+      if (stepLbl) stepLbl.textContent = `${item.cat} · ${item.name}`;
+
+      try {
+        const tmpLayer = L.geoJSON(item.feature);
+        const bb = tmpLayer.getBounds && tmpLayer.getBounds();
+        if (bb && bb.isValid && bb.isValid()) {
+          if (item.feature.geometry && item.feature.geometry.type === 'Point') {
+            geoAnalysisModalMap.setView([item.feature.geometry.coordinates[1], item.feature.geometry.coordinates[0]], 14, { animate: true });
+          } else {
+            geoAnalysisModalMap.flyToBounds(bb.pad(0.4), { duration: 0.85, maxZoom: 15 });
+          }
+        }
+      } catch (e) { /* noop */ }
+
+      const popupAt = getRepresentativePoint(item.feature);
+      const popupLatLng = popupAt && popupAt.geometry && popupAt.geometry.coordinates
+        ? [popupAt.geometry.coordinates[1], popupAt.geometry.coordinates[0]]
+        : null;
+
+      const isPoint = item.feature.geometry && (item.feature.geometry.type === 'Point' || item.feature.geometry.type === 'MultiPoint');
+
+      if (isPoint && popupLatLng) {
+        geoTourState.highlightLayer = L.circleMarker(popupLatLng, {
+          radius: 14,
+          color: item.color,
+          fillColor: item.color,
+          fillOpacity: 0.45,
+          weight: 3,
+          className: 'spotlight-pulse'
+        }).addTo(geoAnalysisModalMap);
+      } else {
+        geoTourState.highlightLayer = L.geoJSON(item.feature, {
+          pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+            radius: 14, color: item.color, fillColor: item.color, fillOpacity: 0.45, weight: 3, className: 'spotlight-pulse'
+          }),
+          style: { color: item.color, weight: 5, fillColor: item.color, fillOpacity: 0.18, className: 'spotlight-pulse' }
+        }).addTo(geoAnalysisModalMap);
+      }
+
+      if (popupLatLng) {
+        L.popup({ className: 'spotlight-popup', closeButton: false, autoClose: false, autoPan: false, offset: [0, -8] })
+          .setLatLng(popupLatLng)
+          .setContent(`<span class="sp-cat">${escapeHtmlSimple(item.cat)}</span><strong>${escapeHtmlSimple(item.name)}</strong><span class="sp-meta">${escapeHtmlSimple(item.meta)}</span>`)
+          .openOn(geoAnalysisModalMap);
+      }
+
+      geoTourState.timer = setTimeout(stepGeoSpotlightTour, 2600);
     }
 
     let fichaMapInstance = null;
@@ -5595,6 +6953,18 @@
         // Limpiar el preloader
         mapDiv.innerHTML = '';
 
+        // Guard: si lineaGj no contiene geometría line, descartar (probablemente es polígono del proyecto duplicado)
+        if (lineaGj && Array.isArray(lineaGj.features)) {
+          const hasLine = lineaGj.features.some((f) => {
+            const t = f && f.geometry ? f.geometry.type : '';
+            return t === 'LineString' || t === 'MultiLineString';
+          });
+          if (!hasLine) {
+            console.warn('lineaGj sin geometría line — descartado (probable duplicado de proyecto)');
+            lineaGj = null;
+          }
+        }
+
         // Crear mapa
         fichaMapInstance = L.map(elementId, {
           zoomControl: true,
@@ -5661,6 +7031,12 @@
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono de Proyecto (KML)</strong>`);
             overlayLayers['Polígono proyecto'] = layer;
             bounds.extend(layer.getBounds());
+            try {
+              L.tooltip({ permanent: true, direction: 'top', className: 'geo-label-proj', interactive: false, opacity: 1, offset: [0, -6] })
+                .setLatLng(layer.getBounds().getCenter())
+                .setContent(escapeHtmlSimple(title || 'Proyecto'))
+                .addTo(fichaMapInstance);
+            } catch (e) {}
           } catch (e) {
             console.warn('Error pintando projGj:', e);
           }
@@ -5678,6 +7054,12 @@
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono de Proyecto (Vértices)</strong>`);
             overlayLayers['Polígono proyecto'] = layer;
             bounds.extend(layer.getBounds());
+            try {
+              L.tooltip({ permanent: true, direction: 'top', className: 'geo-label-proj', interactive: false, opacity: 1, offset: [0, -6] })
+                .setLatLng(layer.getBounds().getCenter())
+                .setContent(escapeHtmlSimple(title || 'Proyecto'))
+                .addTo(fichaMapInstance);
+            } catch (e) {}
           } catch (e) {
             console.warn('No se pudo pintar el polígono del proyecto:', e);
           }
@@ -5728,6 +7110,12 @@
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">SAEE (KML)</strong>`);
             overlayLayers['SAEE'] = layer;
             bounds.extend(layer.getBounds());
+            try {
+              L.tooltip({ permanent: true, direction: 'bottom', className: 'geo-label-saee', interactive: false, opacity: 1, offset: [0, 8] })
+                .setLatLng(layer.getBounds().getCenter())
+                .setContent('SAEE')
+                .addTo(fichaMapInstance);
+            } catch (e) {}
           } catch (e) {
             console.warn('Error pintando saeeGj:', e);
           }
@@ -5745,6 +7133,12 @@
               .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Polígono SAEE (Vértices)</strong>`);
             overlayLayers['SAEE'] = layer;
             bounds.extend(layer.getBounds());
+            try {
+              L.tooltip({ permanent: true, direction: 'bottom', className: 'geo-label-saee', interactive: false, opacity: 1, offset: [0, 8] })
+                .setLatLng(layer.getBounds().getCenter())
+                .setContent('SAEE')
+                .addTo(fichaMapInstance);
+            } catch (e) {}
           } catch (e) {
             console.warn('No se pudo pintar el polígono SAEE:', e);
           }
@@ -5784,10 +7178,7 @@
 
         if (hasVertexMarkers) {
           overlayLayers['Marcadores de vértices'] = vertexMarkersLayer;
-          const shouldShowVertices = !projGj && !saeeGj;
-          if (shouldShowVertices) {
-            vertexMarkersLayer.addTo(fichaMapInstance);
-          }
+          // Off por defecto. Usuario los enciende via control de capas.
         }
 
         // Marcador de ubicación (pin azul): dejarlo opcional para que no tape KML/polígonos.
@@ -6293,7 +7684,6 @@
         ${fkv('Folio', p.folio)}
         ${fkv('Subestación', p.subestacion)}
         ${fkv('Punto interconex.', p.puntoInterconexion)}
-        <button id="btnOpenGeoAnalysis" class="geo-analysis-open-btn" onclick="openGeoSpatialAnalysisModal()" disabled>Abrir análisis geoespacial</button>
       `;
 
       document.getElementById('mFichaBody4').innerHTML = `
