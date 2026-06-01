@@ -1316,10 +1316,80 @@
       padding: 35px 45px;
     }
 
+    .ficha-modal-content .ficha-slide-header {
+      background: #ffffff;
+      border-bottom: 2px solid #b71e4f;
+      grid-template-columns: 1.25fr 1.9fr 1fr;
+      box-shadow: 0 4px 10px rgba(16, 24, 40, 0.06);
+      padding-top: 10px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .ficha-modal-content .ficha-slide-header .brand-left {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.05;
+      color: var(--color-guinda);
+      font-size: 0;
+      position: relative;
+      padding-left: 12px;
+    }
+
+    .ficha-modal-content .ficha-slide-header .brand-left::before {
+      width: 3px;
+      height: 42px;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      background: #b71e4f;
+    }
+
+    .ficha-modal-content .ficha-slide-header .brand-line-1,
+    .ficha-modal-content .ficha-slide-header .brand-line-2 {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: none;
+    }
+
+    .ficha-modal-content .ficha-slide-header .brand-line-1 {
+      font-size: 16px;
+    }
+
+    .ficha-modal-content .ficha-slide-header .brand-line-2 {
+      font-size: 15px;
+    }
+
+    .ficha-modal-content .ficha-slide-header .ef-title {
+      min-width: 0;
+      overflow: hidden;
+      color: #202733;
+      font-size: 24px;
+      line-height: 1.1;
+      letter-spacing: .02em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ficha-modal-content .ficha-slide-header .ef-title::before,
+    .ficha-modal-content .ficha-slide-header .ef-title::after {
+      margin: 0 10px;
+      color: var(--color-dorado);
+    }
+
+    .ficha-modal-content .ficha-slide-header .logo-right {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      padding-right: 8px;
+    }
+
     .modal-close-btn {
       position: absolute;
-      top: 10px;
-      right: 15px;
+      top: 5px;
+      right: 8px;
       background: none;
       border: none;
       font-size: 28px;
@@ -1336,11 +1406,11 @@
 
     .ficha-page-badge {
       font-family: 'Outfit', sans-serif;
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 700;
       color: #fff;
       background: var(--color-guinda);
-      padding: 4px 12px;
+      padding: 3px 9px;
       border-radius: 999px;
       letter-spacing: .08em;
       white-space: nowrap;
@@ -2518,6 +2588,154 @@
       letter-spacing: .06em;
     }
 
+    /* ==== PDF EXPORT ==== */
+    .pdf-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 14000;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(4px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .pdf-loader.show { display: flex; }
+
+    .pdf-loader .spinner-ring {
+      width: 56px;
+      height: 56px;
+      border: 4px solid rgba(255, 255, 255, 0.18);
+      border-top-color: #f7dca1;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .pdf-loader .pl-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #f7dca1;
+    }
+
+    .pdf-loader .pl-step {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.82);
+      letter-spacing: .04em;
+    }
+
+    .pdf-export-btn {
+      background: #1f2937;
+      color: #fff;
+      border: 1px solid #111827;
+      border-radius: 6px;
+      height: 30px;
+      padding: 0 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .pdf-export-btn:hover { background: #111827; }
+    .pdf-export-btn.inline-ctrl {
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 50%;
+      width: 32px;
+      font-size: 14px;
+      background: var(--color-guinda);
+      border-color: var(--color-guinda);
+      box-shadow: 0 4px 12px rgba(155, 34, 71, 0.35);
+      justify-content: center;
+    }
+    .pdf-export-btn.inline-ctrl:hover { background: #7a1534; }
+
+    /* ============ @MEDIA PRINT — REPORTE GENERAL ============ */
+    @media print {
+      @page {
+        size: 14in 7.875in;
+        margin: 0;
+      }
+
+      html, body {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #fff !important;
+        width: 14in;
+        overflow: visible !important;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      #preloader,
+      #presentationControls,
+      #searchModal,
+      #geoAnalysisModal,
+      .ficha-modal,
+      #pdfLoader,
+      .pdf-export-btn.fab,
+      .pdf-export-btn.inline-ctrl,
+      .geo-reveal-toast,
+      .geo-tour-progress {
+        display: none !important;
+      }
+
+      #deck {
+        display: block !important;
+        width: 14in !important;
+        height: auto !important;
+        background: #fff !important;
+      }
+
+      .slide {
+        display: flex !important;
+        position: relative !important;
+        width: 14in !important;
+        height: 7.875in !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
+        z-index: auto !important;
+        page-break-after: always;
+        break-after: page;
+        overflow: hidden !important;
+        background: #fff !important;
+      }
+
+      .slide:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+
+      .slide-container {
+        width: 14in !important;
+        height: 7.875in !important;
+        transform: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
     .geo-analysis-open-btn {
       width: 100%;
       margin-top: 8px;
@@ -2580,13 +2798,13 @@
     <!-- SLIDE 1: PORTADA -->
     <section class="slide cover active" id="slide-0">
       <div class="slide-container">
-        <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
+        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt="">
         <div class="cover-overlay"></div>
 
         <div class="top-band">
-          <img class="gob" src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
+          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México">
           <div class="divider"></div>
-          <img class="sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER">
+          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
           <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
         </div>
 
@@ -2630,7 +2848,7 @@
             <span class="brand-line-2">Particulares</span>
           </div>
           <div class="ef-title">Numeralia de Proyectos</div>
-          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png"
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
               alt="SENER"></div>
         </div>
 
@@ -2730,6 +2948,16 @@
         class="bi bi-arrows-fullscreen"></i></button>
     <button class="control-btn" id="btnSearch" onclick="openSearchModal()" title="Buscar proyecto (F)"><i
         class="bi bi-search"></i></button>
+    <button class="control-btn" id="btnPdfReport" onclick="exportFullReportPDF()" title="Exportar reporte a PDF" style="background:var(--color-guinda);color:#fff;">
+      <i class="bi bi-file-earmark-pdf-fill"></i>
+    </button>
+  </div>
+
+  <!-- LOADER PDF -->
+  <div id="pdfLoader" class="pdf-loader">
+    <div class="spinner-ring"></div>
+    <div class="pl-title">Generando PDF</div>
+    <div class="pl-step" id="pdfLoaderStep">Capturando contenido…</div>
   </div>
   <!-- MODAL DE FICHA DETALLADA (ESTILO SEGUNDA-CONVOCATORIA-DGMESNIE) -->
   <div id="fichaModal" class="ficha-modal" style="display: none;">
@@ -2738,8 +2966,11 @@
 
       <!-- Ficha Page 1 -->
       <div id="modalPage1" class="modal-page">
-        <div class="slide-header" style="margin-top: -35px;">
-          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
           <div class="ef-title" id="mFichaTitle1">Proyecto</div>
           <div class="logo-right">
             <span class="ficha-page-badge">Ficha 2/4 · Ubicación y Contacto</span>
@@ -2752,8 +2983,11 @@
 
       <!-- Ficha Page 2 -->
       <div id="modalPage2" class="modal-page" style="display: none;">
-        <div class="slide-header" style="margin-top: -35px;">
-          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
           <div class="ef-title" id="mFichaTitle2">Proyecto</div>
           <div class="logo-right">
             <span class="ficha-page-badge">Ficha 3/4 · Características y SAEE</span>
@@ -2766,8 +3000,11 @@
 
       <!-- Ficha Page 3 -->
       <div id="modalPage3" class="modal-page" style="display: none;">
-        <div class="slide-header" style="margin-top: -35px;">
-          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
           <div class="ef-title" id="mFichaTitle3">Proyecto</div>
           <div class="logo-right">
             <span class="ficha-page-badge">Ficha 4/4 · Trámites y Fases Finales</span>
@@ -2780,8 +3017,11 @@
 
       <!-- Ficha Page 4 -->
       <div id="modalPage4" class="modal-page" style="display: none;">
-        <div class="slide-header" style="margin-top: -35px;">
-          <div class="brand-left">Segunda Convocatoria 2026 — Particulares</div>
+        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
           <div class="ef-title" id="mFichaTitle4">Proyecto</div>
           <div class="logo-right">
             <span class="ficha-page-badge">Ficha 1/4 · Mapa de Análisis y Capas</span>
@@ -2798,6 +3038,9 @@
           Página Anterior</button>
         <button id="btnOpenGeoAnalysis" class="modal-nav-btn geo-analysis-open-btn" onclick="openGeoSpatialAnalysisModal()" disabled style="background:#a57f2c;border-color:#8a6720;">
           <i class="bi bi-globe-americas"></i> Análisis geoespacial
+        </button>
+        <button class="modal-nav-btn" onclick="exportFichaPDF()" style="background:#1f2937;border-color:#111827;">
+          <i class="bi bi-file-earmark-pdf-fill"></i> PDF Ficha
         </button>
         <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage((window._fichaPage || 1) + 1)">Siguiente
           Página ▶</button>
@@ -2836,6 +3079,7 @@
           </label>
           <label class="geo-analysis-control">Radio
             <select id="geoRadiusSelect">
+              <option value="5">5 km</option>
               <option value="20" selected>20 km</option>
               <option value="50">50 km</option>
               <option value="100">100 km</option>
@@ -2843,6 +3087,9 @@
           </label>
           <button type="button" id="geoTourBtn" class="geo-tour-btn" onclick="toggleGeoSpotlightTour()">
             <i class="bi bi-play-circle-fill"></i> Presentar elementos
+          </button>
+          <button type="button" class="pdf-export-btn" onclick="exportGeoAnalysisPDF()" title="Exportar análisis a PDF">
+            <i class="bi bi-file-earmark-pdf-fill"></i> PDF
           </button>
         </div>
         <div id="geoAnalysisMap" class="geo-analysis-map">
@@ -2882,6 +3129,8 @@
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
     // ==========================================
@@ -2891,6 +3140,7 @@
     const SHEET_PUBHTML_URL = CSV_URL.replace('/pub?output=csv', '/pubhtml');
     const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_gerencias.json';
     const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
+    const GEOJSON_SUBESTACIONES_NOMBRES_URL = 'https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_subestaciones2.geojson';
     const GEO_ANALYSIS_BUFFER_KM = 20;
     const GEO_ANALYSIS_RENDER_LIMITS = {
       lineas: 60,
@@ -2929,7 +3179,7 @@
         high:   { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null,   label: 'Línea ≥ 400 kV' },
         medium: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null,   label: 'Línea 161-399 kV' }
       },
-      subestaciones: { color: '#2E7D32', fillColor: '#66BB6A', fillOpacity: 0.92, weight: 1, radius: 5 },
+      subestaciones: { color: '#2E7D32', fillColor: '#66BB6A', fillOpacity: 0.92, weight: 1, radius: 5, pointBufferMeters: 250 },
       permisos: {
         autorizado: { color: '#B71C1C', bg: '#EF5350', label: 'A' },
         tramite: { color: '#A57F2C', bg: '#FFCA28', label: 'T' },
@@ -4614,7 +4864,7 @@
                   <span class="title-main">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})</span>
                   <span class="table-slide-page">${pIdx + 1}/${totalPages}</span>
                 </div>
-                <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+                <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
               </div>
               <div class="table-container">
                 <table class="report-table">
@@ -4691,7 +4941,7 @@
                 <span class="brand-line-2">Particulares</span>
               </div>
               <div class="ef-title">Sistemas de Almacenamiento (BESS)</div>
-              <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+              <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
             </div>
             <div class="table-container">
               <table class="report-table">
@@ -5075,10 +5325,15 @@
       const allKeys = [...baseKeys, ...impactKeys];
 
       const promises = allKeys.map((k) => fetchGeoJSONWithFallback(GEO_ANALYSIS_SOURCES[k], k));
+      promises.push(fetchGeoJSONWithFallback([GEOJSON_SUBESTACIONES_NOMBRES_URL], 'subestaciones_nombres'));
       const results = await Promise.all(promises);
 
       const datasets = {};
       allKeys.forEach((k, i) => { datasets[k] = results[i]; });
+      datasets.subestaciones = mergeSubstationDatasets(
+        datasets.subestaciones,
+        results[allKeys.length]
+      );
       cachedGeoAnalysisDatasets = datasets;
       return datasets;
     }
@@ -5356,11 +5611,13 @@
       const subCandidates = (datasets.subestaciones.features || [])
         .map((feature) => {
           const p = getRepresentativePoint(feature);
-          const distanceKm = p ? turf.distance(centerPoint, p, { units: 'kilometers' }) : Number.POSITIVE_INFINITY;
+          const distanceKm = isPolygonGeometry(feature)
+            ? distancePointToPolygonKm(centerPoint, feature)
+            : (p ? turf.distance(centerPoint, p, { units: 'kilometers' }) : Number.POSITIVE_INFINITY);
           return {
             feature,
             distanceKm,
-            name: extractNameFromProps(feature.properties || {}, ['nombre', 'NOMBRE', 'subestacion', 'SUBESTACION', 'SE'])
+            name: getSubstationName(feature)
           };
         });
 
@@ -5572,6 +5829,16 @@
           const pt = getRepresentativePoint(subFeature);
           if (pt && pt.geometry && Array.isArray(pt.geometry.coordinates)) {
             const coords = pt.geometry.coordinates;
+            L.circle([coords[1], coords[0]], {
+              radius: subStyle.pointBufferMeters,
+              color: subStyle.color,
+              fillColor: subStyle.fillColor,
+              fillOpacity: 0.14,
+              weight: 1.5,
+              dashArray: '4,4'
+            })
+              .bindPopup(`<strong>Subestación más cercana</strong><br>${escapeHtmlSimple(analysisResult.nearestSubestacion.name)}<br>Radio representativo: ${subStyle.pointBufferMeters} m<br>Distancia: ${formatDistanceKm(analysisResult.nearestSubestacion.distanceKm)}`)
+              .addTo(layer);
             L.circleMarker([coords[1], coords[0]], {
               radius: Math.max(7, subStyle.radius),
               color: subStyle.color,
@@ -5794,16 +6061,31 @@
 
     let geoClickHighlightLayer = null;
     let geoClickHighlightTimer = null;
+    let geoClickPopup = null;
+    let geoClickActiveTargetKey = null;
+    let geoClickOriginalView = null;
 
-    function clearGeoClickHighlight() {
+    function clearGeoClickHighlight({ restoreView = false } = {}) {
       if (geoClickHighlightLayer && geoAnalysisModalMap) {
         geoAnalysisModalMap.removeLayer(geoClickHighlightLayer);
       }
       geoClickHighlightLayer = null;
+      if (geoClickPopup && geoAnalysisModalMap) {
+        geoAnalysisModalMap.closePopup(geoClickPopup);
+      }
+      geoClickPopup = null;
       if (geoClickHighlightTimer) {
         clearTimeout(geoClickHighlightTimer);
         geoClickHighlightTimer = null;
       }
+      const list = document.getElementById('geoAnalysisDetails');
+      if (list) list.querySelectorAll('li.active').forEach((el) => el.classList.remove('active'));
+      geoClickActiveTargetKey = null;
+
+      if (restoreView && geoClickOriginalView && geoAnalysisModalMap) {
+        geoAnalysisModalMap.setView(geoClickOriginalView.center, geoClickOriginalView.zoom, { animate: true });
+      }
+      if (restoreView) geoClickOriginalView = null;
     }
 
     function focusGeoAnalysisTargetByKey(targetKey) {
@@ -5811,14 +6093,25 @@
       const target = geoAnalysisFocusTargets.get(targetKey);
       if (!target || !target.feature) return;
 
+      if (geoClickActiveTargetKey === targetKey) {
+        clearGeoClickHighlight({ restoreView: true });
+        return;
+      }
+      if (!geoClickOriginalView) {
+        geoClickOriginalView = {
+          center: geoAnalysisModalMap.getCenter(),
+          zoom: geoAnalysisModalMap.getZoom()
+        };
+      }
+      clearGeoClickHighlight();
+      geoClickActiveTargetKey = targetKey;
+
       const list = document.getElementById('geoAnalysisDetails');
       if (list) {
-        list.querySelectorAll('li.active').forEach((el) => el.classList.remove('active'));
         const li = list.querySelector(`li[data-focus-key="${targetKey}"]`);
         if (li) li.classList.add('active');
       }
 
-      clearGeoClickHighlight();
       const accent = target.accent || '#9B2247';
 
       // Zoom
@@ -5863,15 +6156,14 @@
       }
 
       if (popupLatLng && target.title) {
-        L.popup({ className: 'spotlight-popup', closeButton: false, autoClose: false, autoPan: false, offset: [0, -8] })
+        geoClickPopup = L.popup({ className: 'spotlight-popup', closeButton: false, autoClose: true, autoPan: false, offset: [0, -8] })
           .setLatLng(popupLatLng)
           .setContent(`<span class="sp-cat">${escapeHtmlSimple(target.title)}</span><strong>Click en mapa</strong>`)
           .openOn(geoAnalysisModalMap);
       }
 
       geoClickHighlightTimer = setTimeout(() => {
-        clearGeoClickHighlight();
-        if (geoAnalysisModalMap) geoAnalysisModalMap.closePopup();
+        clearGeoClickHighlight({ restoreView: true });
       }, 4500);
     }
 
@@ -6203,6 +6495,8 @@
 
     function renderGeoAnalysisModalMap(context, analysisResult) {
       if (!geoAnalysisModalMap) return;
+      clearGeoClickHighlight({ restoreView: false });
+      geoClickOriginalView = null;
 
       if (geoAnalysisModalLayers.estados && geoAnalysisModalMap.hasLayer(geoAnalysisModalLayers.estados)) {
         geoAnalysisModalMap.removeLayer(geoAnalysisModalLayers.estados);
@@ -6435,6 +6729,18 @@
           if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
           const c = pt.geometry.coordinates;
           labelLatLng = L.latLng(c[1], c[0]);
+          L.circle(labelLatLng, {
+            renderer: sharedCanvasRenderer,
+            radius: subStyle.pointBufferMeters,
+            color: subStyle.color,
+            fillColor: subStyle.fillColor,
+            fillOpacity: 0.14,
+            weight: 1.5,
+            dashArray: '4,4',
+            className: 'reveal-sub'
+          })
+            .bindPopup(`<strong>Subestación</strong><br>${escapeHtmlSimple(item.name)}<br>Radio representativo: ${subStyle.pointBufferMeters} m<br>Distancia: ${formatDistanceKm(item.distanceKm)}`)
+            .addTo(geoAnalysisModalLayers.analysis);
           L.circleMarker(labelLatLng, {
             radius: subStyle.radius,
             color: subStyle.color,
@@ -6625,6 +6931,8 @@
     function closeGeoSpatialAnalysisModal() {
       const modal = document.getElementById('geoAnalysisModal');
       if (modal) modal.style.display = 'none';
+      clearGeoClickHighlight({ restoreView: false });
+      geoClickOriginalView = null;
       clearGeoRevealSequence();
       stopGeoSpotlightTour();
     }
@@ -6887,17 +7195,124 @@
     }
 
     let fichaMapInstance = null;
+    let fichaMapCenter = null;
     let currentMapReqId = 0;
     let modalPage = 1;
     let pendingMapPayload = null;
     const MODAL_TOTAL_PAGES = 4;
     const MODAL_PAGE_ORDER = [4, 1, 2, 3];
     const MODAL_PAGE_LABELS = ['Mapa', 'Ubicación', 'Características', 'Trámites'];
+    const FICHA_MAP_RADIUS_KM = 20;
+
+    function fitFichaMapToRadius() {
+      if (!fichaMapInstance || !fichaMapCenter) return;
+      const radiusBounds = L.latLng(fichaMapCenter[0], fichaMapCenter[1])
+        .toBounds(FICHA_MAP_RADIUS_KM * 2 * 1000);
+      fichaMapInstance.fitBounds(radiusBounds, {
+        padding: [0, 0],
+        animate: false
+      });
+    }
+
+    function getPointCoordinates(feature) {
+      const point = getRepresentativePoint(feature);
+      const coords = point && point.geometry ? point.geometry.coordinates : null;
+      if (!Array.isArray(coords) || coords.length < 2) return null;
+      return [Number(coords[0]), Number(coords[1])];
+    }
+
+    function getSubstationName(feature) {
+      const props = (feature && feature.properties) || {};
+      const candidates = [
+        props._nombre_complementario,
+        props.name,
+        props.nombre,
+        props.NOMBRE,
+        props.subestacion,
+        props.SUBESTACION,
+        props.SE,
+        props.nom_geo,
+        props.nom_cono
+      ];
+      const value = candidates.find((item) => {
+        const text = String(item == null ? '' : item).trim();
+        return text && !/^(N\/D|ND|SIN NOMBRE|SIN DATO)$/i.test(text);
+      });
+      return value ? String(value).trim() : 'Sin nombre';
+    }
+
+    function mergeSubstationDatasets(baseDataset, namedDataset) {
+      const baseFeatures = Array.from((baseDataset && baseDataset.features) || []);
+      const namedFeatures = Array.from((namedDataset && namedDataset.features) || []);
+      if (!namedFeatures.length || typeof turf === 'undefined') {
+        return { type: 'FeatureCollection', features: baseFeatures };
+      }
+
+      const matchRadiusKm = 0.25;
+      const cellSize = 0.01;
+      const grid = new Map();
+      const cellKey = (coords) => `${Math.floor(coords[0] / cellSize)}:${Math.floor(coords[1] / cellSize)}`;
+
+      namedFeatures.forEach((feature, index) => {
+        const coords = getPointCoordinates(feature);
+        if (!coords) return;
+        const key = cellKey(coords);
+        if (!grid.has(key)) grid.set(key, []);
+        grid.get(key).push({ feature, index, coords });
+      });
+
+      const matchedNamedIndexes = new Set();
+      const mergedBase = baseFeatures.map((feature) => {
+        const coords = getPointCoordinates(feature);
+        if (!coords) return feature;
+
+        const gx = Math.floor(coords[0] / cellSize);
+        const gy = Math.floor(coords[1] / cellSize);
+        let best = null;
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            const items = grid.get(`${gx + dx}:${gy + dy}`) || [];
+            items.forEach((item) => {
+              const distanceKm = turf.distance(turf.point(coords), turf.point(item.coords), { units: 'kilometers' });
+              if (distanceKm <= matchRadiusKm && (!best || distanceKm < best.distanceKm)) {
+                best = { ...item, distanceKm };
+              }
+            });
+          }
+        }
+
+        if (!best) return feature;
+        matchedNamedIndexes.add(best.index);
+        return {
+          ...feature,
+          properties: {
+            ...(feature.properties || {}),
+            _nombre_complementario: getSubstationName(best.feature),
+            _fase_complementaria: best.feature.properties && best.feature.properties.fase,
+            _voltaje_kv_complementario: best.feature.properties && best.feature.properties.voltaje_kv,
+            _coincidencia_km: Number(best.distanceKm.toFixed(4))
+          }
+        };
+      });
+
+      const unmatchedNamed = namedFeatures.filter((feature, index) => {
+        if (matchedNamedIndexes.has(index)) return false;
+        return !!getPointCoordinates(feature);
+      });
+
+      console.info(
+        `[Geo] Subestaciones combinadas: ${mergedBase.length} polígonos, ` +
+        `${matchedNamedIndexes.size} coincidencias nominales, ${unmatchedNamed.length} puntos complementarios.`
+      );
+      return { type: 'FeatureCollection', features: [...mergedBase, ...unmatchedNamed] };
+    }
+
     function initFichaMiniMap(coords, title, projectVertices, saeeVertices, kmzProj, kmzLinea, saeeKml, elementId = 'fichaMiniMap', projectData = null) {
       if (fichaMapInstance) {
         fichaMapInstance.remove();
         fichaMapInstance = null;
       }
+      fichaMapCenter = null;
 
       const mapDiv = document.getElementById(elementId);
       if (!mapDiv) return;
@@ -6970,6 +7385,7 @@
           zoomControl: true,
           attributionControl: false,
           preferCanvas: true,
+          zoomSnap: 0.25,
           zoomAnimation: false,
           fadeAnimation: false,
           markerZoomAnimation: false
@@ -7264,14 +7680,15 @@
           return;
         }
 
-        // Ajustar vista
-        if (bounds.isValid()) {
+        // Mantener una vista comparable entre proyectos: radio visual de 20 km.
+        if (geom.center) {
+          fichaMapCenter = geom.center;
+          fitFichaMapToRadius();
+        } else if (bounds.isValid()) {
           fichaMapInstance.fitBounds(bounds, {
             padding: [20, 20],
             maxZoom: 14
           });
-        } else if (geom.center) {
-          fichaMapInstance.setView(geom.center, 12);
         } else if (noGeometryData) {
           L.popup({ closeButton: false, autoClose: false, closeOnClick: false })
             .setLatLng([23.5, -102.2])
@@ -7283,6 +7700,7 @@
         setTimeout(() => {
           if (fichaMapInstance) {
             fichaMapInstance.invalidateSize();
+            fitFichaMapToRadius();
           }
         }, 250);
       }).catch(err => {
@@ -7348,7 +7766,10 @@
         }
         if (fichaMapInstance) {
           setTimeout(() => {
-            if (fichaMapInstance) fichaMapInstance.invalidateSize();
+            if (fichaMapInstance) {
+              fichaMapInstance.invalidateSize();
+              fitFichaMapToRadius();
+            }
           }, 120);
         }
       }
@@ -7364,6 +7785,7 @@
         fichaMapInstance.remove();
         fichaMapInstance = null;
       }
+      fichaMapCenter = null;
     }
 
     // Cerrar modal al hacer clic en el fondo gris traslúcido
@@ -7849,6 +8271,324 @@
           document.querySelector('.spinner').style.borderTopColor = '#f8d7da';
         });
     });
+
+    // ============================================================
+    // EXPORTACIÓN PDF
+    // ============================================================
+    function showPdfLoader(step) {
+      const el = document.getElementById('pdfLoader');
+      const stp = document.getElementById('pdfLoaderStep');
+      if (stp && step) stp.textContent = step;
+      if (el) el.classList.add('show');
+    }
+
+    function hidePdfLoader() {
+      const el = document.getElementById('pdfLoader');
+      if (el) el.classList.remove('show');
+    }
+
+    function fileSafe(str) {
+      return String(str || 'documento')
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-zA-Z0-9_-]+/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '')
+        .slice(0, 80) || 'documento';
+    }
+
+    const pdfImageCache = {};
+
+    async function pdfUrlToDataUrl(url) {
+      if (pdfImageCache[url]) return pdfImageCache[url];
+      const response = await fetch(url, { mode: 'cors' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      return pdfImageCache[url] = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function inlineRemoteImagesForPdf(root = document) {
+      const images = Array.from(root.querySelectorAll('img[src^="http"]'));
+      await Promise.all(images.map(async (img) => {
+        if (img.src.startsWith('data:')) return;
+        try {
+          img.dataset.pdfOriginalSrc = img.src;
+          img.src = await pdfUrlToDataUrl(img.src);
+          if (!img.complete) {
+            await new Promise((resolve) => {
+              img.addEventListener('load', resolve, { once: true });
+              img.addEventListener('error', resolve, { once: true });
+            });
+          }
+        } catch (err) {
+          console.warn('No se pudo integrar imagen remota al PDF:', img.src, err.message);
+        }
+      }));
+    }
+
+    async function captureReportSlideForPdf(slide) {
+      const container = slide.querySelector('.slide-container') || slide;
+      const previousTransform = container.style.transform;
+      const previousTransition = container.style.transition;
+      container.style.transform = 'none';
+      container.style.transition = 'none';
+
+      try {
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return await html2canvas(container, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: container.offsetWidth,
+          height: container.offsetHeight,
+          windowWidth: container.offsetWidth,
+          windowHeight: container.offsetHeight
+        });
+      } finally {
+        container.style.transform = previousTransform;
+        container.style.transition = previousTransition;
+      }
+    }
+
+    async function captureElementAsPdf(el, filename, orientation = 'l') {
+      if (!el) { alert('No se encontró el contenido a exportar.'); return; }
+      if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+        alert('Librerías PDF no cargadas. Revisa tu conexión a internet.');
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+
+      showPdfLoader('Esperando renderizado…');
+      await new Promise((r) => setTimeout(r, 350));
+
+      try {
+        await inlineRemoteImagesForPdf(el);
+        showPdfLoader('Capturando contenido…');
+        const canvas = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          windowWidth: el.scrollWidth,
+          windowHeight: el.scrollHeight
+        });
+
+        showPdfLoader('Componiendo PDF…');
+        const pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        const margin = 6;
+        const usableW = pageW - margin * 2;
+        const imgW = usableW;
+        const imgH = canvas.height * imgW / canvas.width;
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+        if (imgH <= pageH - margin * 2) {
+          // cabe en una sola página, centrado vertical
+          const y = (pageH - imgH) / 2;
+          pdf.addImage(imgData, 'JPEG', margin, y, imgW, imgH);
+        } else {
+          // multi-página: trocear imagen verticalmente
+          let heightLeft = imgH;
+          let position = margin;
+          pdf.addImage(imgData, 'JPEG', margin, position, imgW, imgH);
+          heightLeft -= (pageH - margin * 2);
+          while (heightLeft > 0) {
+            position = margin - (imgH - heightLeft);
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', margin, position, imgW, imgH);
+            heightLeft -= (pageH - margin * 2);
+          }
+        }
+
+        showPdfLoader('Guardando archivo…');
+        pdf.save(filename);
+      } catch (err) {
+        console.error('Error PDF:', err);
+        alert('Error generando PDF: ' + err.message);
+      } finally {
+        hidePdfLoader();
+      }
+    }
+
+    function getVisibleFichaColumns(el) {
+      const visiblePage = Array.from(el.querySelectorAll('.modal-page'))
+        .find((page) => page.style.display !== 'none');
+      return visiblePage ? Array.from(visiblePage.querySelectorAll('.ficha-col')) : [];
+    }
+
+    function getFichaPageSliceCount(el) {
+      const columns = getVisibleFichaColumns(el);
+      return Math.max(1, ...columns.map((column) => {
+        return column.clientHeight ? Math.ceil(column.scrollHeight / column.clientHeight) : 1;
+      }));
+    }
+
+    function prepareFichaPageSliceForPdf(el, sliceIndex) {
+      const columns = getVisibleFichaColumns(el);
+      const previousState = columns.map((column) => ({
+        column,
+        cssText: column.style.cssText,
+        scrollTop: column.scrollTop
+      }));
+
+      columns.forEach((column) => {
+        const availableHeight = column.clientHeight;
+        const maxScrollTop = Math.max(0, column.scrollHeight - availableHeight);
+        column.scrollTop = Math.min(sliceIndex * availableHeight, maxScrollTop);
+        column.style.overflowY = 'hidden';
+      });
+
+      return () => {
+        previousState.forEach(({ column, cssText, scrollTop }) => {
+          column.style.cssText = cssText;
+          column.scrollTop = scrollTop;
+        });
+      };
+    }
+
+    async function exportFichaPDF() {
+      const el = document.querySelector('.ficha-modal-content');
+      if (!el) { alert('Ficha no abierta.'); return; }
+      if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+        alert('Librerías PDF no cargadas. Revisa tu conexión a internet.');
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const name = (currentFichaProject && currentFichaProject.nombre) || 'ficha';
+      const previousPage = modalPage;
+      const navBar = el.querySelector('.modal-nav-bar');
+      const closeButton = el.querySelector('.modal-close-btn');
+      const previousNavDisplay = navBar ? navBar.style.display : '';
+      const previousCloseDisplay = closeButton ? closeButton.style.display : '';
+
+      showPdfLoader(`Preparando ${MODAL_TOTAL_PAGES} páginas de ficha…`);
+
+      try {
+        await inlineRemoteImagesForPdf(el);
+        if (navBar) navBar.style.display = 'none';
+        if (closeButton) closeButton.style.display = 'none';
+
+        // Formato panorámico 16:9 para conservar la composición de cada ficha.
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        let hasPdfPage = false;
+
+        for (let pageNum = 1; pageNum <= MODAL_TOTAL_PAGES; pageNum++) {
+          showModalPage(pageNum);
+
+          if (pageNum === 1 && fichaMapInstance) {
+            fichaMapInstance.invalidateSize();
+          }
+          await new Promise((resolve) => setTimeout(resolve, pageNum === 1 ? 900 : 250));
+
+          const sliceCount = getFichaPageSliceCount(el);
+          for (let sliceIndex = 0; sliceIndex < sliceCount; sliceIndex++) {
+            showPdfLoader(
+              sliceCount > 1
+                ? `Capturando ficha ${pageNum}/${MODAL_TOTAL_PAGES} · continuación ${sliceIndex + 1}/${sliceCount}…`
+                : `Capturando ficha ${pageNum}/${MODAL_TOTAL_PAGES}…`
+            );
+            const restoreFichaPage = prepareFichaPageSliceForPdf(el, sliceIndex);
+            try {
+              await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+              const canvas = await captureReportSlideForPdf(el);
+              const imgData = canvas.toDataURL('image/png');
+              if (hasPdfPage) pdf.addPage();
+              pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
+              hasPdfPage = true;
+            } finally {
+              restoreFichaPage();
+            }
+          }
+        }
+
+        showPdfLoader('Guardando archivo…');
+        pdf.save(`Ficha_${fileSafe(name)}.pdf`);
+      } catch (err) {
+        console.error('Error PDF ficha:', err);
+        alert('Error generando PDF de ficha: ' + err.message);
+      } finally {
+        if (navBar) navBar.style.display = previousNavDisplay;
+        if (closeButton) closeButton.style.display = previousCloseDisplay;
+        showModalPage(previousPage);
+        hidePdfLoader();
+      }
+    }
+
+    async function exportGeoAnalysisPDF() {
+      const el = document.querySelector('.geo-analysis-modal-content');
+      if (!el) { alert('Análisis geoespacial no abierto.'); return; }
+      const name = (currentGeoAnalysisContext && currentGeoAnalysisContext.title) || 'analisis';
+      await captureElementAsPdf(el, `Analisis_geoespacial_${fileSafe(name)}.pdf`, 'l');
+    }
+
+    async function exportFullReportPDF() {
+      const deck = document.getElementById('deck');
+      if (!deck) { alert('Reporte no cargado.'); return; }
+      if (typeof window.jspdf === 'undefined' || typeof html2canvas === 'undefined') {
+        alert('Librerías PDF no cargadas.');
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const slides = Array.from(deck.querySelectorAll('.slide'));
+      if (!slides.length) { alert('Sin diapositivas para exportar.'); return; }
+
+      showPdfLoader(`Preparando ${slides.length} diapositivas…`);
+      await new Promise((r) => setTimeout(r, 200));
+
+      const previousSlideState = slides.map((slide) => ({
+        slide,
+        display: slide.style.display
+      }));
+      const prevActive = deck.querySelector('.slide.active');
+
+      try {
+        showPdfLoader('Preparando imágenes…');
+        await inlineRemoteImagesForPdf(deck);
+
+        // Mismo formato panorámico del Index: 13.333 x 7.5 in.
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+
+        // forzar activar cada slide para captura
+        for (let i = 0; i < slides.length; i++) {
+          showPdfLoader(`Capturando slide ${i + 1}/${slides.length}…`);
+          slides.forEach((s) => s.classList.remove('active'));
+          slides[i].classList.add('active');
+          slides[i].style.display = 'flex';
+          await new Promise((r) => setTimeout(r, 500));
+
+          const canvas = await captureReportSlideForPdf(slides[i]);
+          const imgData = canvas.toDataURL('image/png');
+          if (i > 0) pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
+        }
+
+        showPdfLoader('Guardando archivo…');
+        pdf.save('Reporte_Segunda_Convocatoria_Particulares.pdf');
+      } catch (err) {
+        console.error('Error PDF reporte:', err);
+        alert('Error generando PDF: ' + err.message);
+      } finally {
+        slides.forEach((s) => s.classList.remove('active'));
+        previousSlideState.forEach(({ slide, display }) => {
+          slide.style.display = display;
+        });
+        if (prevActive) prevActive.classList.add('active');
+        hidePdfLoader();
+      }
+    }
   </script>
 </body>
 
