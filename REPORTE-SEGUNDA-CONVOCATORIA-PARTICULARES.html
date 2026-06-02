@@ -2978,6 +2978,10 @@
     <button class="control-btn" id="btnPdfReport" onclick="exportFullReportPDF()" title="Exportar reporte a PDF" style="background:var(--color-guinda);color:#fff;">
       <i class="bi bi-file-earmark-pdf-fill"></i>
     </button>
+    <button class="control-btn" id="btnIssues" onclick="jumpToIssuesSlide()" title="Reporte de inconsistencias VUPE" style="background:var(--color-guinda);color:#fff;position:relative;">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span id="btnIssuesBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--color-dorado);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;border:2px solid #1E1E1E;line-height:1;">0</span>
+    </button>
   </div>
 
   <!-- LOADER PDF -->
@@ -5140,8 +5144,505 @@
         slideIdx++;
       }
 
+      // ==========================================
+      // SLIDES DE REPORTE DE INCONSISTENCIAS (VUPE)
+      // ==========================================
+      const inconsistencies = detectVupeInconsistencies(DATA);
+      slideIdx = buildInconsistencyReportSlides(deck, inconsistencies, slideIdx);
+
       slidesCount = slideIdx;
       updateControls();
+    }
+
+    // ==========================================
+    // DETECCIÓN DE INCONSISTENCIAS VUPE
+    // ==========================================
+    // Mapeo issue type → label de FICHA_SOURCE_MAP para resolver columna+celda
+    const ISSUE_SOURCE_LABEL = {
+      INV_FALTANTE: 'Inversión reportada',
+      INV_SIN_MONEDA: 'Inversión reportada',
+      KMZ_PROYECTO_FALTA: 'Archivo KMZ Proyecto',
+      KMZ_LINEA_FALTA: 'Archivo KMZ Línea',
+      SAEE_SIN_GEOM: 'Plano KML SAEE',
+      SAEE_GEOM_SIN_DECLARAR: 'Plano KML SAEE',
+      COORD_FUERA_MX: 'Coordenadas (A)',
+      VERTICES_INCONSISTENTES: 'N° de vértices',
+      MW_CERO: 'Cap. instalada',
+      SIN_EF: 'Entidad federativa',
+      SIN_MUNICIPIO: 'Municipio',
+      SIN_GERENCIA: 'Gerencia regional',
+      TRAMITE_INCONSISTENTE: 'Registro (trámite)',
+      MIA_SI_SIN_ESTATUS: 'Estatus MIA',
+      FEOC_FALTA: 'Entrada COD',
+      SIN_TECNOLOGIA: 'Tipo tecnología',
+      FOLIO_FALTA: 'Folio proyecto',
+      GIE_FALTA: 'Grupo de interés (GIE)'
+    };
+
+    function attachSource(issueType, projectRow) {
+      const label = ISSUE_SOURCE_LABEL[issueType] || null;
+      if (!label || !projectRow || !projectRow._sheetRowNumber) {
+        return { sourceLabel: label, sourceColumn: '', cellRef: '' };
+      }
+      try {
+        const ref = getSourceCellRef(label, projectRow._sheetRowNumber);
+        return {
+          sourceLabel: label,
+          sourceColumn: ref.source ? ref.source.name : '—',
+          cellRef: ref.a1 || ''
+        };
+      } catch (e) {
+        return { sourceLabel: label, sourceColumn: '—', cellRef: '' };
+      }
+    }
+
+    function detectVupeInconsistencies(data) {
+      // Bbox aproximada México continental + golfo + zona marítima
+      const MX_BBOX = { minLat: 14.0, maxLat: 33.0, minLng: -118.5, maxLng: -86.0 };
+      const issues = [];
+
+      const isMissing = (v) => {
+        const s = String(v ?? '').trim().toUpperCase();
+        return !s || s === 'SIN INFORMACIÓN' || s === 'NO APLICA' || s === '—' || s === 'N/A';
+      };
+      const yesLike = (v) => /^(s[ií]|true|verdadero|x|1|yes)$/i.test(String(v ?? '').trim());
+
+      const push = (p, type, severity, detail) => {
+        issues.push({
+          id: p.id, nombre: p.nombre || '—', gie: p.gie || '—', ef: p.ef || '—', folio: p.folio || '—',
+          type, severity, detail,
+          ...attachSource(type, p)
+        });
+      };
+
+      data.forEach((p) => {
+
+        // 1) Inversión faltante (solo si texto raw vacío; ignorar parseo numérico)
+        if (isMissing(p.inversionRaw)) {
+          push(p, 'INV_FALTANTE', 'media', 'Sin monto de inversión reportado');
+        }
+
+        // 2) Inversión sin moneda explícita
+        const invStr = String(p.inversionRaw || '').trim();
+        if (invStr && !isMissing(invStr) && !/(USD|MXN|MDD|MDP|PESOS|DÓLARES|DOLARES|EUR|\$)/i.test(invStr)) {
+          push(p, 'INV_SIN_MONEDA', 'baja', `Inversión sin moneda explícita: "${invStr.slice(0, 50)}"`);
+        }
+
+        // 3) KMZ proyecto faltante
+        if (!p.kmzProj || !String(p.kmzProj).startsWith('http')) {
+          push(p, 'KMZ_PROYECTO_FALTA', 'alta', 'Sin URL de KMZ del proyecto');
+        }
+
+        // 4) KMZ línea faltante
+        if (!p.kmzLinea || !String(p.kmzLinea).startsWith('http')) {
+          push(p, 'KMZ_LINEA_FALTA', 'baja', 'Sin URL de KMZ línea de transmisión');
+        }
+
+        // 5) Coherencia entre declaración SAEE y geometría reportada
+        const saeeDeclarado = yesLike(p.saeeRespaldo) || /incorporar/i.test(String(p.saeeRespaldo || ''));
+        const hasSaeeKml = p.saeeKml && String(p.saeeKml).startsWith('http');
+        const hasSaeeVtx = Array.isArray(p.saeeVertices) && p.saeeVertices.length >= 3;
+        if (saeeDeclarado && !hasSaeeKml && !hasSaeeVtx) {
+          push(p, 'SAEE_SIN_GEOM', 'media', 'SAEE declarado pero sin KML ni vértices válidos');
+        }
+        if (!saeeDeclarado && (hasSaeeKml || hasSaeeVtx)) {
+          push(p, 'SAEE_GEOM_SIN_DECLARAR', 'media', `Geometría SAEE cargada, pero respaldo declarado como ${p.saeeRespaldo || 'SIN INFORMACIÓN'}`);
+        }
+
+        // 6) Vértices proyecto fuera de México
+        if (Array.isArray(p.projectVertices) && p.projectVertices.length) {
+          const out = p.projectVertices.filter((v) => !v || v.length < 2 ||
+            v[0] < MX_BBOX.minLat || v[0] > MX_BBOX.maxLat ||
+            v[1] < MX_BBOX.minLng || v[1] > MX_BBOX.maxLng);
+          if (out.length > 0) {
+            push(p, 'COORD_FUERA_MX', 'alta', `${out.length}/${p.projectVertices.length} vértice(s) fuera del territorio nacional`);
+          }
+        }
+
+        // 7) Número de vértices declarado vs reales
+        if (p.numVertices) {
+          const declared = parseInt(p.numVertices, 10);
+          const actual = Array.isArray(p.projectVertices) ? p.projectVertices.length : 0;
+          if (Number.isFinite(declared) && declared !== actual && actual > 0) {
+            push(p, 'VERTICES_INCONSISTENTES', 'baja', `Declarados ${declared} vértices; capturados ${actual}`);
+          }
+        }
+
+        // 8) MW = 0
+        if (!p.mw || p.mw <= 0) {
+          push(p, 'MW_CERO', 'alta', 'Capacidad instalada = 0 MW');
+        }
+
+        // 9) Sin EF
+        if (isMissing(p.ef)) push(p, 'SIN_EF', 'alta', 'Sin entidad federativa');
+
+        // 10) Sin municipio
+        if (isMissing(p.municipio)) push(p, 'SIN_MUNICIPIO', 'media', 'Sin municipio/alcaldía');
+
+        // 11) Sin gerencia regional
+        if (isMissing(p.gerencia)) push(p, 'SIN_GERENCIA', 'media', 'Sin gerencia regional');
+
+        // 12) Trámites en "Sí" pero estatus regulatorios todos SIN INFORMACIÓN
+        const regStatuses = [p.tierras, p.mia, p.misse, p.cenace, p.cenaceVal];
+        const allMissing = regStatuses.every(isMissing);
+        const tramiteYes = yesLike(p.creStatusPresentada) || yesLike(p.creStatusPrevencion);
+        if (tramiteYes && allMissing) {
+          push(p, 'TRAMITE_INCONSISTENTE', 'media', 'Marcado en trámite pero todos los estatus regulatorios son SIN INFORMACIÓN');
+        }
+
+        // 13) MIA declarada pero sin estatus reportado
+        if (yesLike(p.tieneMia) && isMissing(p.estatusMia)) {
+          push(p, 'MIA_SI_SIN_ESTATUS', 'media', '¿Tiene MIA? = SI, pero Estatus MIA está SIN INFORMACIÓN');
+        }
+
+        // 14) FEOC vacío
+        if (isMissing(p.feoc)) push(p, 'FEOC_FALTA', 'baja', 'Sin fecha prevista de entrada en operación comercial');
+
+        // 15) Sin tecnología
+        if (isMissing(p.tecnologia)) push(p, 'SIN_TECNOLOGIA', 'alta', 'Sin clasificación de tecnología');
+
+        // 16) Folio faltante
+        if (isMissing(p.folio)) push(p, 'FOLIO_FALTA', 'media', 'Sin folio de proyecto');
+
+        // 17) GIE faltante
+        if (isMissing(p.gie) || /NO IDENTIFICADO/i.test(p.gie || '')) {
+          push(p, 'GIE_FALTA', 'media', 'Grupo de interés no identificado');
+        }
+      });
+
+      return issues;
+    }
+
+    const ISSUE_PALETTE = {
+      guinda: '#9b2247',
+      guindaOscuro: '#6a172f',
+      dorado: '#a57f2c',
+      verde: '#1e5b4f',
+      gris: '#64748b'
+    };
+
+    const ISSUE_LABELS = {
+      INV_FALTANTE: { label: 'Inversión faltante o cero', color: ISSUE_PALETTE.guinda },
+      INV_SIN_MONEDA: { label: 'Inversión sin moneda', color: ISSUE_PALETTE.dorado },
+      KMZ_PROYECTO_FALTA: { label: 'KMZ proyecto faltante', color: ISSUE_PALETTE.guindaOscuro },
+      KMZ_LINEA_FALTA: { label: 'KMZ línea faltante', color: ISSUE_PALETTE.gris },
+      SAEE_SIN_GEOM: { label: 'SAEE sin geometría', color: ISSUE_PALETTE.verde },
+      SAEE_GEOM_SIN_DECLARAR: { label: 'SAEE con geometría no declarado', color: ISSUE_PALETTE.dorado },
+      COORD_FUERA_MX: { label: 'Coordenadas fuera de México', color: ISSUE_PALETTE.guindaOscuro },
+      VERTICES_INCONSISTENTES: { label: 'Vértices declarados ≠ capturados', color: ISSUE_PALETTE.dorado },
+      MW_CERO: { label: 'MW = 0', color: ISSUE_PALETTE.guinda },
+      SIN_EF: { label: 'Sin entidad federativa', color: ISSUE_PALETTE.guindaOscuro },
+      SIN_MUNICIPIO: { label: 'Sin municipio', color: ISSUE_PALETTE.dorado },
+      SIN_GERENCIA: { label: 'Sin gerencia regional', color: ISSUE_PALETTE.dorado },
+      TRAMITE_INCONSISTENTE: { label: 'Trámite vs estatus inconsistente', color: ISSUE_PALETTE.guinda },
+      MIA_SI_SIN_ESTATUS: { label: 'MIA declarada sin estatus', color: ISSUE_PALETTE.guinda },
+      FEOC_FALTA: { label: 'FEOC faltante', color: ISSUE_PALETTE.gris },
+      SIN_TECNOLOGIA: { label: 'Sin tecnología', color: ISSUE_PALETTE.dorado },
+      FOLIO_FALTA: { label: 'Folio faltante', color: ISSUE_PALETTE.gris },
+      GIE_FALTA: { label: 'GIE no identificado', color: ISSUE_PALETTE.verde }
+    };
+
+    const SEVERITY_COLORS = {
+      alta: { bg: '#f7e8ed', border: '#c75b7b', text: '#6a172f', chart: ISSUE_PALETTE.guinda },
+      media: { bg: '#f7f0df', border: '#c7a85b', text: '#7a5c1a', chart: ISSUE_PALETTE.dorado },
+      baja: { bg: '#edf4f2', border: '#9abbb4', text: '#1e5b4f', chart: ISSUE_PALETTE.verde }
+    };
+
+    let _inconsistencySlideStart = -1;
+
+    function jumpToIssuesSlide() {
+      if (_inconsistencySlideStart >= 0) {
+        showSlide(_inconsistencySlideStart);
+      } else {
+        alert('Reporte de inconsistencias no disponible.');
+      }
+    }
+
+    function buildInconsistencyReportSlides(deck, issues, slideIdx) {
+      _inconsistencySlideStart = slideIdx; // primer slide del reporte
+      // Agrupar por tipo, proyecto y GIE
+      const byType = {};
+      const byProject = {};
+      const byGie = {};
+      const bySeverityGie = {}; // {gie: {alta, media, baja}}
+      issues.forEach((iss) => {
+        if (!byType[iss.type]) byType[iss.type] = [];
+        byType[iss.type].push(iss);
+        if (!byProject[iss.id]) byProject[iss.id] = { ...iss, issues: [] };
+        byProject[iss.id].issues.push(iss);
+        const gie = iss.gie || 'NO IDENTIFICADO';
+        byGie[gie] = (byGie[gie] || 0) + 1;
+        if (!bySeverityGie[gie]) bySeverityGie[gie] = { alta: 0, media: 0, baja: 0 };
+        bySeverityGie[gie][iss.severity] = (bySeverityGie[gie][iss.severity] || 0) + 1;
+      });
+
+      const totalIssues = issues.length;
+      const totalProjects = Object.keys(byProject).length;
+      const multiIssueProjects = Object.values(byProject).filter((project) => project.issues.length > 1).length;
+      const totalDataProjects = (typeof DATA !== 'undefined' && Array.isArray(DATA)) ? DATA.length : 0;
+      const sev = { alta: 0, media: 0, baja: 0 };
+      issues.forEach((i) => { sev[i.severity] = (sev[i.severity] || 0) + 1; });
+
+      // Top 10 GIEs con más issues
+      const topGies = Object.entries(byGie)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([gie, count]) => ({
+          gie,
+          count,
+          alta: bySeverityGie[gie].alta,
+          media: bySeverityGie[gie].media,
+          baja: bySeverityGie[gie].baja
+        }));
+
+      // Actualizar badge nav (asíncrono)
+      setTimeout(() => {
+        const badge = document.getElementById('btnIssuesBadge');
+        if (badge && totalIssues > 0) {
+          badge.style.display = 'inline-block';
+          badge.textContent = totalIssues > 999 ? '999+' : totalIssues;
+        }
+      }, 100);
+
+      // ---------- SLIDE 1: RESUMEN ----------
+      const summarySlide = document.createElement('section');
+      summarySlide.className = 'slide tabular-slide';
+      summarySlide.id = `slide-${slideIdx}`;
+
+      const sortedTypes = Object.entries(byType).sort((a, b) => b[1].length - a[1].length);
+      const typeChipsHtml = sortedTypes.map(([type, items]) => {
+        const cfg = ISSUE_LABELS[type] || { label: type, color: '#64748b' };
+        return `<div style="background:${cfg.color}18;border:1px solid ${cfg.color};border-left:4px solid ${cfg.color};border-radius:6px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span style="font-size:10px;font-weight:700;color:${cfg.color};">${cfg.label}</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:${cfg.color};">${items.length}</span>
+        </div>`;
+      }).join('');
+
+      const chartId = `chartInconsistGies_${slideIdx}`;
+      const chartTypesId = `chartInconsistTypes_${slideIdx}`;
+
+      summarySlide.innerHTML = `
+        <div class="slide-container">
+          <div class="slide-header">
+            <div class="brand-left">
+              <span class="brand-line-1">Segunda Convocatoria 2026</span>
+              <span class="brand-line-2">Particulares</span>
+            </div>
+            <div class="ef-title">
+              <span class="title-main">Reporte de inconsistencias VUPE</span>
+              <span class="table-slide-page">Resumen nacional</span>
+            </div>
+            <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+          </div>
+
+          <div style="padding:10px 16px;display:flex;flex-direction:column;gap:10px;height:calc(100% - 64px);overflow:hidden;">
+            <!-- KPIs -->
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;">
+              <div style="background:linear-gradient(135deg,#9b2247 0%,#6a172f 100%);color:#fff;padding:10px;border-radius:8px;box-shadow:0 4px 12px rgba(155,34,71,.25);">
+                <div style="font-size:8px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;">Total hallazgos</div>
+                <div style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;line-height:1;">${totalIssues}</div>
+              </div>
+              <div style="background:#fff;border:1px solid #e5e7eb;padding:10px;border-radius:8px;border-left:4px solid #9b2247;">
+                <div style="font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;font-weight:700;">Proyectos afectados</div>
+                <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:#9b2247;line-height:1;">${totalProjects}<span style="font-size:10px;color:#94a3b8;font-weight:600;"> / ${totalDataProjects}</span></div>
+                <div style="font-size:8px;color:#94a3b8;margin-top:2px;">${totalDataProjects ? Math.round(totalProjects / totalDataProjects * 100) : 0}% del padrón</div>
+              </div>
+              <div style="background:#fff;border:1px solid #e5e7eb;padding:10px;border-radius:8px;border-left:4px solid #a57f2c;">
+                <div style="font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;font-weight:700;">Con múltiples hallazgos</div>
+                <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:#a57f2c;line-height:1;">${multiIssueProjects}</div>
+                <div style="font-size:8px;color:#94a3b8;margin-top:2px;">más de una inconsistencia</div>
+              </div>
+              <div style="background:${SEVERITY_COLORS.alta.bg};border:1px solid ${SEVERITY_COLORS.alta.border};padding:10px;border-radius:8px;">
+                <div style="font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:${SEVERITY_COLORS.alta.text};font-weight:700;">Severidad alta</div>
+                <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:${SEVERITY_COLORS.alta.text};line-height:1;">${sev.alta}</div>
+              </div>
+              <div style="background:${SEVERITY_COLORS.media.bg};border:1px solid ${SEVERITY_COLORS.media.border};padding:10px;border-radius:8px;">
+                <div style="font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:${SEVERITY_COLORS.media.text};font-weight:700;">Severidad media</div>
+                <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:${SEVERITY_COLORS.media.text};line-height:1;">${sev.media}</div>
+              </div>
+              <div style="background:${SEVERITY_COLORS.baja.bg};border:1px solid ${SEVERITY_COLORS.baja.border};padding:10px;border-radius:8px;">
+                <div style="font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:${SEVERITY_COLORS.baja.text};font-weight:700;">Severidad baja</div>
+                <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:${SEVERITY_COLORS.baja.text};line-height:1;">${sev.baja}</div>
+              </div>
+            </div>
+
+            <!-- Charts -->
+            <div style="flex:1;min-height:0;display:grid;grid-template-columns:1.4fr 1fr;gap:10px;overflow:hidden;">
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+                <div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#9b2247;border-bottom:2px solid #9b2247;padding:6px 10px;background:linear-gradient(180deg,#fbfbfb 0%,#f3f3f3 100%);">Top 10 GIE con más inconsistencias</div>
+                <div id="${chartId}" style="flex:1;min-height:0;"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+                <div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#a57f2c;border-bottom:2px solid #a57f2c;padding:6px 10px;background:linear-gradient(180deg,#fbfbfb 0%,#f3f3f3 100%);">Distribución por tipo</div>
+                <div id="${chartTypesId}" style="flex:1;min-height:0;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-footer"></div>
+        </div>
+      `;
+      deck.appendChild(summarySlide);
+
+      // Render Highcharts después de DOM insert
+      setTimeout(() => {
+        if (typeof Highcharts === 'undefined' || totalIssues === 0) return;
+        // Chart 1: stacked bar top GIEs por severidad
+        Highcharts.chart(chartId, {
+          chart: { type: 'bar', backgroundColor: 'transparent', spacing: [10, 10, 10, 5] },
+          title: { text: null },
+          credits: { enabled: false },
+          xAxis: {
+            categories: topGies.map((g) => g.gie.length > 32 ? g.gie.slice(0, 32) + '…' : g.gie),
+            labels: { style: { fontSize: '9px', fontWeight: '700', color: '#334155' } }
+          },
+          yAxis: {
+            min: 0,
+            title: { text: null },
+            labels: { style: { fontSize: '8px', color: '#64748b' } },
+            stackLabels: {
+              enabled: true,
+              style: { fontWeight: '800', color: '#1e293b', fontSize: '9px', textOutline: 'none' }
+            }
+          },
+          legend: {
+            itemStyle: { fontSize: '9px', fontWeight: '700' },
+            symbolHeight: 8, symbolWidth: 12,
+            margin: 4
+          },
+          tooltip: { headerFormat: '<b>{point.x}</b><br>', pointFormat: '{series.name}: <b>{point.y}</b><br>Total: <b>{point.stackTotal}</b>' },
+          plotOptions: {
+            series: {
+              stacking: 'normal',
+              dataLabels: { enabled: true, style: { fontSize: '8px', fontWeight: '700', textOutline: 'none', color: '#fff' } },
+              borderWidth: 0
+            }
+          },
+          series: [
+            { name: 'Alta',  data: topGies.map((g) => g.alta), color: SEVERITY_COLORS.alta.chart },
+            { name: 'Media', data: topGies.map((g) => g.media), color: SEVERITY_COLORS.media.chart },
+            { name: 'Baja',  data: topGies.map((g) => g.baja), color: SEVERITY_COLORS.baja.chart }
+          ]
+        });
+
+        // Chart 2: donut por tipo
+        Highcharts.chart(chartTypesId, {
+          chart: { type: 'pie', backgroundColor: 'transparent', spacing: [10, 5, 10, 5] },
+          title: { text: null },
+          credits: { enabled: false },
+          tooltip: { pointFormat: '<b>{point.y}</b> ({point.percentage:.1f}%)' },
+          plotOptions: {
+            pie: {
+              innerSize: '60%',
+              dataLabels: {
+                enabled: true,
+                style: { fontSize: '8px', fontWeight: '700', textOutline: 'none' },
+                format: '{point.name}: <b>{point.y}</b>',
+                distance: 8
+              },
+              borderWidth: 1, borderColor: '#fff'
+            }
+          },
+          series: [{
+            name: 'Hallazgos',
+            data: sortedTypes.map(([type, items]) => ({
+              name: (ISSUE_LABELS[type] || { label: type }).label,
+              y: items.length,
+              color: (ISSUE_LABELS[type] || { color: '#64748b' }).color
+            }))
+          }]
+        });
+      }, 50);
+
+      slideIdx++;
+
+      // ---------- SLIDES DE DETALLE (paginado) ----------
+      // Ordenar por severidad alta → media → baja, luego por nombre proyecto
+      const sevOrder = { alta: 0, media: 1, baja: 2 };
+      const sortedIssues = issues.slice().sort((a, b) => {
+        const d = sevOrder[a.severity] - sevOrder[b.severity];
+        if (d !== 0) return d;
+        return String(a.nombre).localeCompare(String(b.nombre));
+      });
+
+      const rowsPerPage = 22;
+      const totalPages = Math.ceil(sortedIssues.length / rowsPerPage);
+
+      for (let pIdx = 0; pIdx < totalPages; pIdx++) {
+        const chunk = sortedIssues.slice(pIdx * rowsPerPage, (pIdx + 1) * rowsPerPage);
+        const slide = document.createElement('section');
+        slide.className = 'slide tabular-slide';
+        slide.id = `slide-${slideIdx}`;
+
+        const rowsHtml = chunk.map((iss, i) => {
+          const sevCfg = SEVERITY_COLORS[iss.severity] || SEVERITY_COLORS.baja;
+          const typeCfg = ISSUE_LABELS[iss.type] || { label: iss.type, color: '#64748b' };
+          const projectIssueCount = byProject[iss.id]?.issues.length || 1;
+          const rowNum = pIdx * rowsPerPage + i + 1;
+          return `
+            <tr>
+              <td class="col-center-text" style="font-weight:600;color:var(--color-text-light);">${rowNum}</td>
+              <td style="max-width:170px;font-weight:600;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${iss.nombre}</span>
+                  ${projectIssueCount > 1 ? `<span title="${projectIssueCount} inconsistencias para este proyecto" style="background:#f7f0df;border:1px solid #c7a85b;color:#7a5c1a;padding:1px 4px;border-radius:999px;font-family:'Outfit',sans-serif;font-size:8px;font-weight:800;white-space:nowrap;">×${projectIssueCount}</span>` : ''}
+                  <button onclick="openFichaModal('${iss.id}')" style="background:var(--color-guinda);color:white;border:none;padding:2px 5px;font-size:8px;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver</button>
+                </div>
+              </td>
+              <td style="max-width:120px;font-size:8.5px;">${iss.gie}</td>
+              <td class="col-center-text" style="font-size:8.5px;">${iss.ef}</td>
+              <td class="col-center-text">
+                <span style="background:${sevCfg.bg};border:1px solid ${sevCfg.border};color:${sevCfg.text};padding:1px 6px;border-radius:999px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;">${iss.severity}</span>
+              </td>
+              <td>
+                <span style="background:${typeCfg.color}18;border:1px solid ${typeCfg.color};color:${typeCfg.color};padding:1px 6px;border-radius:4px;font-size:8.5px;font-weight:700;white-space:nowrap;">${typeCfg.label}</span>
+              </td>
+              <td style="font-size:8.5px;">${iss.detail}</td>
+              <td style="font-size:8px;line-height:1.25;">
+                ${iss.sourceColumn ? `<div style="color:#475569;font-weight:600;">${iss.sourceColumn.slice(0, 38)}${iss.sourceColumn.length > 38 ? '…' : ''}</div>` : ''}
+                ${iss.cellRef ? `<div style="font-family:'Outfit',sans-serif;font-weight:800;color:#9b2247;letter-spacing:.04em;">${iss.cellRef}</div>` : '<div style="color:#94a3b8;font-style:italic;">—</div>'}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        slide.innerHTML = `
+          <div class="slide-container">
+            <div class="slide-header">
+              <div class="brand-left">
+                <span class="brand-line-1">Segunda Convocatoria 2026</span>
+                <span class="brand-line-2">Particulares</span>
+              </div>
+              <div class="ef-title">
+                <span class="title-main">Detalle de inconsistencias VUPE</span>
+                <span class="table-slide-page">${pIdx + 1}/${totalPages}</span>
+              </div>
+              <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+            </div>
+            <div class="table-container">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th style="width:25px;text-align:center;">#</th>
+                    <th style="width:170px;">Proyecto</th>
+                    <th style="width:120px;">GIE</th>
+                    <th style="width:80px;text-align:center;">EF</th>
+                    <th style="width:60px;text-align:center;">Severidad</th>
+                    <th style="width:140px;">Tipo de hallazgo</th>
+                    <th>Detalle</th>
+                    <th style="width:120px;">Fuente · Celda</th>
+                  </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+              </table>
+            </div>
+            <div class="slide-footer"></div>
+          </div>
+        `;
+        deck.appendChild(slide);
+        slideIdx++;
+      }
+
+      return slideIdx;
     }
 
     // ==========================================
