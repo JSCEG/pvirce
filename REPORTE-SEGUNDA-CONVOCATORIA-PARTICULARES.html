@@ -1161,7 +1161,7 @@
       left: 12px;
       background: #b71e4f;
       border-radius: 10px;
-      min-width: 218px;
+      min-width: 270px;
       padding: 8px 10px;
       font-size: 9px;
       letter-spacing: .01em;
@@ -4231,11 +4231,11 @@
       const formatMillions = amount => formatInt(amount / 1000000);
       return `
         <div class="investment-summary-title">Inversión reportada</div>
-        <div class="investment-summary-row"><span>USD</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
-        <div class="investment-summary-row"><span>MXN</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
-        <div class="investment-summary-row"><span>S/M</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} M s/u</strong></div>
-        <div class="investment-summary-row"><span>0 / 1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>
-        <div class="investment-summary-row"><span>S/I</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>
+        <div class="investment-summary-row"><span>USD (Dólares)</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
+        <div class="investment-summary-row"><span>MXN (Pesos)</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
+        <div class="investment-summary-row"><span>Sin tipo de moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} millones</strong></div>
+        <div class="investment-summary-row"><span>Monto en 0 o 1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>
+        <div class="investment-summary-row"><span>Sin información</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>
       `;
     }
 
