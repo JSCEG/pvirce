@@ -3779,7 +3779,12 @@
         col('Definición Terreno');
 
       const kmzProyecto = col('Archivo KMZ');
-      const kmzLineaCandidate = colLast('Archivo KMZ');
+      const kmzLineaCandidate =
+        col('Archivo KMZ (línea transmisión)') ||
+        col('Archivo KMZ línea transmisión') ||
+        col('Archivo KMZ Línea') ||
+        col('KMZ línea transmisión') ||
+        colLast('Archivo KMZ');
 
       // Vertices proyecto: buscar número de vértices y vértices
       const numVertices = col('Número de vértices:');
@@ -3874,7 +3879,7 @@
         kmzLinea: kmzLineaCandidate !== kmzProyecto ? kmzLineaCandidate : '',
 
         // SAEE fields
-        saeeRespaldo: col('El proyecto ya cuenta con respaldo; indicar si se desea inco'),
+        saeeRespaldo: col('El proyecto ya cuenta con respaldo; indicar si se desea incorporar SAEE:'),
         saeeRed: col('¿El SAEE inyectará energía eléctrica a la RNT o a las RGD?'),
         saeeTec: col('Tecnología que utiliza el SAEE:'),
         saeeMW: num(saeePotencia),
@@ -3884,7 +3889,7 @@
         saeeVelCarga: col('Velocidad de carga (MW/min)'),
         saeeVelDescarga: col('Velocidad de descarga (MW/min)'),
         saeeCorrienteFalla: col('Indicar corriente de falla que soporta el SAEE:'),
-        saeeModos: col('Seleccionar el(los) modo(s) de operación para elaboración de'),
+        saeeModos: col('Seleccionar el(los) modo(s) de operación para elaboración de estudios:'),
         saeeMetodoCarga: col('Indicar método de carga del SAEE:'),
         saeeComposicion: col('Información detallada de la composición de las baterías:'),
         saeeEficiencia: col('Eficiencia de las baterías y capacidad de carga/descarga:'),
@@ -3893,8 +3898,8 @@
         saeeCiclos: col('Número óptimo de ciclos de carga y descarga anuales:'),
         saeeCapMinCenace: col('La capacidad mínima del SAEE es determinada por el CENACE:'),
         saeeNumEstudios: col('Número de estudios de almacenamiento:'),
-        saeeDentroPredio: col('¿El SAEE está ubicado dentro del predio del Proyecto de auto'),
-        saeeKml: col('Plano georreferenciado de la ubicación del SAEE en formato K'),
+        saeeDentroPredio: col('¿El SAEE está ubicado dentro del predio del Proyecto de autoconsumo?'),
+        saeeKml: col('Plano georreferenciado de la ubicación del SAEE en formato KML:'),
 
         // Fases finales
         cenaceVal: col('Estatus Validación CENACE'),
@@ -3929,7 +3934,15 @@
         contratoDoc: col('Contrato de interconexion'),
 
         projectVertices: parseVerticesFromHeader(row, colIndex, colIndexAll, 'Vértice A', numVertices),
-        saeeVertices: parseVerticesFromHeader(row, colIndex, colIndexAll, 'Vértice A', 3, true),
+        saeeVertices: (() => {
+          // SAEE usa "Vértice A (SAEE)" en columnas separadas, fallback a último "Vértice A"
+          const variants = ['Vértice A (SAEE)', 'Vertice A (SAEE)', 'Vértice A SAEE'];
+          for (const name of variants) {
+            const v = parseVerticesFromHeader(row, colIndex, colIndexAll, name, 3, false);
+            if (v.length) return v;
+          }
+          return parseVerticesFromHeader(row, colIndex, colIndexAll, 'Vértice A', 3, true);
+        })(),
 
         descripcion: col('Descripción Proyecto')
       };
@@ -4141,7 +4154,7 @@
         preFolio: col(1),
         anexo4: col(528),
         kmzProj: col(456),
-        kmzLinea: (col(488) && col(488) !== col(456)) ? col(488) : '',
+        kmzLinea: (col(460) && col(460) !== col(456)) ? col(460) : '',
 
         // SAEE
         saeeRespaldo: col(489),
@@ -4164,7 +4177,7 @@
         saeeCapMinCenace: col(507),
         saeeNumEstudios: col(508),
         saeeDentroPredio: col(510),
-        saeeKml: col(515),
+        saeeKml: col(520),
 
         // Fases Finales
         cenaceVal: col(542),
@@ -4182,7 +4195,7 @@
         contratoDoc: col(597),
 
         projectVertices: parseVertices(row, 66, num(col(65))),
-        saeeVertices: parseVertices(row, 512, 3),
+        saeeVertices: parseVertices(row, 516, 3),
 
         descripcion: col(6)
       };
@@ -5385,40 +5398,29 @@
       if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) return null;
 
       const e = encodeURIComponent(cleanUrl);
-      const proxies = [
-        'https://corsproxy.io/?url=' + e,
-        'https://api.codetabs.com/v1/proxy/?quest=' + e,
-        'https://api.allorigins.win/raw?url=' + e,
-        'https://thingproxy.freeboard.io/fetch/' + cleanUrl,
-        cleanUrl
+      const isLocalHost = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+      const isGov = /\.gob\.mx/i.test(cleanUrl);
+      // [url, timeoutMs, supportsCacheBust]
+      // Para URLs gov, allorigins/raw va primero (único proxy que funciona contra ventanilla SENER).
+      const baseProxies = isGov ? [
+        ['https://api.allorigins.win/raw?url=' + e, 20000, false],
+        ['https://api.allorigins.win/get?url=' + e, 25000, false],
+        ...(!isLocalHost ? [['/kmz?url=' + e, 15000, false]] : []),
+        ['https://thingproxy.freeboard.io/fetch/' + cleanUrl, 18000, false],
+        ['https://api.codetabs.com/v1/proxy/?quest=' + e, 12000, false],
+        ['https://corsproxy.io/?url=' + e, 10000, false],
+        [cleanUrl, 25000, false]
+      ] : [
+        ...(!isLocalHost ? [['/kmz?url=' + e, 12000, false]] : []),
+        ['https://corsproxy.io/?url=' + e, 10000, true],
+        ['https://api.codetabs.com/v1/proxy/?quest=' + e, 12000, true],
+        ['https://api.allorigins.win/raw?url=' + e, 18000, false],
+        ['https://thingproxy.freeboard.io/fetch/' + cleanUrl, 18000, false],
+        [cleanUrl, 25000, false]
       ];
+      const proxies = baseProxies;
 
-      let buf = null;
-      for (let i = 0; i < proxies.length; i++) {
-        try {
-          const controller = new AbortController();
-          const t = setTimeout(() => controller.abort(), 7000);
-          const r = await fetch(proxies[i], { signal: controller.signal });
-          clearTimeout(t);
-          if (r.ok) {
-            const b = await r.arrayBuffer();
-            if (b && b.byteLength > 40) {
-              buf = b;
-              break;
-            }
-          }
-        } catch (err) {
-          if (err && err.name === 'AbortError') {
-            console.debug('KMZ fetch timeout proxy', i + 1, '(reintentando siguiente)');
-          } else {
-            console.debug('KMZ fetch fail proxy', i + 1, err.message);
-          }
-        }
-      }
-
-      if (!buf) return null;
-
-      try {
+      const parseBuffer = async (buf) => {
         let kmlText;
         const head = new Uint8Array(buf.slice(0, 4));
         if (head[0] === 0x50 && head[1] === 0x4B) { // ZIP (.kmz)
@@ -5431,12 +5433,67 @@
         }
 
         const dom = new DOMParser().parseFromString(kmlText, 'application/xml');
+        if (dom.querySelector('parsererror')) throw new Error('KML XML inválido');
         const gj = (window.toGeoJSON || window.togeojson).kml(dom);
+        if (!gj || !Array.isArray(gj.features) || gj.features.length === 0) {
+          throw new Error('KML sin geometrías interpretables');
+        }
         return gj;
-      } catch (err) {
-        console.warn('Error parsing KML/KMZ:', err.message);
-        return null;
+      };
+
+      for (let i = 0; i < proxies.length; i++) {
+        const [proxyUrl, timeoutMs, supportsCacheBust] = proxies[i];
+        const isLocal = proxyUrl.startsWith('/kmz?');
+        const isAllOriginsGet = proxyUrl.includes('allorigins.win/get');
+        const attempts = isLocal ? 1 : 2;
+        for (let attempt = 0; attempt < attempts; attempt++) {
+          try {
+            const controller = new AbortController();
+            const t = setTimeout(() => controller.abort(), timeoutMs);
+            const requestUrl = (supportsCacheBust && !isLocal && proxyUrl.includes('?'))
+              ? `${proxyUrl}&cacheBust=${Date.now()}-${attempt}`
+              : proxyUrl;
+            const r = await fetch(requestUrl, { signal: controller.signal });
+            clearTimeout(t);
+            if (r.ok) {
+              let b;
+              if (isAllOriginsGet) {
+                // allorigins /get devuelve JSON { contents, status }
+                const json = await r.json();
+                if (json && json.contents) {
+                  const m = String(json.contents).match(/^data:[^;]+;base64,(.+)$/);
+                  if (m) {
+                    const bin = atob(m[1]);
+                    const arr = new Uint8Array(bin.length);
+                    for (let k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+                    b = arr.buffer;
+                  } else {
+                    b = new TextEncoder().encode(json.contents).buffer;
+                  }
+                }
+              } else {
+                b = await r.arrayBuffer();
+              }
+              if (b && b.byteLength > 40) {
+                try {
+                  return await parseBuffer(b);
+                } catch (parseErr) {
+                  console.debug('KMZ inválido proxy', i + 1, 'intento', attempt + 1, parseErr.message);
+                }
+              }
+            }
+          } catch (err) {
+            if (err && err.name === 'AbortError') {
+              console.debug('KMZ fetch timeout proxy', i + 1, `(${timeoutMs}ms) intento`, attempt + 1);
+            } else {
+              console.debug('KMZ fetch fail proxy', i + 1, 'intento', attempt + 1, err.message);
+            }
+          }
+        }
       }
+
+      console.warn('No se pudo obtener un KML/KMZ válido:', cleanUrl);
+      return null;
     }
 
     function emptyFeatureCollection() {
@@ -5569,6 +5626,51 @@
       } catch (e) {
         return Number.POSITIVE_INFINITY;
       }
+    }
+
+    function reconstructPolygonFromVertices(gj) {
+      if (!gj || !Array.isArray(gj.features) || !gj.features.length) return gj;
+      const hasPolygon = gj.features.some((f) => {
+        const t = f && f.geometry ? f.geometry.type : '';
+        return t === 'Polygon' || t === 'MultiPolygon';
+      });
+      if (hasPolygon) return gj;
+
+      // Recopilar todos los puntos disponibles
+      const pts = [];
+      gj.features.forEach((f) => {
+        const g = f && f.geometry;
+        if (!g) return;
+        if (g.type === 'Point' && Array.isArray(g.coordinates)) {
+          pts.push(g.coordinates);
+        } else if (g.type === 'MultiPoint' && Array.isArray(g.coordinates)) {
+          g.coordinates.forEach((c) => pts.push(c));
+        } else if (g.type === 'LineString' && Array.isArray(g.coordinates)) {
+          g.coordinates.forEach((c) => pts.push(c));
+        } else if (g.type === 'MultiLineString' && Array.isArray(g.coordinates)) {
+          g.coordinates.forEach((ls) => ls.forEach((c) => pts.push(c)));
+        }
+      });
+
+      if (pts.length < 3) return gj;
+
+      // Cerrar anillo si no está cerrado
+      const ring = pts.slice();
+      const first = ring[0];
+      const last = ring[ring.length - 1];
+      if (!Array.isArray(first) || !Array.isArray(last) || first[0] !== last[0] || first[1] !== last[1]) {
+        ring.push([first[0], first[1]]);
+      }
+
+      console.info('reconstructPolygonFromVertices: polígono creado a partir de', pts.length, 'puntos');
+      return {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: { _reconstructed: true },
+          geometry: { type: 'Polygon', coordinates: [ring] }
+        }]
+      };
     }
 
     function hasGeoJsonGeometry(geojson, allowedTypes) {
@@ -6804,12 +6906,16 @@
       }
 
       let saeeCentroid = null;
-      if (hasGeoJsonGeometry(context.saeeGj, ['Polygon', 'MultiPolygon'])) {
+      if (hasGeoJsonGeometry(context.saeeGj, ['Polygon', 'MultiPolygon', 'LineString', 'MultiLineString', 'Point', 'MultiPoint'])) {
         const saeeLayer = L.geoJSON(context.saeeGj, {
-          filter: (f) => {
-            const t = f && f.geometry ? f.geometry.type : '';
-            return t !== 'Point' && t !== 'MultiPoint';
-          },
+          pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
+            radius: 5,
+            color: '#00875A',
+            fillColor: '#00FF95',
+            fillOpacity: 0.85,
+            weight: 1.5,
+            className: 'reveal-saee'
+          }),
           style: { color: '#00D26A', fillColor: '#00FF95', fillOpacity: 0.16, weight: 2, dashArray: '6,6', className: 'reveal-saee' }
         }).addTo(geoAnalysisModalLayers.project);
         try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) {}
@@ -7480,12 +7586,95 @@
       const myReqId = ++currentMapReqId;
       const isCurrent = () => myReqId === currentMapReqId;
 
-      // Mostrar preloader de cargando
+      // Mostrar preloader con progreso multi-paso
+      const steps = [
+        { id: 'gcr', label: 'Límites GCR', skip: false },
+        { id: 'efs', label: 'Entidades federativas', skip: false },
+        { id: 'kproj', label: 'KMZ proyecto', skip: !(kmzProj && String(kmzProj).startsWith('http')) },
+        { id: 'klinea', label: 'KMZ línea transmisión', skip: !(kmzLinea && String(kmzLinea).startsWith('http')) },
+        { id: 'ksaee', label: 'KML SAEE', skip: !(saeeKml && String(saeeKml).startsWith('http')) },
+        { id: 'capas', label: 'Capas geoespaciales', skip: false }
+      ];
+      const govUrls = [kmzProj, kmzLinea, saeeKml].filter(u => /\.gob\.mx/i.test(String(u || '')));
+      const govHint = govUrls.length
+        ? `<div style="margin-top:10px;padding:6px 8px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;font-size:8.5px;color:#9a3412;line-height:1.4;"><i class="bi bi-info-circle"></i> Detectado(s) ${govUrls.length} archivo(s) en servidor SENER (puede tardar 20-30s por archivo).</div>`
+        : '';
+      const stepsHtml = steps.filter(s => !s.skip).map(s => `
+        <div class="ficha-step" data-step="${s.id}" style="display:flex;align-items:center;gap:6px;font-size:9.5px;padding:3px 6px;border-radius:4px;color:#64748b;">
+          <span class="ficha-step-icon" style="width:12px;height:12px;border-radius:50%;border:1.5px solid #cbd5e1;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;"></span>
+          <span class="ficha-step-label" style="flex:1;">${s.label}</span>
+          <span class="ficha-step-time" style="font-size:8px;opacity:0.65;"></span>
+        </div>
+      `).join('');
       mapDiv.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#f8f9fa; border-radius:6px; flex-direction:column; gap:8px; font-family:'Outfit',sans-serif; color:var(--color-text-dark, #2D3748);">
-          <div style="width:24px; height:24px; border:3px solid rgba(105,27,49,0.1); border-top-color:var(--color-guinda, #691B31); border-radius:50%; animation:spin 0.8s infinite linear;"></div>
-          <span style="font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Cargando mapa y polígonos…</span>
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(180deg,#fafafa 0%,#f3f4f6 100%);border-radius:6px;flex-direction:column;gap:10px;font-family:'Outfit',sans-serif;color:var(--color-text-dark,#2D3748);padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:26px;height:26px;border:3px solid rgba(105,27,49,0.1);border-top-color:var(--color-guinda,#691B31);border-radius:50%;animation:spin 0.8s infinite linear;flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;gap:1px;">
+              <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-guinda,#691B31);">Cargando mapa</span>
+              <span id="fichaLoaderCount" style="font-size:9px;opacity:0.7;">Preparando descargas…</span>
+            </div>
+          </div>
+          <div style="width:240px;height:5px;background:#e5e7eb;border-radius:999px;overflow:hidden;">
+            <div id="fichaLoaderBar" style="height:100%;background:linear-gradient(90deg,#9B2247 0%,#A57F2C 100%);width:0%;transition:width 0.3s ease;"></div>
+          </div>
+          <div id="fichaLoaderSteps" style="display:flex;flex-direction:column;gap:2px;min-width:240px;">
+            ${stepsHtml}
+          </div>
+          ${govHint}
         </div>`;
+
+      const totalSteps = steps.filter(s => !s.skip).length;
+      let doneSteps = 0;
+      const stepStartTimes = {};
+      function updateFichaLoadStep(id, status) {
+        if (!isCurrent()) return;
+        const el = mapDiv.querySelector(`[data-step="${id}"]`);
+        if (!el) return;
+        const icon = el.querySelector('.ficha-step-icon');
+        const label = el.querySelector('.ficha-step-label');
+        const time = el.querySelector('.ficha-step-time');
+        if (status === 'loading') {
+          stepStartTimes[id] = Date.now();
+          el.style.color = '#0f172a';
+          el.style.background = 'rgba(155,34,71,0.06)';
+          icon.style.background = 'var(--color-guinda,#691B31)';
+          icon.style.borderColor = 'var(--color-guinda,#691B31)';
+          icon.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:#fff;animation:spin 1s linear infinite;display:inline-block;"></span>';
+          label.style.fontWeight = '700';
+        } else if (status === 'done' || status === 'fail') {
+          doneSteps++;
+          const ms = stepStartTimes[id] ? Date.now() - stepStartTimes[id] : 0;
+          time.textContent = ms ? `${(ms / 1000).toFixed(1)}s` : '';
+          if (status === 'done') {
+            icon.style.background = '#10b981';
+            icon.style.borderColor = '#059669';
+            icon.innerHTML = '✓';
+            label.style.fontWeight = '600';
+            el.style.color = '#059669';
+            el.style.background = 'transparent';
+          } else {
+            icon.style.background = '#ef4444';
+            icon.style.borderColor = '#dc2626';
+            icon.innerHTML = '✕';
+            label.style.fontWeight = '600';
+            el.style.color = '#dc2626';
+            el.style.background = 'transparent';
+          }
+          const pct = Math.round((doneSteps / totalSteps) * 100);
+          const bar = mapDiv.querySelector('#fichaLoaderBar');
+          const cnt = mapDiv.querySelector('#fichaLoaderCount');
+          if (bar) bar.style.width = pct + '%';
+          if (cnt) cnt.textContent = `${doneSteps}/${totalSteps} completado(s) · ${pct}%`;
+        }
+      }
+
+      const wrapStep = (id, promise) => {
+        updateFichaLoadStep(id, 'loading');
+        return Promise.resolve(promise)
+          .then((res) => { updateFichaLoadStep(id, res == null ? 'fail' : 'done'); return res; })
+          .catch((err) => { updateFichaLoadStep(id, 'fail'); throw err; });
+      };
 
       const geom = resolveCenterAndGeometries(coords, projectVertices, saeeVertices);
       const hasKmz = (kmzProj && String(kmzProj).startsWith('http')) ||
@@ -7496,7 +7685,7 @@
 
       // Cargar capas y renderizar
       Promise.all([
-        (async () => {
+        wrapStep('gcr', (async () => {
           if (!cachedGerenciasGeoJSON) {
             try {
               const res = await fetch(GEOJSON_GERENCIAS_URL);
@@ -7506,8 +7695,8 @@
             }
           }
           return cachedGerenciasGeoJSON;
-        })(),
-        (async () => {
+        })()),
+        wrapStep('efs', (async () => {
           if (!cachedEstadosGeoJSON) {
             try {
               const res = await fetch(GEOJSON_EF_URL);
@@ -7517,27 +7706,37 @@
             }
           }
           return cachedEstadosGeoJSON;
-        })(),
-        fetchAndParseKml(kmzProj),
-        fetchAndParseKml(kmzLinea),
-        fetchAndParseKml(saeeKml),
-        loadGeoAnalysisDatasets()
+        })()),
+        steps[2].skip ? Promise.resolve(null) : wrapStep('kproj', fetchAndParseKml(kmzProj)),
+        steps[3].skip ? Promise.resolve(null) : wrapStep('klinea', fetchAndParseKml(kmzLinea)),
+        steps[4].skip ? Promise.resolve(null) : wrapStep('ksaee', fetchAndParseKml(saeeKml)),
+        wrapStep('capas', loadGeoAnalysisDatasets())
       ]).then(([gerenciasGeo, estadosGeo, projGj, lineaGj, saeeGj, geoDatasets]) => {
         if (!isCurrent()) return;
 
         // Limpiar el preloader
         mapDiv.innerHTML = '';
 
-        // Guard: si lineaGj no contiene geometría line, descartar (probablemente es polígono del proyecto duplicado)
-        if (lineaGj && Array.isArray(lineaGj.features)) {
-          if (!hasGeoJsonGeometry(lineaGj, ['LineString', 'MultiLineString'])) {
-            console.warn('lineaGj sin geometría line — descartado (probable duplicado de proyecto)');
-            lineaGj = null;
+        // Reconstruir polígono SAEE si KML solo trae Point/MultiPoint/LineString
+        saeeGj = reconstructPolygonFromVertices(saeeGj);
+        projGj = reconstructPolygonFromVertices(projGj);
+
+        // Guard ligero: descartar lineaGj solo si exactamente igual a projGj (KMZ duplicado real)
+        if (lineaGj && projGj && Array.isArray(lineaGj.features) && Array.isArray(projGj.features)) {
+          if (lineaGj.features.length === projGj.features.length) {
+            try {
+              const a = JSON.stringify(lineaGj.features[0]?.geometry);
+              const b = JSON.stringify(projGj.features[0]?.geometry);
+              if (a && a === b) {
+                console.warn('lineaGj idéntico a projGj — descartado');
+                lineaGj = null;
+              }
+            } catch (e) { /* noop */ }
           }
         }
 
         const hasProjectKmlGeometry = hasGeoJsonGeometry(projGj, ['Polygon', 'MultiPolygon']);
-        const hasSaeeKmlGeometry = hasGeoJsonGeometry(saeeGj, ['Polygon', 'MultiPolygon']);
+        const hasSaeeKmlGeometry = hasGeoJsonGeometry(saeeGj, ['Polygon', 'MultiPolygon', 'LineString', 'MultiLineString', 'Point', 'MultiPoint']);
 
         // Crear mapa
         fichaMapInstance = L.map(elementId, {
@@ -7668,10 +7867,14 @@
         if (hasSaeeKmlGeometry) {
           try {
             const layer = L.geoJSON(saeeGj, {
-              filter: (feature) => {
-                const t = feature && feature.geometry ? feature.geometry.type : '';
-                return t !== 'Point' && t !== 'MultiPoint';
-              },
+              pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
+                radius: 5,
+                color: '#00875A',
+                fillColor: '#00FF95',
+                fillOpacity: 0.85,
+                weight: 1.5,
+                className: 'kml-saee'
+              }),
               style: {
                 color: '#00D26A',
                 fillColor: '#00FF95',
