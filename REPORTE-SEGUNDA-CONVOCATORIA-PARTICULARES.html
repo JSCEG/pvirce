@@ -3683,11 +3683,15 @@
       // Filas de datos (después del header)
       const dataRows = allRows.slice(headerRowIdx + 1);
 
-      DATA = dataRows
-        .map((row, idx) => mapRowByHeader(row, colIndex, colIndexAll, idx, headerRowIdx))
+      const mappedRows = dataRows
+        .map((row, idx) => mapRowByHeader(row, colIndex, colIndexAll, idx, headerRowIdx));
+
+      DATA = mappedRows
+        .filter(r => normText(r.status) === 'FINALIZADO')
         .filter(r => r.nombre && r.mw > 0);
 
       console.log(`Total de proyectos mapeados: ${DATA.length}`);
+      console.log(`Registros descartados por estatus distinto de FINALIZADO: ${mappedRows.length - mappedRows.filter(r => normText(r.status) === 'FINALIZADO').length}`);
       if (DATA.length > 0) {
         console.log('Primer proyecto:', DATA[0].nombre, DATA[0].mw, 'MW');
       }
