@@ -1155,11 +1155,38 @@
     }
 
     #slide-1 .invest-lbl {
+      top: auto;
+      right: auto;
+      bottom: 12px;
+      left: 12px;
       background: #b71e4f;
       border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 21px;
+      min-width: 218px;
+      padding: 8px 10px;
+      font-size: 9px;
       letter-spacing: .01em;
+    }
+
+    .investment-summary-title {
+      margin-bottom: 4px;
+      font-family: 'Patria', 'Outfit', sans-serif;
+      font-size: 11px;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    .investment-summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 2px;
+      border-top: 1px solid rgba(255, 255, 255, .22);
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    .investment-summary-row strong {
+      font-weight: 700;
     }
 
     #slide-1 .status-grid {
@@ -2899,7 +2926,7 @@
           <div class="col-right">
             <div class="map-card">
               <div class="map-lbl">Distribución de Proyectos</div>
-              <div class="invest-lbl" id="kpiTotalInversion">0 MDD</div>
+              <div class="invest-lbl" id="kpiTotalInversion">Inversión reportada</div>
               <div id="miniMap"></div>
             </div>
 
@@ -3935,20 +3962,96 @@
       return null;
     }
 
+    function parseInvestmentNumber(raw, usesMillions) {
+      const token = String(raw || '').match(/\d[\d.,\s]*/)?.[0].replace(/\s/g, '') || '';
+      if (!token) return 0;
+
+      const dots = (token.match(/\./g) || []).length;
+      const commas = (token.match(/,/g) || []).length;
+      let decimalSeparator = '';
+
+      if (dots && commas) {
+        const lastSeparator = token.lastIndexOf('.') > token.lastIndexOf(',') ? '.' : ',';
+        const decimalDigits = token.length - token.lastIndexOf(lastSeparator) - 1;
+        if (decimalDigits > 0 && decimalDigits <= 2) decimalSeparator = lastSeparator;
+      } else {
+        const separator = dots ? '.' : (commas ? ',' : '');
+        if (separator) {
+          const parts = token.split(separator);
+          const decimalDigits = parts[parts.length - 1].length;
+          if (decimalDigits > 0 && (decimalDigits <= 2 || (usesMillions && parts.length === 2 && decimalDigits <= 3))) {
+            decimalSeparator = separator;
+          }
+        }
+      }
+
+      const decimalIndex = decimalSeparator ? token.lastIndexOf(decimalSeparator) : -1;
+      const normalized = decimalSeparator
+        ? `${token.slice(0, decimalIndex).replace(/[.,]/g, '')}.${token.slice(decimalIndex + 1).replace(/[.,]/g, '')}`
+        : token.replace(/[.,]/g, '');
+      const amount = Number(normalized);
+      return Number.isFinite(amount) ? amount : 0;
+    }
+
+    function parseInvestmentReported(raw) {
+      const text = String(raw || '').trim();
+      const upper = text.toUpperCase();
+      if (!text || upper === 'SIN INFORMACIÓN' || upper === 'NO APLICA' || upper === '—') {
+        return { group: 'NO_INFO', amount: 0 };
+      }
+
+      const usesMillions = /MILL|\bMM\b|\bMUSD\b|\bMDD\b|\bM\b|M(?=\s*USD\b)/i.test(upper);
+      const amount = parseInvestmentNumber(text, usesMillions);
+      if (amount === 0) return { group: 'ZERO', amount: 0 };
+      if (amount === 1) return { group: 'ONE', amount: 1 };
+
+      const mxnIndex = upper.search(/MXN|PESOS|MX\s*\$|M\.?\s*N\.?\b/);
+      const usdIndex = upper.search(/MUSD|USD|D[ÓO]LAR(?:ES)?|DLLS|US\s*\$|MDD/);
+      let group = 'NO_CURRENCY';
+      if (mxnIndex >= 0 || usdIndex >= 0) {
+        group = usdIndex >= 0 && (mxnIndex < 0 || usdIndex < mxnIndex) ? 'USD' : 'MXN';
+      }
+
+      return {
+        group,
+        amount: usesMillions && amount < 1000000 ? amount * 1000000 : amount
+      };
+    }
+
     function parseInversionToMdd(val) {
-      if (!val || val === 'SIN INFORMACIÓN') return 0;
-      const cleanStr = String(val).toUpperCase().replace(/[\$,]/g, '');
-      const match = cleanStr.match(/([\d\.]+)/);
-      if (!match) return 0;
-      const amount = parseFloat(match[1]);
-      if (isNaN(amount)) return 0;
-      if (cleanStr.includes('MXN') || cleanStr.includes('PESOS') || amount > 50000000) {
-        return amount / 18 / 1000000;
-      }
-      if (amount > 1000000) {
-        return amount / 1000000;
-      }
-      return amount;
+      const investment = parseInvestmentReported(val);
+      return investment.group === 'USD' ? investment.amount / 1000000 : 0;
+    }
+
+    function summarizeInvestmentReported(projects) {
+      const summary = {
+        USD: { count: 0, amount: 0 },
+        MXN: { count: 0, amount: 0 },
+        NO_CURRENCY: { count: 0, amount: 0 },
+        ZERO: { count: 0, amount: 0 },
+        ONE: { count: 0, amount: 0 },
+        NO_INFO: { count: 0, amount: 0 }
+      };
+
+      projects.forEach((project) => {
+        const investment = parseInvestmentReported(project.inversionRaw);
+        summary[investment.group].count += 1;
+        summary[investment.group].amount += investment.amount;
+      });
+
+      return summary;
+    }
+
+    function renderInvestmentSummary(summary) {
+      const formatMillions = amount => formatInt(amount / 1000000);
+      return `
+        <div class="investment-summary-title">Inversión reportada</div>
+        <div class="investment-summary-row"><span>USD</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
+        <div class="investment-summary-row"><span>MXN</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
+        <div class="investment-summary-row"><span>S/M</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} M s/u</strong></div>
+        <div class="investment-summary-row"><span>0 / 1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>
+        <div class="investment-summary-row"><span>S/I</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>
+      `;
     }
 
     // Mapeo posicional exacto para Proyectos Particulares
@@ -4184,8 +4287,8 @@
         },
         {
           widget: 'kpiTotalInversion',
-          formula: 'sum(p.inversion) + formatMdd',
-          dataField: 'inversion',
+          formula: 'summarizeInvestmentReported => count + sum por moneda reportada, sin conversión',
+          dataField: 'inversionRaw',
           sourceColumns: getSourceColumnsForLabels(['Inversión reportada'])
         },
         {
@@ -4351,7 +4454,7 @@
       const totalCount = DATA.length;
       const totalMw = genProjects.reduce((sum, p) => sum + p.mw, 0);
       const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
-      const totalInversion = DATA.reduce((sum, p) => sum + p.inversion, 0);
+      const investmentSummary = summarizeInvestmentReported(DATA);
 
       const getContractedMw = p => {
         const contracted = Number(p.capacidadContratada || 0);
@@ -4373,7 +4476,7 @@
         <span class="mw-line">${storageMwCard} MW</span>
         <span class="mw-line">Almacenamiento<span class="mw-asterisk">*</span> (${storageCountCard} proyectos)</span>
       `;
-      document.getElementById('kpiTotalInversion').innerText = formatMdd(totalInversion);
+      document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
       // 2. Desglose de Tecnologías
       const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
