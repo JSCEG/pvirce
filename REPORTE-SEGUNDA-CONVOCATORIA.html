@@ -1888,15 +1888,15 @@
       let activeGcr = null;
       gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(row => {
         const gcrName = row.getAttribute('data-gcr');
-        
+
         row.addEventListener('mouseenter', () => {
           highlightGcrOnMap(gcrName);
         });
-        
+
         row.addEventListener('mouseleave', () => {
           highlightGcrOnMap(activeGcr);
         });
-        
+
         row.addEventListener('click', () => {
           if (activeGcr === gcrName) {
             activeGcr = null;
@@ -2061,9 +2061,9 @@
             });
             return {
               fillColor: fill,
-              fillOpacity: 0.2,
-              color: '#ffffff',
-              weight: 1.2
+              fillOpacity: 0,
+              color: fill,
+              weight: 1.5
             };
           }
         }).addTo(mapInstance);
@@ -2146,7 +2146,7 @@
 
       layerGerencias.eachLayer(layer => {
         const featName = String(layer.feature?.properties?.GCR || layer.feature?.properties?.name || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-        
+
         let isMatch = false;
         if (normGcr) {
           if (normGcr === 'BAJA CALIFORNIA') {
@@ -2167,24 +2167,24 @@
           if (isMatch) {
             layer.setStyle({
               fillColor: '#b71e4f',
-              fillOpacity: 0.25,
+              fillOpacity: 0.35,
               color: '#b71e4f',
               weight: 2.5
             });
           } else {
             layer.setStyle({
               fillColor: fill,
-              fillOpacity: 0.03,
-              color: '#cccccc',
+              fillOpacity: 0,
+              color: '#e5e5e5',
               weight: 0.5
             });
           }
         } else {
           layer.setStyle({
             fillColor: fill,
-            fillOpacity: 0.2,
-            color: '#ffffff',
-            weight: 1.2
+            fillOpacity: 0,
+            color: fill,
+            weight: 1.5
           });
         }
       });

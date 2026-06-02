@@ -4947,9 +4947,9 @@
             });
             return {
               fillColor: fill,
-              fillOpacity: 0.2,
-              color: '#ffffff',
-              weight: 1.2
+              fillOpacity: 0,
+              color: fill,
+              weight: 1.5
             };
           }
         }).addTo(mapInstance);
@@ -5053,24 +5053,24 @@
           if (isMatch) {
             layer.setStyle({
               fillColor: '#b71e4f',
-              fillOpacity: 0.25,
+              fillOpacity: 0.35,
               color: '#b71e4f',
               weight: 2.5
             });
           } else {
             layer.setStyle({
               fillColor: fill,
-              fillOpacity: 0.03,
-              color: '#cccccc',
+              fillOpacity: 0,
+              color: '#e5e5e5',
               weight: 0.5
             });
           }
         } else {
           layer.setStyle({
             fillColor: fill,
-            fillOpacity: 0.2,
-            color: '#ffffff',
-            weight: 1.2
+            fillOpacity: 0,
+            color: fill,
+            weight: 1.5
           });
         }
       });
@@ -6337,15 +6337,15 @@
               if (isMatch) {
                 return {
                   fillColor: '#b71e4f',
-                  fillOpacity: 0.25,
+                  fillOpacity: 0.35,
                   color: '#b71e4f',
-                  weight: 2.2
+                  weight: 2.5
                 };
               } else {
                 return {
                   fillColor: fill,
-                  fillOpacity: 0.03,
-                  color: '#cccccc',
+                  fillOpacity: 0,
+                  color: '#e5e5e5',
                   weight: 0.5
                 };
               }
