@@ -934,9 +934,9 @@
     #slide-1 .kpi-card-main {
       background: linear-gradient(160deg, #a11f4d 0%, #6f1433 100%);
       min-height: 224px;
-      padding: 22px;
+      padding: 18px;
       justify-content: flex-start;
-      gap: 6px;
+      gap: 4px;
     }
 
     #slide-1 .kpi-card-main .lbl {
@@ -948,7 +948,7 @@
     }
 
     #slide-1 .kpi-card-main .val-main {
-      font-size: clamp(60px, 4.4vw, 70px);
+      font-size: clamp(52px, 3.9vw, 62px);
       line-height: .95;
       color: #ffffff;
       margin-top: 2px;
@@ -956,7 +956,7 @@
     }
 
     #slide-1 .kpi-card-main .val-sub {
-      font-size: clamp(17px, 1.35vw, 20px);
+      font-size: clamp(15px, 1.15vw, 18px);
       line-height: 1.12;
       color: #f7dca1;
       font-family: 'Patria', 'Outfit', sans-serif;
@@ -1173,11 +1173,44 @@
       background: #b71e4f;
       border-radius: 10px;
       width: 100%;
-      margin-top: 10px;
-      padding: 8px 10px;
-      font-size: 9px;
+      margin-top: 8px;
+      padding: 7px 8px;
+      font-size: 8.5px;
       letter-spacing: .01em;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    #slide-1 .kpi-card-main .investment-summary-title {
+      font-size: 10px;
+      margin-bottom: 3px;
+      letter-spacing: .02em;
+    }
+
+    #slide-1 .kpi-card-main .investment-summary-row {
+      gap: 6px;
+      padding-top: 1px;
+      line-height: 1.2;
+      font-size: 8px;
+      white-space: normal;
+      align-items: flex-start;
+    }
+
+    #slide-1 .kpi-card-main .investment-summary-row span,
+    #slide-1 .kpi-card-main .investment-summary-row strong {
+      min-width: 0;
+    }
+
+    #slide-1 .kpi-card-main .investment-summary-row span {
+      flex: 1 1 auto;
+    }
+
+    #slide-1 .kpi-card-main .investment-summary-row strong {
+      flex: 0 1 auto;
+      text-align: right;
+      font-size: 8px;
+      line-height: 1.2;
+      word-break: break-word;
     }
 
     .investment-summary-title {
@@ -1195,7 +1228,7 @@
       padding-top: 2px;
       border-top: 1px solid rgba(255, 255, 255, .22);
       line-height: 1.25;
-      white-space: nowrap;
+      white-space: normal;
     }
 
     .investment-summary-row strong {
@@ -4305,6 +4338,18 @@
       `;
     }
 
+    function renderInvestmentSummaryCompact(summary) {
+      const formatMillions = amount => formatInt(amount / 1000000);
+      return `
+        <div class="investment-summary-title">Inversión reportada</div>
+        <div class="investment-summary-row"><span>USD</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
+        <div class="investment-summary-row"><span>MXN</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
+        <div class="investment-summary-row"><span>Sin moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} MM</strong></div>
+        <div class="investment-summary-row"><span>Monto 0/1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>
+        <div class="investment-summary-row"><span>Sin info</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>
+      `;
+    }
+
     // Mapeo posicional exacto para Proyectos Particulares
     // DESACTIVO — reemplazado por mapRowByHeader (mapeo por nombre de columna)
     function mapRowPositional(row, idx) {
@@ -4981,13 +5026,14 @@
 
         // Colores pastel para distinguir gerencias
         const gcrColors = {
-          'NORESTE': '#FED7D7',
-          'OCCIDENTE': '#FEEBC8',
-          'NORTE': '#EBF8FF',
-          'ORIENTAL': '#E6FFFA',
-          'PENINSULAR': '#EDF2F7',
-          'CENTRAL': '#E2E8F0',
-          'BAJA CALIFORNIA SUR': '#FAF5FF'
+          'NORESTE': '#D7F1EA',
+          'OCCIDENTE': '#FBE7CF',
+          'NORTE': '#EFE7FD',
+          'ORIENTAL': '#FDE5EE',
+          'PENINSULAR': '#E2EBFB',
+          'CENTRAL': '#E8ECF2',
+          'BAJA CALIFORNIA SUR': '#FFF1D9',
+          'BAJA CALIFORNIA': '#E0F0FF'
         };
 
         layerGerencias = L.geoJSON(geojson, {
@@ -4999,9 +5045,9 @@
             });
             return {
               fillColor: fill,
-              fillOpacity: 0,
-              color: fill,
-              weight: 1.5
+              fillOpacity: 0.5,
+              color: '#8B93A3',
+              weight: 1.1
             };
           }
         }).addTo(mapInstance);
@@ -5059,7 +5105,8 @@
               <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
               <strong>GIE:</strong> ${p.gie}<br>
               <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${tGroup})<br>
-              <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}
+              <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}<br>
+              <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
             </div>
           `);
         }
@@ -5070,14 +5117,14 @@
       if (!layerGerencias || !mapInstance) return;
 
       const gcrColors = {
-        'NORESTE': '#FED7D7',
-        'OCCIDENTE': '#FEEBC8',
-        'NORTE': '#EBF8FF',
-        'ORIENTAL': '#E6FFFA',
-        'PENINSULAR': '#EDF2F7',
-        'CENTRAL': '#E2E8F0',
-        'BAJA CALIFORNIA SUR': '#FAF5FF',
-        'BAJA CALIFORNIA': '#e0f0ff'
+        'NORESTE': '#D7F1EA',
+        'OCCIDENTE': '#FBE7CF',
+        'NORTE': '#EFE7FD',
+        'ORIENTAL': '#FDE5EE',
+        'PENINSULAR': '#E2EBFB',
+        'CENTRAL': '#E8ECF2',
+        'BAJA CALIFORNIA SUR': '#FFF1D9',
+        'BAJA CALIFORNIA': '#E0F0FF'
       };
 
       const normGcr = normalizeGcrName(gcrName);
@@ -5095,24 +5142,24 @@
           if (isMatch) {
             layer.setStyle({
               fillColor: '#b71e4f',
-              fillOpacity: 0.35,
+              fillOpacity: 0.48,
               color: '#b71e4f',
-              weight: 2.5
+              weight: 2.6
             });
           } else {
             layer.setStyle({
               fillColor: fill,
-              fillOpacity: 0,
-              color: '#e5e5e5',
-              weight: 0.5
+              fillOpacity: 0.18,
+              color: '#c7ccd6',
+              weight: 0.8
             });
           }
         } else {
           layer.setStyle({
             fillColor: fill,
-            fillOpacity: 0,
-            color: fill,
-            weight: 1.5
+            fillOpacity: 0.3,
+            color: '#8B93A3',
+            weight: 1.1
           });
         }
       });
@@ -5278,6 +5325,7 @@
         if (!rawProjs.length) return;
 
         const gcrKey = gcrInfo.key;
+        const isOccidenteDashboard = gcrKey === 'OCCIDENTE';
         const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
         const gcrTotalMw = rawProjs.reduce((sum, p) => sum + getTableMw(p), 0);
 
@@ -5297,11 +5345,17 @@
           stateData[state].mw += getTableMw(p);
         });
         const sortedStates = Object.keys(stateData).sort((a, b) => stateData[b].mw - stateData[a].mw);
+        const stateTableStyle = isOccidenteDashboard
+          ? 'font-size: 8px; line-height: 1.08; table-layout: fixed;'
+          : 'font-size: 9px; line-height: 1.15; table-layout: fixed;';
+        const stateNameCellStyle = isOccidenteDashboard
+          ? 'font-weight: 600; font-size: 8px; letter-spacing: .01em;'
+          : 'font-weight: 600;';
         const stateRowsHtml = sortedStates.map(st => {
           const pct = gcrTotalMw > 0 ? (stateData[st].mw / gcrTotalMw) * 100 : 0;
           return `
             <tr>
-              <td style="font-weight: 600;">${st}</td>
+              <td style="${stateNameCellStyle}">${st}</td>
               <td class="col-right-text">${stateData[st].count}</td>
               <td class="col-right-text" style="font-weight: 600;">${formatInt(stateData[st].mw)}</td>
               <td class="col-right-text">${pct.toFixed(0)}%</td>
@@ -5386,7 +5440,7 @@
 
         // Inversión en esta GCR
         const gcrInvestmentSummary = summarizeInvestmentReported(rawProjs);
-        const gcrInvestmentSummaryHtml = renderInvestmentSummary(gcrInvestmentSummary);
+        const gcrInvestmentSummaryHtml = renderInvestmentSummaryCompact(gcrInvestmentSummary);
 
         dashSlide.innerHTML = `
           <div class="slide-container">
@@ -5408,7 +5462,7 @@
                   <span class="lbl">Proyectos Finalizados</span>
                   <span class="val-main" style="font-size: clamp(48px, 3.5vw, 60px);">${rawProjs.length}</span>
                   <span class="val-sub" style="font-size: clamp(16px, 1.2vw, 20px); color: #f7dca1; font-weight: 700;">${formatMw(gcrTotalMw)}</span>
-                  <div class="invest-lbl" style="position: static; width: 100%; margin-top: 10px; background: #b71e4f; border-radius: 10px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
+                  <div class="invest-lbl" style="position: static; width: 100%; margin-top: 8px; background: #b71e4f; border-radius: 10px; padding: 7px 8px; font-size: 8px; letter-spacing: .005em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); overflow: hidden;">
                     ${gcrInvestmentSummaryHtml}
                   </div>
                 </div>
@@ -5426,7 +5480,7 @@
               <div class="col-center">
                 <div class="gcr-table-card" style="height: 220px; padding: 12px 14px;">
                   <h3>Distribución por Entidad Federativa</h3>
-                  <table class="gcr-minitable" style="font-size: 9px; line-height: 1.15; table-layout: fixed;">
+                  <table class="gcr-minitable" style="${stateTableStyle}">
                     <thead>
                       <tr>
                         <th style="width: 50%;">Estado</th>
@@ -6344,14 +6398,14 @@
         const drawGerencias = () => {
           if (!cachedGerenciasGeoJSON || localLayerGerencias) return;
           const gcrColors = {
-            'NORESTE': '#FED7D7',
-            'OCCIDENTE': '#FEEBC8',
-            'NORTE': '#EBF8FF',
-            'ORIENTAL': '#E6FFFA',
-            'PENINSULAR': '#EDF2F7',
-            'CENTRAL': '#E2E8F0',
-            'BAJA CALIFORNIA SUR': '#FAF5FF',
-            'BAJA CALIFORNIA': '#e0f0ff'
+            'NORESTE': '#D7F1EA',
+            'OCCIDENTE': '#FBE7CF',
+            'NORTE': '#EFE7FD',
+            'ORIENTAL': '#FDE5EE',
+            'PENINSULAR': '#E2EBFB',
+            'CENTRAL': '#E8ECF2',
+            'BAJA CALIFORNIA SUR': '#FFF1D9',
+            'BAJA CALIFORNIA': '#E0F0FF'
           };
 
           const normGcrKey = normalizeGcrName(gcrKey);
@@ -6441,7 +6495,8 @@
                 <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
                 <strong>GIE:</strong> ${p.gie}<br>
                 <strong>Capacidad:</strong> ${finalMw.toFixed(1)} MW (${tGroup})<br>
-                <strong>Inversión:</strong> ${p.inversionRaw ? formatInvestmentReported(p.inversionRaw) : 'Sin datos'}
+                <strong>Inversión:</strong> ${p.inversionRaw ? formatInvestmentReported(p.inversionRaw) : 'Sin datos'}<br>
+                <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
               </div>
             `);
             markers.push(marker);
