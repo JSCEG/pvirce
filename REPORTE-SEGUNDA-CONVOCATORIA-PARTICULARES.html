@@ -4519,17 +4519,27 @@
         'Hidroeléctrica': '<i class="bi bi-droplet-fill" aria-hidden="true"></i>'
       };
 
+      const totalTechCount = techs.reduce((sum, t) => sum + techCounts[t], 0);
+      const totalTechMw = techs.reduce((sum, t) => sum + techMws[t], 0);
+
       const techListContainer = document.getElementById('techList');
-      techListContainer.innerHTML = techs.map(t => `
-        <div class="tech-item">
-          <div class="icon-bg">${techIcons[t]}</div>
-          <div class="t-info">
-            <div class="t-name">${t}</div>
-            <div class="t-sub">${formatInt(techCounts[t])} proyectos</div>
+      techListContainer.innerHTML = techs.map(t => {
+        const pctProj = totalTechCount > 0 ? (techCounts[t] / totalTechCount * 100).toFixed(2) : '0.00';
+        const pctMw = totalTechMw > 0 ? (techMws[t] / totalTechMw * 100).toFixed(2) : '0.00';
+        return `
+          <div class="tech-item">
+            <div class="icon-bg">${techIcons[t]}</div>
+            <div class="t-info">
+              <div class="t-name">${t}</div>
+              <div class="t-sub">${formatInt(techCounts[t])} proyectos (${pctProj}%)</div>
+            </div>
+            <div class="t-val">
+              <div>${formatMw(techMws[t])}</div>
+              <div style="font-size: 10px; color: var(--color-text-light); font-weight: normal; margin-top: 1px;">${pctMw}%</div>
+            </div>
           </div>
-          <div class="t-val">${formatMw(techMws[t])}</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       // 3. Desglose GCR (Gerencias)
       // Agrupamos por gerencia. Excluimos almacenamiento de las sumas GCR normales si el PDF lo hace (Slide 15 dedicada)
