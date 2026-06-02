@@ -5132,6 +5132,216 @@
         const rawProjs = groups[gcrInfo.key] || [];
         if (!rawProjs.length) return;
 
+        const gcrKey = gcrInfo.key;
+        const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
+        const gcrTotalMw = rawProjs.reduce((sum, p) => sum + getTableMw(p), 0);
+
+        // Generar Slide de Dashboard Regional para esta GCR
+        const dashSlide = document.createElement('section');
+        dashSlide.className = 'slide';
+        dashSlide.classList.add('gcr-dashboard-slide');
+        dashSlide.id = `slide-${slideIdx}`;
+        dashSlide.dataset.gcr = gcrKey;
+
+        // Calcular la tabla de estados para esta GCR
+        const stateData = {};
+        rawProjs.forEach(p => {
+          const state = p.ef || 'OTRO';
+          stateData[state] = stateData[state] || { count: 0, mw: 0 };
+          stateData[state].count++;
+          stateData[state].mw += getTableMw(p);
+        });
+        const sortedStates = Object.keys(stateData).sort((a,b) => stateData[b].mw - stateData[a].mw);
+        const stateRowsHtml = sortedStates.map(st => {
+          const pct = gcrTotalMw > 0 ? (stateData[st].mw / gcrTotalMw) * 100 : 0;
+          return `
+            <tr>
+              <td style="font-weight: 600;">${st}</td>
+              <td class="col-right-text">${stateData[st].count}</td>
+              <td class="col-right-text" style="font-weight: 600;">${formatInt(stateData[st].mw)}</td>
+              <td class="col-right-text">${pct.toFixed(0)}%</td>
+            </tr>
+          `;
+        }).join('') + `
+          <tr>
+            <td>TOTAL GCR</td>
+            <td class="col-right-text">${rawProjs.length}</td>
+            <td class="col-right-text">${formatInt(gcrTotalMw)}</td>
+            <td class="col-right-text">100%</td>
+          </tr>
+        `;
+
+        // Calcular Tecnologías en esta GCR
+        const techCountsGcr = {};
+        const techMwsGcr = {};
+        techs.forEach(t => { techCountsGcr[t] = 0; techMwsGcr[t] = 0; });
+        rawProjs.forEach(p => {
+          const tg = getTechGroup(p);
+          if (techCountsGcr[tg] !== undefined) {
+            techCountsGcr[tg]++;
+            techMwsGcr[tg] += getTableMw(p);
+          }
+        });
+        const totalTechCountGcr = techs.reduce((sum, t) => sum + techCountsGcr[t], 0);
+        const totalTechMwGcr = techs.reduce((sum, t) => sum + techMwsGcr[t], 0);
+        const techIcons = {
+          'Fotovoltaica': '<i class="bi bi-sun-fill" aria-hidden="true"></i>',
+          'Eólica': '<i class="bi bi-wind" aria-hidden="true"></i>',
+          'Almacenamiento': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+          'Hidroeléctrica': '<i class="bi bi-water" aria-hidden="true"></i>'
+        };
+
+        const techListHtml = techs.map(t => {
+          const pctProj = totalTechCountGcr > 0 ? (techCountsGcr[t] / totalTechCountGcr * 100).toFixed(2) : '0.00';
+          const pctMw = totalTechMwGcr > 0 ? (techMwsGcr[t] / totalTechMwGcr * 100).toFixed(2) : '0.00';
+          return `
+            <div class="tech-item">
+              <div class="icon-bg">${techIcons[t]}</div>
+              <div class="t-info">
+                <div class="t-name">${t}</div>
+                <div class="t-sub">${techCountsGcr[t]} Proyectos (${pctProj}%)</div>
+              </div>
+              <div class="t-val">
+                <div>${formatInt(techMwsGcr[t])} MW</div>
+                <div style="font-size: 10px; color: var(--color-text-light); font-weight: normal; margin-top: 1px;">${pctMw}%</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Calcular Trámites en esta GCR
+        let miaCountG = 0, miaMwG = 0;
+        let evisCountG = 0, evisMwG = 0;
+        let tierrasCountG = 0, tierrasMwG = 0;
+        let cenaceCountG = 0, cenaceMwG = 0;
+        rawProjs.forEach(p => {
+          const mia = normText(p.mia);
+          const evis = normText(p.misse);
+          const terreno = normText(p.tierras);
+          const cenace = normText(p.cenace);
+          const pmw = getTableMw(p);
+
+          if (mia.includes('TRAMITE') || mia.includes('PROCESO') || mia.includes('INICIADO')) {
+            miaCountG++;
+            miaMwG += pmw;
+          }
+          if (evis.includes('RESUELTA') || evis.includes('AUTORIZADA') || evis.includes('APROBADA')) {
+            evisCountG++;
+            evisMwG += pmw;
+          }
+          if (terreno === 'SI' || terreno.includes('TRAMITE')) {
+            tierrasCountG++;
+            tierrasMwG += pmw;
+          }
+          if (cenace === 'SI') {
+            cenaceCountG++;
+            cenaceMwG += pmw;
+          }
+        });
+
+        // Inversión en esta GCR
+        const gcrInvestmentSummary = summarizeInvestmentReported(rawProjs);
+        const gcrInvestmentSummaryHtml = renderInvestmentSummary(gcrInvestmentSummary);
+
+        dashSlide.innerHTML = `
+          <div class="slide-container">
+            <div class="slide-header">
+              <div class="brand-left">
+                <span class="brand-line-1">Segunda Convocatoria 2026</span>
+                <span class="brand-line-2">Particulares</span>
+              </div>
+              <div class="ef-title">
+                <span class="title-main">Resumen Regional - ${gcrInfo.title.toUpperCase()}</span>
+              </div>
+              <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+            </div>
+
+            <div class="numeralia-grid">
+              <!-- Columna Izquierda: KPIs y Tecnologías -->
+              <div class="col-left">
+                <div class="kpi-card-main" style="min-height: 180px; padding: 18px; justify-content: center; gap: 4px;">
+                  <span class="lbl">Proyectos Finalizados</span>
+                  <span class="val-main" style="font-size: clamp(48px, 3.5vw, 60px);">${rawProjs.length}</span>
+                  <span class="val-sub" style="font-size: clamp(16px, 1.2vw, 20px); color: #f7dca1; font-weight: 700;">${formatMw(gcrTotalMw)}</span>
+                </div>
+
+                <div class="tech-card" style="flex-grow: 1;">
+                  <h3>Tipo de Tecnología</h3>
+                  <div class="tech-total">${rawProjs.length} Proyectos en esta GCR</div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    ${techListHtml}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Columna Central: Estados y Grupos -->
+              <div class="col-center">
+                <div class="gcr-table-card" style="height: 220px; padding: 12px 14px;">
+                  <h3>Distribución por Entidad Federativa</h3>
+                  <table class="gcr-minitable" style="font-size: 9px; line-height: 1.15; table-layout: fixed;">
+                    <thead>
+                      <tr>
+                        <th style="width: 50%;">Estado</th>
+                        <th class="col-right-text" style="width: 15%;">Proy.</th>
+                        <th class="col-right-text" style="width: 20%;">MW</th>
+                        <th class="col-right-text" style="width: 15%;">%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${stateRowsHtml}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="group-chart-card">
+                  <h3>Grupos Económicos en GCR (MW)</h3>
+                  <div id="chartGrupo_${gcrSafeId}" style="width: 100%; flex-grow: 1;"></div>
+                </div>
+              </div>
+
+              <!-- Columna Derecha: Mapa y Trámites -->
+              <div class="col-right">
+                <div class="map-card" style="height: 260px; padding: 6px;">
+                  <div class="map-lbl" style="font-size: 10px; padding: 3px 6px;">Distribución GCR ${gcrKey}</div>
+                  <div class="invest-lbl" style="bottom: 12px; left: 12px; top: auto; right: auto; background: #b71e4f; border-radius: 10px; min-width: 218px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
+                    ${gcrInvestmentSummaryHtml}
+                  </div>
+                  <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px;"></div>
+                </div>
+
+                <div class="status-card" style="min-height: 200px; padding: 12px;">
+                  <h3>Avance en Trámites y Estudios</h3>
+                  <div class="status-grid" style="gap: 6px;">
+                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
+                      <span class="s-lbl" style="font-size: 9px;">MIA en Trámite</span>
+                      <span class="s-val" style="font-size: 26px; line-height: 1;">${miaCountG}</span>
+                      <span class="s-mw" style="font-size: 11px;">${formatMw(miaMwG)}</span>
+                    </div>
+                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
+                      <span class="s-lbl" style="font-size: 9px;">EvIS/MISSE Aprob.</span>
+                      <span class="s-val" style="font-size: 26px; line-height: 1;">${evisCountG}</span>
+                      <span class="s-mw" style="font-size: 11px;">${formatMw(evisMwG)}</span>
+                    </div>
+                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
+                      <span class="s-lbl" style="font-size: 9px;">Prop. de Tierras</span>
+                      <span class="s-val" style="font-size: 26px; line-height: 1;">${tierrasCountG}</span>
+                      <span class="s-mw" style="font-size: 11px;">${formatMw(tierrasMwG)}</span>
+                    </div>
+                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
+                      <span class="s-lbl" style="font-size: 9px;">Estudios CENACE</span>
+                      <span class="s-val" style="font-size: 26px; line-height: 1;">${cenaceCountG}</span>
+                      <span class="s-mw" style="font-size: 11px;">${formatMw(cenaceMwG)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slide-footer"></div>
+          </div>
+        `;
+        deck.appendChild(dashSlide);
+        slideIdx++;
+
         // Ranking regulatorio: Tierras, MISSE, MIA y CENACE; mejor avance primero.
         const projs = rawProjs.sort(compareProjectsByRegulatoryRanking);
 
