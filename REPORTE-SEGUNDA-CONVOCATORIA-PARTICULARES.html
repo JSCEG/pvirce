@@ -3928,16 +3928,19 @@
         contratoFirmaFecha: col('Fecha de firma de contrato'),
         contratoDoc: col('Contrato de interconexion'),
 
-        projectVertices: parseVerticesFromHeader(row, colIndex, 'Vértice A', numVertices),
-        saeeVertices: parseVerticesFromHeader(row, colIndex, 'Vértice A', 3),
+        projectVertices: parseVerticesFromHeader(row, colIndex, colIndexAll, 'Vértice A', numVertices),
+        saeeVertices: parseVerticesFromHeader(row, colIndex, colIndexAll, 'Vértice A', 3, true),
 
         descripcion: col('Descripción Proyecto')
       };
     }
 
-    function parseVerticesFromHeader(row, colIndex, baseColName, count) {
+    function parseVerticesFromHeader(row, colIndex, colIndexAll, baseColName, count, preferLast = false) {
       const list = [];
-      const baseIdx = colIndex[baseColName];
+      const matchingIndexes = colIndexAll?.[baseColName] || [];
+      const baseIdx = preferLast && matchingIndexes.length
+        ? matchingIndexes[matchingIndexes.length - 1]
+        : colIndex[baseColName];
       if (baseIdx === undefined) return list;
       for (let i = 0; i < count; i++) {
         const val = String(row?.[baseIdx + i] || '').trim();
@@ -5568,6 +5571,20 @@
       }
     }
 
+    function hasGeoJsonGeometry(geojson, allowedTypes) {
+      const types = new Set(allowedTypes || []);
+      return !!(geojson && Array.isArray(geojson.features) && geojson.features.some((feature) => {
+        const type = feature && feature.geometry ? feature.geometry.type : '';
+        return types.has(type);
+      }));
+    }
+
+    function getLatLngFromPointFeature(pointFeature) {
+      const coords = pointFeature && pointFeature.geometry ? pointFeature.geometry.coordinates : null;
+      if (!Array.isArray(coords) || coords.length < 2) return null;
+      return isValidMexicoCoord(coords[1], coords[0]) ? [coords[1], coords[0]] : null;
+    }
+
     function getProjectAreaFeature(projGj, geom) {
       const projFeatures = (projGj && projGj.features) || [];
       const polyFeature = projFeatures.find((f) => {
@@ -6742,7 +6759,7 @@
 
       const projStyle = { ...GEO_ANALYSIS_STYLE_SYSTEM.project, className: 'reveal-project' };
       let projectCentroid = null;
-      if (context.projGj && Array.isArray(context.projGj.features) && context.projGj.features.length) {
+      if (hasGeoJsonGeometry(context.projGj, ['Polygon', 'MultiPolygon'])) {
         const projLayer = L.geoJSON(context.projGj, {
           filter: (f) => {
             const t = f && f.geometry ? f.geometry.type : '';
@@ -6787,7 +6804,7 @@
       }
 
       let saeeCentroid = null;
-      if (context.saeeGj && Array.isArray(context.saeeGj.features) && context.saeeGj.features.length) {
+      if (hasGeoJsonGeometry(context.saeeGj, ['Polygon', 'MultiPolygon'])) {
         const saeeLayer = L.geoJSON(context.saeeGj, {
           filter: (f) => {
             const t = f && f.geometry ? f.geometry.type : '';
@@ -7513,15 +7530,14 @@
 
         // Guard: si lineaGj no contiene geometría line, descartar (probablemente es polígono del proyecto duplicado)
         if (lineaGj && Array.isArray(lineaGj.features)) {
-          const hasLine = lineaGj.features.some((f) => {
-            const t = f && f.geometry ? f.geometry.type : '';
-            return t === 'LineString' || t === 'MultiLineString';
-          });
-          if (!hasLine) {
+          if (!hasGeoJsonGeometry(lineaGj, ['LineString', 'MultiLineString'])) {
             console.warn('lineaGj sin geometría line — descartado (probable duplicado de proyecto)');
             lineaGj = null;
           }
         }
+
+        const hasProjectKmlGeometry = hasGeoJsonGeometry(projGj, ['Polygon', 'MultiPolygon']);
+        const hasSaeeKmlGeometry = hasGeoJsonGeometry(saeeGj, ['Polygon', 'MultiPolygon']);
 
         // Crear mapa
         fichaMapInstance = L.map(elementId, {
@@ -7570,7 +7586,7 @@
         const bounds = L.latLngBounds([]);
 
         // Polígono del proyecto
-        if (projGj) {
+        if (hasProjectKmlGeometry) {
           try {
             const layer = L.geoJSON(projGj, {
               filter: (feature) => {
@@ -7649,7 +7665,7 @@
         }
 
         // Polígono SAEE
-        if (saeeGj) {
+        if (hasSaeeKmlGeometry) {
           try {
             const layer = L.geoJSON(saeeGj, {
               filter: (feature) => {
@@ -7749,9 +7765,9 @@
           overlayLayers['Pin de ubicación'] = markerLayerGroup;
 
           const hasMainGeometry = !!(
-            projGj ||
+            hasProjectKmlGeometry ||
             lineaGj ||
-            saeeGj ||
+            hasSaeeKmlGeometry ||
             (geom.projectPol && geom.projectPol.length > 0) ||
             (geom.saeePol && geom.saeePol.length > 0)
           );
@@ -7824,8 +7840,9 @@
         }
 
         // Mantener una vista comparable entre proyectos: radio visual de 20 km.
-        if (geom.center) {
-          fichaMapCenter = geom.center;
+        const projectMapCenter = getLatLngFromPointFeature(getProjectCenterPointFeature(projGj, geom)) || geom.center;
+        if (projectMapCenter) {
+          fichaMapCenter = projectMapCenter;
           fitFichaMapToRadius();
         } else if (bounds.isValid()) {
           fichaMapInstance.fitBounds(bounds, {
