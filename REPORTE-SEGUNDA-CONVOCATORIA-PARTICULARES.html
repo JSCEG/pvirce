@@ -9418,9 +9418,9 @@
             try {
               await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
               const canvas = await captureReportSlideForPdf(el);
-              const imgData = canvas.toDataURL('image/png');
+              const imgData = canvas.toDataURL('image/jpeg', 0.90);
               if (hasPdfPage) pdf.addPage();
-              pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
+              pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
               hasPdfPage = true;
             } finally {
               restoreFichaPage();
@@ -9486,9 +9486,9 @@
           await new Promise((r) => setTimeout(r, 500));
 
           const canvas = await captureReportSlideForPdf(slides[i]);
-          const imgData = canvas.toDataURL('image/png');
+          const imgData = canvas.toDataURL('image/jpeg', 0.90);
           if (i > 0) pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
+          pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
         }
 
         showPdfLoader('Guardando archivo…');
