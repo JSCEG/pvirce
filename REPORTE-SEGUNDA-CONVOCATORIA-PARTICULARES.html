@@ -6306,23 +6306,45 @@
             'ORIENTAL': '#E6FFFA',
             'PENINSULAR': '#EDF2F7',
             'CENTRAL': '#E2E8F0',
-            'BAJA CALIFORNIA SUR': '#FAF5FF'
+            'BAJA CALIFORNIA SUR': '#FAF5FF',
+            'BAJA CALIFORNIA': '#e0f0ff'
           };
+
+          const normGcrKey = String(gcrKey || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
 
           localLayerGerencias = L.geoJSON(cachedGerenciasGeoJSON, {
             pane: 'backgroundPane',
             style: (feature) => {
               const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
+              const featName = name.normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+
+              let isMatch = false;
+              if (normGcrKey === 'BAJA CALIFORNIA') {
+                isMatch = featName === 'BAJA CALIFORNIA' || (featName.includes('BAJA') && !featName.includes('SUR'));
+              } else {
+                isMatch = featName.includes(normGcrKey) || normGcrKey.includes(featName);
+              }
+
               let fill = '#EDF2F7';
               Object.keys(gcrColors).forEach(k => {
                 if (name.includes(k)) fill = gcrColors[k];
               });
-              return {
-                fillColor: fill,
-                fillOpacity: 0.15,
-                color: '#ffffff',
-                weight: 1.0
-              };
+
+              if (isMatch) {
+                return {
+                  fillColor: fill,
+                  fillOpacity: 0.45,
+                  color: '#b71e4f',
+                  weight: 2.2
+                };
+              } else {
+                return {
+                  fillColor: fill,
+                  fillOpacity: 0.03,
+                  color: '#ffffff',
+                  weight: 0.5
+                };
+              }
             }
           }).addTo(map);
           updateLayersControl();
