@@ -6073,7 +6073,7 @@
 
     const activeGcrWidgets = {};
 
-    async function initGcrDashboardWidgets(gcrKey) {
+    function initGcrDashboardWidgets(gcrKey) {
       if (activeGcrWidgets[gcrKey]) {
         const widgets = activeGcrWidgets[gcrKey];
         if (widgets.map) {
@@ -6175,29 +6175,29 @@
           maxZoom: 19
         }).addTo(map);
 
-        // Asegurar la carga de GeoJSONs
-        if (!cachedEstadosGeoJSON) {
-          try {
-            const res = await fetch(GEOJSON_EF_URL);
-            cachedEstadosGeoJSON = await res.json();
-          } catch (e) {
-            console.warn("Error cargando geojson de estados:", e);
-          }
-        }
-        if (!cachedGerenciasGeoJSON) {
-          try {
-            const res = await fetch(GEOJSON_GERENCIAS_URL);
-            cachedGerenciasGeoJSON = await res.json();
-          } catch (e) {
-            console.warn("Error cargando geojson de gerencias:", e);
-          }
-        }
+        // Crear panel de fondo para los polígonos GeoJSON (para asegurar que queden detrás de los marcadores canvas)
+        map.createPane('backgroundPane');
+        map.getPane('backgroundPane').style.zIndex = 390;
+        map.getPane('backgroundPane').style.pointerEvents = 'none';
 
         let localLayerGerencias = null;
         let localLayerEstados = null;
+        let layersControl = null;
 
-        // Pintar límites GCR
-        if (cachedGerenciasGeoJSON) {
+        const updateLayersControl = () => {
+          if (!localLayerGerencias && !localLayerEstados) return;
+          if (layersControl) {
+            map.removeControl(layersControl);
+          }
+          const overlayMaps = {};
+          if (localLayerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = localLayerGerencias;
+          if (localLayerEstados) overlayMaps["Límites Estatales"] = localLayerEstados;
+
+          layersControl = L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(map);
+        };
+
+        const drawGerencias = () => {
+          if (!cachedGerenciasGeoJSON || localLayerGerencias) return;
           const gcrColors = {
             'NORESTE': '#FED7D7',
             'OCCIDENTE': '#FEEBC8',
@@ -6209,6 +6209,7 @@
           };
 
           localLayerGerencias = L.geoJSON(cachedGerenciasGeoJSON, {
+            pane: 'backgroundPane',
             style: (feature) => {
               const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
               let fill = '#EDF2F7';
@@ -6223,11 +6224,13 @@
               };
             }
           }).addTo(map);
-        }
+          updateLayersControl();
+        };
 
-        // Pintar límites de Estados
-        if (cachedEstadosGeoJSON) {
+        const drawEstados = () => {
+          if (!cachedEstadosGeoJSON || localLayerEstados) return;
           localLayerEstados = L.geoJSON(cachedEstadosGeoJSON, {
+            pane: 'backgroundPane',
             style: {
               fillColor: 'transparent',
               fillOpacity: 0,
@@ -6236,21 +6239,14 @@
               dashArray: '2, 3'
             }
           });
-        }
+          updateLayersControl();
+        };
 
-        // Agregar control de capas (para poder encender/apagar capas)
-        if (localLayerGerencias || localLayerEstados) {
-          const overlayMaps = {};
-          if (localLayerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = localLayerGerencias;
-          if (localLayerEstados) overlayMaps["Límites Estatales"] = localLayerEstados;
-
-          L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(map);
-        }
-
-        // Pintar y destacar de forma permanente los límites de los estados que pertenecen a esta GCR
-        if (cachedEstadosGeoJSON) {
+        const drawHighlight = () => {
+          if (!cachedEstadosGeoJSON) return;
           const gcrStates = new Set(gcrProjects.map(p => normText(p.ef)));
           L.geoJSON(cachedEstadosGeoJSON, {
+            pane: 'backgroundPane',
             filter: (feature) => {
               const stateName = normText(feature.properties?.ESTADO || feature.properties?.name || '');
               return gcrStates.has(stateName);
@@ -6263,8 +6259,9 @@
               dashArray: '3, 4'
             }
           }).addTo(map);
-        }
+        };
 
+        // Pintar marcadores de proyectos
         const markers = [];
         gcrProjects.forEach(p => {
           if (p.coords) {
@@ -6297,6 +6294,34 @@
         } else {
           map.setView([23.5, -102.2], 5);
         }
+
+        // Cargar/Pintar capas geográficas en segundo plano de manera segura
+        if (cachedGerenciasGeoJSON) {
+          drawGerencias();
+        } else {
+          fetch(GEOJSON_GERENCIAS_URL)
+            .then(res => res.json())
+            .then(geojson => {
+              cachedGerenciasGeoJSON = geojson;
+              drawGerencias();
+            })
+            .catch(e => console.warn("Error cargando gerencias:", e));
+        }
+
+        if (cachedEstadosGeoJSON) {
+          drawEstados();
+          drawHighlight();
+        } else {
+          fetch(GEOJSON_EF_URL)
+            .then(res => res.json())
+            .then(geojson => {
+              cachedEstadosGeoJSON = geojson;
+              drawEstados();
+              drawHighlight();
+            })
+            .catch(e => console.warn("Error cargando estados:", e));
+        }
+
       } catch (err) {
         console.warn(`No se pudo inicializar el mapa regional para ${gcrKey}:`, err);
       }
@@ -10100,7 +10125,7 @@
 
           if (slides[i].classList.contains('gcr-dashboard-slide')) {
             const gcrKey = slides[i].dataset.gcr;
-            await initGcrDashboardWidgets(gcrKey);
+            initGcrDashboardWidgets(gcrKey);
           } else if (i === 1) {
             if (!mapInstance) initMiniMap();
           }
