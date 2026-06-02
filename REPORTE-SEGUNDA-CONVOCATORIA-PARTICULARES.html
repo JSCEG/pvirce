@@ -6085,6 +6085,8 @@
       currentSlideIndex = index;
       updateControls();
 
+      const activeSlide = slides[index];
+
       // Forzar recálculo del mapa si es el Slide 2 (Dashboard)
       if (index === 1) {
         setTimeout(() => {
@@ -6093,6 +6095,11 @@
           } else {
             mapInstance.invalidateSize({ pan: false, animate: false });
           }
+        }, 150);
+      } else if (activeSlide && activeSlide.classList.contains('gcr-dashboard-slide')) {
+        const gcrKey = activeSlide.dataset.gcr;
+        setTimeout(() => {
+          initGcrDashboardWidgets(gcrKey);
         }, 150);
       }
     }
@@ -9857,7 +9864,15 @@
           slides.forEach((s) => s.classList.remove('active'));
           slides[i].classList.add('active');
           slides[i].style.display = 'flex';
-          await new Promise((r) => setTimeout(r, 500));
+
+          if (slides[i].classList.contains('gcr-dashboard-slide')) {
+            const gcrKey = slides[i].dataset.gcr;
+            initGcrDashboardWidgets(gcrKey);
+          } else if (i === 1) {
+            if (!mapInstance) initMiniMap();
+          }
+
+          await new Promise((r) => setTimeout(r, 600));
 
           const canvas = await captureReportSlideForPdf(slides[i]);
           const imgData = canvas.toDataURL('image/jpeg', 0.90);
