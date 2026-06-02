@@ -567,6 +567,20 @@
       border-bottom: 2px solid #E2E8F0;
     }
 
+    .gcr-row-interactive {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .gcr-row-interactive:hover {
+      background-color: rgba(183, 30, 79, 0.08) !important;
+    }
+
+    .gcr-row-interactive.active {
+      background-color: rgba(183, 30, 79, 0.15) !important;
+      font-weight: bold;
+    }
+
     .gcr-minitable td {
       padding: 4px 8px;
       border-bottom: 1px solid #E2E8F0;
@@ -1850,7 +1864,7 @@
       let gcrRowsHtml = sortedGcr.map(gcr => {
         const pct = (gcrData[gcr].mw / totalMw) * 100;
         return `
-          <tr>
+          <tr class="gcr-row-interactive" data-gcr="${gcr}">
             <td style="font-weight: 600;">GCR ${gcr}</td>
             <td class="col-right-text">${gcrData[gcr].count}</td>
             <td class="col-right-text" style="font-weight: 600;">${gcrData[gcr].mw.toFixed(0)}</td>
@@ -1869,6 +1883,33 @@
         </tr>
       `;
       gcrTableBody.innerHTML = gcrRowsHtml;
+
+      // Agregar interactividad con el mapa
+      let activeGcr = null;
+      gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(row => {
+        const gcrName = row.getAttribute('data-gcr');
+        
+        row.addEventListener('mouseenter', () => {
+          highlightGcrOnMap(gcrName);
+        });
+        
+        row.addEventListener('mouseleave', () => {
+          highlightGcrOnMap(activeGcr);
+        });
+        
+        row.addEventListener('click', () => {
+          if (activeGcr === gcrName) {
+            activeGcr = null;
+            row.classList.remove('active');
+            highlightGcrOnMap(null);
+          } else {
+            gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(r => r.classList.remove('active'));
+            activeGcr = gcrName;
+            row.classList.add('active');
+            highlightGcrOnMap(gcrName);
+          }
+        });
+      });
 
       // 4. Avance en Trámites
       let miaCount = 0, miaMw = 0;
@@ -2083,6 +2124,66 @@
               <strong>Inversión:</strong> ${p.inversion > 0 ? p.inversion.toFixed(1) + ' MDD' : 'Sin datos'}
             </div>
           `);
+        }
+      });
+    }
+
+    function highlightGcrOnMap(gcrName) {
+      if (!layerGerencias || !mapInstance) return;
+
+      const gcrColors = {
+        'NORESTE': '#FED7D7',
+        'OCCIDENTE': '#FEEBC8',
+        'NORTE': '#EBF8FF',
+        'ORIENTAL': '#E6FFFA',
+        'PENINSULAR': '#EDF2F7',
+        'CENTRAL': '#E2E8F0',
+        'BAJA CALIFORNIA SUR': '#FAF5FF',
+        'BAJA CALIFORNIA': '#e0f0ff'
+      };
+
+      const normGcr = String(gcrName || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+
+      layerGerencias.eachLayer(layer => {
+        const featName = String(layer.feature?.properties?.GCR || layer.feature?.properties?.name || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+        
+        let isMatch = false;
+        if (normGcr) {
+          if (normGcr === 'BAJA CALIFORNIA') {
+            isMatch = featName === 'BAJA CALIFORNIA' || (featName.includes('BAJA') && !featName.includes('SUR'));
+          } else {
+            isMatch = featName.includes(normGcr) || normGcr.includes(featName);
+          }
+        }
+
+        let fill = '#EDF2F7';
+        Object.keys(gcrColors).forEach(k => {
+          if (featName.includes(k)) fill = gcrColors[k];
+        });
+
+        if (normGcr) {
+          if (isMatch) {
+            layer.setStyle({
+              fillColor: fill,
+              fillOpacity: 0.6,
+              color: '#b71e4f',
+              weight: 2.5
+            });
+          } else {
+            layer.setStyle({
+              fillColor: fill,
+              fillOpacity: 0.05,
+              color: '#ffffff',
+              weight: 0.5
+            });
+          }
+        } else {
+          layer.setStyle({
+            fillColor: fill,
+            fillOpacity: 0.2,
+            color: '#ffffff',
+            weight: 1.2
+          });
         }
       });
     }

@@ -1004,6 +1004,20 @@
       background: #eef1f4;
     }
 
+    #slide-1 .gcr-row-interactive {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    #slide-1 .gcr-row-interactive:hover {
+      background-color: rgba(183, 30, 79, 0.08) !important;
+    }
+
+    #slide-1 .gcr-row-interactive.active {
+      background-color: rgba(183, 30, 79, 0.15) !important;
+      font-weight: bold;
+    }
+
     #slide-1 .gcr-table-card {
       height: 260px;
       padding: 12px 14px;
@@ -4723,7 +4737,7 @@
         const pct = (gcrData[gcr].mw / totalMw) * 100;
         const gcrClass = toGcrClassName(gcr);
         return `
-          <tr>
+          <tr class="gcr-row-interactive" data-gcr="${gcr}">
             <td class="gcr-name-cell"><span class="gcr-chip ${gcrClass}">GCR ${gcr}</span></td>
             <td class="col-right-text">${gcrData[gcr].count}</td>
             <td class="col-right-text" style="font-weight: 600;">${formatInt(gcrData[gcr].mw)}</td>
@@ -4742,6 +4756,33 @@
         </tr>
       `;
       gcrTableBody.innerHTML = gcrRowsHtml;
+
+      // Agregar interactividad con el mapa
+      let activeGcr = null;
+      gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(row => {
+        const gcrName = row.getAttribute('data-gcr');
+        
+        row.addEventListener('mouseenter', () => {
+          highlightGcrOnMap(gcrName);
+        });
+        
+        row.addEventListener('mouseleave', () => {
+          highlightGcrOnMap(activeGcr);
+        });
+        
+        row.addEventListener('click', () => {
+          if (activeGcr === gcrName) {
+            activeGcr = null;
+            row.classList.remove('active');
+            highlightGcrOnMap(null);
+          } else {
+            gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(r => r.classList.remove('active'));
+            activeGcr = gcrName;
+            row.classList.add('active');
+            highlightGcrOnMap(gcrName);
+          }
+        });
+      });
 
       // 4. Avance en Trámites
       let miaCount = 0, miaMw = 0;
@@ -4969,6 +5010,66 @@
               <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}
             </div>
           `);
+        }
+      });
+    }
+
+    function highlightGcrOnMap(gcrName) {
+      if (!layerGerencias || !mapInstance) return;
+
+      const gcrColors = {
+        'NORESTE': '#FED7D7',
+        'OCCIDENTE': '#FEEBC8',
+        'NORTE': '#EBF8FF',
+        'ORIENTAL': '#E6FFFA',
+        'PENINSULAR': '#EDF2F7',
+        'CENTRAL': '#E2E8F0',
+        'BAJA CALIFORNIA SUR': '#FAF5FF',
+        'BAJA CALIFORNIA': '#e0f0ff'
+      };
+
+      const normGcr = String(gcrName || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+
+      layerGerencias.eachLayer(layer => {
+        const featName = String(layer.feature?.properties?.GCR || layer.feature?.properties?.name || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+        
+        let isMatch = false;
+        if (normGcr) {
+          if (normGcr === 'BAJA CALIFORNIA') {
+            isMatch = featName === 'BAJA CALIFORNIA' || (featName.includes('BAJA') && !featName.includes('SUR'));
+          } else {
+            isMatch = featName.includes(normGcr) || normGcr.includes(featName);
+          }
+        }
+
+        let fill = '#EDF2F7';
+        Object.keys(gcrColors).forEach(k => {
+          if (featName.includes(k)) fill = gcrColors[k];
+        });
+
+        if (normGcr) {
+          if (isMatch) {
+            layer.setStyle({
+              fillColor: fill,
+              fillOpacity: 0.6,
+              color: '#b71e4f',
+              weight: 2.5
+            });
+          } else {
+            layer.setStyle({
+              fillColor: fill,
+              fillOpacity: 0.05,
+              color: '#ffffff',
+              weight: 0.5
+            });
+          }
+        } else {
+          layer.setStyle({
+            fillColor: fill,
+            fillOpacity: 0.2,
+            color: '#ffffff',
+            weight: 1.2
+          });
         }
       });
     }
@@ -5303,7 +5404,7 @@
               <div class="col-right">
                 <div class="map-card" style="height: 260px; padding: 6px;">
                   <div class="map-lbl" style="font-size: 10px; padding: 3px 6px;">Distribución GCR ${gcrKey}</div>
-                  <div class="invest-lbl" style="bottom: 12px; left: 12px; top: auto; right: auto; background: #b71e4f; border-radius: 10px; min-width: 218px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
+                  <div class="invest-lbl" style="bottom: 12px; left: 12px; top: auto; right: auto; background: #b71e4f; border-radius: 10px; min-width: 270px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
                     ${gcrInvestmentSummaryHtml}
                   </div>
                   <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px; z-index: 10; position: relative;"></div>
