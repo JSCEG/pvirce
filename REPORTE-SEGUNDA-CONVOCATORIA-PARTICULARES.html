@@ -2152,13 +2152,47 @@
       letter-spacing: .02em;
     }
 
-    .geo-summary .gs-chip.aut { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
-    .geo-summary .gs-chip.tra { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
-    .geo-summary .gs-chip.pre { background: #ede9fe; border-color: #c4b5fd; color: #5b21b6; }
-    .geo-summary .gs-chip.def { background: #f1f5f9; border-color: #cbd5e1; color: #475569; }
-    .geo-summary .gs-chip.hi  { background: #dbeafe; border-color: #93c5fd; color: #1e3a8a; }
-    .geo-summary .gs-chip.md  { background: #e0f2fe; border-color: #7dd3fc; color: #075985; }
-    .geo-summary .gs-chip.lo  { background: #f0fdfa; border-color: #99f6e4; color: #115e59; }
+    .geo-summary .gs-chip.aut {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #991b1b;
+    }
+
+    .geo-summary .gs-chip.tra {
+      background: #fef3c7;
+      border-color: #fcd34d;
+      color: #92400e;
+    }
+
+    .geo-summary .gs-chip.pre {
+      background: #ede9fe;
+      border-color: #c4b5fd;
+      color: #5b21b6;
+    }
+
+    .geo-summary .gs-chip.def {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #475569;
+    }
+
+    .geo-summary .gs-chip.hi {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1e3a8a;
+    }
+
+    .geo-summary .gs-chip.md {
+      background: #e0f2fe;
+      border-color: #7dd3fc;
+      color: #075985;
+    }
+
+    .geo-summary .gs-chip.lo {
+      background: #f0fdfa;
+      border-color: #99f6e4;
+      color: #115e59;
+    }
 
     .geo-analysis-side {
       border-left: 1px solid #eaecf0;
@@ -2213,10 +2247,23 @@
       color: #334155;
     }
 
-    .geo-analysis-list::-webkit-scrollbar { width: 7px; }
-    .geo-analysis-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-    .geo-analysis-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .geo-analysis-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .geo-analysis-list::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .geo-analysis-list::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .geo-analysis-list::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .geo-analysis-list::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
 
     .geo-analysis-list li {
       list-style: none;
@@ -2240,7 +2287,7 @@
     }
 
     .geo-analysis-list li[data-focus-key].active {
-      background: linear-gradient(90deg, rgba(155,34,71,.08) 0%, #fff 80%);
+      background: linear-gradient(90deg, rgba(155, 34, 71, .08) 0%, #fff 80%);
       border-left-color: #f7dca1;
       border-left-width: 5px;
       box-shadow: -2px 4px 14px rgba(155, 34, 71, 0.18);
@@ -2319,7 +2366,9 @@
       white-space: nowrap;
     }
 
-    .leaflet-tooltip.geo-label-gcr::before { display: none; }
+    .leaflet-tooltip.geo-label-gcr::before {
+      display: none;
+    }
 
     .leaflet-tooltip.geo-label-ef {
       background: rgba(255, 255, 255, 0.94);
@@ -2335,7 +2384,9 @@
       white-space: nowrap;
     }
 
-    .leaflet-tooltip.geo-label-ef::before { display: none; }
+    .leaflet-tooltip.geo-label-ef::before {
+      display: none;
+    }
 
     .leaflet-tooltip.geo-label-proj {
       background: linear-gradient(135deg, #ff1f5a 0%, #c2185b 100%);
@@ -2352,7 +2403,10 @@
       white-space: nowrap;
     }
 
-    .leaflet-tooltip.geo-label-proj::before { border-top-color: #c2185b; border-bottom-color: #c2185b; }
+    .leaflet-tooltip.geo-label-proj::before {
+      border-top-color: #c2185b;
+      border-bottom-color: #c2185b;
+    }
 
     .leaflet-tooltip.geo-label-saee {
       background: linear-gradient(135deg, #00d26a 0%, #00875a 100%);
@@ -2369,7 +2423,10 @@
       white-space: nowrap;
     }
 
-    .leaflet-tooltip.geo-label-saee::before { border-top-color: #00875a; border-bottom-color: #00875a; }
+    .leaflet-tooltip.geo-label-saee::before {
+      border-top-color: #00875a;
+      border-bottom-color: #00875a;
+    }
 
     .leaflet-tooltip.geo-label-sub {
       background: rgba(46, 125, 50, 0.95);
@@ -2385,36 +2442,77 @@
       white-space: nowrap;
     }
 
-    .leaflet-tooltip.geo-label-sub::before { display: none; }
+    .leaflet-tooltip.geo-label-sub::before {
+      display: none;
+    }
 
     /* ==== EFECTOS REVEAL DE CAPAS GEOESPACIALES ==== */
     @keyframes glowProject {
-      0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 31, 90, 0.75)); }
-      50%      { filter: drop-shadow(0 0 12px rgba(255, 92, 138, 1)); }
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 3px rgba(255, 31, 90, 0.75));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 12px rgba(255, 92, 138, 1));
+      }
     }
 
     @keyframes glowSaee {
-      0%, 100% { filter: drop-shadow(0 0 3px rgba(0, 210, 106, 0.7)); }
-      50%      { filter: drop-shadow(0 0 12px rgba(0, 255, 149, 1)); }
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 3px rgba(0, 210, 106, 0.7));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 12px rgba(0, 255, 149, 1));
+      }
     }
 
     @keyframes dashFlow {
-      to { stroke-dashoffset: -40; }
+      to {
+        stroke-dashoffset: -40;
+      }
     }
 
     @keyframes pulseSub {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50%      { transform: scale(1.35); opacity: 0.85; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.35);
+        opacity: 0.85;
+      }
     }
 
     @keyframes bouncePermiso {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-4px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-4px);
+      }
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(8px) scale(0.92); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .reveal-project {
@@ -2444,15 +2542,20 @@
     }
 
     @keyframes fadeOpacity {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .reveal-permiso {
       animation: fadeOpacity .45s ease both;
     }
 
-    .reveal-permiso > div {
+    .reveal-permiso>div {
       animation: bouncePermiso 1.4s ease-in-out infinite .45s;
     }
 
@@ -2495,17 +2598,45 @@
       animation: pulseSub 1.2s ease-in-out infinite;
     }
 
-    .toast-dot.proj { background: #ff5c8a; }
-    .toast-dot.saee { background: #00ff95; }
-    .toast-dot.line { background: #00e5ff; }
-    .toast-dot.sub  { background: #66bb6a; }
-    .toast-dot.perm { background: #ffca28; }
+    .toast-dot.proj {
+      background: #ff5c8a;
+    }
+
+    .toast-dot.saee {
+      background: #00ff95;
+    }
+
+    .toast-dot.line {
+      background: #00e5ff;
+    }
+
+    .toast-dot.sub {
+      background: #66bb6a;
+    }
+
+    .toast-dot.perm {
+      background: #ffca28;
+    }
 
     /* ==== SPOTLIGHT TOUR (Gaby-style pulse-ring) ==== */
     @keyframes spotlightRing {
-      0%   { transform: scale(0.75); opacity: 0.7; filter: drop-shadow(0 0 2px rgba(155, 34, 71, 0.9)); }
-      70%  { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 16px rgba(247, 220, 161, 0.9)) drop-shadow(0 0 10px rgba(155, 34, 71, 0.8)); }
-      100% { transform: scale(0.75); opacity: 0.7; filter: drop-shadow(0 0 2px rgba(155, 34, 71, 0.5)); }
+      0% {
+        transform: scale(0.75);
+        opacity: 0.7;
+        filter: drop-shadow(0 0 2px rgba(155, 34, 71, 0.9));
+      }
+
+      70% {
+        transform: scale(1.1);
+        opacity: 1;
+        filter: drop-shadow(0 0 16px rgba(247, 220, 161, 0.9)) drop-shadow(0 0 10px rgba(155, 34, 71, 0.8));
+      }
+
+      100% {
+        transform: scale(0.75);
+        opacity: 0.7;
+        filter: drop-shadow(0 0 2px rgba(155, 34, 71, 0.5));
+      }
     }
 
     .leaflet-overlay-pane path.spotlight-pulse {
@@ -2577,9 +2708,20 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
 
-    .geo-tour-btn:hover { background: #8a6720; }
-    .geo-tour-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .geo-tour-btn.playing { background: #b91c1c; color: #fff; border-color: #991b1b; }
+    .geo-tour-btn:hover {
+      background: #8a6720;
+    }
+
+    .geo-tour-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .geo-tour-btn.playing {
+      background: #b91c1c;
+      color: #fff;
+      border-color: #991b1b;
+    }
 
     .geo-tour-progress {
       position: absolute;
@@ -2602,8 +2744,15 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
 
-    .geo-tour-progress.show { display: inline-flex; }
-    .geo-tour-progress .gtp-step { color: #f7dca1; font-weight: 800; }
+    .geo-tour-progress.show {
+      display: inline-flex;
+    }
+
+    .geo-tour-progress .gtp-step {
+      color: #f7dca1;
+      font-weight: 800;
+    }
+
     .geo-tour-progress .gtp-cancel {
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.3);
@@ -2631,7 +2780,9 @@
       font-family: 'Outfit', sans-serif;
     }
 
-    .pdf-loader.show { display: flex; }
+    .pdf-loader.show {
+      display: flex;
+    }
 
     .pdf-loader .spinner-ring {
       width: 56px;
@@ -2675,7 +2826,10 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
 
-    .pdf-export-btn:hover { background: #111827; }
+    .pdf-export-btn:hover {
+      background: #111827;
+    }
+
     .pdf-export-btn.inline-ctrl {
       height: 32px;
       padding: 0 12px;
@@ -2687,7 +2841,10 @@
       box-shadow: 0 4px 12px rgba(155, 34, 71, 0.35);
       justify-content: center;
     }
-    .pdf-export-btn.inline-ctrl:hover { background: #7a1534; }
+
+    .pdf-export-btn.inline-ctrl:hover {
+      background: #7a1534;
+    }
 
     /* ============ @MEDIA PRINT — REPORTE GENERAL ============ */
     @media print {
@@ -2696,7 +2853,8 @@
         margin: 0;
       }
 
-      html, body {
+      html,
+      body {
         padding: 0 !important;
         margin: 0 !important;
         background: #fff !important;
@@ -2875,8 +3033,8 @@
             <span class="brand-line-2">Particulares</span>
           </div>
           <div class="ef-title">Numeralia de Proyectos</div>
-          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
-              alt="SENER"></div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
+          </div>
         </div>
 
         <div class="numeralia-grid">
@@ -2975,12 +3133,15 @@
         class="bi bi-arrows-fullscreen"></i></button>
     <button class="control-btn" id="btnSearch" onclick="openSearchModal()" title="Buscar proyecto (F)"><i
         class="bi bi-search"></i></button>
-    <button class="control-btn" id="btnPdfReport" onclick="exportFullReportPDF()" title="Exportar reporte a PDF" style="background:var(--color-guinda);color:#fff;">
+    <button class="control-btn" id="btnPdfReport" onclick="exportFullReportPDF()" title="Exportar reporte a PDF"
+      style="background:var(--color-guinda);color:#fff;">
       <i class="bi bi-file-earmark-pdf-fill"></i>
     </button>
-    <button class="control-btn" id="btnIssues" onclick="jumpToIssuesSlide()" title="Reporte de inconsistencias VUPE" style="background:var(--color-guinda);color:#fff;position:relative;">
+    <button class="control-btn" id="btnIssues" onclick="jumpToIssuesSlide()" title="Reporte de inconsistencias VUPE"
+      style="background:var(--color-guinda);color:#fff;position:relative;">
       <i class="bi bi-exclamation-triangle-fill"></i>
-      <span id="btnIssuesBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--color-dorado);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;border:2px solid #1E1E1E;line-height:1;">0</span>
+      <span id="btnIssuesBadge"
+        style="display:none;position:absolute;top:-4px;right:-4px;background:var(--color-dorado);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;border:2px solid #1E1E1E;line-height:1;">0</span>
     </button>
   </div>
 
@@ -3067,7 +3228,8 @@
       <div class="modal-nav-bar">
         <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage((window._fichaPage || 1) - 1)" disabled>◀
           Página Anterior</button>
-        <button id="btnOpenGeoAnalysis" class="modal-nav-btn geo-analysis-open-btn" onclick="openGeoSpatialAnalysisModal()" disabled style="background:#a57f2c;border-color:#8a6720;">
+        <button id="btnOpenGeoAnalysis" class="modal-nav-btn geo-analysis-open-btn"
+          onclick="openGeoSpatialAnalysisModal()" disabled style="background:#a57f2c;border-color:#8a6720;">
           <i class="bi bi-globe-americas"></i> Análisis geoespacial
         </button>
         <button class="modal-nav-btn" onclick="exportFichaPDF()" style="background:#1f2937;border-color:#111827;">
@@ -3127,7 +3289,8 @@
           <div id="geoAnalysisLoading" class="geo-analysis-loading">
             <div class="spinner-ring"></div>
             <div class="ga-title">Analizando…</div>
-            <div class="ga-sub" id="geoAnalysisLoadingSub">Recortando capas dentro del radio de acción del proyecto.</div>
+            <div class="ga-sub" id="geoAnalysisLoadingSub">Recortando capas dentro del radio de acción del proyecto.
+            </div>
             <div class="ga-step" id="geoAnalysisLoadingStep">Cargando capas geoespaciales…</div>
           </div>
           <div id="geoRevealToast" class="geo-reveal-toast">
@@ -3195,20 +3358,20 @@
       },
       // Código de colores CFE/CENACE estándar por tensión nominal
       lineVoltage: {
-        v400: { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null,    label: '400 kV', range: 'extra alta' },
-        v230: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null,    label: '230 kV', range: 'alta' },
-        v161: { color: '#FBC02D', weight: 2.6, opacity: 0.9,  dashArray: '10, 4', label: '161 kV', range: 'alta' },
+        v400: { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null, label: '400 kV', range: 'extra alta' },
+        v230: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null, label: '230 kV', range: 'alta' },
+        v161: { color: '#FBC02D', weight: 2.6, opacity: 0.9, dashArray: '10, 4', label: '161 kV', range: 'alta' },
         v138: { color: '#7CB342', weight: 2.4, opacity: 0.88, dashArray: '10, 4', label: '138 kV', range: 'subtransmisión' },
-        v115: { color: '#43A047', weight: 2.3, opacity: 0.86, dashArray: '8, 4',  label: '115 kV', range: 'subtransmisión' },
-        v85:  { color: '#26C6DA', weight: 2.1, opacity: 0.84, dashArray: '6, 4',  label: '85 kV',  range: 'subtransmisión' },
-        v69:  { color: '#1976D2', weight: 2,   opacity: 0.82, dashArray: '6, 5',  label: '69 kV',  range: 'subtransmisión' },
-        v34:  { color: '#7E57C2', weight: 1.8, opacity: 0.8,  dashArray: '4, 5',  label: '34.5 kV', range: 'distribución' },
-        v23:  { color: '#AB47BC', weight: 1.6, opacity: 0.78, dashArray: '4, 6',  label: '23 kV',  range: 'distribución' },
-        v13:  { color: '#EC407A', weight: 1.5, opacity: 0.76, dashArray: '3, 6',  label: '13.8 kV', range: 'distribución' },
-        low:  { color: '#90A4AE', weight: 1.4, opacity: 0.7,  dashArray: '2, 6',  label: '<13 kV / N/D', range: 'baja' },
+        v115: { color: '#43A047', weight: 2.3, opacity: 0.86, dashArray: '8, 4', label: '115 kV', range: 'subtransmisión' },
+        v85: { color: '#26C6DA', weight: 2.1, opacity: 0.84, dashArray: '6, 4', label: '85 kV', range: 'subtransmisión' },
+        v69: { color: '#1976D2', weight: 2, opacity: 0.82, dashArray: '6, 5', label: '69 kV', range: 'subtransmisión' },
+        v34: { color: '#7E57C2', weight: 1.8, opacity: 0.8, dashArray: '4, 5', label: '34.5 kV', range: 'distribución' },
+        v23: { color: '#AB47BC', weight: 1.6, opacity: 0.78, dashArray: '4, 6', label: '23 kV', range: 'distribución' },
+        v13: { color: '#EC407A', weight: 1.5, opacity: 0.76, dashArray: '3, 6', label: '13.8 kV', range: 'distribución' },
+        low: { color: '#90A4AE', weight: 1.4, opacity: 0.7, dashArray: '2, 6', label: '<13 kV / N/D', range: 'baja' },
         // Aliases para legend compatibility
-        high:   { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null,   label: 'Línea ≥ 400 kV' },
-        medium: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null,   label: 'Línea 161-399 kV' }
+        high: { color: '#D32F2F', weight: 3.2, opacity: 0.95, dashArray: null, label: 'Línea ≥ 400 kV' },
+        medium: { color: '#F57C00', weight: 2.8, opacity: 0.92, dashArray: null, label: 'Línea 161-399 kV' }
       },
       subestaciones: { color: '#2E7D32', fillColor: '#66BB6A', fillOpacity: 0.92, weight: 1, radius: 5, pointBufferMeters: 250 },
       permisos: {
@@ -3259,18 +3422,20 @@
     };
 
     const IMPACT_LAYERS = {
-      atlas:              { name: 'Atlas Pueblos Indígenas', color: '#ff00ff', icon: 'bi-flower3',      geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','nom_loc','LOCALIDAD','pueblo','PUEBLO'] },
-      regiones:           { name: 'Regiones Indígenas',      color: '#ffa500', icon: 'bi-globe-americas', geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','REGION','region'] },
-      lenguas:            { name: 'Lenguas Indígenas',       color: '#00bcd4', icon: 'bi-translate',     geomKind: 'point', nameKeys: ['LENGUA','lengua','nombre','NOMBRE','familia'] },
-      ran:                { name: 'Núcleos Agrarios (RAN)',  color: '#8B4513', icon: 'bi-tree',          geomKind: 'poly',  nameKeys: ['Clv_Unica','NOM_NUC','nom_nuc','nombre'] },
-      anp_estatal:        { name: 'ANP Estatal',             color: '#22c55e', icon: 'bi-tree-fill',     geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','anp','ANP'] },
-      ramsar:             { name: 'Sitios Ramsar',           color: '#0ea5e9', icon: 'bi-water',         geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','SITIO','sitio'] },
-      za_publico:         { name: 'Zonas Arq. Públicas',     color: '#ef4444', icon: 'bi-bank',          geomKind: 'point', nameKeys: ['NOMBRE','nombre','zona'] },
-      za_publico_a:       { name: 'Zonas Arq. Públicas (A)', color: '#dc2626', icon: 'bi-bank',          geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','zona'] },
-      sitio_arqueologico: { name: 'Sitios Arqueológicos',    color: '#b91c1c', icon: 'bi-bricks',        geomKind: 'point', nameKeys: ['NOMBRE','nombre','sitio'] },
-      z_historicos:       { name: 'Zonas Históricas',        color: '#d97706', icon: 'bi-building',      geomKind: 'poly',  nameKeys: ['NOMBRE','nombre','zona'] },
-      rutaWixarika:       { name: 'Ruta Wixárika',           color: '#ff8000', icon: 'bi-signpost',      geomKind: 'line',  nameKeys: ['NOMBRE','nombre','ruta','tramo'] }
+      atlas: { name: 'Atlas Pueblos Indígenas', color: '#ff00ff', icon: 'bi-flower3', geomKind: 'poly', nameKeys: ['NOMBRE', 'nombre', 'nom_loc', 'LOCALIDAD', 'pueblo', 'PUEBLO'] },
+      regiones: { name: 'Regiones Indígenas', color: '#ffa500', icon: 'bi-globe-americas', geomKind: 'poly', nameKeys: ['NOMBRE', 'nombre', 'REGION', 'region'] },
+      lenguas: { name: 'Lenguas Indígenas', color: '#00bcd4', icon: 'bi-translate', geomKind: 'point', nameKeys: ['LENGUA', 'lengua', 'nombre', 'NOMBRE', 'familia'] },
+      ran: { name: 'Núcleos Agrarios (RAN)', color: '#8B4513', icon: 'bi-tree', geomKind: 'poly', nameKeys: ['Clv_Unica', 'NOM_NUC', 'nom_nuc', 'nombre'] },
+      anp_estatal: { name: 'ANP Estatal', color: '#22c55e', icon: 'bi-tree-fill', geomKind: 'poly', nameKeys: ['NOMBRE', 'nombre', 'anp', 'ANP'] },
+      ramsar: { name: 'Sitios Ramsar', color: '#0ea5e9', icon: 'bi-water', geomKind: 'poly', nameKeys: ['NOMBRE', 'nombre', 'SITIO', 'sitio'] },
+      za_publico: { name: 'Zonas Arq. Públicas', color: '#ef4444', icon: 'bi-bank', geomKind: 'point', nameKeys: ['NOMBRE', 'nombre', 'zona'] },
+      za_publico_a: { name: 'Zonas Arq. Públicas (A)', color: '#dc2626', icon: 'bi-bank', geomKind: 'poly', nameKeys: ['NOMBRE', 'nombre', 'zona'] },
+      sitio_arqueologico: { name: 'Sitios Arqueológicos', color: '#b91c1c', icon: 'bi-bricks', geomKind: 'point', nameKeys: ['NOMBRE', 'nombre', 'sitio'] },
+      z_historicos: { name: 'Zonas Históricas', color: '#d97706', icon: 'bi-building', geomKind: 'poly', nameKeys: ['NOMBRE', 'nombre', 'zona'] },
+      rutaWixarika: { name: 'Ruta Wixárika', color: '#ff8000', icon: 'bi-signpost', geomKind: 'line', nameKeys: ['NOMBRE', 'nombre', 'ruta', 'tramo'] }
     };
+
+    const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
 
     let DATA = [];
     let currentSlideIndex = 0;
@@ -4499,7 +4664,6 @@
       document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
       // 2. Desglose de Tecnologías
-      const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
       const techCounts = {};
       const techMws = {};
       techs.forEach(t => { techCounts[t] = 0; techMws[t] = 0; });
@@ -4964,203 +5128,9 @@
       const deck = document.getElementById('deck');
       let slideIdx = 2; // Portada=0, Numeralia=1, las tablas empiezan en slideIndex=2
 
-      const techIcons = {
-        'Fotovoltaica': '<i class="bi bi-sun-fill" aria-hidden="true"></i>',
-        'Eólica': '<i class="bi bi-wind" aria-hidden="true"></i>',
-        'Almacenamiento': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
-        'Hidroeléctrica': '<i class="bi bi-droplet-fill" aria-hidden="true"></i>'
-      };
-
       gcrOrder.forEach(gcrInfo => {
         const rawProjs = groups[gcrInfo.key] || [];
         if (!rawProjs.length) return;
-
-        const gcrKey = gcrInfo.key;
-        const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
-        const gcrTotalMw = rawProjs.reduce((sum, p) => sum + getTableMw(p), 0);
-
-        // Generar Slide de Dashboard Regional para esta GCR
-        const dashSlide = document.createElement('section');
-        dashSlide.className = 'slide';
-        dashSlide.classList.add('gcr-dashboard-slide');
-        dashSlide.id = `slide-${slideIdx}`;
-        dashSlide.dataset.gcr = gcrKey;
-
-        // Calcular la tabla de estados para esta GCR
-        const stateData = {};
-        rawProjs.forEach(p => {
-          const state = p.ef || 'OTRO';
-          stateData[state] = stateData[state] || { count: 0, mw: 0 };
-          stateData[state].count++;
-          stateData[state].mw += getTableMw(p);
-        });
-        const sortedStates = Object.keys(stateData).sort((a,b) => stateData[b].mw - stateData[a].mw);
-        const stateRowsHtml = sortedStates.map(st => {
-          const pct = gcrTotalMw > 0 ? (stateData[st].mw / gcrTotalMw) * 100 : 0;
-          return `
-            <tr>
-              <td class="gcr-name-cell">${st}</td>
-              <td class="col-right-text">${stateData[st].count}</td>
-              <td class="col-right-text" style="font-weight: 600;">${formatInt(stateData[st].mw)}</td>
-              <td class="col-right-text">${pct.toFixed(0)}%</td>
-            </tr>
-          `;
-        }).join('') + `
-          <tr>
-            <td>TOTAL GCR</td>
-            <td class="col-right-text">${rawProjs.length}</td>
-            <td class="col-right-text">${formatInt(gcrTotalMw)}</td>
-            <td class="col-right-text">100%</td>
-          </tr>
-        `;
-
-        // Calcular Tecnologías en esta GCR
-        const techCountsGcr = {};
-        const techMwsGcr = {};
-        techs.forEach(t => { techCountsGcr[t] = 0; techMwsGcr[t] = 0; });
-        rawProjs.forEach(p => {
-          const tg = getTechGroup(p);
-          if (techCountsGcr[tg] !== undefined) {
-            techCountsGcr[tg]++;
-            techMwsGcr[tg] += getTableMw(p);
-          }
-        });
-        const totalTechCountGcr = techs.reduce((sum, t) => sum + techCountsGcr[t], 0);
-        const totalTechMwGcr = techs.reduce((sum, t) => sum + techMwsGcr[t], 0);
-        const techListHtml = techs.map(t => {
-          const pctProj = totalTechCountGcr > 0 ? (techCountsGcr[t] / totalTechCountGcr * 100).toFixed(2) : '0.00';
-          const pctMw = totalTechMwGcr > 0 ? (techMwsGcr[t] / totalTechMwGcr * 100).toFixed(2) : '0.00';
-          return `
-            <div class="tech-item">
-              <div class="icon-bg">${techIcons[t]}</div>
-              <div class="t-info">
-                <div class="t-name">${t}</div>
-                <div class="t-sub">${formatInt(techCountsGcr[t])} proy. (${pctProj}%)</div>
-              </div>
-              <div class="t-val">
-                <div>${formatMw(techMwsGcr[t])}</div>
-                <div style="font-size: 10px; color: var(--color-text-light); font-weight: normal; margin-top: 1px;">${pctMw}%</div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        // Calcular Trámites en esta GCR
-        let miaCountG = 0, miaMwG = 0;
-        let evisCountG = 0, evisMwG = 0;
-        let tierrasCountG = 0, tierrasMwG = 0;
-        let cenaceCountG = 0, cenaceMwG = 0;
-        rawProjs.forEach(p => {
-          const miaStatus = classifyStatus(p.mia);
-          const evisStatus = classifyStatus(p.misse);
-          const terrenoStatus = classifyStatus(p.tierras);
-          const cenaceStatus = classifyStatus(p.cenace);
-          const pmw = getTableMw(p);
-          if (miaStatus === 'TRAMITE') { miaCountG++; miaMwG += pmw; }
-          if (evisStatus === 'SI') { evisCountG++; evisMwG += pmw; }
-          if (terrenoStatus === 'SI') { tierrasCountG++; tierrasMwG += pmw; }
-          if (cenaceStatus === 'SI') { cenaceCountG++; cenaceMwG += pmw; }
-        });
-
-        // Inversión en esta GCR
-        const investmentSummaryGcr = summarizeInvestmentReported(rawProjs);
-
-        dashSlide.innerHTML = `
-          <div class="slide-container">
-            <div class="slide-header">
-              <div class="brand-left">
-                <span class="brand-line-1">Segunda Convocatoria 2026</span>
-                <span class="brand-line-2">Particulares</span>
-              </div>
-              <div class="ef-title">Resumen Regional - ${gcrInfo.title.toUpperCase()}</div>
-              <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
-            </div>
-
-            <div class="numeralia-grid">
-              <!-- Columna Izquierda: KPIs y Tecnologías -->
-              <div class="col-left">
-                <div class="kpi-card-main" style="min-height: 180px; padding: 18px; justify-content: center; gap: 4px;">
-                  <span class="lbl">Proyectos Finalizados</span>
-                  <span class="val-main" style="font-size: clamp(48px, 3.5vw, 60px);">${rawProjs.length}</span>
-                  <span class="val-sub" style="font-size: clamp(16px, 1.2vw, 20px); color: #f7dca1; font-weight: 700;">${formatInt(gcrTotalMw)} MW</span>
-                </div>
-
-                <div class="tech-card" style="flex-grow: 1;">
-                  <h3>Tipo de Tecnología</h3>
-                  <div class="tech-total">${formatInt(rawProjs.length)} proyectos en esta GCR</div>
-                  <div style="display: flex; flex-direction: column; gap: 8px;">
-                    ${techListHtml}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Columna Central: Estados y Grupos -->
-              <div class="col-center">
-                <div class="gcr-table-card" style="height: 220px; padding: 12px 14px;">
-                  <h3>Distribución por Entidad Federativa</h3>
-                  <table class="gcr-minitable" style="font-size: 9px; line-height: 1.15; table-layout: fixed;">
-                    <thead>
-                      <tr>
-                        <th style="width: 50%;">Estado</th>
-                        <th class="col-right-text" style="width: 15%;">Proy.</th>
-                        <th class="col-right-text" style="width: 20%;">MW</th>
-                        <th class="col-right-text" style="width: 15%;">%</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      ${stateRowsHtml}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="group-chart-card">
-                  <h3>Grupos Económicos en GCR (MW)</h3>
-                  <div id="chartGrupo_${gcrSafeId}" style="width: 100%; flex-grow: 1;"></div>
-                </div>
-              </div>
-
-              <!-- Columna Derecha: Mapa y Trámites -->
-              <div class="col-right">
-                <div class="map-card" style="height: 260px; padding: 6px;">
-                  <div class="map-lbl" style="font-size: 10px; padding: 3px 6px;">Distribución GCR ${gcrKey}</div>
-                  <div class="invest-lbl" style="font-size: 8.5px; width: calc(100% - 12px); padding: 6px 8px; bottom: 6px; left: 6px; top: auto; right: auto; box-shadow: none; border-radius: 6px;">
-                    ${renderInvestmentSummary(investmentSummaryGcr)}
-                  </div>
-                  <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px;"></div>
-                </div>
-
-                <div class="status-card" style="min-height: 200px; padding: 12px;">
-                  <h3>Avance en Trámites y Estudios</h3>
-                  <div class="status-grid" style="gap: 6px;">
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">MIA en Trámite</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${miaCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(miaMwG)}</span>
-                    </div>
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">EvIS/MISSE Aprob.</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${evisCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(evisMwG)}</span>
-                    </div>
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">Prop. de Tierras</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${tierrasCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(tierrasMwG)}</span>
-                    </div>
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">Estudios CENACE</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${cenaceCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(cenaceMwG)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="slide-footer"></div>
-          </div>
-        `;
-        deck.appendChild(dashSlide);
-        slideIdx++;
 
         // Ranking regulatorio: Tierras, MISSE, MIA y CENACE; mejor avance primero.
         const projs = rawProjs.sort(compareProjectsByRegulatoryRanking);
@@ -5448,11 +5418,11 @@
         }
 
         // 5) Coherencia entre declaración SAEE y geometría reportada
-        const saeeDeclarado = yesLike(p.saeeRespaldo) || 
-                              /incorporar/i.test(String(p.saeeRespaldo || '')) ||
-                              (p.saeeMW > 0) || 
-                              (p.saeeAlm > 0) || 
-                              (p.saeeTec && !isMissing(p.saeeTec));
+        const saeeDeclarado = yesLike(p.saeeRespaldo) ||
+          /incorporar/i.test(String(p.saeeRespaldo || '')) ||
+          (p.saeeMW > 0) ||
+          (p.saeeAlm > 0) ||
+          (p.saeeTec && !isMissing(p.saeeTec));
         const hasSaeeKml = p.saeeKml && String(p.saeeKml).startsWith('http');
         const hasSaeeVtx = Array.isArray(p.saeeVertices) && p.saeeVertices.length >= 3;
         if (saeeDeclarado && !hasSaeeKml && !hasSaeeVtx) {
@@ -5764,9 +5734,9 @@
             }
           },
           series: [
-            { name: 'Alta',  data: topGies.map((g) => g.alta), color: SEVERITY_COLORS.alta.chart },
+            { name: 'Alta', data: topGies.map((g) => g.alta), color: SEVERITY_COLORS.alta.chart },
             { name: 'Media', data: topGies.map((g) => g.media), color: SEVERITY_COLORS.media.chart },
-            { name: 'Baja',  data: topGies.map((g) => g.baja), color: SEVERITY_COLORS.baja.chart }
+            { name: 'Baja', data: topGies.map((g) => g.baja), color: SEVERITY_COLORS.baja.chart }
           ]
         });
 
@@ -5891,158 +5861,6 @@
       return slideIdx;
     }
 
-    const activeGcrWidgets = {};
-
-    function initGcrDashboardWidgets(gcrKey) {
-      if (activeGcrWidgets[gcrKey]) {
-        const widgets = activeGcrWidgets[gcrKey];
-        if (widgets.map) {
-          widgets.map.invalidateSize({ pan: false, animate: false });
-        }
-        return;
-      }
-
-      const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
-      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
-      const gcrProjects = genProjects.filter(p => (p.gerencia || 'OTRO') === gcrKey);
-
-      if (!gcrProjects.length) return;
-
-      // 1. Inicializar Highcharts
-      const groups = {};
-      gcrProjects.forEach(p => {
-        const gie = p.gie || 'NO IDENTIFICADO';
-        if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
-        groups[gie].count++;
-        groups[gie].mw += p.mw;
-      });
-
-      const sortedGroups = Object.keys(groups)
-        .map(name => ({ name, y: groups[name].mw, projectCount: groups[name].count }))
-        .sort((a, b) => b.y - a.y)
-        .slice(0, 10);
-
-      const chart = Highcharts.chart(`chartGrupo_${gcrSafeId}`, {
-        chart: {
-          type: 'bar',
-          backgroundColor: 'transparent',
-          marginRight: 95,
-          marginTop: 5,
-          marginBottom: 35,
-          style: { fontFamily: 'Montserrat, sans-serif' }
-        },
-        title: { text: '' },
-        xAxis: {
-          categories: sortedGroups.map(g => g.name.length > 20 ? g.name.slice(0, 20) + '…' : g.name),
-          labels: { style: { fontSize: '8px', color: '#333', fontWeight: '500' } },
-          lineColor: '#CBD5E0'
-        },
-        yAxis: {
-          title: { text: null },
-          labels: {
-            formatter: function () { return formatInt(this.value); },
-            style: { fontSize: '8px' }
-          },
-          gridLineColor: '#EDF2F7'
-        },
-        legend: { enabled: false },
-        plotOptions: {
-          series: {
-            color: '#691B31',
-            borderRadius: 2,
-            dataLabels: {
-              enabled: true,
-              formatter: function () {
-                return `${formatInt(this.point.projectCount)} proy. · ${formatInt(this.y)} MW`;
-              },
-              crop: false,
-              overflow: 'allow',
-              style: { fontSize: '7px', fontWeight: 'bold' }
-            }
-          }
-        },
-        tooltip: {
-          formatter: function () {
-            return `<b>${this.point.name}</b><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
-          }
-        },
-        credits: { enabled: false },
-        series: [{ data: sortedGroups }]
-      });
-
-      // 2. Inicializar Mapa Leaflet
-      let map = null;
-      try {
-        const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
-        map = L.map(`map_${gcrSafeId}`, {
-          zoomControl: false,
-          attributionControl: false,
-          preferCanvas: true,
-          minZoom: 4,
-          maxZoom: 10,
-          maxBounds: MEXICO_BOUNDS,
-          maxBoundsViscosity: 1.0
-        });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19
-        }).addTo(map);
-
-        if (cachedEstadosGeoJSON) {
-          const gcrStates = new Set(gcrProjects.map(p => normText(p.ef)));
-          L.geoJSON(cachedEstadosGeoJSON, {
-            filter: (feature) => {
-              const stateName = normText(feature.properties?.ESTADO || feature.properties?.name || '');
-              return gcrStates.has(stateName);
-            },
-            style: {
-              fillColor: '#691B31',
-              fillOpacity: 0.05,
-              color: '#691B31',
-              weight: 0.8,
-              dashArray: '3, 4'
-            }
-          }).addTo(map);
-        }
-
-        const markers = [];
-        gcrProjects.forEach(p => {
-          if (p.coords) {
-            const tGroup = getTechGroup(p);
-            const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
-            const marker = L.circleMarker(p.coords, {
-              radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
-              fillColor: col,
-              fillOpacity: 0.85,
-              color: '#ffffff',
-              weight: 1
-            }).addTo(map);
-
-            marker.bindPopup(`
-              <div style="font-family:Montserrat,sans-serif; font-size:10px; line-height:1.4;">
-                <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
-                <strong>GIE:</strong> ${p.gie}<br>
-                <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${tGroup})<br>
-                <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}
-              </div>
-            `);
-            markers.push(marker);
-          }
-        });
-
-        if (markers.length > 0) {
-          const group = new L.featureGroup(markers);
-          map.fitBounds(group.getBounds().pad(0.15), { animate: false });
-        } else {
-          map.setView([23.5, -102.2], 5);
-        }
-      } catch (err) {
-        console.warn(`No se pudo inicializar el mapa regional para ${gcrKey}:`, err);
-      }
-
-      activeGcrWidgets[gcrKey] = { map, chart };
-    }
-
     // ==========================================
     // CONTROLES DE NAVEGACIÓN Y ESCALADO
     // ==========================================
@@ -6057,8 +5875,6 @@
       currentSlideIndex = index;
       updateControls();
 
-      const activeSlide = slides[index];
-
       // Forzar recálculo del mapa si es el Slide 2 (Dashboard)
       if (index === 1) {
         setTimeout(() => {
@@ -6067,11 +5883,6 @@
           } else {
             mapInstance.invalidateSize({ pan: false, animate: false });
           }
-        }, 150);
-      } else if (activeSlide && activeSlide.classList.contains('gcr-dashboard-slide')) {
-        const gcrKey = activeSlide.dataset.gcr;
-        setTimeout(() => {
-          initGcrDashboardWidgets(gcrKey);
         }, 150);
       }
     }
@@ -6683,11 +6494,11 @@
       if (kv >= 161) return lv.v161;
       if (kv >= 138) return lv.v138;
       if (kv >= 115) return lv.v115;
-      if (kv >= 85)  return lv.v85;
-      if (kv >= 69)  return lv.v69;
-      if (kv >= 30)  return lv.v34;
-      if (kv >= 20)  return lv.v23;
-      if (kv >= 13)  return lv.v13;
+      if (kv >= 85) return lv.v85;
+      if (kv >= 69) return lv.v69;
+      if (kv >= 30) return lv.v34;
+      if (kv >= 20) return lv.v23;
+      if (kv >= 13) return lv.v13;
       return lv.low;
     }
 
@@ -6699,11 +6510,11 @@
       if (kv >= 161) return 'v161';
       if (kv >= 138) return 'v138';
       if (kv >= 115) return 'v115';
-      if (kv >= 85)  return 'v85';
-      if (kv >= 69)  return 'v69';
-      if (kv >= 30)  return 'v34';
-      if (kv >= 20)  return 'v23';
-      if (kv >= 13)  return 'v13';
+      if (kv >= 85) return 'v85';
+      if (kv >= 69) return 'v69';
+      if (kv >= 30) return 'v34';
+      if (kv >= 20) return 'v23';
+      if (kv >= 13) return 'v13';
       return 'low';
     }
 
@@ -7361,7 +7172,7 @@
 
       const gerNames = gers.slice(0, 4).map((g) => escapeHtmlSimple(g.name)).join(', ');
 
-      const bandOrder = ['v400','v230','v161','v138','v115','v85','v69','v34','v23','v13','low'];
+      const bandOrder = ['v400', 'v230', 'v161', 'v138', 'v115', 'v85', 'v69', 'v34', 'v23', 'v13', 'low'];
       const linesTypes = [];
       bandOrder.forEach((k) => {
         const rec = lineBands.get(k);
@@ -7389,7 +7200,7 @@
           if (!b || b.total === 0) return;
           const intCount = b.intersect.length;
           const tag = intCount > 0 ? `<span class="gs-chip" style="background:${cfg.color}25;border-color:${cfg.color};color:${cfg.color}">${intCount} intersecta · ${b.total} total</span>`
-                                   : `<span class="gs-chip" style="background:${cfg.color}18;border-color:${cfg.color}80;color:${cfg.color}">${b.total} en radio</span>`;
+            : `<span class="gs-chip" style="background:${cfg.color}18;border-color:${cfg.color}80;color:${cfg.color}">${b.total} en radio</span>`;
           rows.push(`<div class="gs-row"><span class="gs-label">${escapeHtmlSimple(cfg.name)}</span><span class="gs-count" style="color:${cfg.color}">${b.total}</span></div><div class="gs-types">${tag}</div>`);
         });
         if (rows.length) {
@@ -7597,7 +7408,7 @@
         const pTram = GEO_ANALYSIS_STYLE_SYSTEM.permisos.tramite;
         const pPrev = GEO_ANALYSIS_STYLE_SYSTEM.permisos.prevencion;
 
-        const voltageBands = ['v400','v230','v161','v138','v115','v85','v69','v34','v23','v13','low'];
+        const voltageBands = ['v400', 'v230', 'v161', 'v138', 'v115', 'v85', 'v69', 'v34', 'v23', 'v13', 'low'];
         const voltageRows = voltageBands.map((k) => {
           const v = lv[k];
           return `<div style="display:flex;align-items:center;margin-bottom:2px;"><span style="width:14px;height:3px;background:${v.color};display:inline-block;margin-right:6px;"></span>${v.label}</div>`;
@@ -7775,10 +7586,10 @@
           },
           style: projStyle
         }).addTo(geoAnalysisModalLayers.project);
-        try { projectCentroid = projLayer.getBounds().getCenter(); } catch (e) {}
+        try { projectCentroid = projLayer.getBounds().getCenter(); } catch (e) { }
       } else if (context.geom && Array.isArray(context.geom.projectPol) && context.geom.projectPol.length >= 3) {
         const projLayer = L.polygon(context.geom.projectPol, projStyle).addTo(geoAnalysisModalLayers.project);
-        try { projectCentroid = projLayer.getBounds().getCenter(); } catch (e) {}
+        try { projectCentroid = projLayer.getBounds().getCenter(); } catch (e) { }
       } else if (context.geom && context.geom.center) {
         L.circleMarker(context.geom.center, {
           radius: 8,
@@ -7824,7 +7635,7 @@
           }),
           style: { color: '#00D26A', fillColor: '#00FF95', fillOpacity: 0.16, weight: 2, dashArray: '6,6', className: 'reveal-saee' }
         }).addTo(geoAnalysisModalLayers.project);
-        try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) {}
+        try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) { }
       } else if (context.geom && Array.isArray(context.geom.saeePol) && context.geom.saeePol.length >= 3) {
         const saeeLayer = L.polygon(context.geom.saeePol, {
           color: '#00D26A',
@@ -7834,7 +7645,7 @@
           dashArray: '6,6',
           className: 'reveal-saee'
         }).addTo(geoAnalysisModalLayers.project);
-        try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) {}
+        try { saeeCentroid = saeeLayer.getBounds().getCenter(); } catch (e) { }
       }
 
       if (saeeCentroid) {
@@ -7895,7 +7706,7 @@
           })
             .bindPopup(`<strong>Subestación</strong><br>${escapeHtmlSimple(item.name)}<br>Distancia: ${formatDistanceKm(item.distanceKm)}`)
             .addTo(geoAnalysisModalLayers.analysis);
-          try { labelLatLng = polyLayer.getBounds().getCenter(); } catch (e) {}
+          try { labelLatLng = polyLayer.getBounds().getCenter(); } catch (e) { }
         } else {
           const pt = getRepresentativePoint(item.feature);
           if (!pt || !pt.geometry || !Array.isArray(pt.geometry.coordinates)) return;
@@ -8266,7 +8077,7 @@
       const prog = document.getElementById('geoTourProgress');
       if (prog) prog.classList.remove('show');
       if (geoTourState.originalBounds && geoAnalysisModalMap) {
-        try { geoAnalysisModalMap.fitBounds(geoTourState.originalBounds, { padding: [40, 40], animate: true }); } catch (e) {}
+        try { geoAnalysisModalMap.fitBounds(geoTourState.originalBounds, { padding: [40, 40], animate: true }); } catch (e) { }
       }
     }
 
@@ -8716,7 +8527,7 @@
                 .setLatLng(layer.getBounds().getCenter())
                 .setContent(escapeHtmlSimple(title || 'Proyecto'))
                 .addTo(fichaMapInstance);
-            } catch (e) {}
+            } catch (e) { }
           } catch (e) {
             console.warn('Error pintando projGj:', e);
           }
@@ -8739,7 +8550,7 @@
                 .setLatLng(layer.getBounds().getCenter())
                 .setContent(escapeHtmlSimple(title || 'Proyecto'))
                 .addTo(fichaMapInstance);
-            } catch (e) {}
+            } catch (e) { }
           } catch (e) {
             console.warn('No se pudo pintar el polígono del proyecto:', e);
           }
@@ -8799,7 +8610,7 @@
                 .setLatLng(layer.getBounds().getCenter())
                 .setContent('SAEE')
                 .addTo(fichaMapInstance);
-            } catch (e) {}
+            } catch (e) { }
           } catch (e) {
             console.warn('Error pintando saeeGj:', e);
           }
@@ -8822,7 +8633,7 @@
                 .setLatLng(layer.getBounds().getCenter())
                 .setContent('SAEE')
                 .addTo(fichaMapInstance);
-            } catch (e) {}
+            } catch (e) { }
           } catch (e) {
             console.warn('No se pudo pintar el polígono SAEE:', e);
           }
@@ -9836,15 +9647,7 @@
           slides.forEach((s) => s.classList.remove('active'));
           slides[i].classList.add('active');
           slides[i].style.display = 'flex';
-
-          if (slides[i].classList.contains('gcr-dashboard-slide')) {
-            const gcrKey = slides[i].dataset.gcr;
-            initGcrDashboardWidgets(gcrKey);
-          } else if (i === 1) {
-            if (!mapInstance) initMiniMap();
-          }
-
-          await new Promise((r) => setTimeout(r, 600));
+          await new Promise((r) => setTimeout(r, 500));
 
           const canvas = await captureReportSlideForPdf(slides[i]);
           const imgData = canvas.toDataURL('image/jpeg', 0.90);

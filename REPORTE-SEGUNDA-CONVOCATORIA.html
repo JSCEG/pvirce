@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segunda Convocatoria - Reporte Interactivo</title>
-  
+
   <!-- Hojas de estilo y Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
+
   <style>
     @font-face {
       font-family: 'Patria';
@@ -77,18 +80,25 @@
       font-family: 'Outfit', sans-serif;
       transition: opacity 0.5s ease;
     }
+
     .spinner {
       width: 50px;
       height: 50px;
-      border: 5px solid rgba(255,255,255,0.1);
+      border: 5px solid rgba(255, 255, 255, 0.1);
       border-top-color: var(--color-dorado);
       border-radius: 50%;
       animation: spin 1s infinite linear;
       margin-bottom: 20px;
     }
+
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     /* DECK DE DIAPOSITIVAS */
@@ -133,7 +143,8 @@
       flex-direction: column;
       padding: 35px 45px;
       transform-origin: center center;
-      border-bottom: none; /* No border, we use slide-footer for the tricolor band */
+      border-bottom: none;
+      /* No border, we use slide-footer for the tricolor band */
     }
 
     /* BARRA DE HEADER DE LA DIAPOSITIVA PREMIUM */
@@ -222,7 +233,7 @@
       padding: 8px 18px;
       border-radius: 30px;
       z-index: 1000;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       gap: 15px;
       color: #ffffff;
       font-family: 'Outfit', sans-serif;
@@ -245,13 +256,15 @@
     }
 
     .control-btn:hover {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .control-btn:disabled {
       color: #666;
       cursor: not-allowed;
-    }    /* DIAPOSITIVA 1: PORTADA PREMIUM COPIADA DEL ORIGINAL */
+    }
+
+    /* DIAPOSITIVA 1: PORTADA PREMIUM COPIADA DEL ORIGINAL */
     .slide.cover .slide-container {
       background: #6a172f;
       color: white;
@@ -497,14 +510,17 @@
     .tech-item .t-info {
       flex-grow: 1;
     }
+
     .tech-item .t-info .t-name {
       font-weight: 600;
       color: var(--color-text-dark);
     }
+
     .tech-item .t-info .t-sub {
       font-size: 10px;
       color: var(--color-text-light);
     }
+
     .tech-item .t-val {
       font-weight: 700;
       color: var(--color-guinda);
@@ -555,6 +571,7 @@
       padding: 4px 8px;
       border-bottom: 1px solid #E2E8F0;
     }
+
     .gcr-minitable tr:last-child td {
       font-weight: 700;
       background: var(--color-bg-light);
@@ -599,6 +616,7 @@
       height: 310px;
       position: relative;
     }
+
     #miniMap {
       width: 100%;
       height: 100%;
@@ -611,7 +629,7 @@
       top: 15px;
       left: 15px;
       z-index: 100;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.9);
       padding: 4px 10px;
       border-radius: 4px;
       font-size: 11px;
@@ -631,7 +649,7 @@
       border-radius: 8px;
       font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       font-family: 'Outfit', sans-serif;
       pointer-events: none;
     }
@@ -688,6 +706,7 @@
       color: var(--color-guinda);
       margin-top: 2px;
     }
+
     .status-box .s-mw {
       font-size: 9px;
       color: var(--color-text-light);
@@ -732,6 +751,7 @@
     .report-table tr:nth-child(even) {
       background-color: #fdfdfd;
     }
+
     .report-table tr:hover {
       background-color: #f1f3f5;
     }
@@ -740,6 +760,7 @@
       background-color: #f1f3f5 !important;
       font-weight: 700;
     }
+
     .report-table tr.total-row td {
       border-top: 2px solid var(--color-guinda);
       border-bottom: 2px double var(--color-guinda);
@@ -747,9 +768,14 @@
     }
 
     /* Estilos específicos para celdas */
-    .col-center-text { text-align: center; }
-    .col-right-text { text-align: right; }
-    
+    .col-center-text {
+      text-align: center;
+    }
+
+    .col-right-text {
+      text-align: right;
+    }
+
     .badge-status {
       display: inline-block;
       padding: 1px 4px;
@@ -758,9 +784,21 @@
       font-weight: 700;
       text-transform: uppercase;
     }
-    .badge-si { background: #d4edda; color: #155724; }
-    .badge-no { background: #f8d7da; color: #721c24; }
-    .badge-tramite { background: #fff3cd; color: #856404; }
+
+    .badge-si {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge-no {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .badge-tramite {
+      background: #fff3cd;
+      color: #856404;
+    }
 
     /* ENLACES INTERACTIVOS */
     .clickable-link {
@@ -768,6 +806,7 @@
       text-decoration: underline;
       cursor: pointer;
     }
+
     .clickable-link:hover {
       color: var(--color-guinda);
     }
@@ -786,6 +825,7 @@
       align-items: center;
       backdrop-filter: blur(5px);
     }
+
     .ficha-modal-content {
       background: #ffffff;
       position: relative;
@@ -793,6 +833,7 @@
       flex-direction: column;
       padding: 35px 45px;
     }
+
     .modal-close-btn {
       position: absolute;
       top: 10px;
@@ -806,9 +847,11 @@
       z-index: 10100;
       transition: transform 0.2s;
     }
+
     .modal-close-btn:hover {
       transform: scale(1.2);
     }
+
     .ficha-page-badge {
       font-family: 'Outfit', sans-serif;
       font-size: 11px;
@@ -820,6 +863,7 @@
       letter-spacing: .08em;
       white-space: nowrap;
     }
+
     .ficha-subtitle {
       font-size: 11px;
       color: var(--color-gris);
@@ -827,6 +871,7 @@
       margin-bottom: 8px;
       letter-spacing: .02em;
     }
+
     .modal-page {
       display: flex;
       flex-direction: column;
@@ -848,9 +893,11 @@
       padding: 8px 12px !important;
       transition: all 0.3s ease;
     }
+
     .leaflet-control-layers-expanded {
       padding: 10px 14px !important;
     }
+
     .leaflet-control-layers label {
       margin-bottom: 5px;
       display: flex;
@@ -859,15 +906,18 @@
       cursor: pointer;
       font-weight: 500;
     }
+
     .leaflet-control-layers label:last-child {
       margin-bottom: 0;
     }
+
     .leaflet-control-layers input[type="checkbox"] {
       accent-color: var(--color-guinda, #691B31);
       width: 12px;
       height: 12px;
       cursor: pointer;
     }
+
     .modal-nav-bar {
       display: flex;
       justify-content: center;
@@ -877,6 +927,7 @@
       border-top: 1px solid var(--color-gris-claro);
       background: #fff;
     }
+
     .modal-nav-btn {
       background: var(--color-guinda);
       color: #fff;
@@ -889,9 +940,11 @@
       font-family: 'Outfit', sans-serif;
       transition: background 0.2s;
     }
+
     .modal-nav-btn:hover {
       background: #7a1534;
     }
+
     .modal-nav-btn:disabled {
       background: var(--color-gris-claro);
       color: var(--color-text-light);
@@ -907,6 +960,7 @@
       padding-bottom: 8px;
       border-bottom: 1px solid var(--color-gris-claro);
     }
+
     .ficha-kpis .fk {
       background: white;
       border: 1px solid var(--color-gris-claro);
@@ -915,6 +969,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .ficha-kpis .fk::before {
       content: '';
       position: absolute;
@@ -924,11 +979,26 @@
       width: 3px;
       background: var(--color-guinda);
     }
-    .ficha-kpis .fk:nth-child(2)::before { background: var(--color-verde); }
-    .ficha-kpis .fk:nth-child(3)::before { background: var(--color-dorado); }
-    .ficha-kpis .fk:nth-child(4)::before { background: var(--color-gris); }
-    .ficha-kpis .fk:nth-child(5)::before { background: var(--color-verde); }
-    .ficha-kpis .fk:nth-child(6)::before { background: var(--color-dorado); }
+
+    .ficha-kpis .fk:nth-child(2)::before {
+      background: var(--color-verde);
+    }
+
+    .ficha-kpis .fk:nth-child(3)::before {
+      background: var(--color-dorado);
+    }
+
+    .ficha-kpis .fk:nth-child(4)::before {
+      background: var(--color-gris);
+    }
+
+    .ficha-kpis .fk:nth-child(5)::before {
+      background: var(--color-verde);
+    }
+
+    .ficha-kpis .fk:nth-child(6)::before {
+      background: var(--color-dorado);
+    }
 
     .ficha-kpis .fk .lbl {
       font-size: 7.5px;
@@ -938,6 +1008,7 @@
       font-weight: 700;
       line-height: 1.1;
     }
+
     .ficha-kpis .fk .val {
       font-family: 'Outfit', sans-serif;
       font-size: 15px;
@@ -946,11 +1017,13 @@
       line-height: 1.05;
       margin-top: 2px;
     }
+
     .ficha-kpis .fk .sub {
       font-size: 8px;
       color: var(--color-text-dark);
       margin-top: 1px;
     }
+
     .ficha-body {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -959,6 +1032,7 @@
       min-height: 0;
       overflow: hidden;
     }
+
     .ficha-col {
       min-height: 0;
       overflow-y: auto;
@@ -967,16 +1041,20 @@
       gap: 4px;
       padding-right: 4px;
     }
+
     .ficha-col::-webkit-scrollbar {
       width: 4px;
     }
+
     .ficha-col::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+
     .ficha-col::-webkit-scrollbar-thumb {
       background: var(--color-guinda);
       border-radius: 2px;
     }
+
     .ficha-sec {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 9.5px;
@@ -988,9 +1066,20 @@
       padding-bottom: 3px;
       border-bottom: 1px solid var(--color-guinda);
     }
-    .ficha-sec:first-child { margin-top: 0; }
-    .ficha-sec.verde { color: var(--color-verde); border-bottom-color: var(--color-verde); }
-    .ficha-sec.dorado { color: var(--color-dorado); border-bottom-color: var(--color-dorado); }
+
+    .ficha-sec:first-child {
+      margin-top: 0;
+    }
+
+    .ficha-sec.verde {
+      color: var(--color-verde);
+      border-bottom-color: var(--color-verde);
+    }
+
+    .ficha-sec.dorado {
+      color: var(--color-dorado);
+      border-bottom-color: var(--color-dorado);
+    }
 
     .ficha-kv {
       display: grid;
@@ -1002,16 +1091,19 @@
       line-height: 1.3;
       border-bottom: 1px solid #f2f2f2;
     }
+
     .ficha-kv .k {
       color: var(--color-text-dark);
       font-weight: 700;
     }
+
     .ficha-kv .v {
       color: var(--color-guinda);
       font-weight: 700;
       word-break: break-word;
       min-width: 0;
     }
+
     .ficha-kv .v.muted {
       color: var(--color-gris);
       font-weight: 400;
@@ -1034,6 +1126,7 @@
       backdrop-filter: blur(5px);
       transition: opacity 0.2s ease;
     }
+
     .search-modal-content {
       width: 620px;
       background: rgba(255, 255, 255, 0.95);
@@ -1048,10 +1141,19 @@
       font-family: 'Outfit', sans-serif;
       animation: spotlightDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     @keyframes spotlightDown {
-      from { transform: translateY(-30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
+
     .search-modal-header {
       display: flex;
       align-items: center;
@@ -1059,11 +1161,13 @@
       border-bottom: 1.5px solid rgba(105, 27, 49, 0.15);
       background: #fafafa;
     }
+
     .search-icon {
       font-size: 18px;
       color: var(--color-guinda, #691B31);
       margin-right: 12px;
     }
+
     #searchInput {
       flex: 1;
       border: none;
@@ -1074,10 +1178,12 @@
       color: var(--color-text-dark, #2D3748);
       font-weight: 500;
     }
+
     #searchInput::placeholder {
       color: var(--color-gris, #a0aec0);
       font-weight: 400;
     }
+
     .search-close-btn {
       background: none;
       border: none;
@@ -1089,15 +1195,18 @@
       line-height: 1;
       transition: transform 0.2s;
     }
+
     .search-close-btn:hover {
       transform: scale(1.15);
     }
+
     .search-results-list {
       flex: 1;
       overflow-y: auto;
       padding: 8px 0;
       max-height: 350px;
     }
+
     .search-result-item {
       display: flex;
       align-items: center;
@@ -1108,16 +1217,19 @@
       border-left: 3px solid transparent;
       gap: 12px;
     }
+
     .search-result-item:hover {
       background: rgba(105, 27, 49, 0.05);
       border-left-color: var(--color-guinda, #691B31);
     }
+
     .search-result-main {
       display: flex;
       flex-direction: column;
       min-width: 0;
       flex: 1;
     }
+
     .search-result-name {
       font-size: 11.5px;
       font-weight: 700;
@@ -1126,6 +1238,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .search-result-desc {
       font-size: 9px;
       color: var(--color-text-dark, #2D3748);
@@ -1135,6 +1248,7 @@
       text-overflow: ellipsis;
       margin-top: 2px;
     }
+
     .search-result-badge {
       font-size: 8.5px;
       font-weight: 700;
@@ -1147,6 +1261,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+
     .search-result-empty {
       padding: 24px;
       text-align: center;
@@ -1156,6 +1271,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- LOADING PRELOADER -->
@@ -1166,13 +1282,13 @@
 
   <!-- DECK PRINCIPAL DE SLIDES -->
   <div id="deck">
-    
+
     <!-- SLIDE 1: PORTADA -->
     <section class="slide cover active" id="slide-0">
       <div class="slide-container">
         <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
         <div class="cover-overlay"></div>
-        
+
         <div class="top-band">
           <img class="gob" src="https://cdn.sassoapps.com/dgmesnie/logo_gob.png" alt="Gobierno de México">
           <div class="divider"></div>
@@ -1183,7 +1299,8 @@
         <div class="body">
           <div class="eyebrow">Seguimiento de la Segunda Convocatoria</div>
           <h1>Proyectos de Generación Eléctrica — Segunda Convocatoria</h1>
-          <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
+          <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información
+            Energética</div>
           <div class="subtitle" id="coverPeriod">Periodo: <strong>2026-2035</strong></div>
           <div class="meta">
             <div><strong>Versión</strong>2026 · v1.0</div>
@@ -1202,9 +1319,10 @@
         <div class="slide-header">
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title">Numeralia de Proyectos</div>
-          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+          <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png"
+              alt="SENER"></div>
         </div>
-        
+
         <div class="numeralia-grid">
           <!-- Columna Izquierda: KPIs y Tecnologías -->
           <div class="col-left">
@@ -1213,7 +1331,7 @@
               <span class="val-main" id="kpiTotalCount">0</span>
               <span class="val-sub" id="kpiTotalMw">0 MW</span>
             </div>
-            
+
             <div class="tech-card">
               <h3>Tipo de Tecnología</h3>
               <div id="techList" style="display: flex; flex-direction: column; gap: 8px;">
@@ -1221,7 +1339,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Columna Central: GCR y Grupos Económicos -->
           <div class="col-center">
             <div class="gcr-table-card">
@@ -1240,13 +1358,13 @@
                 </tbody>
               </table>
             </div>
-            
+
             <div class="group-chart-card">
               <h3>Proyectos por Grupo Económico (MW)</h3>
               <div id="chartGrupo"></div>
             </div>
           </div>
-          
+
           <!-- Columna Derecha: Mapa y Trámites -->
           <div class="col-right">
             <div class="map-card">
@@ -1254,7 +1372,7 @@
               <div class="invest-lbl" id="kpiTotalInversion">0 MDD</div>
               <div id="miniMap"></div>
             </div>
-            
+
             <div class="status-card">
               <h3>Avance en Trámites y Estudios</h3>
               <div class="status-grid">
@@ -1302,7 +1420,7 @@
   <div id="fichaModal" class="ficha-modal" style="display: none;">
     <div class="slide-container ficha-modal-content">
       <button class="modal-close-btn" onclick="closeFichaModal()">×</button>
-      
+
       <!-- Ficha Page 1 -->
       <div id="modalPage1" class="modal-page">
         <div class="slide-header" style="margin-top: -35px;">
@@ -1333,10 +1451,12 @@
 
       <!-- Modal Footer / Navigation -->
       <div class="modal-nav-bar">
-        <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage(1)" disabled>◀ Página Anterior (Generales)</button>
-        <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage(2)">Siguiente Página (Regulación y SAEE) ▶</button>
+        <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage(1)" disabled>◀ Página Anterior
+          (Generales)</button>
+        <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage(2)">Siguiente Página (Regulación y SAEE)
+          ▶</button>
       </div>
-      
+
       <div class="slide-footer" style="margin-bottom: -35px;"></div>
     </div>
   </div>
@@ -1346,7 +1466,8 @@
     <div class="search-modal-content">
       <div class="search-modal-header">
         <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Buscar por Nombre, Folio o Empresa..." oninput="handleSearchInput(this.value)" autocomplete="off">
+        <input type="text" id="searchInput" placeholder="Buscar por Nombre, Folio o Empresa..."
+          oninput="handleSearchInput(this.value)" autocomplete="off">
         <button class="search-close-btn" onclick="closeSearchModal()">×</button>
       </div>
       <div id="searchResults" class="search-results-list"></div>
@@ -1359,7 +1480,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
-  
+
   <script>
     // ==========================================
     // CONFIGURACIÓN GENERAL Y VARIABLES GLOBALES
@@ -1367,7 +1488,7 @@
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2Ffre2ItozEiKEj0Omx5X_2fSiopFjc1lGlBugXZZ6AxhFSwb7BXS8Ufs4qvHGOqcKxUU9thg_nkE/pub?output=csv';
     const GEOJSON_GERENCIAS_URL = 'https://cdn.sassoapps.com/Mapas/gerencias_javs_2.geojson';
     const GEOJSON_EF_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
-    
+
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
@@ -1376,8 +1497,6 @@
     let cachedEstadosGeoJSON = null;
     let layerGerencias = null;
     let layerEstados = null;
-
-    const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
 
     // Colores para el mapa por tecnología
     const TECH_COLORS = {
@@ -1420,7 +1539,7 @@
 
       let csvText = null;
       let lastErr = null;
-      
+
       for (let i = 0; i < proxies.length; i++) {
         try {
           document.getElementById('loaderText').innerText = `Descargando datos (Intento ${i + 1}/${proxies.length})…`;
@@ -1444,7 +1563,7 @@
       const allRows = parsed.data || [];
       const headerIdx = allRows.findIndex(r => Array.isArray(r) && r.map(h => String(h).trim()).includes('Folio Proyecto'));
       const dataRows = allRows.slice(headerIdx >= 0 ? headerIdx + 1 : 1);
-      
+
       DATA = dataRows.map(mapRowPositional).filter(r => r.nombre && r.mw > 0);
       console.log(`Total de proyectos mapeados: ${DATA.length}`);
     }
@@ -1453,14 +1572,14 @@
     function mapRowPositional(row, idx) {
       const col = i => String(row?.[i] || '').trim();
       const num = x => { const n = parseFloat(String(x || '').replace(/[\$,\s]/g, '')); return isNaN(n) ? 0 : n; };
-      
+
       const rawGcr = col(19);
       const ef = col(20);
       const muni = col(68);
       const name = col(8);
       const techBase = col(11);
       const subtech = col(12);
-      
+
       return {
         rowNum: col(0),
         id: 'p_' + idx,
@@ -1481,7 +1600,7 @@
         cenace: col(110) || 'SIN INFORMACIÓN',
         coords: parseCoords(col(71)), // Vértice A para Leaflet
         gerencia: resolveMappedGcr(ef, muni, rawGcr),
-        
+
         // Campos adicionales para la ficha
         empresa: col(7),
         rfc: col(5),
@@ -1532,7 +1651,7 @@
         tieneEstudios: col(110),
         anexo4: col(112),
         folioEvis: col(104),
-        
+
         // SAEE
         saeeRespaldo: col(73),
         saeeRed: col(74),
@@ -1555,10 +1674,10 @@
         saeeNumEstudios: col(92),
         saeeDentroPredio: col(94),
         saeeKml: col(99),
-        
+
         kmzProj: col(72),
         kmzLinea: '',
-        
+
         // Fases Finales (no presentes en este reporte, se definen como vacíos)
         cenaceVal: '',
         pagoStatus: '',
@@ -1573,10 +1692,10 @@
         contratoStatus: '',
         contratoFirmaFecha: '',
         contratoDoc: '',
-        
+
         projectVertices: parseVertices(row, 71, num(col(70))),
         saeeVertices: parseVertices(row, 96, 3),
-        
+
         descripcion: col(9)
       };
     }
@@ -1661,7 +1780,7 @@
       // En nuestro CSV: tenemos N registros totales.
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
-      
+
       const totalCount = DATA.length;
       const totalMw = genProjects.reduce((sum, p) => sum + p.mw, 0);
       const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
@@ -1672,6 +1791,7 @@
       document.getElementById('kpiTotalInversion').innerText = formatMdd(totalInversion);
 
       // 2. Desglose de Tecnologías
+      const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
       const techCounts = {};
       const techMws = {};
       techs.forEach(t => { techCounts[t] = 0; techMws[t] = 0; });
@@ -1724,9 +1844,9 @@
         gcrData[gcr].mw += p.mw;
       });
 
-      const sortedGcr = Object.keys(gcrData).sort((a,b) => gcrData[b].mw - gcrData[a].mw);
+      const sortedGcr = Object.keys(gcrData).sort((a, b) => gcrData[b].mw - gcrData[a].mw);
       const gcrTableBody = document.getElementById('gcrMiniTableBody');
-      
+
       let gcrRowsHtml = sortedGcr.map(gcr => {
         const pct = (gcrData[gcr].mw / totalMw) * 100;
         return `
@@ -1803,7 +1923,7 @@
       // Ordenar y tomar los top 12
       const sortedGroups = Object.keys(groups)
         .map(name => ({ name, y: groups[name] }))
-        .sort((a,b) => b.y - a.y)
+        .sort((a, b) => b.y - a.y)
         .slice(0, 12);
 
       Highcharts.chart('chartGrupo', {
@@ -1851,7 +1971,7 @@
     // ==========================================
     async function initMiniMap() {
       if (mapInstance) return;
-      
+
       const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
       mapInstance = L.map('miniMap', {
         zoomControl: false,
@@ -1879,7 +1999,7 @@
           geojson = await res.json();
           cachedGerenciasGeoJSON = geojson;
         }
-        
+
         // Colores pastel para distinguir gerencias
         const gcrColors = {
           'NORESTE': '#FED7D7',
@@ -1937,7 +2057,7 @@
         const overlayMaps = {};
         if (layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = layerGerencias;
         if (layerEstados) overlayMaps["Límites Estatales"] = layerEstados;
-        
+
         L.control.layers(null, overlayMaps, { collapsed: false, position: 'topright' }).addTo(mapInstance);
       }
 
@@ -1946,7 +2066,7 @@
         if (p.coords) {
           const tGroup = getTechGroup(p);
           const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
-          
+
           const marker = L.circleMarker(p.coords, {
             radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
             fillColor: col,
@@ -1974,7 +2094,7 @@
       if (val === undefined || val === null || val === '') return '—';
       const cleanVal = String(val).trim();
       if (cleanVal === 'SIN INFORMACIÓN' || cleanVal === 'SIN PROCESO' || cleanVal === 'NO APLICA') return '—';
-      
+
       if (type === 'status') {
         const norm = normText(cleanVal);
         if (norm === 'SI' || norm.includes('RESUELTA') || norm.includes('APROBADA') || norm.includes('AUTORIZADA')) {
@@ -2007,7 +2127,7 @@
       // 1. Agrupar proyectos de generación por GCR
       const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
       const groups = {};
-      
+
       genProjects.forEach(p => {
         const gcr = p.gerencia || 'OTRO';
         groups[gcr] = groups[gcr] || [];
@@ -2030,225 +2150,21 @@
       const deck = document.getElementById('deck');
       let slideIdx = 2; // Portada=0, Numeralia=1, las tablas empiezan en slideIndex=2
 
-      const techIcons = {
-        'Fotovoltaica': '☀️',
-        'Eólica': '🌬️',
-        'Almacenamiento': '🔋',
-        'Hidroeléctrica': '💧'
-      };
-
       gcrOrder.forEach(gcrInfo => {
         const rawProjs = groups[gcrInfo.key] || [];
         if (!rawProjs.length) return;
 
-        const gcrKey = gcrInfo.key;
-        const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
-        const gcrTotalMw = rawProjs.reduce((sum, p) => sum + p.mw, 0);
-
-        // Generar Slide de Dashboard Regional para esta GCR
-        const dashSlide = document.createElement('section');
-        dashSlide.className = 'slide';
-        dashSlide.classList.add('gcr-dashboard-slide');
-        dashSlide.id = `slide-${slideIdx}`;
-        dashSlide.dataset.gcr = gcrKey;
-
-        // Calcular la tabla de estados para esta GCR
-        const stateData = {};
-        rawProjs.forEach(p => {
-          const state = p.ef || 'OTRO';
-          stateData[state] = stateData[state] || { count: 0, mw: 0 };
-          stateData[state].count++;
-          stateData[state].mw += p.mw;
-        });
-        const sortedStates = Object.keys(stateData).sort((a,b) => stateData[b].mw - stateData[a].mw);
-        const stateRowsHtml = sortedStates.map(st => {
-          const pct = gcrTotalMw > 0 ? (stateData[st].mw / gcrTotalMw) * 100 : 0;
-          return `
-            <tr>
-              <td style="font-weight: 600;">${st}</td>
-              <td class="col-right-text">${stateData[st].count}</td>
-              <td class="col-right-text" style="font-weight: 600;">${stateData[st].mw.toFixed(0)}</td>
-              <td class="col-right-text">${pct.toFixed(0)}%</td>
-            </tr>
-          `;
-        }).join('') + `
-          <tr>
-            <td>TOTAL GCR</td>
-            <td class="col-right-text">${rawProjs.length}</td>
-            <td class="col-right-text">${gcrTotalMw.toFixed(0)}</td>
-            <td class="col-right-text">100%</td>
-          </tr>
-        `;
-
-        // Calcular Tecnologías en esta GCR
-        const techCountsGcr = {};
-        const techMwsGcr = {};
-        techs.forEach(t => { techCountsGcr[t] = 0; techMwsGcr[t] = 0; });
-        rawProjs.forEach(p => {
-          const tg = getTechGroup(p);
-          if (techCountsGcr[tg] !== undefined) {
-            techCountsGcr[tg]++;
-            techMwsGcr[tg] += p.mw;
-          }
-        });
-        const totalTechCountGcr = techs.reduce((sum, t) => sum + techCountsGcr[t], 0);
-        const totalTechMwGcr = techs.reduce((sum, t) => sum + techMwsGcr[t], 0);
-        const techListHtml = techs.map(t => {
-          const pctProj = totalTechCountGcr > 0 ? (techCountsGcr[t] / totalTechCountGcr * 100).toFixed(2) : '0.00';
-          const pctMw = totalTechMwGcr > 0 ? (techMwsGcr[t] / totalTechMwGcr * 100).toFixed(2) : '0.00';
-          return `
-            <div class="tech-item">
-              <div class="icon-bg">${techIcons[t]}</div>
-              <div class="t-info">
-                <div class="t-name">${t}</div>
-                <div class="t-sub">${techCountsGcr[t]} Proyectos (${pctProj}%)</div>
-              </div>
-              <div class="t-val">
-                <div>${formatMw(techMwsGcr[t])}</div>
-                <div style="font-size: 10px; color: var(--color-text-light); font-weight: normal; margin-top: 1px;">${pctMw}%</div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        // Calcular Trámites en esta GCR
-        let miaCountG = 0, miaMwG = 0;
-        let evisCountG = 0, evisMwG = 0;
-        let tierrasCountG = 0, tierrasMwG = 0;
-        let cenaceCountG = 0, cenaceMwG = 0;
-        rawProjs.forEach(p => {
-          const mia = normText(p.mia);
-          const evis = normText(p.misse);
-          const terreno = normText(p.tierras);
-          const cenace = normText(p.cenace);
-          const pmw = p.mw;
-
-          if (mia.includes('TRAMITE') || mia.includes('PROCESO') || mia.includes('INICIADO')) {
-            miaCountG++;
-            miaMwG += pmw;
-          }
-          if (evis.includes('RESUELTA') || evis.includes('AUTORIZADA') || evis.includes('APROBADA')) {
-            evisCountG++;
-            evisMwG += pmw;
-          }
-          if (terreno === 'SI' || terreno.includes('TRAMITE')) {
-            tierrasCountG++;
-            tierrasMwG += pmw;
-          }
-          if (cenace === 'SI') {
-            cenaceCountG++;
-            cenaceMwG += pmw;
-          }
-        });
-
-        // Inversión en esta GCR
-        const gcrTotalInversion = rawProjs.reduce((sum, p) => sum + p.inversion, 0);
-
-        dashSlide.innerHTML = `
-          <div class="slide-container">
-            <div class="slide-header">
-              <div class="brand-left">Segunda Convocatoria 2026</div>
-              <div class="ef-title">Resumen Regional - ${gcrInfo.title.toUpperCase()}</div>
-              <div class="logo-right"><img class="logo-sener" src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
-            </div>
-
-            <div class="numeralia-grid">
-              <!-- Columna Izquierda: KPIs y Tecnologías -->
-              <div class="col-left">
-                <div class="kpi-card-main" style="min-height: 180px; padding: 18px; justify-content: center; gap: 4px;">
-                  <span class="lbl">Proyectos Finalizados</span>
-                  <span class="val-main" style="font-size: clamp(48px, 3.5vw, 60px);">${rawProjs.length}</span>
-                  <span class="val-sub" style="font-size: clamp(16px, 1.2vw, 20px); color: #f7dca1; font-weight: 700;">${formatMw(gcrTotalMw)}</span>
-                </div>
-
-                <div class="tech-card" style="flex-grow: 1;">
-                  <h3>Tipo de Tecnología</h3>
-                  <div class="tech-total">${rawProjs.length} Proyectos en esta GCR</div>
-                  <div style="display: flex; flex-direction: column; gap: 8px;">
-                    ${techListHtml}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Columna Central: Estados y Grupos -->
-              <div class="col-center">
-                <div class="gcr-table-card" style="height: 220px; padding: 12px 14px;">
-                  <h3>Distribución por Entidad Federativa</h3>
-                  <table class="gcr-minitable" style="font-size: 9px; line-height: 1.15; table-layout: fixed;">
-                    <thead>
-                      <tr>
-                        <th style="width: 50%;">Estado</th>
-                        <th class="col-right-text" style="width: 15%;">Proy.</th>
-                        <th class="col-right-text" style="width: 20%;">MW</th>
-                        <th class="col-right-text" style="width: 15%;">%</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      ${stateRowsHtml}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="group-chart-card">
-                  <h3>Grupos Económicos en GCR (MW)</h3>
-                  <div id="chartGrupo_${gcrSafeId}" style="width: 100%; flex-grow: 1;"></div>
-                </div>
-              </div>
-
-              <!-- Columna Derecha: Mapa y Trámites -->
-              <div class="col-right">
-                <div class="map-card" style="height: 260px; padding: 6px;">
-                  <div class="map-lbl" style="font-size: 10px; padding: 3px 6px;">Distribución GCR ${gcrKey}</div>
-                  <div class="invest-lbl" style="font-size: 11px; padding: 6px 12px; bottom: 8px; left: 8px; top: auto; right: auto; box-shadow: none; border-radius: 6px;">
-                    Inversión: ${formatMdd(gcrTotalInversion)}
-                  </div>
-                  <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px;"></div>
-                </div>
-
-                <div class="status-card" style="min-height: 200px; padding: 12px;">
-                  <h3>Avance en Trámites y Estudios</h3>
-                  <div class="status-grid" style="gap: 6px;">
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">MIA en Trámite</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${miaCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(miaMwG)}</span>
-                    </div>
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">EvIS/MISSE Aprob.</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${evisCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(evisMwG)}</span>
-                    </div>
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">Prop. de Tierras</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${tierrasCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(tierrasMwG)}</span>
-                    </div>
-                    <div class="status-box" style="min-height: 70px; padding: 6px 8px;">
-                      <span class="s-lbl" style="font-size: 9px;">Estudios CENACE</span>
-                      <span class="s-val" style="font-size: 26px; line-height: 1;">${cenaceCountG}</span>
-                      <span class="s-mw" style="font-size: 11px;">${formatMw(cenaceMwG)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="slide-footer"></div>
-          </div>
-        `;
-        deck.appendChild(dashSlide);
-        slideIdx++;
-
         // Ordenar alfabéticamente por nombre de proyecto
         const projs = rawProjs.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        // Paginación dinámica (máximo 22 filas por diapositiva para evitar desbordamiento)
-        const rowsPerSlide = 22;
+        // Paginación dinámica (máximo 14 filas por diapositiva para evitar desbordamiento)
+        const rowsPerSlide = 14;
         const totalPages = Math.ceil(projs.length / rowsPerSlide);
 
         for (let pIdx = 0; pIdx < totalPages; pIdx++) {
           const slice = projs.slice(pIdx * rowsPerSlide, (pIdx + 1) * rowsPerSlide);
           const isLastPage = (pIdx === totalPages - 1);
-          
+
           const slide = document.createElement('section');
           slide.className = 'slide';
           slide.id = `slide-${slideIdx}`;
@@ -2340,7 +2256,7 @@
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       if (storageProjects.length > 0) {
         const sortedStorage = storageProjects.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        
+
         const slide = document.createElement('section');
         slide.className = 'slide';
         slide.id = `slide-${slideIdx}`;
@@ -2420,177 +2336,19 @@
       updateControls();
     }
 
-    const activeGcrWidgets = {};
-
-    function formatInt(n) {
-      return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    }
-
-    function initGcrDashboardWidgets(gcrKey) {
-      if (activeGcrWidgets[gcrKey]) {
-        const widgets = activeGcrWidgets[gcrKey];
-        if (widgets.map) {
-          widgets.map.invalidateSize({ pan: false, animate: false });
-        }
-        return;
-      }
-
-      const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
-      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
-      const gcrProjects = genProjects.filter(p => (p.gerencia || 'OTRO') === gcrKey);
-
-      if (!gcrProjects.length) return;
-
-      // 1. Inicializar Highcharts
-      const groups = {};
-      gcrProjects.forEach(p => {
-        const gie = p.gie || 'NO IDENTIFICADO';
-        if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
-        groups[gie].count++;
-        groups[gie].mw += p.mw;
-      });
-
-      const sortedGroups = Object.keys(groups)
-        .map(name => ({ name, y: groups[name].mw, projectCount: groups[name].count }))
-        .sort((a, b) => b.y - a.y)
-        .slice(0, 10);
-
-      const chart = Highcharts.chart(`chartGrupo_${gcrSafeId}`, {
-        chart: {
-          type: 'bar',
-          backgroundColor: 'transparent',
-          marginRight: 95,
-          marginTop: 5,
-          marginBottom: 35,
-          style: { fontFamily: 'Montserrat, sans-serif' }
-        },
-        title: { text: '' },
-        xAxis: {
-          categories: sortedGroups.map(g => g.name.length > 20 ? g.name.slice(0, 20) + '…' : g.name),
-          labels: { style: { fontSize: '8px', color: '#333', fontWeight: '500' } },
-          lineColor: '#CBD5E0'
-        },
-        yAxis: {
-          title: { text: null },
-          labels: {
-            formatter: function () { return formatInt(this.value); },
-            style: { fontSize: '8px' }
-          },
-          gridLineColor: '#EDF2F7'
-        },
-        legend: { enabled: false },
-        plotOptions: {
-          series: {
-            color: '#691B31',
-            borderRadius: 2,
-            dataLabels: {
-              enabled: true,
-              formatter: function () {
-                return `${formatInt(this.point.projectCount)} proy. · ${formatInt(this.y)} MW`;
-              },
-              crop: false,
-              overflow: 'allow',
-              style: { fontSize: '7px', fontWeight: 'bold' }
-            }
-          }
-        },
-        tooltip: {
-          formatter: function () {
-            return `<b>${this.point.name}</b><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
-          }
-        },
-        credits: { enabled: false },
-        series: [{ data: sortedGroups }]
-      });
-
-      // 2. Inicializar Mapa Leaflet
-      let map = null;
-      try {
-        const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
-        map = L.map(`map_${gcrSafeId}`, {
-          zoomControl: false,
-          attributionControl: false,
-          preferCanvas: true,
-          minZoom: 4,
-          maxZoom: 10,
-          maxBounds: MEXICO_BOUNDS,
-          maxBoundsViscosity: 1.0
-        });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19
-        }).addTo(map);
-
-        if (cachedEstadosGeoJSON) {
-          const gcrStates = new Set(gcrProjects.map(p => normText(p.ef)));
-          L.geoJSON(cachedEstadosGeoJSON, {
-            filter: (feature) => {
-              const stateName = normText(feature.properties?.ESTADO || feature.properties?.name || '');
-              return gcrStates.has(stateName);
-            },
-            style: {
-              fillColor: '#691B31',
-              fillOpacity: 0.05,
-              color: '#691B31',
-              weight: 0.8,
-              dashArray: '3, 4'
-            }
-          }).addTo(map);
-        }
-
-        const markers = [];
-        gcrProjects.forEach(p => {
-          if (p.coords) {
-            const tGroup = getTechGroup(p);
-            const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
-            const marker = L.circleMarker(p.coords, {
-              radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
-              fillColor: col,
-              fillOpacity: 0.85,
-              color: '#ffffff',
-              weight: 1
-            }).addTo(map);
-
-            marker.bindPopup(`
-              <div style="font-family:Montserrat,sans-serif; font-size:10px; line-height:1.4;">
-                <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
-                <strong>GIE:</strong> ${p.gie}<br>
-                <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${tGroup})<br>
-                <strong>Inversión:</strong> ${p.inversion > 0 ? p.inversion.toFixed(1) + ' MDD' : 'Sin datos'}
-              </div>
-            `);
-            markers.push(marker);
-          }
-        });
-
-        if (markers.length > 0) {
-          const group = new L.featureGroup(markers);
-          map.fitBounds(group.getBounds().pad(0.15), { animate: false });
-        } else {
-          map.setView([23.5, -102.2], 5);
-        }
-      } catch (err) {
-        console.warn(`No se pudo inicializar el mapa regional para ${gcrKey}:`, err);
-      }
-
-      activeGcrWidgets[gcrKey] = { map, chart };
-    }
-
     // ==========================================
     // CONTROLES DE NAVEGACIÓN Y ESCALADO
     // ==========================================
     function showSlide(index) {
       if (index < 0 || index >= slidesCount) return;
-      
+
       const slides = document.querySelectorAll('.slide');
       slides.forEach((slide, i) => {
         slide.classList.toggle('active', i === index);
       });
-      
+
       currentSlideIndex = index;
       updateControls();
-
-      const activeSlide = slides[index];
 
       // Forzar recálculo del mapa si es el Slide 2 (Dashboard)
       if (index === 1) {
@@ -2600,11 +2358,6 @@
           } else {
             mapInstance.invalidateSize({ pan: false, animate: false });
           }
-        }, 150);
-      } else if (activeSlide && activeSlide.classList.contains('gcr-dashboard-slide')) {
-        const gcrKey = activeSlide.dataset.gcr;
-        setTimeout(() => {
-          initGcrDashboardWidgets(gcrKey);
         }, 150);
       }
     }
@@ -2643,16 +2396,16 @@
     function fitSlides() {
       const baseW = 1333;
       const baseH = 750;
-      
+
       const availW = window.innerWidth;
       const availH = window.innerHeight;
-      
+
       // Encontrar la escala que encaje en el espacio disponible
       const scale = Math.min(availW / baseW, availH / baseH);
-      
+
       // Asignar variable CSS
       document.documentElement.style.setProperty('--scale', scale.toFixed(4));
-      
+
       const containers = document.querySelectorAll('.slide-container');
       containers.forEach(container => {
         container.style.transform = `scale(${scale.toFixed(4)})`;
@@ -2712,7 +2465,7 @@
     function makeClickableIfUrl(val) {
       if (!val || val === '—' || val === 'Sin información') return val || '—';
       let str = String(val).trim();
-      
+
       // Limpiar comillas iniciales y finales habituales en celdas de CSV
       str = str.replace(/^["']|["']$/g, '').trim();
 
@@ -2766,7 +2519,7 @@
       if (coords && Array.isArray(coords) && coords.length >= 2 && isValidMexicoCoord(coords[0], coords[1])) {
         center = coords;
       }
-      
+
       const validProject = [];
       if (Array.isArray(projectVertices)) {
         projectVertices.forEach(v => {
@@ -2775,7 +2528,7 @@
           }
         });
       }
-      
+
       const validSaee = [];
       if (Array.isArray(saeeVertices)) {
         saeeVertices.forEach(v => {
@@ -2784,14 +2537,14 @@
           }
         });
       }
-      
+
       if (!center && validProject.length > 0) {
         center = validProject[0];
       }
       if (!center && validSaee.length > 0) {
         center = validSaee[0];
       }
-      
+
       return {
         center,
         projectPol: validProject,
@@ -2804,7 +2557,7 @@
       if (!url) return null;
       const cleanUrl = String(url).trim();
       if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) return null;
-      
+
       const e = encodeURIComponent(cleanUrl);
       const proxies = [
         'https://api.allorigins.win/raw?url=' + e,
@@ -2813,7 +2566,7 @@
         'https://thingproxy.freeboard.io/fetch/' + cleanUrl,
         cleanUrl
       ];
-      
+
       let buf = null;
       for (let i = 0; i < proxies.length; i++) {
         try {
@@ -2832,9 +2585,9 @@
           console.warn('KMZ fetch fail proxy', i + 1, err.message);
         }
       }
-      
+
       if (!buf) return null;
-      
+
       try {
         let kmlText;
         const head = new Uint8Array(buf.slice(0, 4));
@@ -2846,7 +2599,7 @@
         } else {
           kmlText = new TextDecoder().decode(buf);
         }
-        
+
         const dom = new DOMParser().parseFromString(kmlText, 'application/xml');
         const gj = (window.toGeoJSON || window.togeojson).kml(dom);
         return gj;
@@ -2863,25 +2616,25 @@
         fichaMapInstance.remove();
         fichaMapInstance = null;
       }
-      
+
       const mapDiv = document.getElementById('fichaMiniMap');
       if (!mapDiv) return;
-      
+
       const myReqId = ++currentMapReqId;
       const isCurrent = () => myReqId === currentMapReqId;
-      
+
       // Mostrar preloader de cargando
       mapDiv.innerHTML = `
         <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#f8f9fa; border-radius:6px; flex-direction:column; gap:8px; font-family:'Outfit',sans-serif; color:var(--color-text-dark, #2D3748);">
           <div style="width:24px; height:24px; border:3px solid rgba(105,27,49,0.1); border-top-color:var(--color-guinda, #691B31); border-radius:50%; animation:spin 0.8s infinite linear;"></div>
           <span style="font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Cargando mapa y polígonos…</span>
         </div>`;
-        
+
       const geom = resolveCenterAndGeometries(coords, projectVertices, saeeVertices);
-      const hasKmz = (kmzProj && String(kmzProj).startsWith('http')) || 
-                     (kmzLinea && String(kmzLinea).startsWith('http')) || 
-                     (saeeKml && String(saeeKml).startsWith('http'));
-                     
+      const hasKmz = (kmzProj && String(kmzProj).startsWith('http')) ||
+        (kmzLinea && String(kmzLinea).startsWith('http')) ||
+        (saeeKml && String(saeeKml).startsWith('http'));
+
       if (!geom.isValid && !hasKmz) {
         mapDiv.innerHTML = `
           <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#FFF5F5; color:#C53030; font-family:'Outfit',sans-serif; font-size:10px; border-radius:6px; flex-direction:column; gap:6px; border: 1px dashed #FEB2B2; padding:15px; text-align:center;">
@@ -2891,7 +2644,7 @@
           </div>`;
         return;
       }
-      
+
       // Cargar capas y renderizar
       Promise.all([
         (async () => {
@@ -2921,22 +2674,22 @@
         fetchAndParseKml(saeeKml)
       ]).then(([gerenciasGeo, estadosGeo, projGj, lineaGj, saeeGj]) => {
         if (!isCurrent()) return;
-        
+
         // Limpiar el preloader
         mapDiv.innerHTML = '';
-        
+
         // Crear mapa
         fichaMapInstance = L.map('fichaMiniMap', {
           zoomControl: true,
           attributionControl: false
         });
-        
+
         L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
           maxZoom: 20,
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
           attribution: 'Google Satellite'
         }).addTo(fichaMapInstance);
-        
+
         // Pintar capas de límites si están disponibles
         if (estadosGeo) {
           try {
@@ -2947,7 +2700,7 @@
             console.warn('No se pudo pintar el GeoJSON de estados en la ficha:', e);
           }
         }
-        
+
         if (gerenciasGeo) {
           try {
             L.geoJSON(gerenciasGeo, {
@@ -2957,9 +2710,9 @@
             console.warn('No se pudo pintar el GeoJSON de gerencias en la ficha:', e);
           }
         }
-        
+
         const bounds = L.latLngBounds([]);
-        
+
         // Polígono del proyecto
         if (projGj) {
           try {
@@ -2985,7 +2738,7 @@
             console.warn('No se pudo pintar el polígono del proyecto:', e);
           }
         }
-        
+
         // Línea de transmisión
         if (lineaGj) {
           try {
@@ -2998,7 +2751,7 @@
             console.warn('Error pintando lineaGj:', e);
           }
         }
-        
+
         // Polígono SAEE
         if (saeeGj) {
           try {
@@ -3025,7 +2778,7 @@
             console.warn('No se pudo pintar el polígono SAEE:', e);
           }
         }
-        
+
         // Marcador de ubicación
         if (geom.center) {
           L.marker(geom.center).addTo(fichaMapInstance)
@@ -3033,7 +2786,7 @@
             .openPopup();
           bounds.extend(geom.center);
         }
-        
+
         // Si no pudimos cargar KMLs y no hay centro, la geometría es inválida
         if (!geom.center && !bounds.isValid()) {
           mapDiv.innerHTML = `
@@ -3048,7 +2801,7 @@
           }
           return;
         }
-        
+
         // Ajustar vista
         if (bounds.isValid()) {
           fichaMapInstance.fitBounds(bounds, {
@@ -3058,7 +2811,7 @@
         } else if (geom.center) {
           fichaMapInstance.setView(geom.center, 12);
         }
-        
+
         // Forzar redibujo por problemas de escalado de Leaflet en modales
         setTimeout(() => {
           if (fichaMapInstance) {
@@ -3120,15 +2873,15 @@
         return;
       }
       console.log(`[FichaModal] Abriendo proyecto ID: "${projectId}", Nombre: "${p.nombre}", Folio: "${p.folio}"`);
-      
+
       const titleTxt = p.nombre || 'Proyecto';
       const subTxt = `${p.empresa || '—'} · ${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
-      
+
       document.getElementById('mFichaTitle1').textContent = titleTxt;
       document.getElementById('mFichaTitle2').textContent = titleTxt;
       document.getElementById('mFichaSub1').textContent = subTxt;
       document.getElementById('mFichaSub2').textContent = `${p.techBase || '—'}${p.subtech ? ' · ' + p.subtech : ''}`;
-      
+
       // Página 1: KPIs
       document.getElementById('mFichaKpis1').innerHTML = [
         fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', ''),
@@ -3157,7 +2910,7 @@
         ${fkv('Domicilio fiscal', p.domFiscal)}
         ${fkv('Domicilio notificaciones', p.domNotif)}
       `;
-      
+
       const colTech = `
         <div class="ficha-sec verde">Tecnología e inversión</div>
         ${fkv('Tipo tecnología', p.techBase)}
@@ -3178,7 +2931,7 @@
         ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 60))}
         ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 60))}
       `;
-      
+
       const coords = p.coords ? p.coords[0].toFixed(5) + ', ' + p.coords[1].toFixed(5) : '';
       const colLoc = `
         <div class="ficha-sec dorado">Ubicación y Georreferenciación</div>
@@ -3192,7 +2945,7 @@
         <div class="ficha-sec dorado" style="margin-top:8px">Ubicación en Mapa</div>
         <div id="fichaMiniMap" style="width:100%; height:160px; border-radius:6px; border:1px solid var(--color-gris-claro); margin-top:6px; z-index:10; background:#f8f9fa;"></div>
       `;
-      
+
       document.getElementById('mFichaBody1').innerHTML = `
         <div class="ficha-col">${colIdent}</div>
         <div class="ficha-col">${colTech}</div>
@@ -3298,12 +3051,12 @@
         <div class="ficha-col">${colSaee}</div>
         <div class="ficha-col">${colTec2}</div>
       `;
-      
+
       showModalPage(1);
-      
+
       document.getElementById('fichaModal').style.display = 'flex';
       fitSlides();
-      
+
       // Inicializar el minimapa Leaflet en base a las coordenadas del proyecto y la batería
       initFichaMiniMap(p.coords, titleTxt, p.projectVertices, p.saeeVertices, p.kmzProj, '', p.saeeKml);
     }
@@ -3315,7 +3068,7 @@
       const modal = document.getElementById('searchModal');
       const input = document.getElementById('searchInput');
       const resultsDiv = document.getElementById('searchResults');
-      
+
       modal.style.display = 'flex';
       input.value = '';
       resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
@@ -3329,38 +3082,38 @@
     function handleSearchInput(query) {
       const resultsDiv = document.getElementById('searchResults');
       const cleanQuery = query.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-      
+
       if (!cleanQuery) {
         resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
         return;
       }
-      
+
       const matched = DATA.filter(p => {
         const name = String(p.nombre || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const folio = String(p.folio || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const preFolio = String(p.preFolio || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const dev = String(p.empresa || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
         const gie = String(p.gie || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-        
-        return name.includes(cleanQuery) || 
-               folio.includes(cleanQuery) || 
-               preFolio.includes(cleanQuery) || 
-               dev.includes(cleanQuery) || 
-               gie.includes(cleanQuery);
+
+        return name.includes(cleanQuery) ||
+          folio.includes(cleanQuery) ||
+          preFolio.includes(cleanQuery) ||
+          dev.includes(cleanQuery) ||
+          gie.includes(cleanQuery);
       });
-      
+
       if (matched.length === 0) {
         resultsDiv.innerHTML = '<div class="search-result-empty">No se encontraron proyectos coincidentes.</div>';
         return;
       }
-      
+
       // Mostrar máximo los primeros 10 resultados para evitar lentitud
       const limit = matched.slice(0, 10);
       resultsDiv.innerHTML = limit.map(p => {
         const textTech = p.techBase || p.tecnologia || 'OTRA';
         const labelLoc = `${p.ef || '—'}${p.municipio ? ' · ' + p.municipio : ''}`;
         const labelFolio = p.folio || p.preFolio || 'Sin Folio';
-        
+
         return `
           <div class="search-result-item" onclick="selectSearchResult('${p.id}')">
             <div class="search-result-main">
@@ -3371,7 +3124,7 @@
           </div>
         `;
       }).join('');
-      
+
       if (matched.length > 10) {
         resultsDiv.innerHTML += `
           <div class="search-result-empty" style="padding: 10px; border-top: 1px dashed rgba(105,27,49,0.1); font-size: 9.5px; opacity:0.8;">
@@ -3390,7 +3143,7 @@
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('searchModal');
       const isSearchOpen = modal && modal.style.display === 'flex';
-      
+
       // Abrir con tecla 'F' (sólo si no se está escribiendo en un campo)
       if (!isSearchOpen && (e.key === 'f' || e.key === 'F')) {
         const activeEl = document.activeElement;
@@ -3400,7 +3153,7 @@
           openSearchModal();
         }
       }
-      
+
       // Cerrar con tecla Esc
       if (isSearchOpen && e.key === 'Escape') {
         closeSearchModal();
@@ -3426,7 +3179,7 @@
           renderNumeralia();
           generateGcrTables();
           fitSlides();
-          
+
           // Ocultar preloader con fade
           const preloader = document.getElementById('preloader');
           preloader.style.opacity = 0;
@@ -3446,4 +3199,5 @@
     });
   </script>
 </body>
+
 </html>
