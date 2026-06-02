@@ -5306,7 +5306,7 @@
                   <div class="invest-lbl" style="bottom: 12px; left: 12px; top: auto; right: auto; background: #b71e4f; border-radius: 10px; min-width: 218px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
                     ${gcrInvestmentSummaryHtml}
                   </div>
-                  <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px;"></div>
+                  <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px; z-index: 10; position: relative;"></div>
                 </div>
 
                 <div class="status-card" style="min-height: 200px; padding: 12px;">
@@ -6073,7 +6073,7 @@
 
     const activeGcrWidgets = {};
 
-    function initGcrDashboardWidgets(gcrKey) {
+    async function initGcrDashboardWidgets(gcrKey) {
       if (activeGcrWidgets[gcrKey]) {
         const widgets = activeGcrWidgets[gcrKey];
         if (widgets.map) {
@@ -6175,6 +6175,79 @@
           maxZoom: 19
         }).addTo(map);
 
+        // Asegurar la carga de GeoJSONs
+        if (!cachedEstadosGeoJSON) {
+          try {
+            const res = await fetch(GEOJSON_EF_URL);
+            cachedEstadosGeoJSON = await res.json();
+          } catch (e) {
+            console.warn("Error cargando geojson de estados:", e);
+          }
+        }
+        if (!cachedGerenciasGeoJSON) {
+          try {
+            const res = await fetch(GEOJSON_GERENCIAS_URL);
+            cachedGerenciasGeoJSON = await res.json();
+          } catch (e) {
+            console.warn("Error cargando geojson de gerencias:", e);
+          }
+        }
+
+        let localLayerGerencias = null;
+        let localLayerEstados = null;
+
+        // Pintar límites GCR
+        if (cachedGerenciasGeoJSON) {
+          const gcrColors = {
+            'NORESTE': '#FED7D7',
+            'OCCIDENTE': '#FEEBC8',
+            'NORTE': '#EBF8FF',
+            'ORIENTAL': '#E6FFFA',
+            'PENINSULAR': '#EDF2F7',
+            'CENTRAL': '#E2E8F0',
+            'BAJA CALIFORNIA SUR': '#FAF5FF'
+          };
+
+          localLayerGerencias = L.geoJSON(cachedGerenciasGeoJSON, {
+            style: (feature) => {
+              const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
+              let fill = '#EDF2F7';
+              Object.keys(gcrColors).forEach(k => {
+                if (name.includes(k)) fill = gcrColors[k];
+              });
+              return {
+                fillColor: fill,
+                fillOpacity: 0.15,
+                color: '#ffffff',
+                weight: 1.0
+              };
+            }
+          }).addTo(map);
+        }
+
+        // Pintar límites de Estados
+        if (cachedEstadosGeoJSON) {
+          localLayerEstados = L.geoJSON(cachedEstadosGeoJSON, {
+            style: {
+              fillColor: 'transparent',
+              fillOpacity: 0,
+              color: '#ffffff',
+              weight: 1.0,
+              dashArray: '2, 3'
+            }
+          });
+        }
+
+        // Agregar control de capas (para poder encender/apagar capas)
+        if (localLayerGerencias || localLayerEstados) {
+          const overlayMaps = {};
+          if (localLayerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = localLayerGerencias;
+          if (localLayerEstados) overlayMaps["Límites Estatales"] = localLayerEstados;
+
+          L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(map);
+        }
+
+        // Pintar y destacar de forma permanente los límites de los estados que pertenecen a esta GCR
         if (cachedEstadosGeoJSON) {
           const gcrStates = new Set(gcrProjects.map(p => normText(p.ef)));
           L.geoJSON(cachedEstadosGeoJSON, {
@@ -6186,7 +6259,7 @@
               fillColor: '#691B31',
               fillOpacity: 0.05,
               color: '#691B31',
-              weight: 0.8,
+              weight: 1.2,
               dashArray: '3, 4'
             }
           }).addTo(map);
@@ -10027,7 +10100,7 @@
 
           if (slides[i].classList.contains('gcr-dashboard-slide')) {
             const gcrKey = slides[i].dataset.gcr;
-            initGcrDashboardWidgets(gcrKey);
+            await initGcrDashboardWidgets(gcrKey);
           } else if (i === 1) {
             if (!mapInstance) initMiniMap();
           }
