@@ -4,7 +4,9 @@
       "Bash(cp PVIRCE-DGMESNIE.html index.html)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(wc -l \"C:\\\\Proyectos\\\\21.-Gaby\\\\index3.html\" \"C:\\\\Proyectos\\\\21.-Gaby\\\\index3.js\")",
+      "Bash(curl -s \"https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_lt.geojson\")"
     ]
   }
 }

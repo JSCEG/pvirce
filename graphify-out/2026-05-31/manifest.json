@@ -1,0 +1,152 @@
+{
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\launch.json": {
+    "mtime": 1780081758.3355403,
+    "ast_hash": "d142b8a028fd5e8b91d284a2a69e5d73",
+    "semantic_hash": "d142b8a028fd5e8b91d284a2a69e5d73"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\settings.local.json": {
+    "mtime": 1780086343.5491335,
+    "ast_hash": "2e8de7e11c286e55eafef44c7f2864ab",
+    "semantic_hash": "2e8de7e11c286e55eafef44c7f2864ab"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\canvas-capture.js": {
+    "mtime": 1763267924.1922371,
+    "ast_hash": "1ebaf1985f4f57097332695b07d04e9b",
+    "semantic_hash": "1ebaf1985f4f57097332695b07d04e9b"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\dashboard-analitico.js": {
+    "mtime": 1772823561.0236287,
+    "ast_hash": "8288552cf72568b34ce249ee6bbb8b73",
+    "semantic_hash": "8288552cf72568b34ce249ee6bbb8b73"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\detalle-central.js": {
+    "mtime": 1771527347.0283618,
+    "ast_hash": "77169d6061774862254fffea88661aad",
+    "semantic_hash": "77169d6061774862254fffea88661aad"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\detalle-nuevo-proyecto.js": {
+    "mtime": 1772815861.817066,
+    "ast_hash": "d11824ebcc3f956cf6d65fa282da33d4",
+    "semantic_hash": "d11824ebcc3f956cf6d65fa282da33d4"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\export-config.js": {
+    "mtime": 1762202581.9376042,
+    "ast_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a",
+    "semantic_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\export-ui.js": {
+    "mtime": 1762218917.8647463,
+    "ast_hash": "6b0a5d34bbe2986e23f6ce9887c01e85",
+    "semantic_hash": "6b0a5d34bbe2986e23f6ce9887c01e85"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\fix-layer-error.js": {
+    "mtime": 1764033291.414186,
+    "ast_hash": "3ff27de11edef2d82f78e858753c9fd9",
+    "semantic_hash": "3ff27de11edef2d82f78e858753c9fd9"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\fullscreen-toolbar.js": {
+    "mtime": 1763063632.4225066,
+    "ast_hash": "ffe9a7884c28d2fe9985173ae67a36a1",
+    "semantic_hash": "ffe9a7884c28d2fe9985173ae67a36a1"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\map-config.js": {
+    "mtime": 1772818876.6728027,
+    "ast_hash": "06f4321ad7911df563faf1dada5da466",
+    "semantic_hash": "06f4321ad7911df563faf1dada5da466"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\map-exporter.js": {
+    "mtime": 1763054975.8162086,
+    "ast_hash": "f8cc03c481b963506b90e961196e8ca6",
+    "semantic_hash": "f8cc03c481b963506b90e961196e8ca6"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\mobile-interface.js": {
+    "mtime": 1772815861.8245852,
+    "ast_hash": "612717d7b36003c34c9440ae66aed9a8",
+    "semantic_hash": "612717d7b36003c34c9440ae66aed9a8"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\municipios-rios-maps.js": {
+    "mtime": 1764175568.7780545,
+    "ast_hash": "d374e539dae7486c04be88adcb965f48",
+    "semantic_hash": "d374e539dae7486c04be88adcb965f48"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\notification-system.js": {
+    "mtime": 1762202586.4439192,
+    "ast_hash": "08af642ffe64212915063fa77795bbb9",
+    "semantic_hash": "08af642ffe64212915063fa77795bbb9"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\pdf-generator.js": {
+    "mtime": 1762219066.1308982,
+    "ast_hash": "75874016fdad3f12629287bb02fc0d1b",
+    "semantic_hash": "75874016fdad3f12629287bb02fc0d1b"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\pladese-maps.js": {
+    "mtime": 1764179862.3819015,
+    "ast_hash": "e18cb9f6761f58beb5addc618641dbb3",
+    "semantic_hash": "e18cb9f6761f58beb5addc618641dbb3"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\png-processor.js": {
+    "mtime": 1763054975.818209,
+    "ast_hash": "4fb9a85cdb33e651a640fd1c894ade98",
+    "semantic_hash": "4fb9a85cdb33e651a640fd1c894ade98"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\presas-maps.js": {
+    "mtime": 1771457951.1090364,
+    "ast_hash": "64b0006156757f9998d8468afeb319c2",
+    "semantic_hash": "64b0006156757f9998d8468afeb319c2"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\progress-system.js": {
+    "mtime": 1762974468.0379298,
+    "ast_hash": "988e7973100d588b1f0a8e0720f8a211",
+    "semantic_hash": "988e7973100d588b1f0a8e0720f8a211"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\seguimiento-proyectos.js": {
+    "mtime": 1772844355.3799353,
+    "ast_hash": "809dfac2950f047df00f4614ca407270",
+    "semantic_hash": "809dfac2950f047df00f4614ca407270"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\simple-export.js": {
+    "mtime": 1764017334.3283217,
+    "ast_hash": "7dde62a6fd53d1ca8b33e4769cee59cb",
+    "semantic_hash": "7dde62a6fd53d1ca8b33e4769cee59cb"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\smart-labels.js": {
+    "mtime": 1763664572.6786892,
+    "ast_hash": "115820506cd5f7366bc3a9277925d5c3",
+    "semantic_hash": "115820506cd5f7366bc3a9277925d5c3"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\tablero-proyectos.js": {
+    "mtime": 1772816636.8637917,
+    "ast_hash": "5b7a3de5d258550143270696d7970f21",
+    "semantic_hash": "5b7a3de5d258550143270696d7970f21"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\data-cne.js": {
+    "mtime": 1778272239.9059734,
+    "ast_hash": "974eeff2f0f617798825e44eae94b330",
+    "semantic_hash": "974eeff2f0f617798825e44eae94b330"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\data-gat.js": {
+    "mtime": 1778270894.409947,
+    "ast_hash": "ad09b1b6770daa521d89a6049aaf644b",
+    "semantic_hash": "ad09b1b6770daa521d89a6049aaf644b"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\data.js": {
+    "mtime": 1778267653.606386,
+    "ast_hash": "ebf6fba28b625487c58eacd565c51f36",
+    "semantic_hash": "ebf6fba28b625487c58eacd565c51f36"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\kmz.js": {
+    "mtime": 1778284120.3032486,
+    "ast_hash": "1986e1f201b58ef4b8553b97ad747313",
+    "semantic_hash": "1986e1f201b58ef4b8553b97ad747313"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\visor_pvirce_assets\\data\\visor-data.js": {
+    "mtime": 1778043902.0287797,
+    "ast_hash": "09704b417bbd0fc68361ed44cc4b4ccf",
+    "semantic_hash": "09704b417bbd0fc68361ed44cc4b4ccf"
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\visor_pvirce_assets\\js\\visor.js": {
+    "mtime": 1778089473.523241,
+    "ast_hash": "0f189877e0ce5cb8e5950eadcf3f2f09",
+    "semantic_hash": "0f189877e0ce5cb8e5950eadcf3f2f09"
+  }
+}

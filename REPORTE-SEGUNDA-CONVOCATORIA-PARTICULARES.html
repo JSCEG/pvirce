@@ -1169,16 +1169,15 @@
     }
 
     #slide-1 .invest-lbl {
-      top: auto;
-      right: auto;
-      bottom: 12px;
-      left: 12px;
+      position: static;
       background: #b71e4f;
       border-radius: 10px;
-      min-width: 270px;
+      width: 100%;
+      margin-top: 10px;
       padding: 8px 10px;
       font-size: 9px;
       letter-spacing: .01em;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     .investment-summary-title {
@@ -3058,6 +3057,7 @@
               <span class="lbl">Registros Finalizados</span>
               <span class="val-main" id="kpiTotalCount">0</span>
               <span class="val-sub" id="kpiTotalMw">0 MW</span>
+              <div class="invest-lbl" id="kpiTotalInversion">Inversión reportada</div>
             </div>
 
             <div class="tech-card">
@@ -3098,7 +3098,6 @@
           <div class="col-right">
             <div class="map-card">
               <div class="map-lbl">Distribución de Proyectos</div>
-              <div class="invest-lbl" id="kpiTotalInversion">Inversión reportada</div>
               <div id="miniMap"></div>
             </div>
 
@@ -3664,6 +3663,59 @@
     // Normalizador de texto para búsquedas y comparación
     function normText(s) {
       return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    }
+
+    function getGerenciaNameFromMapFeature(feature) {
+      const props = (feature && feature.properties) || {};
+      return String(
+        props.GCR ||
+        props.gcr ||
+        props.Field1 ||
+        props.field1 ||
+        props.Gerencia ||
+        props.gerencia ||
+        props.name ||
+        props.NOMBRE ||
+        ''
+      ).trim();
+    }
+
+    function normalizeGcrName(rawName) {
+      const normalized = String(rawName || '')
+        .toUpperCase()
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/^GERENCIA\s+DE\s+CONTROL\s+REGIONAL\s+/i, '')
+        .replace(/^GERENCIA\s+REGIONAL\s+/i, '')
+        .replace(/^GCR\s+/i, '')
+        .trim();
+
+      if (!normalized) return '';
+      if (normalized.includes('BAJA CALIFORNIA SUR')) return 'BAJA CALIFORNIA SUR';
+      if (normalized.includes('BAJA CALIFORNIA')) return 'BAJA CALIFORNIA';
+      if (normalized.includes('NORESTE')) return 'NORESTE';
+      if (normalized.includes('OCCIDENTAL') || normalized.includes('OCCIDENTE')) return 'OCCIDENTE';
+      if (normalized.includes('NORTE')) return 'NORTE';
+      if (normalized.includes('ORIENTAL')) return 'ORIENTAL';
+      if (normalized.includes('PENINSULAR')) return 'PENINSULAR';
+      if (normalized.includes('CENTRAL')) return 'CENTRAL';
+      return normalized;
+    }
+
+    function isMatchingGcr(targetGcrName, featureGcrName) {
+      const target = normalizeGcrName(targetGcrName);
+      const feature = normalizeGcrName(featureGcrName);
+      if (!target || !feature) return false;
+
+      if (target === 'BAJA CALIFORNIA') {
+        return feature === 'BAJA CALIFORNIA';
+      }
+      if (target === 'BAJA CALIFORNIA SUR') {
+        return feature === 'BAJA CALIFORNIA SUR';
+      }
+      return feature === target;
     }
 
     function colNumToLetter(colNum) {
@@ -4761,15 +4813,15 @@
       let activeGcr = null;
       gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(row => {
         const gcrName = row.getAttribute('data-gcr');
-        
+
         row.addEventListener('mouseenter', () => {
           highlightGcrOnMap(gcrName);
         });
-        
+
         row.addEventListener('mouseleave', () => {
           highlightGcrOnMap(activeGcr);
         });
-        
+
         row.addEventListener('click', () => {
           if (activeGcr === gcrName) {
             activeGcr = null;
@@ -4940,7 +4992,7 @@
 
         layerGerencias = L.geoJSON(geojson, {
           style: (feature) => {
-            const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
+            const name = normalizeGcrName(getGerenciaNameFromMapFeature(feature));
             let fill = '#EDF2F7';
             Object.keys(gcrColors).forEach(k => {
               if (name.includes(k)) fill = gcrColors[k];
@@ -5028,21 +5080,11 @@
         'BAJA CALIFORNIA': '#e0f0ff'
       };
 
-      const normGcr = String(gcrName || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+      const normGcr = normalizeGcrName(gcrName);
 
       layerGerencias.eachLayer(layer => {
-        const featName = String(layer.feature?.properties?.GCR || layer.feature?.properties?.name || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-        
-        let isMatch = false;
-        if (normGcr) {
-          if (normGcr === 'BAJA CALIFORNIA') {
-            isMatch = featName.includes('BAJA CALIFORNIA') && !featName.includes('SUR');
-          } else if (normGcr === 'BAJA CALIFORNIA SUR') {
-            isMatch = featName.includes('BAJA CALIFORNIA SUR') || featName.includes('SUR');
-          } else {
-            isMatch = featName.includes(normGcr);
-          }
-        }
+        const featName = normalizeGcrName(getGerenciaNameFromMapFeature(layer.feature));
+        const isMatch = normGcr ? isMatchingGcr(normGcr, featName) : false;
 
         let fill = '#EDF2F7';
         Object.keys(gcrColors).forEach(k => {
@@ -5254,7 +5296,7 @@
           stateData[state].count++;
           stateData[state].mw += getTableMw(p);
         });
-        const sortedStates = Object.keys(stateData).sort((a,b) => stateData[b].mw - stateData[a].mw);
+        const sortedStates = Object.keys(stateData).sort((a, b) => stateData[b].mw - stateData[a].mw);
         const stateRowsHtml = sortedStates.map(st => {
           const pct = gcrTotalMw > 0 ? (stateData[st].mw / gcrTotalMw) * 100 : 0;
           return `
@@ -5362,10 +5404,13 @@
             <div class="numeralia-grid">
               <!-- Columna Izquierda: KPIs y Tecnologías -->
               <div class="col-left">
-                <div class="kpi-card-main" style="min-height: 180px; padding: 18px; justify-content: center; gap: 4px;">
+                <div class="kpi-card-main" style="min-height: 230px; padding: 18px; justify-content: flex-start; gap: 4px;">
                   <span class="lbl">Proyectos Finalizados</span>
                   <span class="val-main" style="font-size: clamp(48px, 3.5vw, 60px);">${rawProjs.length}</span>
                   <span class="val-sub" style="font-size: clamp(16px, 1.2vw, 20px); color: #f7dca1; font-weight: 700;">${formatMw(gcrTotalMw)}</span>
+                  <div class="invest-lbl" style="position: static; width: 100%; margin-top: 10px; background: #b71e4f; border-radius: 10px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
+                    ${gcrInvestmentSummaryHtml}
+                  </div>
                 </div>
 
                 <div class="tech-card" style="flex-grow: 1;">
@@ -5406,9 +5451,6 @@
               <div class="col-right">
                 <div class="map-card" style="height: 260px; padding: 6px;">
                   <div class="map-lbl" style="font-size: 10px; padding: 3px 6px;">Distribución GCR ${gcrKey}</div>
-                  <div class="invest-lbl" style="bottom: 12px; left: 12px; top: auto; right: auto; background: #b71e4f; border-radius: 10px; min-width: 270px; padding: 8px 10px; font-size: 9px; letter-spacing: .01em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);">
-                    ${gcrInvestmentSummaryHtml}
-                  </div>
                   <div id="map_${gcrSafeId}" style="width:100%; height:100%; border-radius:8px; z-index: 10; position: relative;"></div>
                 </div>
 
@@ -6312,26 +6354,17 @@
             'BAJA CALIFORNIA': '#e0f0ff'
           };
 
-          const normGcrKey = String(gcrKey || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+          const normGcrKey = normalizeGcrName(gcrKey);
 
           localLayerGerencias = L.geoJSON(cachedGerenciasGeoJSON, {
             pane: 'backgroundPane',
             style: (feature) => {
-              const name = String(feature.properties?.GCR || feature.properties?.name || '').toUpperCase();
-              const featName = name.normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-
-              let isMatch = false;
-              if (normGcrKey === 'BAJA CALIFORNIA') {
-                isMatch = featName.includes('BAJA CALIFORNIA') && !featName.includes('SUR');
-              } else if (normGcrKey === 'BAJA CALIFORNIA SUR') {
-                isMatch = featName.includes('BAJA CALIFORNIA SUR') || featName.includes('SUR');
-              } else {
-                isMatch = featName.includes(normGcrKey);
-              }
+              const featName = normalizeGcrName(getGerenciaNameFromMapFeature(feature));
+              const isMatch = isMatchingGcr(normGcrKey, featName);
 
               let fill = '#EDF2F7';
               Object.keys(gcrColors).forEach(k => {
-                if (name.includes(k)) fill = gcrColors[k];
+                if (featName.includes(k)) fill = gcrColors[k];
               });
 
               if (isMatch) {
