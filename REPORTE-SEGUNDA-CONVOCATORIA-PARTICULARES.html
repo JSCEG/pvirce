@@ -4496,12 +4496,14 @@
       const groups = {};
       DATA.forEach(p => {
         const gie = p.gie || 'NO IDENTIFICADO';
-        groups[gie] = (groups[gie] || 0) + p.mw;
+        if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
+        groups[gie].count += 1;
+        groups[gie].mw += p.mw;
       });
 
       // Ordenar y tomar los top 12
       const sortedGroups = Object.keys(groups)
-        .map(name => ({ name, y: groups[name] }))
+        .map(name => ({ name, y: groups[name].mw, projectCount: groups[name].count }))
         .sort((a, b) => b.y - a.y)
         .slice(0, 12);
 
@@ -4509,7 +4511,7 @@
         chart: {
           type: 'bar',
           backgroundColor: 'transparent',
-          marginRight: 20,
+          marginRight: 115,
           marginTop: 10,
           marginBottom: 40,
           style: { fontFamily: 'Montserrat, sans-serif' }
@@ -4522,7 +4524,10 @@
         },
         yAxis: {
           title: { text: 'Capacidad (MW)', style: { fontSize: '9px' } },
-          labels: { style: { fontSize: '9px' } },
+          labels: {
+            formatter: function () { return formatInt(this.value); },
+            style: { fontSize: '9px' }
+          },
           gridLineColor: '#EDF2F7'
         },
         legend: { enabled: false },
@@ -4532,16 +4537,22 @@
             borderRadius: 3,
             dataLabels: {
               enabled: true,
-              format: '{point.y:.0f}',
+              formatter: function () {
+                return `${formatInt(this.point.projectCount)} proy. · ${formatInt(this.y)} MW`;
+              },
+              crop: false,
+              overflow: 'allow',
               style: { fontSize: '8px', fontWeight: 'bold' }
             }
           }
         },
         tooltip: {
-          pointFormat: '<b>{point.y:.1f} MW</b>'
+          formatter: function () {
+            return `<b>${this.point.name}</b><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
+          }
         },
         credits: { enabled: false },
-        series: [{ data: sortedGroups.map(g => g.y) }]
+        series: [{ data: sortedGroups }]
       });
     }
 
@@ -4688,6 +4699,30 @@
       return cleanVal;
     }
 
+    function getRegulatoryRanking(p) {
+      const fields = ['tierras', 'misse', 'mia', 'cenace'];
+      const values = fields.map((field) => {
+        const status = classifyStatus(p && p[field]);
+        if (status === 'SI') return 2;
+        if (status === 'TRAMITE') return 1;
+        return 0;
+      });
+      return {
+        values,
+        score: values.reduce((sum, value) => sum + value, 0)
+      };
+    }
+
+    function compareProjectsByRegulatoryRanking(a, b) {
+      const rankA = getRegulatoryRanking(a);
+      const rankB = getRegulatoryRanking(b);
+      if (rankB.score !== rankA.score) return rankB.score - rankA.score;
+      for (let i = 0; i < rankA.values.length; i++) {
+        if (rankB.values[i] !== rankA.values[i]) return rankB.values[i] - rankA.values[i];
+      }
+      return String(a.nombre || '').localeCompare(String(b.nombre || ''), 'es');
+    }
+
     function formatFeoc(feoc) {
       const raw = String(feoc || '').trim();
       if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return '—';
@@ -4800,8 +4835,8 @@
         const rawProjs = groups[gcrInfo.key] || [];
         if (!rawProjs.length) return;
 
-        // Ordenar alfabéticamente por nombre de proyecto
-        const projs = rawProjs.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        // Ranking regulatorio: Tierras, MISSE, MIA y CENACE; mejor avance primero.
+        const projs = rawProjs.sort(compareProjectsByRegulatoryRanking);
 
         // Paginación dinámica (más filas por lámina para aprovechar el área útil)
         const rowsPerSlide = 18;
@@ -4819,9 +4854,10 @@
 
           let rowsHtml = slice.map((p, i) => {
             const rowNum = pIdx * rowsPerSlide + i + 1;
+            const regulatoryRank = getRegulatoryRanking(p);
             return `
               <tr>
-                <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);">${rowNum}</td>
+                <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);" title="Puntaje regulatorio: ${regulatoryRank.score}/8">${rowNum}</td>
                 <td style="font-weight:600; max-width:180px;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
                     <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.nombre}</span>
@@ -4906,7 +4942,7 @@
       // 2. Diapositiva para el Sistema de Almacenamiento (Slide 15 dedicada)
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       if (storageProjects.length > 0) {
-        const sortedStorage = storageProjects.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        const sortedStorage = storageProjects.sort(compareProjectsByRegulatoryRanking);
 
         const slide = document.createElement('section');
         slide.className = 'slide tabular-slide';
@@ -4914,7 +4950,7 @@
 
         const rowsHtml = sortedStorage.map((p, i) => `
           <tr>
-            <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);">${i + 1}</td>
+            <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);" title="Puntaje regulatorio: ${getRegulatoryRanking(p).score}/8">${i + 1}</td>
             <td style="font-weight:600; max-width:180px;">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
                 <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.nombre}</span>
