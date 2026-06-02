@@ -5165,6 +5165,11 @@
       KMZ_LINEA_FALTA: 'Archivo KMZ Línea',
       SAEE_SIN_GEOM: 'Plano KML SAEE',
       SAEE_GEOM_SIN_DECLARAR: 'Plano KML SAEE',
+      SAEE_SIN_CAPACIDAD: 'Potencia',
+      SAEE_COORD_FUERA_MX: 'KML SAEE',
+      EVIS_CON_FOLIO_SIN_ESTATUS: 'Estatus EVIS',
+      EVIS_APROBADA_SIN_FOLIO: 'Folio EVIS',
+      TIERRAS_NO_ASEGURADAS: 'Definición terreno',
       COORD_FUERA_MX: 'Coordenadas (A)',
       VERTICES_INCONSISTENTES: 'N° de vértices',
       MW_CERO: 'Cap. instalada',
@@ -5239,7 +5244,11 @@
         }
 
         // 5) Coherencia entre declaración SAEE y geometría reportada
-        const saeeDeclarado = yesLike(p.saeeRespaldo) || /incorporar/i.test(String(p.saeeRespaldo || ''));
+        const saeeDeclarado = yesLike(p.saeeRespaldo) || 
+                              /incorporar/i.test(String(p.saeeRespaldo || '')) ||
+                              (p.saeeMW > 0) || 
+                              (p.saeeAlm > 0) || 
+                              (p.saeeTec && !isMissing(p.saeeTec));
         const hasSaeeKml = p.saeeKml && String(p.saeeKml).startsWith('http');
         const hasSaeeVtx = Array.isArray(p.saeeVertices) && p.saeeVertices.length >= 3;
         if (saeeDeclarado && !hasSaeeKml && !hasSaeeVtx) {
@@ -5247,6 +5256,17 @@
         }
         if (!saeeDeclarado && (hasSaeeKml || hasSaeeVtx)) {
           push(p, 'SAEE_GEOM_SIN_DECLARAR', 'media', `Geometría SAEE cargada, pero respaldo declarado como ${p.saeeRespaldo || 'SIN INFORMACIÓN'}`);
+        }
+        if (saeeDeclarado && p.saeeMW <= 0 && p.saeeAlm <= 0) {
+          push(p, 'SAEE_SIN_CAPACIDAD', 'baja', 'SAEE declarado pero sin potencia (MW) ni almacenamiento reportado');
+        }
+        if (Array.isArray(p.saeeVertices) && p.saeeVertices.length) {
+          const out = p.saeeVertices.filter((v) => !v || v.length < 2 ||
+            v[0] < MX_BBOX.minLat || v[0] > MX_BBOX.maxLat ||
+            v[1] < MX_BBOX.minLng || v[1] > MX_BBOX.maxLng);
+          if (out.length > 0) {
+            push(p, 'SAEE_COORD_FUERA_MX', 'alta', `${out.length}/${p.saeeVertices.length} vértice(s) del SAEE fuera del territorio nacional`);
+          }
         }
 
         // 6) Vértices proyecto fuera de México
@@ -5308,6 +5328,23 @@
         if (isMissing(p.gie) || /NO IDENTIFICADO/i.test(p.gie || '')) {
           push(p, 'GIE_FALTA', 'media', 'Grupo de interés no identificado');
         }
+
+        // 18) EVIS/MISSE inconsistencias
+        const hasFolioEvis = p.folioEvis && !isMissing(p.folioEvis);
+        const misseStatus = classifyStatus(p.misse);
+        if (hasFolioEvis && misseStatus === 'EMPTY') {
+          push(p, 'EVIS_CON_FOLIO_SIN_ESTATUS', 'media', `Folio EVIS reportado (${p.folioEvis}), pero Estatus EVIS está como SIN INFORMACIÓN`);
+        }
+        if (misseStatus === 'SI' && !hasFolioEvis) {
+          push(p, 'EVIS_APROBADA_SIN_FOLIO', 'media', 'Estatus EVIS es Aprobado/Autorizado, pero no reporta Folio EVIS');
+        }
+
+        // 19) Tierras no aseguradas en trámites avanzados
+        const isCreAdvanced = p.creStatus && !isMissing(p.creStatus) && !/SIN SOLICITUD/i.test(p.creStatus);
+        const isContratoAdvanced = p.contratoStatus && !isMissing(p.contratoStatus) && !/SIN SOLICITUD|NO INICIADO/i.test(p.contratoStatus);
+        if ((isCreAdvanced || isContratoAdvanced) && (classifyStatus(p.tierras) === 'NO' || isMissing(p.tierras))) {
+          push(p, 'TIERRAS_NO_ASEGURADAS', 'alta', `Trámite CRE/Contrato avanzado, pero estatus de Tierras es ${p.tierras || 'SIN INFORMACIÓN'}`);
+        }
       });
 
       return issues;
@@ -5328,6 +5365,11 @@
       KMZ_LINEA_FALTA: { label: 'KMZ línea faltante', color: ISSUE_PALETTE.gris },
       SAEE_SIN_GEOM: { label: 'SAEE sin geometría', color: ISSUE_PALETTE.verde },
       SAEE_GEOM_SIN_DECLARAR: { label: 'SAEE con geometría no declarado', color: ISSUE_PALETTE.dorado },
+      SAEE_SIN_CAPACIDAD: { label: 'SAEE sin capacidad especificada', color: ISSUE_PALETTE.gris },
+      SAEE_COORD_FUERA_MX: { label: 'Coordenadas SAEE fuera de México', color: ISSUE_PALETTE.guindaOscuro },
+      EVIS_CON_FOLIO_SIN_ESTATUS: { label: 'EVIS con folio pero sin estatus', color: ISSUE_PALETTE.dorado },
+      EVIS_APROBADA_SIN_FOLIO: { label: 'EVIS aprobada sin folio', color: ISSUE_PALETTE.dorado },
+      TIERRAS_NO_ASEGURADAS: { label: 'Trámite avanzado sin tierras aseguradas', color: ISSUE_PALETTE.guinda },
       COORD_FUERA_MX: { label: 'Coordenadas fuera de México', color: ISSUE_PALETTE.guindaOscuro },
       VERTICES_INCONSISTENTES: { label: 'Vértices declarados ≠ capturados', color: ISSUE_PALETTE.dorado },
       MW_CERO: { label: 'MW = 0', color: ISSUE_PALETTE.guinda },
