@@ -2036,8 +2036,8 @@
         // Ordenar alfabéticamente por nombre de proyecto
         const projs = rawProjs.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        // Paginación dinámica (máximo 14 filas por diapositiva para evitar desbordamiento)
-        const rowsPerSlide = 14;
+        // Paginación dinámica (máximo 22 filas por diapositiva para evitar desbordamiento)
+        const rowsPerSlide = 22;
         const totalPages = Math.ceil(projs.length / rowsPerSlide);
 
         for (let pIdx = 0; pIdx < totalPages; pIdx++) {
