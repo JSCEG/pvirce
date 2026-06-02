@@ -5036,9 +5036,11 @@
         let isMatch = false;
         if (normGcr) {
           if (normGcr === 'BAJA CALIFORNIA') {
-            isMatch = featName === 'BAJA CALIFORNIA' || (featName.includes('BAJA') && !featName.includes('SUR'));
+            isMatch = featName.includes('BAJA CALIFORNIA') && !featName.includes('SUR');
+          } else if (normGcr === 'BAJA CALIFORNIA SUR') {
+            isMatch = featName.includes('BAJA CALIFORNIA SUR') || featName.includes('SUR');
           } else {
-            isMatch = featName.includes(normGcr) || normGcr.includes(featName);
+            isMatch = featName.includes(normGcr);
           }
         }
 
@@ -6320,9 +6322,11 @@
 
               let isMatch = false;
               if (normGcrKey === 'BAJA CALIFORNIA') {
-                isMatch = featName === 'BAJA CALIFORNIA' || (featName.includes('BAJA') && !featName.includes('SUR'));
+                isMatch = featName.includes('BAJA CALIFORNIA') && !featName.includes('SUR');
+              } else if (normGcrKey === 'BAJA CALIFORNIA SUR') {
+                isMatch = featName.includes('BAJA CALIFORNIA SUR') || featName.includes('SUR');
               } else {
-                isMatch = featName.includes(normGcrKey) || normGcrKey.includes(featName);
+                isMatch = featName.includes(normGcrKey);
               }
 
               let fill = '#EDF2F7';
