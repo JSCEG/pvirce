@@ -4998,7 +4998,7 @@
                   </div>
                 </td>
                 <td style="max-width:120px;">${p.gie}</td>
-                <td class="col-center-text">${p.origenGie}</td>
+                <td class="col-center-text" style="font-size: 8px;">${p.folio || p.preFolio || '—'}</td>
                 <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
                 <td style="max-width:110px;">${formatCell(p.tecnologia)}</td>
                 <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
@@ -5046,10 +5046,10 @@
                       <th style="width:25px; text-align:center;">#</th>
                       <th style="width:180px;">Proyecto</th>
                       <th style="width:120px;">GIE</th>
-                      <th style="width:50px; text-align:center;">Origen</th>
+                      <th style="width:80px; text-align:center;">Folio VUPE</th>
                       <th style="width:60px; text-align:right;">MW (Contr.)</th>
-                      <th style="width:110px;">Tecnología</th>
-                      <th style="width:125px;">Ubicación</th>
+                      <th style="width:100px;">Tecnología</th>
+                      <th style="width:115px;">Ubicación</th>
                       <th style="width:90px; text-align:right;">Inversión reportada</th>
                       <th style="width:65px; text-align:center;">FEOC</th>
                       <th style="width:45px; text-align:center;">Tierras</th>
@@ -5091,7 +5091,7 @@
               </div>
             </td>
             <td style="max-width:120px;">${p.gie}</td>
-            <td class="col-center-text">${p.origenGie}</td>
+            <td class="col-center-text" style="font-size: 8px;">${p.folio || p.preFolio || '—'}</td>
             <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
             <td style="max-width:110px;">ALMACENAMIENTO</td>
             <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
@@ -5123,10 +5123,10 @@
                     <th style="width:25px; text-align:center;">#</th>
                     <th style="width:180px;">Proyecto</th>
                     <th style="width:120px;">GIE</th>
-                    <th style="width:50px; text-align:center;">Origen</th>
+                    <th style="width:80px; text-align:center;">Folio VUPE</th>
                     <th style="width:60px; text-align:right;">MW (Contr.)</th>
-                    <th style="width:110px;">Tecnología</th>
-                    <th style="width:125px;">Ubicación</th>
+                    <th style="width:100px;">Tecnología</th>
+                    <th style="width:115px;">Ubicación</th>
                     <th style="width:90px; text-align:right;">Inversión reportada</th>
                     <th style="width:65px; text-align:center;">FEOC</th>
                     <th style="width:45px; text-align:center;">Tierras</th>
