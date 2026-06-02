@@ -1687,10 +1687,10 @@
         saeeCapMinCenace: col(91),
         saeeNumEstudios: col(92),
         saeeDentroPredio: col(94),
-        saeeKml: col(99),
+        saeeKml: col(4) ? `https://cdn.sassoapps.com/dgmesnie/saees2c/${col(4).trim().toUpperCase()}-saee.kmz` : col(99),
 
-        kmzProj: col(72),
-        kmzLinea: '',
+        kmzProj: col(4) ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${col(4).trim().toUpperCase()}-proyecto.kmz` : col(72),
+        kmzLinea: col(4) ? `https://cdn.sassoapps.com/dgmesnie/subestaciones2c/${col(4).trim().toUpperCase()}-subestacion.kmz` : '',
 
         // Fases Finales (no presentes en este reporte, se definen como vacíos)
         cenaceVal: '',
@@ -2842,16 +2842,16 @@
           }
         }
 
-        // Línea de transmisión
+        // Subestación
         if (lineaGj) {
           try {
             const layer = L.geoJSON(lineaGj, {
-              style: { color: '#D69E2E', weight: 3, dashArray: '5, 5' }
+              style: { color: '#00E5FF', weight: 3, dashArray: '5, 5' }
             }).addTo(fichaMapInstance)
-              .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Línea de Transmisión (KML)</strong>`);
+              .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Subestación (KML)</strong>`);
             bounds.extend(layer.getBounds());
           } catch (e) {
-            console.warn('Error pintando lineaGj:', e);
+            console.warn('Error pintando lineaGj (subestacion):', e);
           }
         }
 
@@ -2888,6 +2888,34 @@
             .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">${title}</strong>`)
             .openPopup();
           bounds.extend(geom.center);
+        }
+
+        // Control de estatus de capas KMZ
+        try {
+          const statusControl = L.control({ position: 'bottomleft' });
+          statusControl.onAdd = function() {
+            const div = L.DomUtil.create('div', 'kmz-status-card');
+            div.style.cssText = 'background: rgba(255, 255, 255, 0.95); padding: 4px 6px; border-radius: 4px; border: 1px solid #cbd5e1; font-family: \'Outfit\', sans-serif; font-size: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 2px; line-height: 1.2;';
+            div.innerHTML = `
+              <div style="font-weight: 700; text-transform: uppercase; color: #1e293b; border-bottom: 1px solid #e2e8f0; margin-bottom: 2px; padding-bottom: 1px;">Capas CDN</div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: ${projGj ? '#10b981' : '#cbd5e1'}"></span>
+                <span>Proyecto: ${projGj ? '✓' : '✕'}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: ${lineaGj ? '#10b981' : '#cbd5e1'}"></span>
+                <span>Subestación: ${lineaGj ? '✓' : '✕'}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: ${saeeGj ? '#10b981' : '#cbd5e1'}"></span>
+                <span>SAEE: ${saeeGj ? '✓' : '✕'}</span>
+              </div>
+            `;
+            return div;
+          };
+          statusControl.addTo(fichaMapInstance);
+        } catch (e) {
+          console.warn('Error agregando control de estatus KMZ:', e);
         }
 
         // Si no pudimos cargar KMLs y no hay centro, la geometría es inválida

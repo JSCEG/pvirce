@@ -4143,8 +4143,8 @@
         densidadViento: col('El perfil horario de la densidad del viento promedio mensual:'),
         numVertices,
         preFolio: col('Pre Folio'),
-        kmzProj: kmzProyecto,
-        kmzLinea: kmzLineaCandidate !== kmzProyecto ? kmzLineaCandidate : '',
+        kmzProj: col('Folio Proyecto') ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${col('Folio Proyecto').trim().toUpperCase()}-proyecto.kmz` : kmzProyecto,
+        kmzLinea: col('Folio Proyecto') ? `https://cdn.sassoapps.com/dgmesnie/subestaciones2c/${col('Folio Proyecto').trim().toUpperCase()}-subestacion.kmz` : (kmzLineaCandidate !== kmzProyecto ? kmzLineaCandidate : ''),
 
         // SAEE fields
         saeeRespaldo: col('El proyecto ya cuenta con respaldo; indicar si se desea incorporar SAEE:'),
@@ -4167,7 +4167,7 @@
         saeeCapMinCenace: col('La capacidad mínima del SAEE es determinada por el CENACE:'),
         saeeNumEstudios: col('Número de estudios de almacenamiento:'),
         saeeDentroPredio: col('¿El SAEE está ubicado dentro del predio del Proyecto de autoconsumo?'),
-        saeeKml: col('Plano georreferenciado de la ubicación del SAEE en formato KML:'),
+        saeeKml: col('Folio Proyecto') ? `https://cdn.sassoapps.com/dgmesnie/saees2c/${col('Folio Proyecto').trim().toUpperCase()}-saee.kmz` : col('Plano georreferenciado de la ubicación del SAEE en formato KML:'),
 
         // Fases finales
         cenaceVal: col('Estatus Validación CENACE'),
@@ -4433,8 +4433,8 @@
         numVertices: col(65),
         preFolio: col(1),
         anexo4: col(528),
-        kmzProj: col(456),
-        kmzLinea: (col(460) && col(460) !== col(456)) ? col(460) : '',
+        kmzProj: col(2) ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${col(2).trim().toUpperCase()}-proyecto.kmz` : col(456),
+        kmzLinea: col(2) ? `https://cdn.sassoapps.com/dgmesnie/subestaciones2c/${col(2).trim().toUpperCase()}-subestacion.kmz` : ((col(460) && col(460) !== col(456)) ? col(460) : ''),
 
         // SAEE
         saeeRespaldo: col(489),
@@ -4457,7 +4457,7 @@
         saeeCapMinCenace: col(507),
         saeeNumEstudios: col(508),
         saeeDentroPredio: col(510),
-        saeeKml: col(520),
+        saeeKml: col(2) ? `https://cdn.sassoapps.com/dgmesnie/saees2c/${col(2).trim().toUpperCase()}-saee.kmz` : col(520),
 
         // Fases Finales
         cenaceVal: col(542),
@@ -8998,7 +8998,7 @@
         { id: 'gcr', label: 'Límites GCR', skip: false },
         { id: 'efs', label: 'Entidades federativas', skip: false },
         { id: 'kproj', label: 'KMZ proyecto', skip: !(kmzProj && String(kmzProj).startsWith('http')) },
-        { id: 'klinea', label: 'KMZ línea transmisión', skip: !(kmzLinea && String(kmzLinea).startsWith('http')) },
+        { id: 'klinea', label: 'KMZ subestación', skip: !(kmzLinea && String(kmzLinea).startsWith('http')) },
         { id: 'ksaee', label: 'KML SAEE', skip: !(saeeKml && String(saeeKml).startsWith('http')) },
         { id: 'capas', label: 'Capas geoespaciales', skip: false }
       ];
@@ -9246,7 +9246,7 @@
           }
         }
 
-        // Línea de transmisión
+        // Subestación
         if (lineaGj) {
           try {
             const layer = L.geoJSON(lineaGj, {
@@ -9262,11 +9262,11 @@
                 className: 'kml-linea'
               }
             }).addTo(fichaMapInstance)
-              .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Línea de Transmisión (KML)</strong>`);
-            overlayLayers['Línea transmisión'] = layer;
+              .bindPopup(`<strong style="font-family:'Outfit',sans-serif;font-size:10px;">Subestación (KML)</strong>`);
+            overlayLayers['Subestación'] = layer;
             bounds.extend(layer.getBounds());
           } catch (e) {
-            console.warn('Error pintando lineaGj:', e);
+            console.warn('Error pintando lineaGj (subestacion):', e);
           }
         }
 
@@ -9432,6 +9432,34 @@
 
         if (Object.keys(overlayLayers).length > 0) {
           L.control.layers({}, overlayLayers, { collapsed: true, position: 'topright' }).addTo(fichaMapInstance);
+        }
+
+        // Control de estatus de capas KMZ
+        try {
+          const statusControl = L.control({ position: 'bottomleft' });
+          statusControl.onAdd = function() {
+            const div = L.DomUtil.create('div', 'kmz-status-card');
+            div.style.cssText = 'background: rgba(255, 255, 255, 0.95); padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: \'Outfit\', sans-serif; font-size: 9px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 3px; line-height: 1.2;';
+            div.innerHTML = `
+              <div style="font-weight: 700; text-transform: uppercase; color: #1e293b; border-bottom: 1px solid #e2e8f0; margin-bottom: 2px; padding-bottom: 2px;">Capas CDN</div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${projGj ? '#10b981' : '#cbd5e1'}"></span>
+                <span>Proyecto: ${projGj ? '✓' : '✕'}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${lineaGj ? '#10b981' : '#cbd5e1'}"></span>
+                <span>Subestación: ${lineaGj ? '✓' : '✕'}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${saeeGj ? '#10b981' : '#cbd5e1'}"></span>
+                <span>SAEE: ${saeeGj ? '✓' : '✕'}</span>
+              </div>
+            `;
+            return div;
+          };
+          statusControl.addTo(fichaMapInstance);
+        } catch (e) {
+          console.warn('Error agregando control de estatus KMZ:', e);
         }
 
         // Si no pudimos cargar KMLs y no hay centro, la geometría es inválida
@@ -9657,7 +9685,7 @@
         ${fkv('N° de vértices', p.numVertices)}
         ${fkv('Coordenadas (A)', coords)}
         ${fkv('Archivo KMZ Proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ'))}
-        ${fkv('Archivo KMZ Línea', formatKmzLink(p.kmzLinea, 'Descargar KMZ Línea'))}
+        ${fkv('Archivo KMZ Subestación', formatKmzLink(p.kmzLinea, 'Descargar KMZ Subestación'))}
       `;
 
       document.getElementById('mFichaBody1').innerHTML = `
@@ -9816,8 +9844,8 @@
       const colDocs = `
         <div class="ficha-sec verde">Documentos y evidencias</div>
         ${fkv('KMZ proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ proyecto'))}
-        ${fkv('KMZ línea', formatKmzLink(p.kmzLinea, 'Descargar KMZ línea'))}
-        ${fkv('KML SAEE', formatKmzLink(p.saeeKml, 'Descargar KML SAEE'))}
+        ${fkv('KMZ subestación', formatKmzLink(p.kmzLinea, 'Descargar KMZ subestación'))}
+        ${fkv('KMZ SAEE', formatKmzLink(p.saeeKml, 'Descargar KMZ SAEE'))}
         ${fkv('Contrato interconexión', formatKmzLink(p.contratoDoc, 'Descargar contrato'))}
         ${fkv('CRE solicitud', formatKmzLink(p.creSolicitudDoc, 'Descargar solicitud'))}
         ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio'))}

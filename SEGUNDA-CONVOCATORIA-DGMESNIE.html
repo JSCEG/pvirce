@@ -2130,7 +2130,10 @@
         tension: String(field(r, ['Nivel de tensión (kV):']) || '').trim(),
         repre: String(field(r, ['Representante']) || '').trim(),
         email: String(field(r, ['Email']) || '').trim(),
-        kmz: String(field(r, ['Archivo KMZ']) || '').trim(),
+        kmz: field(r, ['Folio Proyecto']) ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${String(field(r, ['Folio Proyecto'])).trim().toUpperCase()}-proyecto.kmz` : String(field(r, ['Archivo KMZ']) || '').trim(),
+        kmzProj: field(r, ['Folio Proyecto']) ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${String(field(r, ['Folio Proyecto'])).trim().toUpperCase()}-proyecto.kmz` : String(field(r, ['Archivo KMZ']) || '').trim(),
+        kmzLinea: field(r, ['Folio Proyecto']) ? `https://cdn.sassoapps.com/dgmesnie/subestaciones2c/${String(field(r, ['Folio Proyecto'])).trim().toUpperCase()}-subestacion.kmz` : '',
+        saeeKml: field(r, ['Folio Proyecto']) ? `https://cdn.sassoapps.com/dgmesnie/saees2c/${String(field(r, ['Folio Proyecto'])).trim().toUpperCase()}-saee.kmz` : '',
         coords: coords,
         // estatus desglose
         estatusIndicativo: String(field(r, ['Estatus Indicativo']) || '').trim(),
@@ -2265,7 +2268,10 @@
         tension: col(22),
         repre: col(23),
         email: col(26),
-        kmz: col(72),                      // Archivo KMZ
+        kmz: col(4) ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${col(4).trim().toUpperCase()}-proyecto.kmz` : col(72),
+        kmzProj: col(4) ? `https://cdn.sassoapps.com/dgmesnie/proyectos2c/${col(4).trim().toUpperCase()}-proyecto.kmz` : col(72),
+        kmzLinea: col(4) ? `https://cdn.sassoapps.com/dgmesnie/subestaciones2c/${col(4).trim().toUpperCase()}-subestacion.kmz` : '',
+        saeeKml: col(4) ? `https://cdn.sassoapps.com/dgmesnie/saees2c/${col(4).trim().toUpperCase()}-saee.kmz` : '',
         coords: coords,
         // estatus desglose
         estatusIndicativo: col(113),
@@ -2803,7 +2809,11 @@
           : '';
         document.getElementById('topPanelTitle').textContent = isProject ? 'Ficha del proyecto seleccionado' : 'Top 10 proyectos por capacidad instalada';
         const p0 = rows[0] || {};
-        const kmzLink = p0.kmz ? `<a href="${p0.kmz}" target="_blank" style="color:var(--guinda);font-weight:700">Descargar KMZ ↗</a>` : '—';
+        const kmzLinks = [];
+        if (p0.kmzProj) kmzLinks.push(`<a href="${p0.kmzProj}" target="_blank" style="color:var(--guinda);font-weight:700">Proyecto ↗</a>`);
+        if (p0.kmzLinea) kmzLinks.push(`<a href="${p0.kmzLinea}" target="_blank" style="color:var(--guinda);font-weight:700">Subestación ↗</a>`);
+        if (p0.saeeKml) kmzLinks.push(`<a href="${p0.saeeKml}" target="_blank" style="color:var(--guinda);font-weight:700">SAEE ↗</a>`);
+        const kmzLink = kmzLinks.length ? kmzLinks.join(' · ') : '—';
 
         // Helpers para repartir la ficha del proyecto en las 3 columnas de la lámina 2
         const setPanelTitle = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
@@ -3404,68 +3414,162 @@
       const t = setTimeout(() => ctl.abort(), ms);
       return fetch(url, { redirect: 'follow', signal: ctl.signal }).finally(() => clearTimeout(t));
     }
-    let kmzLayer = null;
-    async function loadKmzOnMap(url) {
-      if (!url || !mapInstance) return;
-      const myReq = ++kmlReqId;
-      const isCurrent = () => myReq === kmlReqId;
-      if (kmzLayer) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
-      showKmlLoader(true, 'Descargando archivo…');
+    let kmzLayersGroup = null;
+    let mainMapStatusControl = null;
+
+    function updateMapStatusControl(projGj, lineaGj, saeeGj) {
+      if (mainMapStatusControl && mapInstance) {
+        mapInstance.removeControl(mainMapStatusControl);
+        mainMapStatusControl = null;
+      }
+      if (!projGj && !lineaGj && !saeeGj) return;
       try {
-        const e = encodeURIComponent(url);
-        const proxies = [
-          'https://api.allorigins.win/raw?url=' + e,
-          'https://corsproxy.io/?url=' + e,
-          'https://api.codetabs.com/v1/proxy/?quest=' + e,
-          'https://thingproxy.freeboard.io/fetch/' + url,
-          url
-        ];
-        let buf;
-        for (let i = 0; i < proxies.length; i++) {
-          if (!isCurrent()) return;            // otra selección tomó el control
-          showKmlLoader(true, `Descargando archivo… (fuente ${i + 1}/${proxies.length})`);
-          try {
-            const r = await fetchTimeout(proxies[i], 12000);
-            if (!r.ok) continue;
-            const b = await r.arrayBuffer();
-            if (b && b.byteLength > 40) { buf = b; break; }
-          } catch (err) { console.warn('KMZ fetch fail', proxies[i], err.message); }
-        }
-        if (!isCurrent()) return;
-        if (!buf) {
-          console.warn('KMZ no descargable', url);
-          showKmlLoader(true, 'No se pudo cargar el polígono (servidor sin CORS).', { url });
-          setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 4000);
-          return;
-        }
-        showKmlLoader(true, 'Procesando polígono…');
+        mainMapStatusControl = L.control({ position: 'bottomleft' });
+        mainMapStatusControl.onAdd = function() {
+          const div = L.DomUtil.create('div', 'kmz-status-card');
+          div.style.cssText = 'background: rgba(255, 255, 255, 0.95); padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: \'Outfit\', sans-serif; font-size: 9px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 3px; line-height: 1.2;';
+          div.innerHTML = `
+            <div style="font-weight: 700; text-transform: uppercase; color: #1e293b; border-bottom: 1px solid #e2e8f0; margin-bottom: 2px; padding-bottom: 2px;">Capas CDN</div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${projGj ? '#10b981' : '#cbd5e1'}"></span>
+              <span>Proyecto: ${projGj ? '✓' : '✕'}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${lineaGj ? '#10b981' : '#cbd5e1'}"></span>
+              <span>Subestación: ${lineaGj ? '✓' : '✕'}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${saeeGj ? '#10b981' : '#cbd5e1'}"></span>
+              <span>SAEE: ${saeeGj ? '✓' : '✕'}</span>
+            </div>
+          `;
+          return div;
+        };
+        mainMapStatusControl.addTo(mapInstance);
+      } catch (e) {
+        console.warn('Error adding main map status control:', e);
+      }
+    }
+
+    async function fetchAndParseKml(url, isCurrent) {
+      if (!url) return null;
+      const e = encodeURIComponent(url);
+      const proxies = [
+        'https://api.allorigins.win/raw?url=' + e,
+        'https://corsproxy.io/?url=' + e,
+        'https://api.codetabs.com/v1/proxy/?quest=' + e,
+        'https://thingproxy.freeboard.io/fetch/' + url,
+        url
+      ];
+      let buf = null;
+      for (let i = 0; i < proxies.length; i++) {
+        if (!isCurrent()) return null;
+        try {
+          const r = await fetchTimeout(proxies[i], 12000);
+          if (!r.ok) continue;
+          const b = await r.arrayBuffer();
+          if (b && b.byteLength > 40) { buf = b; break; }
+        } catch (err) { console.warn('KMZ fetch fail', proxies[i], err.message); }
+      }
+      if (!isCurrent() || !buf) return null;
+
+      try {
         let kmlText;
         const head = new Uint8Array(buf.slice(0, 4));
         if (head[0] === 0x50 && head[1] === 0x4B) {
           const zip = await JSZip.loadAsync(buf);
           const kmlEntry = Object.values(zip.files).find(f => /\.kml$/i.test(f.name));
-          if (!kmlEntry) { showKmlLoader(true, 'KMZ sin archivo .kml', { url }); setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000); return; }
+          if (!kmlEntry) return null;
           kmlText = await kmlEntry.async('string');
         } else {
           kmlText = new TextDecoder().decode(buf);
         }
-        if (!isCurrent()) return;
+        if (!isCurrent()) return null;
         const dom = new DOMParser().parseFromString(kmlText, 'application/xml');
-        const gj = (window.toGeoJSON || window.togeojson).kml(dom);
-        if (!gj || !gj.features || !gj.features.length) {
-          showKmlLoader(true, 'El archivo no contiene geometría válida.', { url });
-          setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000);
+        return (window.toGeoJSON || window.togeojson).kml(dom);
+      } catch (err) {
+        console.warn('KMZ parsing error', err.message);
+        return null;
+      }
+    }
+
+    async function loadKmzOnMap(projectOrUrl) {
+      if (!projectOrUrl || !mapInstance) return;
+      const myReq = ++kmlReqId;
+      const isCurrent = () => myReq === kmlReqId;
+      if (kmzLayersGroup && mapInstance) { mapInstance.removeLayer(kmzLayersGroup); kmzLayersGroup = null; }
+      if (mainMapStatusControl && mapInstance) { mapInstance.removeControl(mainMapStatusControl); mainMapStatusControl = null; }
+
+      let kmzProj = '';
+      let kmzLinea = '';
+      let saeeKml = '';
+
+      if (typeof projectOrUrl === 'object') {
+        kmzProj = projectOrUrl.kmzProj;
+        kmzLinea = projectOrUrl.kmzLinea;
+        saeeKml = projectOrUrl.saeeKml;
+      } else {
+        kmzProj = projectOrUrl;
+      }
+
+      showKmlLoader(true, 'Descargando archivos KMZ…');
+      try {
+        const [projGj, lineaGj, saeeGj] = await Promise.all([
+          fetchAndParseKml(kmzProj, isCurrent),
+          fetchAndParseKml(kmzLinea, isCurrent),
+          fetchAndParseKml(saeeKml, isCurrent)
+        ]);
+
+        if (!isCurrent()) return;
+        if (!projGj && !lineaGj && !saeeGj) {
+          console.warn('Ningún KMZ descargable', kmzProj);
+          showKmlLoader(true, 'No se pudo cargar ningún polígono.', { url: kmzProj });
+          setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 4000);
           return;
         }
-        kmzLayer = L.geoJSON(gj, {
-          style: { color: '#9B2247', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.35 },
-          pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 5, color: '#9B2247', fillColor: '#A57F2C', fillOpacity: 0.9 })
-        }).addTo(mapInstance);
-        try { mapInstance.fitBounds(kmzLayer.getBounds(), { padding: [30, 30] }); } catch (e2) { }
+
+        kmzLayersGroup = L.layerGroup();
+        const bounds = L.latLngBounds([]);
+
+        if (projGj && projGj.features && projGj.features.length) {
+          const l = L.geoJSON(projGj, {
+            style: { color: '#9B2247', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.35 },
+            pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 5, color: '#9B2247', fillColor: '#A57F2C', fillOpacity: 0.9 })
+          });
+          l.addTo(kmzLayersGroup);
+          bounds.extend(l.getBounds());
+        }
+
+        if (lineaGj && lineaGj.features && lineaGj.features.length) {
+          const l = L.geoJSON(lineaGj, {
+            style: { color: '#00E5FF', weight: 3, dashArray: '5, 5' },
+            pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 5, color: '#00E5FF', fillOpacity: 0.9 })
+          });
+          l.addTo(kmzLayersGroup);
+          bounds.extend(l.getBounds());
+        }
+
+        if (saeeGj && saeeGj.features && saeeGj.features.length) {
+          const l = L.geoJSON(saeeGj, {
+            style: { color: '#2F855A', fillColor: '#48BB78', fillOpacity: 0.2, weight: 2, dashArray: '4, 4' },
+            pointToLayer: (f, ll) => L.circleMarker(ll, { radius: 5, color: '#2F855A', fillOpacity: 0.9 })
+          });
+          l.addTo(kmzLayersGroup);
+          bounds.extend(l.getBounds());
+        }
+
+        kmzLayersGroup.addTo(mapInstance);
+        try {
+          if (bounds.isValid()) {
+            mapInstance.fitBounds(bounds, { padding: [30, 30] });
+          }
+        } catch (e2) { }
+
+        updateMapStatusControl(projGj, lineaGj, saeeGj);
         showKmlLoader(false);
       } catch (e) {
         console.warn('KMZ error', e.message);
-        if (isCurrent()) { showKmlLoader(true, 'Error al procesar KML', { url }); setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000); }
+        if (isCurrent()) { showKmlLoader(true, 'Error al procesar KML', { url: kmzProj }); setTimeout(() => { if (isCurrent()) showKmlLoader(false); }, 3000); }
       }
     }
     let projectMarkersLayer = null;
@@ -3982,8 +4086,11 @@
       populateProjectSelect();
       render();
       flyToSelectedProject();
-      if (rows?.length && rows[0].kmz) loadKmzOnMap(rows[0].kmz);
-      else if (kmzLayer && mapInstance) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
+      if (rows?.length) loadKmzOnMap(rows[0]);
+      else if (mapInstance) {
+        if (kmzLayersGroup) { mapInstance.removeLayer(kmzLayersGroup); kmzLayersGroup = null; }
+        if (mainMapStatusControl) { mapInstance.removeControl(mainMapStatusControl); mainMapStatusControl = null; }
+      }
       if (presentationMode) { syncCommandBar(); refreshPresentationDeck(); }
     });
 
@@ -4017,7 +4124,10 @@
       if (value === '__ALL__') {
         // volver: deselecciona proyecto, mantiene foco EF/gerencia → markers restauran
         if (globalSel) globalSel.value = '__ALL__';
-        if (kmzLayer && mapInstance) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
+        if (mapInstance) {
+          if (kmzLayersGroup) { mapInstance.removeLayer(kmzLayersGroup); kmzLayersGroup = null; }
+          if (mainMapStatusControl) { mapInstance.removeControl(mainMapStatusControl); mainMapStatusControl = null; }
+        }
         const scope = getMapScope();
         const focusKey = scope === 'gerencia' ? CURRENT_FOCUS_GERENCIA : CURRENT_FOCUS_EF;
         drawMap();
