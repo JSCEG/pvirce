@@ -6071,6 +6071,166 @@
       return slideIdx;
     }
 
+    const activeGcrWidgets = {};
+
+    function initGcrDashboardWidgets(gcrKey) {
+      if (activeGcrWidgets[gcrKey]) {
+        const widgets = activeGcrWidgets[gcrKey];
+        if (widgets.map) {
+          widgets.map.invalidateSize({ pan: false, animate: false });
+        }
+        return;
+      }
+
+      const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
+      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      const gcrProjects = genProjects.filter(p => (p.gerencia || 'OTRO') === gcrKey);
+
+      if (!gcrProjects.length) return;
+
+      const getProjectCapacity = p => {
+        const contracted = Number(p.capacidadContratada || 0);
+        if (!isNaN(contracted) && contracted > 0) return contracted;
+        const fallback = Number(p.mw || 0);
+        return isNaN(fallback) ? 0 : fallback;
+      };
+
+      // 1. Inicializar Highcharts
+      const groups = {};
+      gcrProjects.forEach(p => {
+        const gie = p.gie || 'NO IDENTIFICADO';
+        if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
+        groups[gie].count++;
+        groups[gie].mw += getProjectCapacity(p);
+      });
+
+      const sortedGroups = Object.keys(groups)
+        .map(name => ({ name, y: groups[name].mw, projectCount: groups[name].count }))
+        .sort((a, b) => b.y - a.y)
+        .slice(0, 10);
+
+      const chart = Highcharts.chart(`chartGrupo_${gcrSafeId}`, {
+        chart: {
+          type: 'bar',
+          backgroundColor: 'transparent',
+          marginRight: 95,
+          marginTop: 5,
+          marginBottom: 35,
+          style: { fontFamily: 'Montserrat, sans-serif' }
+        },
+        title: { text: '' },
+        xAxis: {
+          categories: sortedGroups.map(g => g.name.length > 20 ? g.name.slice(0, 20) + '…' : g.name),
+          labels: { style: { fontSize: '8px', color: '#333', fontWeight: '500' } },
+          lineColor: '#CBD5E0'
+        },
+        yAxis: {
+          title: { text: null },
+          labels: {
+            formatter: function () { return formatInt(this.value); },
+            style: { fontSize: '8px' }
+          },
+          gridLineColor: '#EDF2F7'
+        },
+        legend: { enabled: false },
+        plotOptions: {
+          series: {
+            color: '#691B31',
+            borderRadius: 2,
+            dataLabels: {
+              enabled: true,
+              formatter: function () {
+                return `${formatInt(this.point.projectCount)} proy. · ${formatInt(this.y)} MW`;
+              },
+              crop: false,
+              overflow: 'allow',
+              style: { fontSize: '7px', fontWeight: 'bold' }
+            }
+          }
+        },
+        tooltip: {
+          formatter: function () {
+            return `<b>${this.point.name}</b><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
+          }
+        },
+        credits: { enabled: false },
+        series: [{ data: sortedGroups }]
+      });
+
+      // 2. Inicializar Mapa Leaflet
+      let map = null;
+      try {
+        const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
+        map = L.map(`map_${gcrSafeId}`, {
+          zoomControl: false,
+          attributionControl: false,
+          preferCanvas: true,
+          minZoom: 4,
+          maxZoom: 10,
+          maxBounds: MEXICO_BOUNDS,
+          maxBoundsViscosity: 1.0
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(map);
+
+        if (cachedEstadosGeoJSON) {
+          const gcrStates = new Set(gcrProjects.map(p => normText(p.ef)));
+          L.geoJSON(cachedEstadosGeoJSON, {
+            filter: (feature) => {
+              const stateName = normText(feature.properties?.ESTADO || feature.properties?.name || '');
+              return gcrStates.has(stateName);
+            },
+            style: {
+              fillColor: '#691B31',
+              fillOpacity: 0.05,
+              color: '#691B31',
+              weight: 0.8,
+              dashArray: '3, 4'
+            }
+          }).addTo(map);
+        }
+
+        const markers = [];
+        gcrProjects.forEach(p => {
+          if (p.coords) {
+            const tGroup = getTechGroup(p);
+            const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
+            const finalMw = getProjectCapacity(p);
+            const marker = L.circleMarker(p.coords, {
+              radius: Math.max(3, Math.min(8, Math.sqrt(finalMw) * 0.5)),
+              fillColor: col,
+              fillOpacity: 0.85,
+              color: '#ffffff',
+              weight: 1
+            }).addTo(map);
+
+            marker.bindPopup(`
+              <div style="font-family:Montserrat,sans-serif; font-size:10px; line-height:1.4;">
+                <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
+                <strong>GIE:</strong> ${p.gie}<br>
+                <strong>Capacidad:</strong> ${finalMw.toFixed(1)} MW (${tGroup})<br>
+                <strong>Inversión:</strong> ${p.inversionRaw ? formatInvestmentReported(p.inversionRaw) : 'Sin datos'}
+              </div>
+            `);
+            markers.push(marker);
+          }
+        });
+
+        if (markers.length > 0) {
+          const group = new L.featureGroup(markers);
+          map.fitBounds(group.getBounds().pad(0.15), { animate: false });
+        } else {
+          map.setView([23.5, -102.2], 5);
+        }
+      } catch (err) {
+        console.warn(`No se pudo inicializar el mapa regional para ${gcrKey}:`, err);
+      }
+
+      activeGcrWidgets[gcrKey] = { map, chart };
+    }
+
     // ==========================================
     // CONTROLES DE NAVEGACIÓN Y ESCALADO
     // ==========================================
