@@ -3012,6 +3012,60 @@
         max-height: 40vh;
       }
     }
+
+    /* ANIMACIONES Y MICRO-INTERACCIONES (Anime.js & CSS transitions) */
+    .kpi-card-main,
+    .tech-card,
+    .gcr-table-card,
+    .group-chart-card,
+    .map-card,
+    .status-card,
+    .status-box {
+      transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .kpi-card-main:hover,
+    .tech-card:hover,
+    .gcr-table-card:hover,
+    .group-chart-card:hover,
+    .map-card:hover,
+    .status-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12) !important;
+    }
+    .status-box:hover {
+      transform: translateY(-2px);
+      background: #eef1f4 !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .control-btn, .modal-nav-btn, .search-close-btn, .modal-close-btn {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .control-btn:hover:not(:disabled) {
+      transform: scale(1.08);
+    }
+    .modal-nav-btn:hover {
+      background: var(--color-guinda-light) !important;
+      transform: translateY(-1px);
+    }
+
+    /* Clases para inicializar elementos antes de animarlos */
+    .animate-item {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .animate-item-left {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    .animate-item-right {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    .animate-item-scale {
+      opacity: 0;
+      transform: scale(0.9);
+    }
   </style>
 </head>
 
@@ -3422,8 +3476,17 @@
   <script src="https://cdn.jsdelivr.net/npm/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
   <script>
+    // Flag global para deshabilitar animaciones durante exportación a PDF
+    window.isExportingPdf = false;
+
+    function getCurrentScale() {
+      const scaleStr = document.documentElement.style.getPropertyValue('--scale') || '1';
+      const scaleVal = parseFloat(scaleStr);
+      return isNaN(scaleVal) ? 1 : scaleVal;
+    }
     // ==========================================
     // CONFIGURACIÓN GENERAL Y VARIABLES GLOBALES
     // ==========================================
@@ -6240,7 +6303,7 @@
         return String(a.nombre).localeCompare(String(b.nombre));
       });
 
-      const rowsPerPage = 22;
+      const rowsPerPage = 20;
       const totalPages = Math.ceil(sortedIssues.length / rowsPerPage);
 
       for (let pIdx = 0; pIdx < totalPages; pIdx++) {
@@ -6619,12 +6682,16 @@
           } else {
             mapInstance.invalidateSize({ pan: false, animate: false });
           }
+          animateSlide(index);
         }, 150);
       } else if (activeSlide && activeSlide.classList.contains('gcr-dashboard-slide')) {
         const gcrKey = activeSlide.dataset.gcr;
         setTimeout(() => {
           initGcrDashboardWidgets(gcrKey);
+          animateSlide(index);
         }, 150);
+      } else {
+        animateSlide(index);
       }
     }
 
@@ -8636,6 +8703,22 @@
       if (!modal) return;
       modal.style.display = 'flex';
 
+      if (!window.isExportingPdf) {
+        anime({
+          targets: '.geo-analysis-modal-content',
+          scale: [0.92, 1],
+          opacity: [0, 1],
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+        anime({
+          targets: '#geoAnalysisModal',
+          backgroundColor: ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.75)'],
+          duration: 250,
+          easing: 'easeOutQuad'
+        });
+      }
+
       showGeoAnalysisLoading('Inicializando mapa…');
       ensureGeoAnalysisModalMap();
       if (!geoAnalysisModalMap) return;
@@ -8654,11 +8737,36 @@
 
     function closeGeoSpatialAnalysisModal() {
       const modal = document.getElementById('geoAnalysisModal');
-      if (modal) modal.style.display = 'none';
-      clearGeoClickHighlight({ restoreView: false });
-      geoClickOriginalView = null;
-      clearGeoRevealSequence();
-      stopGeoSpotlightTour();
+      if (!modal) return;
+      
+      if (!window.isExportingPdf) {
+        anime({
+          targets: '.geo-analysis-modal-content',
+          scale: 0.92,
+          opacity: 0,
+          duration: 200,
+          easing: 'easeInQuad',
+          complete: () => {
+            modal.style.display = 'none';
+            clearGeoClickHighlight({ restoreView: false });
+            geoClickOriginalView = null;
+            clearGeoRevealSequence();
+            stopGeoSpotlightTour();
+          }
+        });
+        anime({
+          targets: '#geoAnalysisModal',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          duration: 200,
+          easing: 'easeInQuad'
+        });
+      } else {
+        modal.style.display = 'none';
+        clearGeoClickHighlight({ restoreView: false });
+        geoClickOriginalView = null;
+        clearGeoRevealSequence();
+        stopGeoSpotlightTour();
+      }
     }
 
     // ===== SPOTLIGHT TOUR (Gaby-style) =====
@@ -9583,6 +9691,17 @@
       const visiblePage = document.getElementById(`modalPage${actualPage}`);
       if (visiblePage) {
         visiblePage.style.display = 'flex';
+        
+        if (!window.isExportingPdf) {
+          anime({
+            targets: visiblePage.querySelectorAll('.ficha-col, .ficha-mega-kpis, .ficha-sec'),
+            opacity: [0, 1],
+            translateX: [15, 0],
+            delay: anime.stagger(40),
+            duration: 300,
+            easing: 'easeOutQuad'
+          });
+        }
       }
 
       const prevBtn = document.getElementById('mBtnPrevPage');
@@ -9624,8 +9743,7 @@
       }
     }
 
-    function closeFichaModal() {
-      document.getElementById('fichaModal').style.display = 'none';
+    function cleanupFichaModal() {
       closeGeoSpatialAnalysisModal();
       currentFichaProject = null;
       pendingMapPayload = null;
@@ -9635,6 +9753,35 @@
         fichaMapInstance = null;
       }
       fichaMapCenter = null;
+    }
+
+    function closeFichaModal() {
+      const modal = document.getElementById('fichaModal');
+      if (!modal) return;
+
+      if (!window.isExportingPdf) {
+        const currentScale = getCurrentScale();
+        anime({
+          targets: '.ficha-modal-content',
+          scale: currentScale * 0.88,
+          opacity: 0,
+          duration: 250,
+          easing: 'easeInQuad',
+          complete: () => {
+            modal.style.display = 'none';
+            cleanupFichaModal();
+          }
+        });
+        anime({
+          targets: '#fichaModal',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          duration: 250,
+          easing: 'easeInQuad'
+        });
+      } else {
+        modal.style.display = 'none';
+        cleanupFichaModal();
+      }
     }
 
     // Cerrar modal al hacer clic en el fondo gris traslúcido
@@ -10026,7 +10173,26 @@
 
       showModalPage(1);
 
-      document.getElementById('fichaModal').style.display = 'flex';
+      const modal = document.getElementById('fichaModal');
+      modal.style.display = 'flex';
+      
+      if (!window.isExportingPdf) {
+        const currentScale = getCurrentScale();
+        anime({
+          targets: '.ficha-modal-content',
+          scale: [currentScale * 0.88, currentScale],
+          opacity: [0, 1],
+          duration: 350,
+          easing: 'easeOutBack'
+        });
+        anime({
+          targets: '#fichaModal',
+          backgroundColor: ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.75)'],
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      }
+
       fitSlides();
 
       // El mapa se inicializa al entrar a la página 4 para asegurar render correcto.
@@ -10043,11 +10209,50 @@
       modal.style.display = 'flex';
       input.value = '';
       resultsDiv.innerHTML = '<div class="search-result-empty">Comienza a escribir para buscar proyectos por nombre, folio o empresa…</div>';
+
+      if (!window.isExportingPdf) {
+        anime({
+          targets: '.search-modal-content',
+          scale: [0.92, 1],
+          opacity: [0, 1],
+          duration: 250,
+          easing: 'easeOutQuad'
+        });
+        anime({
+          targets: '#searchModal',
+          backgroundColor: ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.75)'],
+          duration: 200,
+          easing: 'easeOutQuad'
+        });
+      }
+
       setTimeout(() => input.focus(), 50);
     }
 
     function closeSearchModal() {
-      document.getElementById('searchModal').style.display = 'none';
+      const modal = document.getElementById('searchModal');
+      if (!modal) return;
+
+      if (!window.isExportingPdf) {
+        anime({
+          targets: '.search-modal-content',
+          scale: 0.92,
+          opacity: 0,
+          duration: 200,
+          easing: 'easeInQuad',
+          complete: () => {
+            modal.style.display = 'none';
+          }
+        });
+        anime({
+          targets: '#searchModal',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          duration: 200,
+          easing: 'easeInQuad'
+        });
+      } else {
+        modal.style.display = 'none';
+      }
     }
 
     function handleSearchInput(query) {
@@ -10138,6 +10343,174 @@
         closeSearchModal();
       }
     });
+
+    // ============================================================
+    // ANIMACIONES Y MICRO-INTERACCIONES (Anime.js)
+    // ============================================================
+    function animateNumberCountUp(element) {
+      const el = typeof element === 'string' ? document.querySelector(element) : element;
+      if (!el) return;
+
+      // Restablecer al HTML original si existe para reiniciar la animación
+      if (el.dataset.origHtml) {
+        el.innerHTML = el.dataset.origHtml;
+      } else {
+        el.dataset.origHtml = el.innerHTML;
+      }
+
+      const textNodes = [];
+      function getTextNodes(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          textNodes.push(node);
+        } else {
+          for (let child of node.childNodes) {
+            getTextNodes(child);
+          }
+        }
+      }
+      getTextNodes(el);
+
+      const animTargets = [];
+      textNodes.forEach((node) => {
+        const text = node.nodeValue;
+        const matches = [];
+        const regex = /\b\d+(?:,\d+)*(?:\.\d+)?\b/g;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const val = parseFloat(match[0].replace(/,/g, ''));
+          if (val > 0) {
+            matches.push({
+              index: match.index,
+              valueStr: match[0],
+              value: val
+            });
+          }
+        }
+
+        if (matches.length > 0) {
+          node._origValue = text;
+          node._matches = matches;
+          matches.forEach((m, mIdx) => {
+            const targetObj = { val: 0 };
+            animTargets.push({
+              node: node,
+              matchIdx: mIdx,
+              target: targetObj,
+              endVal: m.value
+            });
+          });
+        }
+      });
+
+      if (animTargets.length === 0) return;
+
+      anime({
+        targets: animTargets.map(t => t.target),
+        val: animTargets.map(t => t.endVal),
+        round: 1,
+        duration: 1000,
+        easing: 'easeOutQuad',
+        update: function() {
+          animTargets.forEach(t => {
+            const node = t.node;
+            let newText = node._origValue;
+            const sortedMatches = [...node._matches].reverse();
+            sortedMatches.forEach((m, idx) => {
+              const targetInfo = animTargets.find(x => x.node === node && x.matchIdx === (node._matches.length - 1 - idx));
+              if (targetInfo) {
+                const isDecimal = m.valueStr.includes('.');
+                const decimals = isDecimal ? m.valueStr.split('.')[1].length : 0;
+                let valFormatted;
+                if (isDecimal) {
+                  valFormatted = targetInfo.target.val.toLocaleString('es-MX', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+                } else {
+                  valFormatted = Math.round(targetInfo.target.val).toLocaleString('es-MX');
+                }
+                const part1 = newText.slice(0, m.index);
+                const part2 = newText.slice(m.index + m.valueStr.length);
+                newText = part1 + valFormatted + part2;
+              }
+            });
+            node.nodeValue = newText;
+          });
+        }
+      });
+    }
+
+    function animateSlide(index) {
+      if (window.isExportingPdf) return;
+
+      const slides = document.querySelectorAll('.slide');
+      const activeSlide = slides[index];
+      if (!activeSlide) return;
+
+      // Animación suave de aparición para el contenedor del slide
+      const container = activeSlide.querySelector('.slide-container');
+      if (container) {
+        const currentScale = getCurrentScale();
+        anime({
+          targets: container,
+          opacity: [0.4, 1],
+          scale: [currentScale * 0.985, currentScale],
+          duration: 350,
+          easing: 'easeOutQuad'
+        });
+      }
+
+      // Animación de los elementos según el tipo de slide
+      if (index === 0) {
+        // Portada
+        anime({
+          targets: '#slide-0 h1, #slide-0 .eyebrow, #slide-0 .unidad, #slide-0 .unidad-sub, #slide-0 .subtitle',
+          opacity: [0, 1],
+          translateY: [25, 0],
+          delay: anime.stagger(60),
+          duration: 600,
+          easing: 'easeOutQuad'
+        });
+        anime({
+          targets: '#slide-0 .top-band, #slide-0 .bottom-band',
+          scaleX: [0, 1],
+          duration: 500,
+          easing: 'easeOutQuad'
+        });
+      } else if (index === 1 || activeSlide.classList.contains('gcr-dashboard-slide')) {
+        // Numeralia principal o GCR Regional Dashboards
+        anime({
+          targets: activeSlide.querySelectorAll('.kpi-card-main, .tech-card, .gcr-table-card, .group-chart-card, .map-card, .status-card'),
+          opacity: [0, 1],
+          translateY: [20, 0],
+          delay: anime.stagger(50),
+          duration: 500,
+          easing: 'easeOutQuad'
+        });
+
+        // Contadores dinámicos
+        activeSlide.querySelectorAll('.val-main, .val-sub, .s-val, .s-mw, .t-val div, .invest-lbl strong, .tech-total').forEach(el => {
+          animateNumberCountUp(el);
+        });
+
+        // Tecnologías
+        anime({
+          targets: activeSlide.querySelectorAll('.tech-item'),
+          opacity: [0, 1],
+          translateX: [-15, 0],
+          delay: anime.stagger(35),
+          duration: 400,
+          easing: 'easeOutQuad'
+        });
+      } else if (activeSlide.classList.contains('tabular-slide')) {
+        // Animación de renglones en las tablas detalladas
+        anime({
+          targets: activeSlide.querySelectorAll('.report-table tbody tr'),
+          opacity: [0, 1],
+          translateY: [8, 0],
+          delay: anime.stagger(15),
+          duration: 350,
+          easing: 'easeOutQuad'
+        });
+      }
+    }
 
     window.addEventListener('resize', fitSlides);
 
@@ -10372,6 +10745,7 @@
       showPdfLoader(`Preparando ${MODAL_TOTAL_PAGES} páginas de ficha…`);
 
       try {
+        window.isExportingPdf = true;
         await inlineRemoteImagesForPdf(el);
         if (navBar) navBar.style.display = 'none';
         if (closeButton) closeButton.style.display = 'none';
@@ -10417,6 +10791,7 @@
         console.error('Error PDF ficha:', err);
         alert('Error generando PDF de ficha: ' + err.message);
       } finally {
+        window.isExportingPdf = false;
         if (navBar) navBar.style.display = previousNavDisplay;
         if (closeButton) closeButton.style.display = previousCloseDisplay;
         showModalPage(previousPage);
@@ -10428,7 +10803,12 @@
       const el = document.querySelector('.geo-analysis-modal-content');
       if (!el) { alert('Análisis geoespacial no abierto.'); return; }
       const name = (currentGeoAnalysisContext && currentGeoAnalysisContext.title) || 'analisis';
-      await captureElementAsPdf(el, `Analisis_geoespacial_${fileSafe(name)}.pdf`, 'l');
+      try {
+        window.isExportingPdf = true;
+        await captureElementAsPdf(el, `Analisis_geoespacial_${fileSafe(name)}.pdf`, 'l');
+      } finally {
+        window.isExportingPdf = false;
+      }
     }
 
     async function exportFullReportPDF() {
@@ -10452,6 +10832,7 @@
       const prevActive = deck.querySelector('.slide.active');
 
       try {
+        window.isExportingPdf = true;
         showPdfLoader('Preparando imágenes…');
         await inlineRemoteImagesForPdf(deck);
 
@@ -10488,6 +10869,7 @@
         console.error('Error PDF reporte:', err);
         alert('Error generando PDF: ' + err.message);
       } finally {
+        window.isExportingPdf = false;
         slides.forEach((s) => s.classList.remove('active'));
         previousSlideState.forEach(({ slide, display }) => {
           slide.style.display = display;
