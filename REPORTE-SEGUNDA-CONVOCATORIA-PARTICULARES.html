@@ -3211,7 +3211,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle1">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 2/7 · Ubicación y Contacto</span>
+            <span class="ficha-page-badge">Ficha 2/6 · Ubicación y Contacto</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub1">Subtítulo</div>
@@ -3228,7 +3228,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle2">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 3/7 · Características y Conectividad</span>
+            <span class="ficha-page-badge">Ficha 3/6 · Características y Conectividad</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub2">Subtítulo</div>
@@ -3245,7 +3245,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle3">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 5/7 · Trámites Regulatorios</span>
+            <span class="ficha-page-badge">Ficha 5/6 · Trámites Regulatorios</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub3">Subtítulo</div>
@@ -3262,7 +3262,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle4">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 1/7 · Mapa de Análisis y Capas</span>
+            <span class="ficha-page-badge">Ficha 1/6 · Mapa de Análisis y Capas</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub4">Subtítulo</div>
@@ -3279,7 +3279,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle5">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 4/7 · Almacenamiento (SAEE)</span>
+            <span class="ficha-page-badge">Ficha 4/6 · Almacenamiento (SAEE)</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub5">Subtítulo</div>
@@ -3296,29 +3296,12 @@
           </div>
           <div class="ef-title" id="mFichaTitle6">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 6/7 · CRE (Estatus y Permisos)</span>
+            <span class="ficha-page-badge">Ficha 6/6 · Fases Finales y Contratos</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub6">Subtítulo</div>
         <div class="ficha-kpis" id="mFichaKpis6"></div>
         <div class="ficha-body" id="mFichaBody6"></div>
-      </div>
-
-      <!-- Ficha Page 7 -->
-      <div id="modalPage7" class="modal-page" style="display: none;">
-        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
-          <div class="brand-left">
-            <span class="brand-line-1">Segunda Convocatoria 2026</span>
-            <span class="brand-line-2">Particulares</span>
-          </div>
-          <div class="ef-title" id="mFichaTitle7">Proyecto</div>
-          <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 7/7 · Contratos CFE y Evidencias</span>
-          </div>
-        </div>
-        <div class="ficha-subtitle" id="mFichaSub7">Subtítulo</div>
-        <div class="ficha-kpis" id="mFichaKpis7"></div>
-        <div class="ficha-body" id="mFichaBody7"></div>
       </div>
 
       <!-- Modal Footer / Navigation -->
@@ -8923,9 +8906,9 @@
     let currentMapReqId = 0;
     let modalPage = 1;
     let pendingMapPayload = null;
-    const MODAL_TOTAL_PAGES = 7;
-    const MODAL_PAGE_ORDER = [4, 1, 2, 5, 3, 6, 7];
-    const MODAL_PAGE_LABELS = ['Mapa', 'Ubicación y Contacto', 'Características', 'Almacenamiento (SAEE)', 'Trámites Regulatorios', 'CRE (Estatus y Permisos)', 'Contratos CFE y Evidencias'];
+    const MODAL_TOTAL_PAGES = 6;
+    const MODAL_PAGE_ORDER = [4, 1, 2, 5, 3, 6];
+    const MODAL_PAGE_LABELS = ['Mapa', 'Ubicación y Contacto', 'Características', 'Almacenamiento (SAEE)', 'Trámites Regulatorios', 'Fases Finales y Contratos'];
     const FICHA_MAP_RADIUS_KM = 20;
 
     function fitFichaMapToRadius() {
@@ -9667,14 +9650,12 @@
       document.getElementById('mFichaTitle4').textContent = titleTxt;
       document.getElementById('mFichaTitle5').textContent = titleTxt;
       document.getElementById('mFichaTitle6').textContent = titleTxt;
-      document.getElementById('mFichaTitle7').textContent = titleTxt;
       document.getElementById('mFichaSub1').textContent = subTxt;
       document.getElementById('mFichaSub2').textContent = `${p.techBase || '—'}${p.subtech ? ' · ' + p.subtech : ''}`;
-      document.getElementById('mFichaSub3').textContent = `Trámites de Registro · ${p.folio || 'Sin folio'}`;
+      document.getElementById('mFichaSub3').textContent = `Trámites Regulatorios · ${p.folio || 'Sin folio'}`;
       document.getElementById('mFichaSub4').textContent = `Mapa ampliado para análisis de capas · ${p.ef || 'México'}`;
       document.getElementById('mFichaSub5').textContent = `Almacenamiento de Energía (SAEE) · ${p.folio || 'Sin folio'}`;
-      document.getElementById('mFichaSub6').textContent = `CRE (Estatus y Permisos) · ${p.folio || 'Sin folio'}`;
-      document.getElementById('mFichaSub7').textContent = `CENACE, Contratos CFE y Evidencias · ${p.folio || 'Sin folio'}`;
+      document.getElementById('mFichaSub6').textContent = `Fases Finales y Contratos · ${p.folio || 'Sin folio'}`;
 
       // Página 1: KPIs
       document.getElementById('mFichaKpis1').innerHTML = [
@@ -9873,17 +9854,13 @@
       `;
 
       const colReg2 = `
-        <div class="ficha-sec">Medio Ambiente y Terreno (1/2)</div>
+        <div class="ficha-sec">Medio Ambiente y Terreno</div>
         ${fkv('¿Tiene MIA?', p.tieneMia)}
         ${fkv('Estatus MIA', p.estatusMia)}
         ${fkv('Folio MIA', p.folioMia)}
         ${fkv('Estatus EVIS', p.misse)}
         ${fkv('Folio EVIS', p.folioEvis)}
         ${fkv('Impacto social', p.estatusImpacto)}
-      `;
-
-      const colReg3 = `
-        <div class="ficha-sec">Medio Ambiente y Terreno (2/2)</div>
         ${fkv('Instalaciones', p.estatusInstalaciones)}
         ${fkv('¿Estudios interc.?', p.cenace)}
         ${fkv('Definición terreno', p.tierras)}
@@ -9892,13 +9869,25 @@
         ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
       `;
 
+      const colDocs = `
+        <div class="ficha-sec verde">Documentos y evidencias</div>
+        ${fkv('KMZ proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ proyecto'))}
+        ${fkv('KMZ subestación', formatKmzLink(p.kmzLinea, 'Descargar KMZ subestación'))}
+        ${fkv('KMZ SAEE', formatKmzLink(p.saeeKml, 'Descargar KMZ SAEE'))}
+        ${fkv('Contrato interconexión', formatKmzLink(p.contratoDoc, 'Descargar contrato'))}
+        ${fkv('CRE solicitud', formatKmzLink(p.creSolicitudDoc, 'Descargar solicitud'))}
+        ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio'))}
+        ${fkv('CRE resolución prevención', formatKmzLink(p.creResolucionPrevencionDoc, 'Descargar resolución'))}
+        ${fkv('Acuerdos sesión', formatKmzLink(p.acuerdosSesionDoc, 'Descargar acuerdos'))}
+      `;
+
       document.getElementById('mFichaBody3').innerHTML = `
         <div class="ficha-col">${colReg1}</div>
         <div class="ficha-col">${colReg2}</div>
-        <div class="ficha-col">${colReg3}</div>
+        <div class="ficha-col">${colDocs}</div>
       `;
 
-      // Página 6: KPIs y CRE (Estatus y Permisos)
+      // Página 6: KPIs y Fases Finales y Contratos
       document.getElementById('mFichaKpis6').innerHTML = [
         fkpi('Validación CENACE', p.cenaceVal || '—', '', 'CENACE Val'),
         fkpi('Estatus de Pago', p.pagoStatus || '—', '', 'Pago'),
@@ -9929,33 +9918,6 @@
         ${fkv('Fecha Resolución CRE', p.creFechaRes)}
       `;
 
-      const colAudit = `
-        <div class="ficha-sec verde">Auditoría de mapeo (Google Sheets)</div>
-        ${fkvAudit('¿Tiene MIA? (mostrado)', p.tieneMia, '¿Tiene MIA?', p.rawTieneMia)}
-        ${fkvAudit('Estatus MIA (mostrado)', p.estatusMia, 'Estatus MIA', p.rawEstatusMia)}
-        ${fkvAudit('Estatus EVIS (mostrado)', p.misse, 'Estatus EVIS', p.rawEstatusEvis)}
-        ${fkvAudit('Definición terreno (mostrado)', p.tierras, 'Definición Terreno (última ocurrencia)', p.rawTierras)}
-        ${fkvAudit('CRE estatus presentada', p.creStatusPresentada, 'Estatus permiso (Presentada)', p.rawCrePresentada)}
-        ${fkvAudit('CRE estatus prevención', p.creStatusPrevencion, 'Estatus permiso (Con prevención)', p.rawCrePrevencion)}
-        ${fkvAudit('CRE estatus solicitud', p.creStatus, 'Estatus solicitud permiso (campo legacy)', p.rawCreSolicitud)}
-      `;
-
-      document.getElementById('mFichaBody6').innerHTML = `
-        <div class="ficha-col">${colFinal1}</div>
-        <div class="ficha-col">${colFinal1_2}</div>
-        <div class="ficha-col">${colAudit}</div>
-      `;
-
-      // Página 7: KPIs y Contratos CFE / Evidencias
-      document.getElementById('mFichaKpis7').innerHTML = [
-        fkpi('Validación CENACE', p.cenaceVal || '—', '', 'CENACE Val'),
-        fkpi('Estatus de Pago', p.pagoStatus || '—', '', 'Pago'),
-        fkpi('CRE Estatus', p.creStatus || '—', '', 'CRE Permiso'),
-        fkpi('CFE Contrato', p.contratoStatus || '—', '', 'Contrato CFE'),
-        fkpi('% Implementación', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
-        fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
-      ].join('');
-
       const colFinal2 = `
         <div class="ficha-sec dorado">CENACE y CFE Contratos</div>
         ${fkv('Validación CENACE', p.cenaceVal)}
@@ -9969,22 +9931,10 @@
         ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
       `;
 
-      const colDocs = `
-        <div class="ficha-sec verde">Documentos y evidencias</div>
-        ${fkv('KMZ proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ proyecto'))}
-        ${fkv('KMZ subestación', formatKmzLink(p.kmzLinea, 'Descargar KMZ subestación'))}
-        ${fkv('KMZ SAEE', formatKmzLink(p.saeeKml, 'Descargar KMZ SAEE'))}
-        ${fkv('Contrato interconexión', formatKmzLink(p.contratoDoc, 'Descargar contrato'))}
-        ${fkv('CRE solicitud', formatKmzLink(p.creSolicitudDoc, 'Descargar solicitud'))}
-        ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio'))}
-        ${fkv('CRE resolución prevención', formatKmzLink(p.creResolucionPrevencionDoc, 'Descargar resolución'))}
-        ${fkv('Acuerdos sesión', formatKmzLink(p.acuerdosSesionDoc, 'Descargar acuerdos'))}
-      `;
-
-      document.getElementById('mFichaBody7').innerHTML = `
+      document.getElementById('mFichaBody6').innerHTML = `
+        <div class="ficha-col">${colFinal1}</div>
+        <div class="ficha-col">${colFinal1_2}</div>
         <div class="ficha-col">${colFinal2}</div>
-        <div class="ficha-col">${colDocs}</div>
-        <div class="ficha-col"></div>
       `;
 
       // Página 4: mapa ampliado y panel de capas
