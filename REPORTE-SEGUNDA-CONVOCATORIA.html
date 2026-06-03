@@ -1071,7 +1071,7 @@
 
     .ficha-sec {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-size: 9px;
+      font-size: 9.5px;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--color-guinda);
@@ -1100,9 +1100,9 @@
       grid-template-columns: 110px 1fr;
       gap: 8px;
       align-items: start;
-      padding: 1px 0;
-      font-size: 9px;
-      line-height: 1.25;
+      padding: 1.5px 0;
+      font-size: 9.5px;
+      line-height: 1.3;
       border-bottom: 1px solid #f2f2f2;
     }
 
@@ -1441,7 +1441,7 @@
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title" id="mFichaTitle1">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 1/4 · Generales, Ubicación y Mapa</span>
+            <span class="ficha-page-badge">Ficha 1/5 · Generales, Ubicación y Mapa</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub1">Subtítulo</div>
@@ -1455,7 +1455,7 @@
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title" id="mFichaTitle2">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 2/4 · Tecnología, Clima y Conectividad</span>
+            <span class="ficha-page-badge">Ficha 2/5 · Tecnología, Clima y Conectividad</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub2">Subtítulo</div>
@@ -1469,7 +1469,7 @@
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title" id="mFichaTitle3">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 3/4 · Almacenamiento (SAEE)</span>
+            <span class="ficha-page-badge">Ficha 3/5 · Almacenamiento (SAEE)</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub3">Subtítulo</div>
@@ -1483,12 +1483,26 @@
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title" id="mFichaTitle4">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 4/4 · Estatus Regulatorios e Interconexión</span>
+            <span class="ficha-page-badge">Ficha 4/5 · Trámites Regulatorios</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub4">Subtítulo</div>
         <div class="ficha-kpis" id="mFichaKpis4"></div>
         <div class="ficha-body" id="mFichaBody4"></div>
+      </div>
+
+      <!-- Ficha Page 5 -->
+      <div id="modalPage5" class="modal-page" style="display: none;">
+        <div class="slide-header" style="margin-top: -35px;">
+          <div class="brand-left">Segunda Convocatoria 2026</div>
+          <div class="ef-title" id="mFichaTitle5">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 5/5 · Fases Finales y Evidencias</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub5">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis5"></div>
+        <div class="ficha-body" id="mFichaBody5"></div>
       </div>
 
       <!-- Modal Footer / Navigation -->
@@ -2994,7 +3008,7 @@
     }
 
     let modalPage = 1;
-    const MODAL_TOTAL_PAGES = 4;
+    const MODAL_TOTAL_PAGES = 5;
     function showModalPage(pageNum) {
       modalPage = Math.max(1, Math.min(MODAL_TOTAL_PAGES, Number(pageNum) || 1));
       for (let i = 1; i <= MODAL_TOTAL_PAGES; i++) {
@@ -3043,10 +3057,12 @@
       document.getElementById('mFichaTitle2').textContent = titleTxt;
       document.getElementById('mFichaTitle3').textContent = titleTxt;
       document.getElementById('mFichaTitle4').textContent = titleTxt;
+      document.getElementById('mFichaTitle5').textContent = titleTxt;
       document.getElementById('mFichaSub1').textContent = subTxt;
       document.getElementById('mFichaSub2').textContent = `${p.techBase || '—'}${p.subtech ? ' · ' + p.subtech : ''}`;
       document.getElementById('mFichaSub3').textContent = `Almacenamiento de Energía (SAEE) · ${p.folio || 'Sin folio'}`;
-      document.getElementById('mFichaSub4').textContent = `Estatus regulatorios y de interconexión · ${p.folio || 'Sin folio'}`;
+      document.getElementById('mFichaSub4').textContent = `Trámites Regulatorios · ${p.folio || 'Sin folio'}`;
+      document.getElementById('mFichaSub5').textContent = `Fases Finales y Evidencias · ${p.folio || 'Sin folio'}`;
 
       // Página 1: KPIs
       document.getElementById('mFichaKpis1').innerHTML = [
@@ -3227,7 +3243,7 @@
       ].join('');
 
       const colReg1 = `
-        <div class="ficha-sec">Trámites Regulatorios</div>
+        <div class="ficha-sec">Trámites Regulatorios (1/2)</div>
         ${fkv('Registro (trámite)', p.status)}
         ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
         ${fkv('Indicativo', p.estatusIndicativo)}
@@ -3236,6 +3252,10 @@
         ${fkv('Estatus MIA', p.estatusMia)}
         ${fkv('Folio MIA', p.folioMia)}
         ${fkv('Estatus EVIS', p.misse)}
+      `;
+
+      const colReg2 = `
+        <div class="ficha-sec">Trámites Regulatorios (2/2)</div>
         ${fkv('Folio EVIS', p.folioEvis)}
         ${fkv('Impacto social', p.estatusImpacto)}
         ${fkv('Instalaciones', p.estatusInstalaciones)}
@@ -3245,23 +3265,6 @@
         ${fkv('Inicio registro', p.fechaInicioRegistro)}
         ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
       `;
-
-      const advancedSteps = p.cenaceVal || p.pagoStatus || p.creStatus || p.contratoStatus ? `
-        <div class="ficha-sec dorado">Fases Finales (CRE, CENACE y CFE)</div>
-        ${fkv('Validación CENACE', p.cenaceVal)}
-        ${fkv('Estatus de Pago', p.pagoStatus)}
-        ${fkv('Folio OPE', p.folioOpe)}
-        ${fkv('Solicitud Permiso CRE', p.creStatus)}
-        ${fkv('Fecha Resolución CRE', p.creFechaRes)}
-        ${fkv('Resultados Estudios', p.estudiosResult)}
-        ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
-        ${fkv('Tipo de Garantía', p.garantiaTipo)}
-        ${fkv('Monto Garantía', p.garantiaMonto)}
-        ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
-        ${fkv('Estatus Contrato CFE', p.contratoStatus)}
-        ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
-        ${fkv('Contrato de Interconex.', formatKmzLink(p.contratoDoc, 'Descargar Contrato'))}
-      ` : '<div class="ficha-sec dorado">Fases Finales</div><div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>';
 
       const colDocs = `
         <div class="ficha-sec verde">Evidencias y Documentos</div>
@@ -3273,8 +3276,46 @@
 
       document.getElementById('mFichaBody4').innerHTML = `
         <div class="ficha-col">${colReg1}</div>
-        <div class="ficha-col">${advancedSteps}</div>
+        <div class="ficha-col">${colReg2}</div>
         <div class="ficha-col">${colDocs}</div>
+      `;
+
+      // Página 5: KPIs y Fases Finales (CRE, CENACE y CFE)
+      document.getElementById('mFichaKpis5').innerHTML = [
+        fkpi('¿Tiene MIA?', p.tieneMia || '—', ''),
+        fkpi('Estatus MIA', p.estatusMia || '—', ''),
+        fkpi('Estatus EVIS', p.misse || '—', ''),
+        fkpi('Def. Terreno', p.tierras || '—', ''),
+        fkpi('Estudios CENACE', p.cenace || '—', ''),
+        fkpi('CFE Contrato', p.contratoStatus || '—', '')
+      ].join('');
+
+      const hasFasesFinales = p.cenaceVal || p.pagoStatus || p.creStatus || p.contratoStatus;
+      const colFinal1 = hasFasesFinales ? `
+        <div class="ficha-sec dorado">Fases Finales (CRE y CENACE)</div>
+        ${fkv('Validación CENACE', p.cenaceVal)}
+        ${fkv('Estatus de Pago', p.pagoStatus)}
+        ${fkv('Folio OPE', p.folioOpe)}
+        ${fkv('Solicitud Permiso CRE', p.creStatus)}
+        ${fkv('Fecha Resolución CRE', p.creFechaRes)}
+        ${fkv('Resultados Estudios', p.estudiosResult)}
+        ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
+      ` : '<div class="ficha-sec dorado">Fases Finales</div><div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>';
+
+      const colFinal2 = hasFasesFinales ? `
+        <div class="ficha-sec dorado">Fases Finales (Garantías y Contratos)</div>
+        ${fkv('Tipo de Garantía', p.garantiaTipo)}
+        ${fkv('Monto Garantía', p.garantiaMonto)}
+        ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
+        ${fkv('Estatus Contrato CFE', p.contratoStatus)}
+        ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
+        ${fkv('Contrato de Interconex.', formatKmzLink(p.contratoDoc, 'Descargar Contrato'))}
+      ` : '';
+
+      document.getElementById('mFichaBody5').innerHTML = `
+        <div class="ficha-col">${colFinal1}</div>
+        <div class="ficha-col">${colFinal2}</div>
+        <div class="ficha-col"></div>
       `;
 
       showModalPage(1);

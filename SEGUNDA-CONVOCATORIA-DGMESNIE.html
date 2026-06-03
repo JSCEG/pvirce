@@ -1458,7 +1458,7 @@
 
     .ficha-sec {
       font-family: var(--font-b);
-      font-size: 9px;
+      font-size: 9.5px;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--guinda);
@@ -1478,9 +1478,9 @@
       grid-template-columns: 122px 1fr;
       gap: 8px;
       align-items: start;
-      padding: 1px 0;
-      font-size: 9px;
-      line-height: 1.25;
+      padding: 1.5px 0;
+      font-size: 9.5px;
+      line-height: 1.3;
       border-bottom: 1px solid #f2f2f2;
     }
 
@@ -1938,7 +1938,7 @@
           <div class="ficha-sub" id="fichaASub">Selecciona un proyecto</div>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="ficha-page">Ficha 1/4 · Generales, Ubicación y Validación KML</span>
+          <span class="ficha-page">Ficha 1/5 · Generales, Ubicación y Validación KML</span>
           <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
         </div>
       </div>
@@ -1958,7 +1958,7 @@
           <div class="ficha-sub" id="fichaBSub">Tecnología, Clima y Conectividad</div>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="ficha-page">Ficha 2/4 · Tecnología, Clima y Conectividad</span>
+          <span class="ficha-page">Ficha 2/5 · Tecnología, Clima y Conectividad</span>
           <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
         </div>
       </div>
@@ -1978,7 +1978,7 @@
           <div class="ficha-sub" id="fichaCSub">Almacenamiento (SAEE)</div>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="ficha-page">Ficha 3/4 · Almacenamiento (SAEE)</span>
+          <span class="ficha-page">Ficha 3/5 · Almacenamiento (SAEE)</span>
           <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
         </div>
       </div>
@@ -1998,7 +1998,7 @@
           <div class="ficha-sub" id="fichaDSub">Estatus Regulatorios</div>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="ficha-page">Ficha 4/4 · Estatus Regulatorios</span>
+          <span class="ficha-page">Ficha 4/5 · Trámites Regulatorios</span>
           <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
         </div>
       </div>
@@ -2006,6 +2006,26 @@
       <div class="ficha-body" id="fichaDBody"></div>
       <div class="footer">
         <span id="fichaDFolio">—</span>
+        <span>Segunda Convocatoria 2026 · DGMESNIE · SNIE</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 8: FICHA PROYECTO · PÁGINA 5 ============ -->
+    <section class="slide ficha ficha-hidden" id="slideFichaE">
+      <div class="header">
+        <div>
+          <div class="ficha-title" id="fichaETitle">Ficha de proyecto</div>
+          <div class="ficha-sub" id="fichaESub">Fases Finales y Evidencias</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="ficha-page">Ficha 5/5 · Fases Finales y Evidencias</span>
+          <span class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></span>
+        </div>
+      </div>
+      <div class="ficha-kpis" id="fichaEKpis"></div>
+      <div class="ficha-body" id="fichaEBody"></div>
+      <div class="footer">
+        <span id="fichaEFolio">—</span>
         <span>Segunda Convocatoria 2026 · DGMESNIE · SNIE</span>
       </div>
     </section>
@@ -3829,7 +3849,7 @@
       return str.length > n ? str.slice(0, n) + '…' : str;
     }
     function clearFichaSlides() {
-      ['slideFichaA', 'slideFichaB', 'slideFichaC', 'slideFichaD'].forEach(id => document.getElementById(id)?.classList.add('ficha-hidden'));
+      ['slideFichaA', 'slideFichaB', 'slideFichaC', 'slideFichaD', 'slideFichaE'].forEach(id => document.getElementById(id)?.classList.add('ficha-hidden'));
     }
     function renderFichaSlides(p) {
       if (!p) { clearFichaSlides(); return; }
@@ -3837,11 +3857,13 @@
       const b = document.getElementById('slideFichaB');
       const c = document.getElementById('slideFichaC');
       const d = document.getElementById('slideFichaD');
-      if (!a || !b || !c || !d) return;
+      const e = document.getElementById('slideFichaE');
+      if (!a || !b || !c || !d || !e) return;
       a.classList.remove('ficha-hidden');
       b.classList.remove('ficha-hidden');
       c.classList.remove('ficha-hidden');
       d.classList.remove('ficha-hidden');
+      e.classList.remove('ficha-hidden');
 
       const gv = projectGeoValidation(p);
       const geoWarn = gv && (gv.efOk === false || gv.gerOk === false);
@@ -3852,14 +3874,17 @@
       document.getElementById('fichaBTitle').textContent = titleTxt;
       document.getElementById('fichaCTitle').textContent = titleTxt;
       document.getElementById('fichaDTitle').textContent = titleTxt;
+      document.getElementById('fichaETitle').textContent = titleTxt;
       document.getElementById('fichaASub').textContent = subTxt;
       document.getElementById('fichaBSub').textContent = `${p.tipoBase || '—'}${p.subtec ? ' · ' + p.subtec : ''}`;
       document.getElementById('fichaCSub').textContent = `Almacenamiento de Energía (SAEE) · ${p.folio || 'Sin folio'}`;
-      document.getElementById('fichaDSub').textContent = `Estatus regulatorios y de interconexión · ${p.folio || 'Sin folio'}`;
+      document.getElementById('fichaDSub').textContent = `Trámites Regulatorios · ${p.folio || 'Sin folio'}`;
+      document.getElementById('fichaESub').textContent = `Fases Finales y Evidencias · ${p.folio || 'Sin folio'}`;
       document.getElementById('fichaAFolio').textContent = `Folio: ${p.folio || '—'}`;
       document.getElementById('fichaBFolio').textContent = `Folio: ${p.folio || '—'}`;
       document.getElementById('fichaCFolio').textContent = `Folio: ${p.folio || '—'}`;
       document.getElementById('fichaDFolio').textContent = `Folio: ${p.folio || '—'}`;
+      document.getElementById('fichaEFolio').textContent = `Folio: ${p.folio || '—'}`;
 
       // ---- FICHA A: KPIs ----
       document.getElementById('fichaAKpis').innerHTML = [
@@ -4041,7 +4066,7 @@
 
       // ---- FICHA D (Estatus Regulatorios): cuerpo ----
       const colReg1 = `
-        <div class="ficha-sec">Estatus regulatorios</div>
+        <div class="ficha-sec">Estatus regulatorios (1/2)</div>
         ${fkv('Registro (trámite)', p.status)}
         ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
         ${fkv('Indicativo', p.estatusIndicativo)}
@@ -4050,6 +4075,10 @@
         ${fkv('Estatus MIA', p.estatusMia)}
         ${fkv('Folio MIA', p.folioMia)}
         ${fkv('Estatus EVIS', p.estatusEvis)}
+      `;
+
+      const colReg2 = `
+        <div class="ficha-sec">Estatus regulatorios (2/2)</div>
         ${fkv('Folio EVIS', p.folioEvis)}
         ${fkv('Impacto social', p.estatusImpacto)}
         ${fkv('Instalaciones', p.estatusInstalaciones)}
@@ -4060,22 +4089,6 @@
         ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
       `;
 
-      const advancedSteps = p.cenaceVal || p.pagoStatus || p.creStatus || p.contratoStatus ? `
-        <div class="ficha-sec dorado">Fases Finales (CRE, CENACE y CFE)</div>
-        ${fkv('Validación CENACE', p.cenaceVal)}
-        ${fkv('Estatus de Pago', p.pagoStatus)}
-        ${fkv('Folio OPE', p.folioOpe)}
-        ${fkv('Solicitud Permiso CRE', p.creStatus)}
-        ${fkv('Fecha Resolución CRE', p.creFechaRes)}
-        ${fkv('Resultados Estudios', p.estudiosResult)}
-        ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
-        ${fkv('Tipo de Garantía', p.garantiaTipo)}
-        ${fkv('Monto Garantía', p.garantiaMonto)}
-        ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
-        ${fkv('Estatus Contrato CFE', p.contratoStatus)}
-        ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
-      ` : '<div class="ficha-sec dorado">Fases Finales</div><div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>';
-
       const colDocsD = `
         <div class="ficha-sec verde">Evidencias y Documentación</div>
         ${fkv('KMZ proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ proyecto'))}
@@ -4085,7 +4098,42 @@
       `;
 
       document.getElementById('fichaDBody').innerHTML =
-        `<div class="ficha-col">${colReg1}</div><div class="ficha-col">${advancedSteps}</div><div class="ficha-col">${colDocsD}</div>`;
+        `<div class="ficha-col">${colReg1}</div><div class="ficha-col">${colReg2}</div><div class="ficha-col">${colDocsD}</div>`;
+
+      // ---- FICHA E (Fases Finales): KPIs ----
+      document.getElementById('fichaEKpis').innerHTML = [
+        fkpi('¿Tiene MIA?', p.tieneMia || '—', ''),
+        fkpi('Estatus MIA', p.estatusMia || '—', ''),
+        fkpi('Estatus EVIS', p.estatusEvis || '—', ''),
+        fkpi('Def. Terreno', p.definicionTerreno || '—', ''),
+        fkpi('Estudios CENACE', p.tieneEstudios || '—', ''),
+        fkpi('Contrato CFE', p.contratoStatus || '—', '')
+      ].join('');
+
+      // ---- FICHA E (Fases Finales): cuerpo ----
+      const hasFasesFinales = p.cenaceVal || p.pagoStatus || p.creStatus || p.contratoStatus;
+      const colFinal1 = hasFasesFinales ? `
+        <div class="ficha-sec dorado">Fases Finales (CRE y CENACE)</div>
+        ${fkv('Validación CENACE', p.cenaceVal)}
+        ${fkv('Estatus de Pago', p.pagoStatus)}
+        ${fkv('Folio OPE', p.folioOpe)}
+        ${fkv('Solicitud Permiso CRE', p.creStatus)}
+        ${fkv('Fecha Resolución CRE', p.creFechaRes)}
+        ${fkv('Resultados Estudios', p.estudiosResult)}
+        ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
+      ` : '<div class="ficha-sec dorado">Fases Finales</div><div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>';
+
+      const colFinal2 = hasFasesFinales ? `
+        <div class="ficha-sec dorado">Fases Finales (Garantías y Contratos)</div>
+        ${fkv('Tipo de Garantía', p.garantiaTipo)}
+        ${fkv('Monto Garantía', p.garantiaMonto)}
+        ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
+        ${fkv('Estatus Contrato CFE', p.contratoStatus)}
+        ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
+      ` : '';
+
+      document.getElementById('fichaEBody').innerHTML =
+        `<div class="ficha-col">${colFinal1}</div><div class="ficha-col">${colFinal2}</div><div class="ficha-col"></div>`;
     }
 
     function showScopeDetail(scope, key) {
