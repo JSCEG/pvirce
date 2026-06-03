@@ -10360,7 +10360,9 @@
         return;
       }
       const { jsPDF } = window.jspdf;
-      const name = (currentFichaProject && currentFichaProject.nombre) || 'ficha';
+      const name = currentFichaProject
+        ? `${currentFichaProject.nombre || 'Proyecto'}_${currentFichaProject.folio || ''}`
+        : 'ficha';
       const previousPage = modalPage;
       const navBar = el.querySelector('.modal-nav-bar');
       const closeButton = el.querySelector('.modal-close-btn');
