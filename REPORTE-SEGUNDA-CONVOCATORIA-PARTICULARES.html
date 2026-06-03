@@ -885,19 +885,19 @@
     }
 
     .tabular-slide .report-table {
-      font-size: 11px;
+      font-size: 10px;
     }
 
     .tabular-slide .report-table th {
-      font-size: 11px;
-      padding: 7px 8px;
-      line-height: 1.2;
+      font-size: 10px;
+      padding: 5px 6px;
+      line-height: 1.15;
       text-align: center !important;
     }
 
     .tabular-slide .report-table td {
-      padding: 6px 8px;
-      line-height: 1.2;
+      padding: 4px 6px;
+      line-height: 1.15;
     }
 
     #slide-1 .slide-header .ef-title::before,
@@ -5596,7 +5596,7 @@
         const projs = rawProjs.sort(compareProjectsByRegulatoryRanking);
 
         // Paginación dinámica (más filas por lámina para aprovechar el área útil)
-        const rowsPerSlide = 12;
+        const rowsPerSlide = 16;
         const totalPages = Math.ceil(projs.length / rowsPerSlide);
 
         for (let pIdx = 0; pIdx < totalPages; pIdx++) {
@@ -5618,11 +5618,11 @@
                 <td style="font-weight:600; max-width:180px;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
                     <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.nombre}</span>
-                    <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 3px 6px; font-size: 9.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
+                    <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
                   </div>
                 </td>
                 <td style="max-width:120px;">${p.gie}</td>
-                <td class="col-center-text" style="font-size: 10px;">${p.folio || p.preFolio || '—'}</td>
+                <td class="col-center-text" style="font-size: 9px;">${p.folio || p.preFolio || '—'}</td>
                 <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
                 <td style="max-width:110px;">${formatCell(p.tecnologia)}</td>
                 <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
@@ -5711,11 +5711,11 @@
             <td style="font-weight:600; max-width:180px;">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
                 <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.nombre}</span>
-                <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 3px 6px; font-size: 9.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
+                <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
               </div>
             </td>
             <td style="max-width:120px;">${p.gie}</td>
-            <td class="col-center-text" style="font-size: 10px;">${p.folio || p.preFolio || '—'}</td>
+            <td class="col-center-text" style="font-size: 9px;">${p.folio || p.preFolio || '—'}</td>
             <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
             <td style="max-width:110px;">ALMACENAMIENTO</td>
             <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
@@ -6240,7 +6240,7 @@
         return String(a.nombre).localeCompare(String(b.nombre));
       });
 
-      const rowsPerPage = 12;
+      const rowsPerPage = 16;
       const totalPages = Math.ceil(sortedIssues.length / rowsPerPage);
 
       for (let pIdx = 0; pIdx < totalPages; pIdx++) {
@@ -6260,20 +6260,20 @@
               <td style="max-width:170px;font-weight:600;">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
                   <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${iss.nombre}</span>
-                  ${projectIssueCount > 1 ? `<span title="${projectIssueCount} inconsistencias para este proyecto" style="background:#f7f0df;border:1px solid #c7a85b;color:#7a5c1a;padding:1px 4px;border-radius:999px;font-family:'Outfit',sans-serif;font-size:9.5px;font-weight:800;white-space:nowrap;">×${projectIssueCount}</span>` : ''}
-                  <button onclick="openFichaModal('${iss.id}')" style="background:var(--color-guinda);color:white;border:none;padding:3px 6px;font-size:9.5px;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver</button>
+                  ${projectIssueCount > 1 ? `<span title="${projectIssueCount} inconsistencias para este proyecto" style="background:#f7f0df;border:1px solid #c7a85b;color:#7a5c1a;padding:1px 4px;border-radius:999px;font-family:'Outfit',sans-serif;font-size:8.5px;font-weight:800;white-space:nowrap;">×${projectIssueCount}</span>` : ''}
+                  <button onclick="openFichaModal('${iss.id}')" style="background:var(--color-guinda);color:white;border:none;padding:2px 5px;font-size:8.5px;border-radius:3px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver</button>
                 </div>
               </td>
-              <td style="max-width:120px;font-size:10px;">${iss.gie}</td>
-              <td class="col-center-text" style="font-size:10px;">${iss.ef}</td>
+              <td style="max-width:120px;font-size:9px;">${iss.gie}</td>
+              <td class="col-center-text" style="font-size:9px;">${iss.ef}</td>
               <td class="col-center-text">
-                <span style="background:${sevCfg.bg};border:1px solid ${sevCfg.border};color:${sevCfg.text};padding:1px 6px;border-radius:999px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;">${iss.severity}</span>
+                <span style="background:${sevCfg.bg};border:1px solid ${sevCfg.border};color:${sevCfg.text};padding:1px 6px;border-radius:999px;font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;">${iss.severity}</span>
               </td>
               <td>
-                <span style="background:${typeCfg.color}18;border:1px solid ${typeCfg.color};color:${typeCfg.color};padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;">${typeCfg.label}</span>
+                <span style="background:${typeCfg.color}18;border:1px solid ${typeCfg.color};color:${typeCfg.color};padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700;white-space:nowrap;">${typeCfg.label}</span>
               </td>
-              <td style="font-size:10px;">${iss.detail}</td>
-              <td style="font-size:9.5px;line-height:1.25;">
+              <td style="font-size:9px;">${iss.detail}</td>
+              <td style="font-size:8.5px;line-height:1.25;">
                 ${iss.sourceColumn ? `<div style="color:#475569;font-weight:600;">${iss.sourceColumn.slice(0, 38)}${iss.sourceColumn.length > 38 ? '…' : ''}</div>` : ''}
                 ${iss.cellRef ? `<div style="font-family:'Outfit',sans-serif;font-weight:800;color:#9b2247;letter-spacing:.04em;">${iss.cellRef}</div>` : '<div style="color:#94a3b8;font-style:italic;">—</div>'}
               </td>
