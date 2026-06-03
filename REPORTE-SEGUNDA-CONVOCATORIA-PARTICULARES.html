@@ -3211,7 +3211,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle1">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 2/4 · Ubicación y Contacto</span>
+            <span class="ficha-page-badge">Ficha 2/6 · Ubicación y Contacto</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub1">Subtítulo</div>
@@ -3228,7 +3228,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle2">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 3/4 · Características y SAEE</span>
+            <span class="ficha-page-badge">Ficha 3/6 · Características y Conectividad</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub2">Subtítulo</div>
@@ -3245,7 +3245,7 @@
           </div>
           <div class="ef-title" id="mFichaTitle3">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 4/4 · Trámites y Fases Finales</span>
+            <span class="ficha-page-badge">Ficha 5/6 · Trámites Regulatorios</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub3">Subtítulo</div>
@@ -3262,12 +3262,46 @@
           </div>
           <div class="ef-title" id="mFichaTitle4">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 1/4 · Mapa de Análisis y Capas</span>
+            <span class="ficha-page-badge">Ficha 1/6 · Mapa de Análisis y Capas</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub4">Subtítulo</div>
         <div class="ficha-kpis" id="mFichaKpis4"></div>
         <div class="ficha-body" id="mFichaBody4"></div>
+      </div>
+
+      <!-- Ficha Page 5 -->
+      <div id="modalPage5" class="modal-page" style="display: none;">
+        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
+          <div class="ef-title" id="mFichaTitle5">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 4/6 · Almacenamiento (SAEE)</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub5">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis5"></div>
+        <div class="ficha-body" id="mFichaBody5"></div>
+      </div>
+
+      <!-- Ficha Page 6 -->
+      <div id="modalPage6" class="modal-page" style="display: none;">
+        <div class="slide-header ficha-slide-header" style="margin-top: -35px;">
+          <div class="brand-left">
+            <span class="brand-line-1">Segunda Convocatoria 2026</span>
+            <span class="brand-line-2">Particulares</span>
+          </div>
+          <div class="ef-title" id="mFichaTitle6">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 6/6 · Fases Finales y Auditoría</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub6">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis6"></div>
+        <div class="ficha-body" id="mFichaBody6"></div>
       </div>
 
       <!-- Modal Footer / Navigation -->
@@ -8872,9 +8906,9 @@
     let currentMapReqId = 0;
     let modalPage = 1;
     let pendingMapPayload = null;
-    const MODAL_TOTAL_PAGES = 4;
-    const MODAL_PAGE_ORDER = [4, 1, 2, 3];
-    const MODAL_PAGE_LABELS = ['Mapa', 'Ubicación', 'Características', 'Trámites'];
+    const MODAL_TOTAL_PAGES = 6;
+    const MODAL_PAGE_ORDER = [4, 1, 2, 5, 3, 6];
+    const MODAL_PAGE_LABELS = ['Mapa', 'Ubicación y Contacto', 'Características', 'Almacenamiento (SAEE)', 'Trámites Regulatorios', 'Fases Finales y Auditoría'];
     const FICHA_MAP_RADIUS_KM = 20;
 
     function fitFichaMapToRadius() {
@@ -9630,8 +9664,8 @@
       ].join('');
 
       // Página 1: Columnas
-      const colIdent = `
-        <div class="ficha-sec">Identificación y Contacto</div>
+      const colIdent1 = `
+        <div class="ficha-sec">Identificación y Contacto (1/2)</div>
         ${fkv('Folio proyecto', p.folio)}
         ${fkv('Pre-folio', p.preFolio)}
         ${fkv('RFC', p.rfc)}
@@ -9642,6 +9676,10 @@
         ${fkv('Teléfono', p.telefono)}
         ${fkv('OIR', p.oir)}
         ${fkv('Capturista', p.capturista)}
+      `;
+
+      const colIdent2 = `
+        <div class="ficha-sec">Identificación y Contacto (2/2)</div>
         ${fkv('Persona a escuchar', p.personaEscuchar)}
         ${fkv('Estatus registro', p.status)}
         ${fkv('Tipo tecnología', p.techBase)}
@@ -9652,27 +9690,6 @@
         ${fkv('Entrada COD', formatFeoc(p.feoc))}
         ${fkv('Domicilio fiscal', p.domFiscal)}
         ${fkv('Domicilio notificaciones', p.domNotif)}
-      `;
-
-      const colTech = `
-        <div class="ficha-sec verde">Tecnología e inversión</div>
-        ${fkv('Tipo tecnología', p.techBase)}
-        ${fkv('Subtecnología', p.subtech)}
-        ${fkv('Config. híbrida', p.hibrida)}
-        ${fkv('Otra tecnología', p.otraTec)}
-        ${fkv('N° de equipos', p.numEquipos)}
-        ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? formatNumber(p.capacidadGenPermiso) + ' MW' : '—')}
-        ${fkv('Gen. anual est.', p.generacionAnual ? formatNumber(p.generacionAnual) + ' GWh' : '—')}
-        ${fkv('Inversión reportada', formatInvestmentReported(p.inversionRaw))}
-        ${fkv('Inversión social', p.inversionSocial)}
-        <div class="ficha-sec verde" style="margin-top:8px">Perfil de producción y Clima</div>
-        ${fkv('Energía bruta mensual', trunc(p.energiaBrutaMensual, 60))}
-        ${fkv('Irradiación solar', trunc(p.irradiacionSolar, 60))}
-        ${fkv('Velocidad del viento', trunc(p.velocidadViento, 60))}
-        ${fkv('Densidad del viento', trunc(p.densidadViento, 60))}
-        ${fkv('Temp. ambiente', trunc(p.tempAmbiente, 60))}
-        ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 60))}
-        ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 60))}
       `;
 
       const coords = p.coords ? p.coords[0].toFixed(5) + ', ' + p.coords[1].toFixed(5) : '';
@@ -9689,116 +9706,45 @@
       `;
 
       document.getElementById('mFichaBody1').innerHTML = `
-        <div class="ficha-col">${colIdent}</div>
-        <div class="ficha-col" style="grid-column: span 2;">${colLoc}</div>
+        <div class="ficha-col">${colIdent1}</div>
+        <div class="ficha-col">${colIdent2}</div>
+        <div class="ficha-col">${colLoc}</div>
       `;
 
       // Página 2: KPIs
-      const hasSaee = p.saeeMW > 0 || p.saeeAlm > 0;
       document.getElementById('mFichaKpis2').innerHTML = [
-        fkpi('SAEE Potencia', hasSaee ? formatNumber(p.saeeMW) + ' MW' : '—', '', 'Potencia'),
-        fkpi('SAEE Almacen.', hasSaee ? formatNumber(p.saeeAlm) + ' MWh' : '—', '', 'Almacenamiento'),
-        fkpi('Prof. descarga', p.saeeDOD || '—', '', 'Prof. descarga (DOD)'),
+        fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', '', 'Cap. instalada'),
+        fkpi('Cap. Permiso', formatNumber(p.capacidadGenPermiso) + ' MW', '', 'Cap. gen. permiso'),
+        fkpi('Inversión', formatInvestmentReported(p.inversionRaw), '', 'Inversión reportada'),
+        fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', '', 'Entrada COD'),
         fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
-        fkpi('Estatus indic.', trunc(p.estatusIndicativo, 18) || '—', '', 'Indicativo'),
         fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
       ].join('');
 
       // Página 2: Columnas
-      const colReg = `
-        <div class="ficha-sec">Estatus regulatorios</div>
-        ${fkv('Registro (trámite)', p.status)}
-        ${fkv('Registro cumple', p.registroCumple)}
-        ${fkv('Fecha prev. registro', p.fechaPrevencionRegistro)}
-        ${fkv('Fecha límite prevención', p.fechaLimitePrevencion)}
-        ${fkv('Fecha desahogo', p.fechaDesahogoPrevencion)}
-        ${fkv('Desahogo correcto', p.desahogoCorrecto)}
-        ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
-        ${fkv('Indicativo', p.estatusIndicativo)}
-        ${fkv('Anexo 4', p.anexo4)}
-        ${fkv('¿Tiene MIA?', p.tieneMia)}
-        ${fkv('Estatus MIA', p.estatusMia)}
-        ${fkv('Folio MIA', p.folioMia)}
-        ${fkv('Estatus EVIS', p.misse)}
-        ${fkv('Folio EVIS', p.folioEvis)}
-        ${fkv('Impacto social', p.estatusImpacto)}
-        ${fkv('Instalaciones', p.estatusInstalaciones)}
-        ${fkv('¿Estudios interc.?', p.cenace)}
-        ${fkv('Definición terreno', p.tierras)}
-        ${fkv('Restricción', p.restriccion)}
-        ${fkv('Inicio registro', p.fechaInicioRegistro)}
-        ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
+      const colTech1 = `
+        <div class="ficha-sec verde">Tecnología e inversión</div>
+        ${fkv('Tipo tecnología', p.techBase)}
+        ${fkv('Subtecnología', p.subtech)}
+        ${fkv('Config. híbrida', p.hibrida)}
+        ${fkv('Otra tecnología', p.otraTec)}
+        ${fkv('N° de equipos', p.numEquipos)}
+        ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? formatNumber(p.capacidadGenPermiso) + ' MW' : '—')}
+        ${fkv('Gen. anual est.', p.generacionAnual ? formatNumber(p.generacionAnual) + ' GWh' : '—')}
+        ${fkv('Inversión reportada', formatInvestmentReported(p.inversionRaw))}
+        ${fkv('Inversión social', p.inversionSocial)}
       `;
 
-      const colSaee = hasSaee ? `
-        <div class="ficha-sec verde">Almacenamiento (SAEE)</div>
-        ${fkv('¿Incorporar SAEE?', p.saeeRespaldo)}
-        ${fkv('Inyecta a', p.saeeRed)}
-        ${fkv('Tecnología', p.saeeTec)}
-        ${fkv('Potencia', formatNumber(p.saeeMW) + ' MW')}
-        ${fkv('Almacenamiento', formatNumber(p.saeeAlm) + ' MWh')}
-        ${fkv('Prof. descarga (DOD)', p.saeeDOD)}
-        ${fkv('Tiempo respuesta', p.saeeTiempoResp)}
-        ${fkv('Vel. carga', p.saeeVelCarga)}
-        ${fkv('Vel. descarga', p.saeeVelDescarga)}
-        ${fkv('Corriente de falla', p.saeeCorrienteFalla)}
-        ${fkv('Modos operación', trunc(p.saeeModos, 90))}
-        ${fkv('Método de carga', p.saeeMetodoCarga)}
-        ${fkv('Composición bat.', trunc(p.saeeComposicion, 80))}
-        ${fkv('Eficiencia', trunc(p.saeeEficiencia, 60))}
-        ${fkv('Tiempo carga', p.saeeTiempoCarga)}
-        ${fkv('Tiempo desagreg.', p.saeeTiempoDesag)}
-        ${fkv('Ciclos anuales', p.saeeCiclos)}
-        ${fkv('Cap. mín. CENACE', p.saeeCapMinCenace)}
-        ${fkv('N° estudios', p.saeeNumEstudios)}
-        ${fkv('Dentro del predio', p.saeeDentroPredio)}
-        ${fkv('Plano KML SAEE', formatKmzLink(p.saeeKml, 'Descargar KML SAEE'))}
-      ` : `
-        <div class="ficha-sec verde">Almacenamiento (SAEE)</div>
-        <div class="ficha-kv"><span class="v muted">Proyecto sin SAEE asociado.</span></div>
+      const colTech2 = `
+        <div class="ficha-sec verde">Perfil de producción y Clima</div>
+        ${fkv('Energía bruta mensual', trunc(p.energiaBrutaMensual, 60))}
+        ${fkv('Irradiación solar', trunc(p.irradiacionSolar, 60))}
+        ${fkv('Velocidad del viento', trunc(p.velocidadViento, 60))}
+        ${fkv('Densidad del viento', trunc(p.densidadViento, 60))}
+        ${fkv('Temp. ambiente', trunc(p.tempAmbiente, 60))}
+        ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 60))}
+        ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 60))}
       `;
-
-      // Sección con los pasos avanzados de CENACE, CRE y CFE
-      const advancedSteps =
-        p.cenaceVal ||
-          p.pagoStatus ||
-          p.creStatus ||
-          p.creStatusPresentada ||
-          p.creStatusPrevencion ||
-          p.creFechaRecepcion ||
-          p.creFechaEmisionPrevencion ||
-          p.creDesahogoPrevencion ||
-          p.creFechaRecepcionDesahogo ||
-          p.contratoStatus ? `
-        <div class="ficha-sec dorado" style="margin-top:8px">Fases Finales (CRE, CENACE y CFE)</div>
-        ${fkv('Validación CENACE', p.cenaceVal)}
-        ${fkv('Estatus de Pago', p.pagoStatus)}
-        ${fkv('Estatus no cumple obs.', p.noCumpleObs)}
-        ${fkv('Fecha validación pago', p.fechaValidacionPago)}
-        ${fkv('Motivos rechazo', p.motivoRechazo)}
-        ${fkv('Folio OPE', p.folioOpe)}
-        ${fkv('CRE estatus (presentada)', p.creStatusPresentada)}
-        ${fkv('CRE estatus (prevención)', p.creStatusPrevencion)}
-        ${fkv('CRE fecha recepción', p.creFechaRecepcion)}
-        ${fkv('CRE fecha emisión prev.', p.creFechaEmisionPrevencion)}
-        ${fkv('CRE desahogo prev.', p.creDesahogoPrevencion)}
-        ${fkv('CRE fecha recepción desahogo', p.creFechaRecepcionDesahogo)}
-        ${fkv('CRE solicitud doc', formatKmzLink(p.creSolicitudDoc, 'Descargar solicitud CRE'))}
-        ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio CRE'))}
-        ${fkv('CRE resolución prevención', formatKmzLink(p.creResolucionPrevencionDoc, 'Descargar resolución CRE'))}
-        ${fkv('Solicitud Permiso CRE', p.creStatus)}
-        ${fkv('Fecha Resolución CRE', p.creFechaRes)}
-        ${fkv('Resultados Estudios', p.estudiosResult)}
-        ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
-        ${fkv('Carta de aceptación', p.cartaAceptacion)}
-        ${fkv('Tipo de Garantía', p.garantiaTipo)}
-        ${fkv('Monto Garantía', p.garantiaMonto)}
-        ${fkv('Acuerdos de sesión', formatKmzLink(p.acuerdosSesionDoc, 'Descargar acuerdos'))}
-        ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
-        ${fkv('Estatus Contrato CFE', p.contratoStatus)}
-        ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
-        ${fkv('Contrato de Interconex.', formatKmzLink(p.contratoDoc, 'Descargar Contrato'))}
-      ` : '';
 
       const colTec2 = `
         <div class="ficha-sec dorado">Inversores y Conectividad</div>
@@ -9816,10 +9762,69 @@
       `;
 
       document.getElementById('mFichaBody2').innerHTML = `
-        <div class="ficha-col">${colTech}</div>
-        <div class="ficha-col">${colSaee}</div>
+        <div class="ficha-col">${colTech1}</div>
+        <div class="ficha-col">${colTech2}</div>
         <div class="ficha-col">${colTec2}</div>
       `;
+
+      // Página 5: KPIs y Almacenamiento (SAEE)
+      const hasSaee = p.saeeMW > 0 || p.saeeAlm > 0;
+      document.getElementById('mFichaKpis5').innerHTML = [
+        fkpi('SAEE Potencia', hasSaee ? formatNumber(p.saeeMW) + ' MW' : '—', '', 'Potencia'),
+        fkpi('SAEE Almacen.', hasSaee ? formatNumber(p.saeeAlm) + ' MWh' : '—', '', 'Almacenamiento'),
+        fkpi('Prof. descarga', p.saeeDOD || '—', '', 'Prof. descarga (DOD)'),
+        fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
+        fkpi('Estatus indic.', trunc(p.estatusIndicativo, 18) || '—', '', 'Indicativo'),
+        fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
+      ].join('');
+
+      const colSaee1 = `
+        <div class="ficha-sec verde">SAEE - Especificaciones</div>
+        ${fkv('¿Incorporar SAEE?', p.saeeRespaldo)}
+        ${fkv('Inyecta a', p.saeeRed)}
+        ${fkv('Tecnología', p.saeeTec)}
+        ${fkv('Potencia', formatNumber(p.saeeMW) + ' MW')}
+        ${fkv('Almacenamiento', formatNumber(p.saeeAlm) + ' MWh')}
+        ${fkv('Prof. descarga (DOD)', p.saeeDOD)}
+        ${fkv('Tiempo respuesta', p.saeeTiempoResp)}
+      `;
+
+      const colSaee2 = `
+        <div class="ficha-sec verde">SAEE - Operación</div>
+        ${fkv('Vel. carga', p.saeeVelCarga)}
+        ${fkv('Vel. descarga', p.saeeVelDescarga)}
+        ${fkv('Corriente de falla', p.saeeCorrienteFalla)}
+        ${fkv('Modos operación', trunc(p.saeeModos, 90))}
+        ${fkv('Método de carga', p.saeeMetodoCarga)}
+        ${fkv('Composición bat.', trunc(p.saeeComposicion, 80))}
+        ${fkv('Eficiencia', trunc(p.saeeEficiencia, 60))}
+      `;
+
+      const colSaee3 = `
+        <div class="ficha-sec verde">SAEE - Estudios e Integración</div>
+        ${fkv('Tiempo carga', p.saeeTiempoCarga)}
+        ${fkv('Tiempo desagreg.', p.saeeTiempoDesag)}
+        ${fkv('Ciclos anuales', p.saeeCiclos)}
+        ${fkv('Cap. mín. CENACE', p.saeeCapMinCenace)}
+        ${fkv('N° estudios', p.saeeNumEstudios)}
+        ${fkv('Dentro del predio', p.saeeDentroPredio)}
+        ${fkv('Plano KML SAEE', formatKmzLink(p.saeeKml, 'Descargar KML SAEE'))}
+      `;
+
+      if (hasSaee) {
+        document.getElementById('mFichaBody5').innerHTML = `
+          <div class="ficha-col">${colSaee1}</div>
+          <div class="ficha-col">${colSaee2}</div>
+          <div class="ficha-col">${colSaee3}</div>
+        `;
+      } else {
+        document.getElementById('mFichaBody5').innerHTML = `
+          <div class="ficha-col" style="grid-column: span 3; text-align: center; padding-top: 50px;">
+            <div class="ficha-sec verde" style="border: none; font-size: 14px;">Almacenamiento (SAEE)</div>
+            <div style="font-size: 12px; color: var(--color-gris); margin-top: 15px;">Este proyecto no tiene un Sistema de Almacenamiento de Energía (SAEE) asociado.</div>
+          </div>
+        `;
+      }
 
       // Página 3: KPIs y detalle de trámites
       document.getElementById('mFichaKpis3').innerHTML = [
@@ -9831,14 +9836,33 @@
         fkpi('Estatus CRE', p.creStatusPrevencion || p.creStatusPresentada || p.creStatus || '—', '', 'Estatus CRE KPI')
       ].join('');
 
-      const colRegDetalle = `
-        <div class="ficha-sec">Bloque Registro / MISSE / MIA</div>
-        ${colReg}
+      const colReg1 = `
+        <div class="ficha-sec">Trámites de Registro</div>
+        ${fkv('Registro (trámite)', p.status)}
+        ${fkv('Registro cumple', p.registroCumple)}
+        ${fkv('Fecha prev. registro', p.fechaPrevencionRegistro)}
+        ${fkv('Fecha límite prevención', p.fechaLimitePrevencion)}
+        ${fkv('Fecha desahogo', p.fechaDesahogoPrevencion)}
+        ${fkv('Desahogo correcto', p.desahogoCorrecto)}
+        ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
+        ${fkv('Indicativo', p.estatusIndicativo)}
+        ${fkv('Anexo 4', p.anexo4)}
       `;
 
-      const colFinalDetalle = `
-        <div class="ficha-sec dorado">Bloque CRE / CENACE / CFE</div>
-        ${advancedSteps || '<div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>'}
+      const colReg2 = `
+        <div class="ficha-sec">Medio Ambiente y Terreno</div>
+        ${fkv('¿Tiene MIA?', p.tieneMia)}
+        ${fkv('Estatus MIA', p.estatusMia)}
+        ${fkv('Folio MIA', p.folioMia)}
+        ${fkv('Estatus EVIS', p.misse)}
+        ${fkv('Folio EVIS', p.folioEvis)}
+        ${fkv('Impacto social', p.estatusImpacto)}
+        ${fkv('Instalaciones', p.estatusInstalaciones)}
+        ${fkv('¿Estudios interc.?', p.cenace)}
+        ${fkv('Definición terreno', p.tierras)}
+        ${fkv('Restricción', p.restriccion)}
+        ${fkv('Inicio registro', p.fechaInicioRegistro)}
+        ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
       `;
 
       const colDocs = `
@@ -9851,7 +9875,56 @@
         ${fkv('CRE oficio prevención', formatKmzLink(p.creOficioPrevencionDoc, 'Descargar oficio'))}
         ${fkv('CRE resolución prevención', formatKmzLink(p.creResolucionPrevencionDoc, 'Descargar resolución'))}
         ${fkv('Acuerdos sesión', formatKmzLink(p.acuerdosSesionDoc, 'Descargar acuerdos'))}
-        <div class="ficha-sec verde" style="margin-top:10px">Auditoría de mapeo (Google Sheets)</div>
+      `;
+
+      document.getElementById('mFichaBody3').innerHTML = `
+        <div class="ficha-col">${colReg1}</div>
+        <div class="ficha-col">${colReg2}</div>
+        <div class="ficha-col">${colDocs}</div>
+      `;
+
+      // Página 6: KPIs y Fases Finales
+      document.getElementById('mFichaKpis6').innerHTML = [
+        fkpi('Validación CENACE', p.cenaceVal || '—', '', 'CENACE Val'),
+        fkpi('Estatus de Pago', p.pagoStatus || '—', '', 'Pago'),
+        fkpi('CRE Estatus', p.creStatus || '—', '', 'CRE Permiso'),
+        fkpi('CFE Contrato', p.contratoStatus || '—', '', 'Contrato CFE'),
+        fkpi('% Implementación', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
+        fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
+      ].join('');
+
+      const colFinal1 = `
+        <div class="ficha-sec dorado">CRE (Permisos y Estatus)</div>
+        ${fkv('Estatus de Pago', p.pagoStatus)}
+        ${fkv('Estatus no cumple obs.', p.noCumpleObs)}
+        ${fkv('Fecha validación pago', p.fechaValidacionPago)}
+        ${fkv('Motivos rechazo', p.motivoRechazo)}
+        ${fkv('Folio OPE', p.folioOpe)}
+        ${fkv('CRE estatus (presentada)', p.creStatusPresentada)}
+        ${fkv('CRE estatus (prevención)', p.creStatusPrevencion)}
+        ${fkv('CRE fecha recepción', p.creFechaRecepcion)}
+        ${fkv('CRE fecha emisión prev.', p.creFechaEmisionPrevencion)}
+        ${fkv('CRE desahogo prev.', p.creDesahogoPrevencion)}
+        ${fkv('CRE fecha recepción desahogo', p.creFechaRecepcionDesahogo)}
+        ${fkv('Solicitud Permiso CRE', p.creStatus)}
+        ${fkv('Fecha Resolución CRE', p.creFechaRes)}
+      `;
+
+      const colFinal2 = `
+        <div class="ficha-sec dorado">CENACE y CFE Contratos</div>
+        ${fkv('Validación CENACE', p.cenaceVal)}
+        ${fkv('Resultados Estudios', p.estudiosResult)}
+        ${fkv('Monto Obras Refuerzo', p.obrasMonto)}
+        ${fkv('Carta de aceptación', p.cartaAceptacion)}
+        ${fkv('Tipo de Garantía', p.garantiaTipo)}
+        ${fkv('Monto Garantía', p.garantiaMonto)}
+        ${fkv('Fecha Resp. CENACE', p.cenaceRespuestaFecha)}
+        ${fkv('Estatus Contrato CFE', p.contratoStatus)}
+        ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
+      `;
+
+      const colAudit = `
+        <div class="ficha-sec verde">Auditoría de mapeo (Google Sheets)</div>
         ${fkvAudit('¿Tiene MIA? (mostrado)', p.tieneMia, '¿Tiene MIA?', p.rawTieneMia)}
         ${fkvAudit('Estatus MIA (mostrado)', p.estatusMia, 'Estatus MIA', p.rawEstatusMia)}
         ${fkvAudit('Estatus EVIS (mostrado)', p.misse, 'Estatus EVIS', p.rawEstatusEvis)}
@@ -9861,10 +9934,10 @@
         ${fkvAudit('CRE estatus solicitud', p.creStatus, 'Estatus solicitud permiso (campo legacy)', p.rawCreSolicitud)}
       `;
 
-      document.getElementById('mFichaBody3').innerHTML = `
-        <div class="ficha-col">${colRegDetalle}</div>
-        <div class="ficha-col">${colFinalDetalle}</div>
-        <div class="ficha-col">${colDocs}</div>
+      document.getElementById('mFichaBody6').innerHTML = `
+        <div class="ficha-col">${colFinal1}</div>
+        <div class="ficha-col">${colFinal2}</div>
+        <div class="ficha-col">${colAudit}</div>
       `;
 
       // Página 4: mapa ampliado y panel de capas

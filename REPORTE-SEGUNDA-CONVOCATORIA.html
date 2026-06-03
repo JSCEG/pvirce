@@ -1441,7 +1441,7 @@
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title" id="mFichaTitle1">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 1/2 · Generales e Interconexión</span>
+            <span class="ficha-page-badge">Ficha 1/4 · Generales, Ubicación y Mapa</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub1">Subtítulo</div>
@@ -1455,7 +1455,7 @@
           <div class="brand-left">Segunda Convocatoria 2026</div>
           <div class="ef-title" id="mFichaTitle2">Proyecto</div>
           <div class="logo-right">
-            <span class="ficha-page-badge">Ficha 2/2 · Regulación y SAEE</span>
+            <span class="ficha-page-badge">Ficha 2/4 · Tecnología, Clima y Conectividad</span>
           </div>
         </div>
         <div class="ficha-subtitle" id="mFichaSub2">Subtítulo</div>
@@ -1463,12 +1463,38 @@
         <div class="ficha-body" id="mFichaBody2"></div>
       </div>
 
+      <!-- Ficha Page 3 -->
+      <div id="modalPage3" class="modal-page" style="display: none;">
+        <div class="slide-header" style="margin-top: -35px;">
+          <div class="brand-left">Segunda Convocatoria 2026</div>
+          <div class="ef-title" id="mFichaTitle3">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 3/4 · Almacenamiento (SAEE)</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub3">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis3"></div>
+        <div class="ficha-body" id="mFichaBody3"></div>
+      </div>
+
+      <!-- Ficha Page 4 -->
+      <div id="modalPage4" class="modal-page" style="display: none;">
+        <div class="slide-header" style="margin-top: -35px;">
+          <div class="brand-left">Segunda Convocatoria 2026</div>
+          <div class="ef-title" id="mFichaTitle4">Proyecto</div>
+          <div class="logo-right">
+            <span class="ficha-page-badge">Ficha 4/4 · Estatus Regulatorios e Interconexión</span>
+          </div>
+        </div>
+        <div class="ficha-subtitle" id="mFichaSub4">Subtítulo</div>
+        <div class="ficha-kpis" id="mFichaKpis4"></div>
+        <div class="ficha-body" id="mFichaBody4"></div>
+      </div>
+
       <!-- Modal Footer / Navigation -->
       <div class="modal-nav-bar">
-        <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage(1)" disabled>◀ Página Anterior
-          (Generales)</button>
-        <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage(2)">Siguiente Página (Regulación y SAEE)
-          ▶</button>
+        <button class="modal-nav-btn" id="mBtnPrevPage" onclick="showModalPage(modalPage - 1)" disabled>◀ Anterior</button>
+        <button class="modal-nav-btn" id="mBtnNextPage" onclick="showModalPage(modalPage + 1)">Siguiente ▶</button>
       </div>
 
       <div class="slide-footer" style="margin-bottom: -35px;"></div>
@@ -2528,12 +2554,12 @@
         }
         if (['ArrowRight', 'PageDown', ' '].includes(e.key)) {
           e.preventDefault();
-          showModalPage(2);
+          showModalPage(modalPage + 1);
           return;
         }
         if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) {
           e.preventDefault();
-          showModalPage(1);
+          showModalPage(modalPage - 1);
           return;
         }
         return; // Detener navegación del slide deck si el modal está abierto
@@ -2967,17 +2993,22 @@
       return str.length > n ? str.slice(0, n) + '…' : str;
     }
 
+    let modalPage = 1;
+    const MODAL_TOTAL_PAGES = 4;
     function showModalPage(pageNum) {
-      if (pageNum === 1) {
-        document.getElementById('modalPage1').style.display = 'flex';
-        document.getElementById('modalPage2').style.display = 'none';
-        document.getElementById('mBtnPrevPage').disabled = true;
-        document.getElementById('mBtnNextPage').disabled = false;
-      } else {
-        document.getElementById('modalPage1').style.display = 'none';
-        document.getElementById('modalPage2').style.display = 'flex';
-        document.getElementById('mBtnPrevPage').disabled = false;
-        document.getElementById('mBtnNextPage').disabled = true;
+      modalPage = Math.max(1, Math.min(MODAL_TOTAL_PAGES, Number(pageNum) || 1));
+      for (let i = 1; i <= MODAL_TOTAL_PAGES; i++) {
+        const page = document.getElementById(`modalPage${i}`);
+        if (page) page.style.display = (i === modalPage) ? 'flex' : 'none';
+      }
+      const prevBtn = document.getElementById('mBtnPrevPage');
+      const nextBtn = document.getElementById('mBtnNextPage');
+      if (prevBtn) prevBtn.disabled = (modalPage === 1);
+      if (nextBtn) nextBtn.disabled = (modalPage === MODAL_TOTAL_PAGES);
+
+      // Si cambiamos de página y el mapa de la ficha está inicializado, invalidamos tamaño
+      if (modalPage === 1 && fichaMapInstance) {
+        setTimeout(() => fichaMapInstance.invalidateSize(), 150);
       }
     }
 
@@ -3010,8 +3041,12 @@
 
       document.getElementById('mFichaTitle1').textContent = titleTxt;
       document.getElementById('mFichaTitle2').textContent = titleTxt;
+      document.getElementById('mFichaTitle3').textContent = titleTxt;
+      document.getElementById('mFichaTitle4').textContent = titleTxt;
       document.getElementById('mFichaSub1').textContent = subTxt;
       document.getElementById('mFichaSub2').textContent = `${p.techBase || '—'}${p.subtech ? ' · ' + p.subtech : ''}`;
+      document.getElementById('mFichaSub3').textContent = `Almacenamiento de Energía (SAEE) · ${p.folio || 'Sin folio'}`;
+      document.getElementById('mFichaSub4').textContent = `Estatus regulatorios y de interconexión · ${p.folio || 'Sin folio'}`;
 
       // Página 1: KPIs
       document.getElementById('mFichaKpis1').innerHTML = [
@@ -3024,8 +3059,8 @@
       ].join('');
 
       // Página 1: Columnas
-      const colIdent = `
-        <div class="ficha-sec">Identificación y Contacto</div>
+      const colIdent1 = `
+        <div class="ficha-sec">Identificación y Contacto (1/2)</div>
         ${fkv('Folio proyecto', p.folio)}
         ${fkv('Pre-folio', p.preFolio)}
         ${fkv('RFC', p.rfc)}
@@ -3033,6 +3068,10 @@
         ${fkv('Grupo de interés (GIE)', p.gie)}
         ${fkv('Representante legal', p.repre)}
         ${fkv('Email', p.email)}
+      `;
+
+      const colIdent2 = `
+        <div class="ficha-sec">Identificación y Contacto (2/2)</div>
         ${fkv('Teléfono', p.telefono)}
         ${fkv('OIR', p.oir)}
         ${fkv('Capturista', p.capturista)}
@@ -3040,27 +3079,6 @@
         ${fkv('Estatus registro', p.status)}
         ${fkv('Domicilio fiscal', p.domFiscal)}
         ${fkv('Domicilio notificaciones', p.domNotif)}
-      `;
-
-      const colTech = `
-        <div class="ficha-sec verde">Tecnología e inversión</div>
-        ${fkv('Tipo tecnología', p.techBase)}
-        ${fkv('Subtecnología', p.subtech)}
-        ${fkv('Config. híbrida', p.hibrida)}
-        ${fkv('Otra tecnología', p.otraTec)}
-        ${fkv('N° de equipos', p.numEquipos)}
-        ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? formatNumber(p.capacidadGenPermiso) + ' MW' : '—')}
-        ${fkv('Gen. anual est.', p.generacionAnual ? formatNumber(p.generacionAnual) + ' GWh' : '—')}
-        ${fkv('Inversión (MDD)', p.inversion > 0 ? p.inversion.toFixed(2) : '—')}
-        ${fkv('Inversión social', p.inversionSocial)}
-        <div class="ficha-sec verde" style="margin-top:8px">Perfil de producción y Clima</div>
-        ${fkv('Energía bruta mensual', trunc(p.energiaBrutaMensual, 60))}
-        ${fkv('Irradiación solar', trunc(p.irradiacionSolar, 60))}
-        ${fkv('Velocidad del viento', trunc(p.velocidadViento, 60))}
-        ${fkv('Densidad del viento', trunc(p.densidadViento, 60))}
-        ${fkv('Temp. ambiente', trunc(p.tempAmbiente, 60))}
-        ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 60))}
-        ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 60))}
       `;
 
       const coords = p.coords ? p.coords[0].toFixed(5) + ', ' + p.coords[1].toFixed(5) : '';
@@ -3074,18 +3092,74 @@
         ${fkv('Coordenadas (A)', coords)}
         ${fkv('Archivo KMZ Proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ'))}
         <div class="ficha-sec dorado" style="margin-top:8px">Ubicación en Mapa</div>
-        <div id="fichaMiniMap" style="width:100%; height:160px; border-radius:6px; border:1px solid var(--color-gris-claro); margin-top:6px; z-index:10; background:#f8f9fa;"></div>
+        <div id="fichaMiniMap" style="width:100%; height:200px; border-radius:6px; border:1px solid var(--color-gris-claro); margin-top:6px; z-index:10; background:#f8f9fa;"></div>
       `;
 
       document.getElementById('mFichaBody1').innerHTML = `
-        <div class="ficha-col">${colIdent}</div>
-        <div class="ficha-col">${colTech}</div>
+        <div class="ficha-col">${colIdent1}</div>
+        <div class="ficha-col">${colIdent2}</div>
         <div class="ficha-col">${colLoc}</div>
       `;
 
       // Página 2: KPIs
-      const hasSaee = p.saeeMW > 0 || p.saeeAlm > 0;
       document.getElementById('mFichaKpis2').innerHTML = [
+        fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', ''),
+        fkpi('Cap. Permiso', formatNumber(p.capacidadGenPermiso) + ' MW', ''),
+        fkpi('Inversión', p.inversion > 0 ? p.inversion.toFixed(1) + ' MDD' : '—', ''),
+        fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', ''),
+        fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', ''),
+        fkpi('Inversión social', p.inversionSocial || '—', '')
+      ].join('');
+
+      // Página 2: Columnas
+      const colTech1 = `
+        <div class="ficha-sec verde">Tecnología e inversión</div>
+        ${fkv('Tipo tecnología', p.techBase)}
+        ${fkv('Subtecnología', p.subtech)}
+        ${fkv('Config. híbrida', p.hibrida)}
+        ${fkv('Otra tecnología', p.otraTec)}
+        ${fkv('N° de equipos', p.numEquipos)}
+        ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? formatNumber(p.capacidadGenPermiso) + ' MW' : '—')}
+        ${fkv('Gen. anual est.', p.generacionAnual ? formatNumber(p.generacionAnual) + ' GWh' : '—')}
+        ${fkv('Inversión (MDD)', p.inversion > 0 ? p.inversion.toFixed(2) : '—')}
+        ${fkv('Inversión social', p.inversionSocial)}
+      `;
+
+      const colTech2 = `
+        <div class="ficha-sec verde">Perfil de producción y Clima</div>
+        ${fkv('Energía bruta mensual', trunc(p.energiaBrutaMensual, 60))}
+        ${fkv('Irradiación solar', trunc(p.irradiacionSolar, 60))}
+        ${fkv('Velocidad del viento', trunc(p.velocidadViento, 60))}
+        ${fkv('Densidad del viento', trunc(p.densidadViento, 60))}
+        ${fkv('Temp. ambiente', trunc(p.tempAmbiente, 60))}
+        ${fkv('Cuencas hidrológicas', trunc(p.cuencasHidro, 60))}
+        ${fkv('Respaldo intermitente', trunc(p.respaldoIntermitente, 60))}
+      `;
+
+      const colTec2 = `
+        <div class="ficha-sec dorado">Inversores y Conectividad</div>
+        ${fkv('Fabricante inversores', p.invFabricante)}
+        ${fkv('Modelo inversores', p.invModelo)}
+        ${fkv('Cap. inversor (kW)', p.invCapacidadKw)}
+        ${fkv('Subestación', p.subestacion)}
+        ${fkv('Punto interconex.', p.puntoInterconexion)}
+        ${fkv('Nivel de tensión', p.tension ? p.tension + ' kV' : '—')}
+        ${fkv('Gerencia CENACE', p.cenaceGerencia)}
+        ${fkv('Distancia a SE', p.distanciaSE)}
+        ${fkv('Respaldo intermitente', p.respaldoIntermitente)}
+        <div class="ficha-sec dorado" style="margin-top:8px">Descripción</div>
+        <div style="font-size:9.5px;line-height:1.4;color:var(--color-text-dark)">${trunc(p.descripcion, 360) || '<span style="color:var(--color-gris);font-style:italic">Sin información</span>'}</div>
+      `;
+
+      document.getElementById('mFichaBody2').innerHTML = `
+        <div class="ficha-col">${colTech1}</div>
+        <div class="ficha-col">${colTech2}</div>
+        <div class="ficha-col">${colTec2}</div>
+      `;
+
+      // Página 3: KPIs y Almacenamiento (SAEE)
+      const hasSaee = p.saeeMW > 0 || p.saeeAlm > 0;
+      document.getElementById('mFichaKpis3').innerHTML = [
         fkpi('SAEE Potencia', hasSaee ? formatNumber(p.saeeMW) + ' MW' : '—', ''),
         fkpi('SAEE Almacen.', hasSaee ? formatNumber(p.saeeAlm) + ' MWh' : '—', ''),
         fkpi('Prof. descarga', p.saeeDOD || '—', ''),
@@ -3094,9 +3168,66 @@
         fkpi('Inversión social', p.inversionSocial || '—', '')
       ].join('');
 
-      // Página 2: Columnas
-      const colReg = `
-        <div class="ficha-sec">Estatus regulatorios</div>
+      const colSaee1 = `
+        <div class="ficha-sec verde">SAEE - Especificaciones</div>
+        ${fkv('¿Incorporar SAEE?', p.saeeRespaldo)}
+        ${fkv('Inyecta a', p.saeeRed)}
+        ${fkv('Tecnología', p.saeeTec)}
+        ${fkv('Potencia', formatNumber(p.saeeMW) + ' MW')}
+        ${fkv('Almacenamiento', formatNumber(p.saeeAlm) + ' MWh')}
+        ${fkv('Prof. descarga (DOD)', p.saeeDOD)}
+        ${fkv('Tiempo respuesta', p.saeeTiempoResp)}
+      `;
+
+      const colSaee2 = `
+        <div class="ficha-sec verde">SAEE - Operación</div>
+        ${fkv('Vel. carga', p.saeeVelCarga)}
+        ${fkv('Vel. descarga', p.saeeVelDescarga)}
+        ${fkv('Corriente de falla', p.saeeCorrienteFalla)}
+        ${fkv('Modos operación', trunc(p.saeeModos, 90))}
+        ${fkv('Método de carga', p.saeeMetodoCarga)}
+        ${fkv('Composición bat.', trunc(p.saeeComposicion, 80))}
+        ${fkv('Eficiencia', trunc(p.saeeEficiencia, 60))}
+      `;
+
+      const colSaee3 = `
+        <div class="ficha-sec verde">SAEE - Estudios e Integración</div>
+        ${fkv('Tiempo carga', p.saeeTiempoCarga)}
+        ${fkv('Tiempo desagreg.', p.saeeTiempoDesag)}
+        ${fkv('Ciclos anuales', p.saeeCiclos)}
+        ${fkv('Cap. mín. CENACE', p.saeeCapMinCenace)}
+        ${fkv('N° estudios', p.saeeNumEstudios)}
+        ${fkv('Dentro del predio', p.saeeDentroPredio)}
+        ${fkv('Plano KML SAEE', formatKmzLink(p.saeeKml, 'Descargar KML SAEE'))}
+      `;
+
+      if (hasSaee) {
+        document.getElementById('mFichaBody3').innerHTML = `
+          <div class="ficha-col">${colSaee1}</div>
+          <div class="ficha-col">${colSaee2}</div>
+          <div class="ficha-col">${colSaee3}</div>
+        `;
+      } else {
+        document.getElementById('mFichaBody3').innerHTML = `
+          <div class="ficha-col" style="grid-column: span 3; text-align: center; padding-top: 50px;">
+            <div class="ficha-sec verde" style="border: none; font-size: 14px;">Almacenamiento (SAEE)</div>
+            <div style="font-size: 12px; color: var(--color-gris); margin-top: 15px;">Este proyecto no tiene un Sistema de Almacenamiento de Energía (SAEE) asociado.</div>
+          </div>
+        `;
+      }
+
+      // Página 4: KPIs y Estatus Regulatorios
+      document.getElementById('mFichaKpis4').innerHTML = [
+        fkpi('¿Tiene MIA?', p.tieneMia || '—', ''),
+        fkpi('Estatus MIA', p.estatusMia || '—', ''),
+        fkpi('Estatus EVIS', p.misse || '—', ''),
+        fkpi('Def. Terreno', p.tierras || '—', ''),
+        fkpi('Estudios CENACE', p.cenace || '—', ''),
+        fkpi('CFE Contrato', p.contratoStatus || '—', '')
+      ].join('');
+
+      const colReg1 = `
+        <div class="ficha-sec">Trámites Regulatorios</div>
         ${fkv('Registro (trámite)', p.status)}
         ${fkv('% Implementación', p.pctImpl ? p.pctImpl + '%' : '')}
         ${fkv('Indicativo', p.estatusIndicativo)}
@@ -3115,37 +3246,8 @@
         ${fkv('Firma proyecto', p.fechaFirmaProyecto)}
       `;
 
-      const colSaee = hasSaee ? `
-        <div class="ficha-sec verde">Almacenamiento (SAEE)</div>
-        ${fkv('¿Incorporar SAEE?', p.saeeRespaldo)}
-        ${fkv('Inyecta a', p.saeeRed)}
-        ${fkv('Tecnología', p.saeeTec)}
-        ${fkv('Potencia', formatNumber(p.saeeMW) + ' MW')}
-        ${fkv('Almacenamiento', formatNumber(p.saeeAlm) + ' MWh')}
-        ${fkv('Prof. descarga (DOD)', p.saeeDOD)}
-        ${fkv('Tiempo respuesta', p.saeeTiempoResp)}
-        ${fkv('Vel. carga', p.saeeVelCarga)}
-        ${fkv('Vel. descarga', p.saeeVelDescarga)}
-        ${fkv('Corriente de falla', p.saeeCorrienteFalla)}
-        ${fkv('Modos operación', trunc(p.saeeModos, 90))}
-        ${fkv('Método de carga', p.saeeMetodoCarga)}
-        ${fkv('Composición bat.', trunc(p.saeeComposicion, 80))}
-        ${fkv('Eficiencia', trunc(p.saeeEficiencia, 60))}
-        ${fkv('Tiempo carga', p.saeeTiempoCarga)}
-        ${fkv('Tiempo desagreg.', p.saeeTiempoDesag)}
-        ${fkv('Ciclos anuales', p.saeeCiclos)}
-        ${fkv('Cap. mín. CENACE', p.saeeCapMinCenace)}
-        ${fkv('N° estudios', p.saeeNumEstudios)}
-        ${fkv('Dentro del predio', p.saeeDentroPredio)}
-        ${fkv('Plano KML SAEE', formatKmzLink(p.saeeKml, 'Descargar KML SAEE'))}
-      ` : `
-        <div class="ficha-sec verde">Almacenamiento (SAEE)</div>
-        <div class="ficha-kv"><span class="v muted">Proyecto sin SAEE asociado.</span></div>
-      `;
-
-      // En este reporte original no existen las columnas de fases finales
       const advancedSteps = p.cenaceVal || p.pagoStatus || p.creStatus || p.contratoStatus ? `
-        <div class="ficha-sec dorado" style="margin-top:8px">Fases Finales (CRE, CENACE y CFE)</div>
+        <div class="ficha-sec dorado">Fases Finales (CRE, CENACE y CFE)</div>
         ${fkv('Validación CENACE', p.cenaceVal)}
         ${fkv('Estatus de Pago', p.pagoStatus)}
         ${fkv('Folio OPE', p.folioOpe)}
@@ -3159,28 +3261,20 @@
         ${fkv('Estatus Contrato CFE', p.contratoStatus)}
         ${fkv('Fecha Firma Contrato', p.contratoFirmaFecha)}
         ${fkv('Contrato de Interconex.', formatKmzLink(p.contratoDoc, 'Descargar Contrato'))}
-      ` : '';
+      ` : '<div class="ficha-sec dorado">Fases Finales</div><div class="ficha-kv"><span class="v muted">Sin información en fases finales.</span></div>';
 
-      const colTec2 = `
-        <div class="ficha-sec dorado">Inversores y Conectividad</div>
-        ${fkv('Fabricante inversores', p.invFabricante)}
-        ${fkv('Modelo inversores', p.invModelo)}
-        ${fkv('Cap. inversor (kW)', p.invCapacidadKw)}
-        ${fkv('Subestación', p.subestacion)}
-        ${fkv('Punto interconex.', p.puntoInterconexion)}
-        ${fkv('Nivel de tensión', p.tension ? p.tension + ' kV' : '—')}
-        ${fkv('Gerencia CENACE', p.cenaceGerencia)}
-        ${fkv('Distancia a SE', p.distanciaSE)}
-        ${fkv('Respaldo intermitente', p.respaldoIntermitente)}
-        ${advancedSteps}
-        <div class="ficha-sec dorado" style="margin-top:8px">Descripción</div>
-        <div style="font-size:9.5px;line-height:1.4;color:var(--color-text-dark)">${trunc(p.descripcion, 360) || '<span style="color:var(--color-gris);font-style:italic">Sin información</span>'}</div>
+      const colDocs = `
+        <div class="ficha-sec verde">Evidencias y Documentos</div>
+        ${fkv('KMZ proyecto', formatKmzLink(p.kmzProj, 'Descargar KMZ proyecto'))}
+        ${fkv('KMZ subestación', formatKmzLink(p.kmzLinea, 'Descargar KMZ subestación'))}
+        ${fkv('KMZ SAEE', formatKmzLink(p.saeeKml, 'Descargar KMZ SAEE'))}
+        ${fkv('Contrato interconexión', formatKmzLink(p.contratoDoc, 'Descargar contrato'))}
       `;
 
-      document.getElementById('mFichaBody2').innerHTML = `
-        <div class="ficha-col">${colReg}</div>
-        <div class="ficha-col">${colSaee}</div>
-        <div class="ficha-col">${colTec2}</div>
+      document.getElementById('mFichaBody4').innerHTML = `
+        <div class="ficha-col">${colReg1}</div>
+        <div class="ficha-col">${advancedSteps}</div>
+        <div class="ficha-col">${colDocs}</div>
       `;
 
       showModalPage(1);
