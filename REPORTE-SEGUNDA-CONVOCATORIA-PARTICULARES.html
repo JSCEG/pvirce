@@ -5596,7 +5596,7 @@
         const projs = rawProjs.sort(compareProjectsByRegulatoryRanking);
 
         // Paginación dinámica (más filas por lámina para aprovechar el área útil)
-        const rowsPerSlide = 16;
+        const rowsPerSlide = 22;
         const totalPages = Math.ceil(projs.length / rowsPerSlide);
 
         for (let pIdx = 0; pIdx < totalPages; pIdx++) {
@@ -6240,7 +6240,7 @@
         return String(a.nombre).localeCompare(String(b.nombre));
       });
 
-      const rowsPerPage = 16;
+      const rowsPerPage = 22;
       const totalPages = Math.ceil(sortedIssues.length / rowsPerPage);
 
       for (let pIdx = 0; pIdx < totalPages; pIdx++) {
