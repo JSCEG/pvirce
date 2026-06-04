@@ -5878,7 +5878,8 @@
       FEOC_FALTA: 'Entrada COD',
       SIN_TECNOLOGIA: 'Tipo tecnología',
       FOLIO_FALTA: 'Folio proyecto',
-      GIE_FALTA: 'Grupo de interés (GIE)'
+      GIE_FALTA: 'Grupo de interés (GIE)',
+      REGISTRO_DUPLICADO: 'Folio proyecto'
     };
 
     function attachSource(issueType, projectRow) {
@@ -6044,6 +6045,25 @@
         }
       });
 
+      // 20) Detección de duplicados por Proyecto + Empresa + Capacidad MW
+      const groups = {};
+      data.forEach(p => {
+        if (!p.nombre || p.mw <= 0) return;
+        const key = `${String(p.nombre).trim().toUpperCase()}_${String(p.empresa || '').trim().toUpperCase()}_${Math.round(p.mw * 10) / 10}`;
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(p);
+      });
+
+      Object.keys(groups).forEach(key => {
+        const group = groups[key];
+        if (group.length > 1) {
+          group.forEach(p => {
+            const otherRows = group.filter(x => x.id !== p.id).map(x => `Fila ${x._sheetRowNumber} (${x.folio || 'Sin Folio'})`).join(', ');
+            push(p, 'REGISTRO_DUPLICADO', 'alta', `Proyecto duplicado exacto en Google Sheets. Registrado también en: ${otherRows}`);
+          });
+        }
+      });
+
       return issues;
     }
 
@@ -6078,7 +6098,8 @@
       FEOC_FALTA: { label: 'FEOC faltante', color: ISSUE_PALETTE.gris },
       SIN_TECNOLOGIA: { label: 'Sin tecnología', color: ISSUE_PALETTE.dorado },
       FOLIO_FALTA: { label: 'Folio faltante', color: ISSUE_PALETTE.gris },
-      GIE_FALTA: { label: 'GIE no identificado', color: ISSUE_PALETTE.verde }
+      GIE_FALTA: { label: 'GIE no identificado', color: ISSUE_PALETTE.verde },
+      REGISTRO_DUPLICADO: { label: 'Registro duplicado', color: ISSUE_PALETTE.guinda }
     };
 
     const SEVERITY_COLORS = {
@@ -6380,6 +6401,144 @@
         deck.appendChild(slide);
         slideIdx++;
       }
+
+      // ---------- SLIDE DE OBSERVACIONES DE DUPLICADOS ----------
+      const obsSlide = document.createElement('section');
+      obsSlide.className = 'slide tabular-slide';
+      obsSlide.id = `slide-${slideIdx}`;
+
+      // Agrupar proyectos de DATA
+      const dupGroups = {};
+      DATA.forEach(p => {
+        if (!p.nombre || p.mw <= 0) return;
+        const key = `${String(p.nombre).trim().toUpperCase()}_${String(p.empresa || '').trim().toUpperCase()}_${Math.round(p.mw * 10) / 10}`;
+        if (!dupGroups[key]) dupGroups[key] = [];
+        dupGroups[key].push(p);
+      });
+
+      const duplicateList = [];
+      let totalDupRecords = 0;
+      let inflatedMw = 0;
+
+      Object.keys(dupGroups).forEach(key => {
+        const grp = dupGroups[key];
+        if (grp.length > 1) {
+          totalDupRecords += grp.length;
+          inflatedMw += (grp.length - 1) * grp[0].mw;
+          duplicateList.push({
+            nombre: grp[0].nombre,
+            empresa: grp[0].empresa,
+            mw: grp[0].mw,
+            count: grp.length,
+            details: grp.map(x => `Fila ${x._sheetRowNumber} (${x.folio || 'Sin Folio'})`).join('<br>')
+          });
+        }
+      });
+
+      // Ordenar por capacidad MW de mayor a menor
+      duplicateList.sort((a, b) => b.mw - a.mw);
+
+      const tableRowsHtml = duplicateList.length > 0 
+        ? duplicateList.map((d, i) => `
+            <tr>
+              <td class="col-center-text" style="font-weight:600;color:var(--color-text-light);">${i + 1}</td>
+              <td style="font-weight:700;color:var(--color-text-dark);">${d.nombre}</td>
+              <td style="font-size:9.5px;color:var(--color-text-light);">${d.empresa}</td>
+              <td class="col-right-text" style="font-weight:700;color:var(--color-guinda);">${formatNumber(d.mw)} MW</td>
+              <td class="col-center-text">
+                <span style="background:#fef2f2;border:1px solid #fee2e2;color:#ef4444;padding:1px 6px;border-radius:999px;font-size:9px;font-weight:800;">${d.count} registros</span>
+              </td>
+              <td style="font-size:8.5px;line-height:1.3;font-family:'Outfit',sans-serif;color:#475569;">${d.details}</td>
+            </tr>
+          `).join('')
+        : `<tr><td colspan="6" style="text-align:center;color:var(--color-text-light);font-style:italic;padding:20px;">No se identificaron registros duplicados en el padrón de proyectos.</td></tr>`;
+
+      obsSlide.innerHTML = `
+        <div class="slide-container">
+          <div class="slide-header">
+            <div class="brand-left">
+              <span class="brand-line-1">Segunda Convocatoria 2026</span>
+              <span class="brand-line-2">Particulares</span>
+            </div>
+            <div class="ef-title">
+              <span class="title-main">Observaciones del Reporte</span>
+              <span class="table-slide-page">Registros Duplicados</span>
+            </div>
+            <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.15fr 1.85fr; gap: 15px; height: calc(100% - 64px); overflow: hidden; padding: 10px 0;">
+            <!-- Columna izquierda: KPI y Resumen -->
+            <div style="display: flex; flex-direction: column; gap: 10px; background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px;">
+              <h3 style="font-family:'Outfit',sans-serif; font-size:12px; color:var(--color-guinda); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid #e2e8f0; padding-bottom:6px; display:flex; align-items:center; gap:8px;">
+                <i class="bi bi-exclamation-triangle-fill" style="color:var(--color-dorado);"></i>
+                Resumen de Hallazgos
+              </h3>
+              
+              <!-- Card de Capacidad Excedente -->
+              <div style="background: linear-gradient(135deg, #9b2247 0%, #6a172f 100%); color: #ffffff; padding: 14px; border-radius: 10px; box-shadow: 0 4px 12px rgba(155, 34, 71, 0.25);">
+                <div style="font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .85; font-weight:600;">Capacidad Excedente Duplicada</div>
+                <div style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; line-height: 1.1; margin: 4px 0;">
+                  <span>${formatNumber(inflatedMw)}</span> <span style="font-size: 14px; font-weight: 600;">MW</span>
+                </div>
+                <div style="font-size: 8.5px; opacity: .9; line-height: 1.25;">Capacidad inflada artificialmente en las estadísticas del padrón nacional.</div>
+              </div>
+              
+              <!-- Fila de Estadísticas -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: #ffffff; border: 1px solid #e5e7eb; border-left: 4px solid #a57f2c; padding: 10px; border-radius: 8px;">
+                  <div style="font-size: 8.5px; color: #64748b; font-weight: 700; text-transform: uppercase; line-height:1.2;">Proyectos Afectados</div>
+                  <div style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: #a57f2c;">${duplicateList.length}</div>
+                  <div style="font-size: 7.5px; color: #94a3b8; line-height: 1.2;">Casos con registros múltiples</div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid #e5e7eb; border-left: 4px solid #475569; padding: 10px; border-radius: 8px;">
+                  <div style="font-size: 8.5px; color: #64748b; font-weight: 700; text-transform: uppercase; line-height:1.2;">Filas Afectadas</div>
+                  <div style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: #475569;">${totalDupRecords}</div>
+                  <div style="font-size: 7.5px; color: #94a3b8; line-height: 1.2;">Folios totales registrados</div>
+                </div>
+              </div>
+
+              <!-- Nota de advertencia -->
+              <div style="font-size: 10.5px; line-height: 1.4; color: #334155; display:flex; flex-direction:column; gap:6px; margin-top: auto;">
+                <p><strong>Nota técnica:</strong> Se identifican como duplicados aquellos proyectos en estatus <em>FINALIZADO</em> que repiten exactamente Nombre del Proyecto, Desarrollador y Capacidad MW en distintos folios.</p>
+                <p style="background: #fff8e6; border: 1px solid #ffe8cc; color: #b27a00; padding: 8px 10px; border-radius: 6px; font-weight: 500; font-size: 9.5px; margin-top: 4px;">
+                  <i class="bi bi-info-circle-fill" style="margin-right: 4px;"></i>
+                  Se recomienda depurar y consolidar estos folios en la hoja origen de Google Sheets para reflejar la estadística real de la convocatoria.
+                </p>
+              </div>
+            </div>
+
+            <!-- Columna derecha: Tabla de detalle -->
+            <div style="display: flex; flex-direction: column; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; padding: 0; height: 100%;">
+              <div style="font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #9b2247; border-bottom: 2px solid #9b2247; padding: 8px 12px; background: linear-gradient(180deg, #fbfbfb 0%, #f3f3f3 100%); display:flex; justify-content:space-between; align-items:center;">
+                <span>Detalle de Proyectos Duplicados</span>
+                <span style="font-family:'Outfit',sans-serif; font-weight:800; background:var(--color-guinda); color:#fff; padding:1px 6px; border-radius:10px; font-size:8.5px;">${duplicateList.length} grupos</span>
+              </div>
+              <div style="flex: 1; overflow-y: auto; padding: 8px;">
+                <table class="report-table" style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr>
+                      <th style="width: 25px; text-align: center;">#</th>
+                      <th>Proyecto</th>
+                      <th>Desarrolladora</th>
+                      <th style="width: 70px; text-align: right;">Capacidad</th>
+                      <th style="width: 60px; text-align: center;">Repeticiones</th>
+                      <th style="width: 130px;">Filas (Folio)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${tableRowsHtml}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="slide-footer"></div>
+        </div>
+      `;
+
+      deck.appendChild(obsSlide);
+      slideIdx++;
 
       return slideIdx;
     }
