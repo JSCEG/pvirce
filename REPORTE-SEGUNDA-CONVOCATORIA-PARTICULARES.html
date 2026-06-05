@@ -3155,7 +3155,7 @@
             <span class="brand-line-1">Segunda Convocatoria 2026</span>
             <span class="brand-line-2">Particulares</span>
           </div>
-          <div class="ef-title">Numeralia de Proyectos</div>
+          <div class="ef-title" id="slide2Title">Numeralia de Proyectos</div>
           <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
           </div>
         </div>
@@ -4733,6 +4733,10 @@
       return 'Otro';
     }
 
+    function getActiveTechTitleSuffix() {
+      return ACTIVE_TECH_FILTER ? ` · ${ACTIVE_TECH_FILTER}` : '';
+    }
+
     // Normalizador de texto para búsquedas y comparación
     function normText(s) {
       return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
@@ -4936,6 +4940,10 @@
       // En nuestro CSV: tenemos N registros totales.
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      const slide2Title = document.getElementById('slide2Title');
+      if (slide2Title) {
+        slide2Title.textContent = `Numeralia de Proyectos${getActiveTechTitleSuffix()}`;
+      }
 
       // Actualizar portada con datos dinámicos
       document.getElementById('coverPeriodValue').textContent = '2026-2030';
@@ -4968,7 +4976,7 @@
       document.getElementById('kpiTotalMw').innerHTML = `
         <span class="mw-line">${totalMwCard} MW (${genCountCard} proyectos) +</span>
         <span class="mw-line">${storageMwCard} MW</span>
-        <span class="mw-line">Almacenamiento<span class="mw-asterisk">*</span> (${storageCountCard} proyectos)</span>
+        <span class="mw-line">Almacenamiento no asociado<span class="mw-asterisk">*</span> (${storageCountCard} proyectos)</span>
       `;
       document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
@@ -5710,7 +5718,7 @@
                 <span class="brand-line-2">Particulares</span>
               </div>
               <div class="ef-title">
-                <span class="title-main">Resumen Regional - ${gcrInfo.title.toUpperCase()}</span>
+                <span class="title-main">Resumen Regional - ${gcrInfo.title.toUpperCase()}${getActiveTechTitleSuffix()}</span>
               </div>
               <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
             </div>
@@ -5867,7 +5875,7 @@
                   <span class="brand-line-2">Particulares</span>
                 </div>
                 <div class="ef-title">
-                  <span class="title-main">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})</span>
+                  <span class="title-main">Proyectos Finalizados (${gcrInfo.title.toUpperCase()})${getActiveTechTitleSuffix()}</span>
                   <span class="table-slide-page">${pIdx + 1}/${totalPages}</span>
                 </div>
                 <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
@@ -5946,7 +5954,7 @@
                 <span class="brand-line-1">Segunda Convocatoria 2026</span>
                 <span class="brand-line-2">Particulares</span>
               </div>
-              <div class="ef-title">Sistemas de Almacenamiento (BESS)</div>
+              <div class="ef-title">Sistemas de Almacenamiento (BESS)${getActiveTechTitleSuffix()}</div>
               <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
             </div>
             <div class="table-container">
@@ -6381,7 +6389,7 @@
               <span class="brand-line-2">Particulares</span>
             </div>
             <div class="ef-title">
-              <span class="title-main">Reporte de inconsistencias VUPE</span>
+              <span class="title-main">Reporte de inconsistencias VUPE${getActiveTechTitleSuffix()}</span>
               <span class="table-slide-page">Resumen nacional</span>
             </div>
             <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
@@ -6578,7 +6586,7 @@
                   <span class="brand-line-2">Particulares</span>
                 </div>
                 <div class="ef-title">
-                  <span class="title-main">Observaciones del Reporte</span>
+                  <span class="title-main">Observaciones del Reporte${getActiveTechTitleSuffix()}</span>
                   <span class="table-slide-page">Proyectos duplicados en registro VUPE (${pIdx + 1}/${dupTotalPages})</span>
                 </div>
                 <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
@@ -6678,7 +6686,7 @@
                   <span class="brand-line-2">Particulares</span>
                 </div>
                 <div class="ef-title">
-                  <span class="title-main">Observaciones del Reporte (Detalle)</span>
+                  <span class="title-main">Observaciones del Reporte (Detalle)${getActiveTechTitleSuffix()}</span>
                   <span class="table-slide-page">Proyectos duplicados en registro VUPE (${pIdx + 1}/${dupTotalPages})</span>
                 </div>
                 <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
@@ -6775,7 +6783,7 @@
                 <span class="brand-line-2">Particulares</span>
               </div>
               <div class="ef-title">
-                <span class="title-main">Detalle de inconsistencias VUPE</span>
+                <span class="title-main">Detalle de inconsistencias VUPE${getActiveTechTitleSuffix()}</span>
                 <span class="table-slide-page">${pIdx + 1}/${totalPages}</span>
               </div>
               <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
