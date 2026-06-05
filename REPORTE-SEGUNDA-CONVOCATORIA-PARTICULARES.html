@@ -577,6 +577,29 @@
       align-items: center;
       gap: 10px;
       font-size: 12px;
+      border: 1px solid transparent;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .tech-item-interactive {
+      cursor: pointer;
+    }
+
+    .tech-item-interactive:hover {
+      background-color: rgba(155, 34, 71, 0.05);
+    }
+
+    .tech-item-active {
+      background-color: rgba(155, 34, 71, 0.08) !important;
+      border-color: var(--color-dorado) !important;
+      box-shadow: 0 4px 12px rgba(165, 127, 44, 0.15);
+    }
+
+    .tech-item-dimmed {
+      opacity: 0.35;
+      filter: grayscale(60%);
     }
 
     .tech-item .icon-bg {
@@ -3243,6 +3266,17 @@
       <span id="btnIssuesBadge"
         style="display:none;position:absolute;top:-4px;right:-4px;background:var(--color-dorado);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;border:2px solid #1E1E1E;line-height:1;">0</span>
     </button>
+    <div class="tech-filter-nav" style="display: flex; align-items: center; gap: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 15px; margin-left: 5px;">
+      <i class="bi bi-funnel-fill" style="color: var(--color-dorado-light);"></i>
+      <select id="techFilterSelect" onchange="filterDataAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none;">
+        <option value="ALL">Todas las Tecnologías</option>
+        <option value="Fotovoltaica">Fotovoltaica</option>
+        <option value="Eólica">Eólica</option>
+        <option value="SAEE Asociado">SAEE Asociado</option>
+        <option value="SAEE No Asociado">SAEE No Asociado</option>
+        <option value="Hidroeléctrica">Hidroeléctrica</option>
+      </select>
+    </div>
   </div>
 
   <!-- LOADER PDF -->
@@ -3595,8 +3629,10 @@
       rutaWixarika: { name: 'Ruta Wixárika', color: '#ff8000', icon: 'bi-signpost', geomKind: 'line', nameKeys: ['NOMBRE', 'nombre', 'ruta', 'tramo'] }
     };
 
-    const techs = ['Fotovoltaica', 'Eólica', 'Almacenamiento', 'Hidroeléctrica'];
+    const techs = ['Fotovoltaica', 'Eólica', 'SAEE Asociado', 'SAEE No Asociado', 'Hidroeléctrica'];
 
+    let ALL_DATA = [];
+    let ACTIVE_TECH_FILTER = null;
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
@@ -3605,6 +3641,7 @@
     let cachedEstadosGeoJSON = null;
     let layerGerencias = null;
     let layerEstados = null;
+    let projectMarkersGroup = null;
     let SHEET_HEADER_ROW_IDX = 0;
     let SHEET_COL_INDEX = {};
     let SHEET_COL_INDEX_ALL = {};
@@ -4095,9 +4132,14 @@
       const mappedRows = dataRows
         .map((row, idx) => mapRowByHeader(row, colIndex, colIndexAll, idx, headerRowIdx));
 
-      DATA = mappedRows
-        .filter(r => normText(r.status) === 'FINALIZADO')
+      ALL_DATA = mappedRows
+        .filter(r => {
+          const statusNorm = normText(r.status);
+          return statusNorm === 'FINALIZADO';
+        })
         .filter(r => r.nombre && r.mw > 0);
+
+      DATA = ALL_DATA;
 
       console.log(`Total de proyectos mapeados: ${DATA.length}`);
       console.log(`Registros descartados por estatus distinto de FINALIZADO: ${mappedRows.length - mappedRows.filter(r => normText(r.status) === 'FINALIZADO').length}`);
@@ -4655,6 +4697,42 @@
       return 'Otro';
     }
 
+    function isAssociatedSaee(p) {
+      const yesLike = (v) => /^(s[ií]|true|verdadero|x|1|yes)$/i.test(String(v ?? '').trim());
+      const saeeRes = String(p.saeeRespaldo || '').trim();
+      const techVal = normText(p.saeeTec);
+      return yesLike(saeeRes) ||
+        /incorporar/i.test(saeeRes) ||
+        (Number(p.saeeMW) > 0) ||
+        (Number(p.saeeAlm) > 0) ||
+        (techVal && techVal !== 'SIN INFORMACION' && techVal !== 'NO APLICA' && techVal !== '');
+    }
+
+    function matchesTechFilter(p, selectedTech) {
+      const group = getTechGroup(p);
+      switch (selectedTech) {
+        case 'Fotovoltaica':
+          return group === 'Fotovoltaica';
+        case 'Eólica':
+          return group === 'Eólica';
+        case 'SAEE No Asociado':
+          return group === 'Almacenamiento';
+        case 'SAEE Asociado':
+          return group !== 'Almacenamiento' && isAssociatedSaee(p);
+        case 'Hidroeléctrica':
+          return group === 'Hidroeléctrica';
+        default:
+          return true;
+      }
+    }
+
+    function getTechBucket(p) {
+      const group = getTechGroup(p);
+      if (group === 'Almacenamiento') return 'SAEE No Asociado';
+      if (group === 'Fotovoltaica' || group === 'Eólica' || group === 'Hidroeléctrica') return group;
+      return 'Otro';
+    }
+
     // Normalizador de texto para búsquedas y comparación
     function normText(s) {
       return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
@@ -4846,6 +4924,12 @@
     }
 
     function renderNumeralia() {
+      document
+        .querySelectorAll('#slide-1 .val-main, #slide-1 .val-sub, #slide-1 .s-val, #slide-1 .s-mw, #slide-1 .t-val div, #slide-1 .invest-lbl strong, #slide-1 .tech-total')
+        .forEach(el => {
+          delete el.dataset.origHtml;
+        });
+
       // 1. Totales Generales
       // Filtrar almacenamiento de los totales generales de "generación" si el PDF los separa
       // En el PDF: "149 Registros = 21,218 MW + 3 Almacenamiento 60 MW"
@@ -4888,35 +4972,63 @@
       `;
       document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
-      // 2. Desglose de Tecnologías
+      // 2. Desglose de Tecnologías (misma base visible: finalizados + filtro activo)
       const techCounts = {};
       const techMws = {};
       techs.forEach(t => { techCounts[t] = 0; techMws[t] = 0; });
 
       DATA.forEach(p => {
         const tg = getTechGroup(p);
-        if (techCounts[tg] !== undefined) {
-          techCounts[tg]++;
-          techMws[tg] += p.mw;
+        if (tg === 'Fotovoltaica') {
+          techCounts['Fotovoltaica']++;
+          techMws['Fotovoltaica'] += p.mw;
+        } else if (tg === 'Eólica') {
+          techCounts['Eólica']++;
+          techMws['Eólica'] += p.mw;
+        } else if (tg === 'Hidroeléctrica') {
+          techCounts['Hidroeléctrica']++;
+          techMws['Hidroeléctrica'] += p.mw;
+        } else if (tg === 'Almacenamiento') {
+          techCounts['SAEE No Asociado']++;
+          techMws['SAEE No Asociado'] += p.mw;
+        }
+
+        if (tg !== 'Almacenamiento' && isAssociatedSaee(p)) {
+          techCounts['SAEE Asociado']++;
+          techMws['SAEE Asociado'] += (p.saeeMW || 0);
         }
       });
 
       const techIcons = {
         'Fotovoltaica': '<i class="bi bi-sun-fill" aria-hidden="true"></i>',
         'Eólica': '<i class="bi bi-wind" aria-hidden="true"></i>',
-        'Almacenamiento': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+        'SAEE Asociado': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+        'SAEE No Asociado': '<i class="bi bi-battery" aria-hidden="true"></i>',
         'Hidroeléctrica': '<i class="bi bi-droplet-fill" aria-hidden="true"></i>'
       };
 
-      const totalTechCount = techs.reduce((sum, t) => sum + techCounts[t], 0);
-      const totalTechMw = techs.reduce((sum, t) => sum + techMws[t], 0);
+      const totalTechCount = techCounts['Fotovoltaica'] + techCounts['Eólica'] + techCounts['SAEE No Asociado'] + techCounts['Hidroeléctrica'];
+      const totalTechMw = techMws['Fotovoltaica'] + techMws['Eólica'] + techMws['SAEE No Asociado'] + techMws['Hidroeléctrica'];
 
       const techListContainer = document.getElementById('techList');
       techListContainer.innerHTML = techs.map(t => {
-        const pctProj = totalTechCount > 0 ? (techCounts[t] / totalTechCount * 100).toFixed(2) : '0.00';
-        const pctMw = totalTechMw > 0 ? (techMws[t] / totalTechMw * 100).toFixed(2) : '0.00';
+        let pctProj = '0.00';
+        let pctMw = '0.00';
+        if (t === 'SAEE Asociado') {
+          const genCount = DATA.length - techCounts['SAEE No Asociado'];
+          pctProj = genCount > 0 ? (techCounts[t] / genCount * 100).toFixed(2) : '0.00';
+          pctMw = totalTechMw > 0 ? (techMws[t] / totalTechMw * 100).toFixed(2) : '0.00';
+        } else {
+          pctProj = totalTechCount > 0 ? (techCounts[t] / totalTechCount * 100).toFixed(2) : '0.00';
+          pctMw = totalTechMw > 0 ? (techMws[t] / totalTechMw * 100).toFixed(2) : '0.00';
+        }
+
+        const isActive = ACTIVE_TECH_FILTER === t;
+        const isDimmed = ACTIVE_TECH_FILTER && ACTIVE_TECH_FILTER !== t;
+
         return `
-          <div class="tech-item">
+          <div class="tech-item tech-item-interactive ${isActive ? 'tech-item-active' : ''} ${isDimmed ? 'tech-item-dimmed' : ''}" 
+               onclick="filterDataAndRebuild('${t}')">
             <div class="icon-bg">${techIcons[t]}</div>
             <div class="t-info">
               <div class="t-name">${t}</div>
@@ -5201,10 +5313,30 @@
       }
 
       // Dibujar marcadores de proyectos
+      if (!projectMarkersGroup) {
+        projectMarkersGroup = L.layerGroup().addTo(mapInstance);
+      }
+      drawProjectMarkersOnMap();
+    }
+
+    function drawProjectMarkersOnMap() {
+      if (!mapInstance) return;
+      if (!projectMarkersGroup) {
+        projectMarkersGroup = L.layerGroup().addTo(mapInstance);
+      }
+      projectMarkersGroup.clearLayers();
+
       DATA.forEach(p => {
         if (p.coords) {
           const tGroup = getTechGroup(p);
-          const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
+          let col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
+          let displayTech = tGroup;
+
+          if (tGroup !== 'Almacenamiento' && isAssociatedSaee(p)) {
+            // Highlight projects with associated storage
+            col = TECH_COLORS['Almacenamiento'] || '#A57F2C';
+            displayTech = `${tGroup} + SAEE`;
+          }
 
           const marker = L.circleMarker(p.coords, {
             radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
@@ -5212,17 +5344,19 @@
             fillOpacity: 0.85,
             color: '#ffffff',
             weight: 1
-          }).addTo(mapInstance);
+          });
 
           marker.bindPopup(`
             <div style="font-family:Montserrat,sans-serif; font-size:11px; line-height:1.4;">
               <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
               <strong>GIE:</strong> ${p.gie}<br>
-              <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${tGroup})<br>
+              <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${displayTech})<br>
               <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}<br>
               <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
             </div>
           `);
+
+          projectMarkersGroup.addLayer(marker);
         }
       });
     }
@@ -5401,6 +5535,10 @@
     }
 
     function generateGcrTables() {
+      const deck = document.getElementById('deck');
+      const existingDynamicSlides = deck.querySelectorAll('section.slide:not(#slide-0):not(#slide-1)');
+      existingDynamicSlides.forEach(s => s.remove());
+
       const getTableMw = p => {
         const contracted = Number(p.capacidadContratada || 0);
         if (!isNaN(contracted) && contracted > 0) return contracted;
@@ -5431,7 +5569,6 @@
         { key: 'BAJA CALIFORNIA', title: 'GCR Baja California' }
       ];
 
-      const deck = document.getElementById('deck');
       let slideIdx = 2; // Portada=0, Numeralia=1, las tablas empiezan en slideIndex=2
 
       gcrOrder.forEach(gcrInfo => {
@@ -5489,26 +5626,35 @@
         const techMwsGcr = {};
         techs.forEach(t => { techCountsGcr[t] = 0; techMwsGcr[t] = 0; });
         rawProjs.forEach(p => {
-          const tg = getTechGroup(p);
-          if (techCountsGcr[tg] !== undefined) {
-            techCountsGcr[tg]++;
-            techMwsGcr[tg] += getTableMw(p);
+          const bucket = getTechBucket(p);
+          if (techCountsGcr[bucket] !== undefined) {
+            techCountsGcr[bucket]++;
+            techMwsGcr[bucket] += getTableMw(p);
+          }
+          if (bucket !== 'SAEE No Asociado' && isAssociatedSaee(p)) {
+            techCountsGcr['SAEE Asociado']++;
+            techMwsGcr['SAEE Asociado'] += Number(p.saeeMW || p.saeeAlm || 0);
           }
         });
-        const totalTechCountGcr = techs.reduce((sum, t) => sum + techCountsGcr[t], 0);
-        const totalTechMwGcr = techs.reduce((sum, t) => sum + techMwsGcr[t], 0);
+        const totalTechCountGcr = techCountsGcr['Fotovoltaica'] + techCountsGcr['Eólica'] + techCountsGcr['SAEE No Asociado'] + techCountsGcr['Hidroeléctrica'];
+        const totalTechMwGcr = techMwsGcr['Fotovoltaica'] + techMwsGcr['Eólica'] + techMwsGcr['SAEE No Asociado'] + techMwsGcr['Hidroeléctrica'];
         const techIcons = {
           'Fotovoltaica': '<i class="bi bi-sun-fill" aria-hidden="true"></i>',
           'Eólica': '<i class="bi bi-wind" aria-hidden="true"></i>',
-          'Almacenamiento': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+          'SAEE Asociado': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+          'SAEE No Asociado': '<i class="bi bi-battery" aria-hidden="true"></i>',
           'Hidroeléctrica': '<i class="bi bi-water" aria-hidden="true"></i>'
         };
 
         const techListHtml = techs.map(t => {
-          const pctProj = totalTechCountGcr > 0 ? (techCountsGcr[t] / totalTechCountGcr * 100).toFixed(2) : '0.00';
+          const pctBase = t === 'SAEE Asociado' ? Math.max(0, rawProjs.length - techCountsGcr['SAEE No Asociado']) : totalTechCountGcr;
+          const pctProj = pctBase > 0 ? (techCountsGcr[t] / pctBase * 100).toFixed(2) : '0.00';
           const pctMw = totalTechMwGcr > 0 ? (techMwsGcr[t] / totalTechMwGcr * 100).toFixed(2) : '0.00';
+          const isActiveTech = ACTIVE_TECH_FILTER === t;
+          const isUnusedTech = techCountsGcr[t] === 0 && Number(techMwsGcr[t] || 0) === 0;
+          const dimTech = ACTIVE_TECH_FILTER ? !isActiveTech : isUnusedTech;
           return `
-            <div class="tech-item">
+            <div class="tech-item ${isActiveTech ? 'tech-item-active' : ''} ${dimTech ? 'tech-item-dimmed' : ''}">
               <div class="icon-bg">${techIcons[t]}</div>
               <div class="t-info">
                 <div class="t-name">${t}</div>
@@ -5849,6 +5995,52 @@
 
       slidesCount = slideIdx;
       updateControls();
+    }
+
+    function clearGcrWidgets() {
+      for (const key in activeGcrWidgets) {
+        const widgets = activeGcrWidgets[key];
+        if (widgets?.chart) {
+          widgets.chart.destroy();
+        }
+        if (widgets?.map) {
+          widgets.map.remove();
+        }
+        delete activeGcrWidgets[key];
+      }
+    }
+
+    function filterDataAndRebuild(selectedTech) {
+      const targetSlideIndex = currentSlideIndex;
+
+      if (selectedTech === 'ALL' || ACTIVE_TECH_FILTER === selectedTech) {
+        ACTIVE_TECH_FILTER = null;
+        DATA = ALL_DATA;
+      } else {
+        ACTIVE_TECH_FILTER = selectedTech;
+        DATA = ALL_DATA.filter(p => matchesTechFilter(p, selectedTech));
+      }
+
+      // Sincronizar el select de presentación
+      const selectEl = document.getElementById('techFilterSelect');
+      if (selectEl) {
+        selectEl.value = ACTIVE_TECH_FILTER || 'ALL';
+      }
+
+      // Re-renderizar Numeralia
+      renderNumeralia();
+
+      // Limpiar widgets y generar tablas de nuevo
+      clearGcrWidgets();
+      generateGcrTables();
+
+      // Redibujar marcadores en el mapa general
+      if (mapInstance) {
+        drawProjectMarkersOnMap();
+      }
+
+      // Mantener al usuario en la diapositiva donde aplicó el filtro.
+      showSlide(Math.min(targetSlideIndex, slidesCount - 1));
     }
 
     // ==========================================
