@@ -1,16 +1,16 @@
-# Graph Report - 71.-Automatización_PPT  (2026-06-06)
+# Graph Report - 71.-Automatización_PPT  (2026-06-05)
 
 ## Corpus Check
-- 36 files · ~317,540 words
+- 35 files · ~315,666 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 912 nodes · 1612 edges · 51 communities (29 shown, 22 thin omitted)
+- 674 nodes · 1375 edges · 50 communities (28 shown, 22 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ce11b15e`
+- Built from commit: `7a03cf03`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -61,7 +61,6 @@
 - [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
-- [[_COMMUNITY_Community 50|Community 50]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `MobileInterface` - 32 edges
@@ -90,15 +89,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (51 total, 22 thin omitted)
+## Communities (50 total, 22 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.11
 Nodes (47): applyPointColors(), applySeriesColors(), chartBase(), chartDataByMode(), chartOptionsById, chartsById, chartTableRows, closeFullscreen() (+39 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.29
-Nodes (8): clearInsetLayers(), clearInsetLines(), clearInsetPolygons(), createInsetMaps(), createInsetToggleButton(), destroyInsetMaps(), removeInsetToggleButton(), updateLeaderLines()
+Cohesion: 0.10
+Nodes (28): addGasLegend(), buildMapTilerUrl(), cleanUpLayerControl(), clearInsetLayers(), clearInsetLines(), clearInsetPolygons(), closeSearchHelpModal(), createGradientPattern() (+20 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.13
@@ -121,8 +120,8 @@ Cohesion: 0.15
 Nodes (9): MapExporter, exportMapAsPNG(), exportMapForWord(), isMapTilerActive(), prepareLayoutForExport(), showMapTilerWarning(), toggleFullscreen(), updateAllProgressOverlays() (+1 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.08
-Nodes (59): addCapacityLegend(), addConservationLayersLegend(), addConsumptionLegend(), addGasLegend(), addHorizontalCapacityLegend(), addLegend(), addMunicipalitiesLegend(), addPIBLegend() (+51 more)
+Cohesion: 0.11
+Nodes (34): addCapacityLegend(), addConservationLayersLegend(), addConsumptionLegend(), addHorizontalCapacityLegend(), addLegend(), addMunicipalitiesLegend(), addPIBLegend(), addTotalCapacityLegendTwoColumns() (+26 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.07
@@ -149,12 +148,12 @@ Cohesion: 0.16
 Nodes (25): calculateGasLPStats(), calculateGasNaturalStats(), clearSearchBox(), createGasLPFilterCards(), createGasNaturalFilterCards(), displayStatesLayer(), drawGasLPMarkersOnly(), drawGasLPPermits() (+17 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.35
-Nodes (12): assignPermitsToGCR(), calculateElectricityStats(), createElectricityCharts(), createElectricityStatesChart(), createFilterCards(), createMatrixView(), drawElectricityMarkersOnly(), drawElectricityPermits() (+4 more)
+Cohesion: 0.27
+Nodes (14): assignPermitsToGCR(), calculateElectricityStats(), createElectricityCharts(), createElectricityStatesChart(), createElectricityTechChart(), createFilterCards(), createMatrixView(), drawElectricityMarkersOnly() (+6 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.40
-Nodes (6): clearData(), clearInsetMarkers(), drawRows(), getNodeMarkerOptions(), loadAndRender(), removeLabelToggleControl()
+Cohesion: 0.25
+Nodes (9): clearData(), clearInsetMarkers(), drawRows(), getDisplaySheetUrl(), getNodeMarkerOptions(), hasValidSheetUrl(), loadAndRender(), removeLabelToggleControl() (+1 more)
 
 ### Community 23 - "Community 23"
 Cohesion: 0.53
@@ -188,29 +187,25 @@ Nodes (7): Archivos, Características, Cloudflare Pages, Despliegue, Fuente de d
 Cohesion: 0.40
 Nodes (5): createGasLPCharts(), createGasLPStatesChart(), createGasLPTypeChart(), updateGasLPStatesChart(), updateGasLPTypeChart()
 
-### Community 50 - "Community 50"
-Cohesion: 0.01
-Nodes (237): 0, 360 ENERGY SOLAR MEXICO, ACCIONA, AES MÉXICO, AGROINDUSTRIAS UNIDAS DE MÉXICO, AGRORENOVABLES, AGRORENOVABLES ENERGY, AKRON (+229 more)
-
 ## Knowledge Gaps
-- **323 isolated node(s):** `360 ENERGY SOLAR MEXICO`, `ACCIONA`, `AES MÉXICO`, `AGROINDUSTRIAS UNIDAS DE MÉXICO`, `AGRORENOVABLES` (+318 more)
+- **86 isolated node(s):** `allow`, `1. Variables CSS (Design Tokens)`, `Importación (Google Fonts)`, `Jerarquía`, `Botones` (+81 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **22 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `loadGeoJSON()` connect `Community 8` to `Community 42`, `Community 7`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
+- **Why does `loadGeoJSON()` connect `Community 8` to `Community 1`, `Community 42`, `Community 7`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `Google Sheets — 2DA CONVOCATORIA PARTICULARES` connect `Community 9` to `Community 4`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
-- **Why does `loadTotalCapacityAdditionsMap()` connect `Community 8` to `Community 7`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `loadTotalCapacityAdditionsMap()` connect `Community 8` to `Community 1`, `Community 7`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `SENER Project Tracking Dashboard` (e.g. with `PVIRCE 2026-2040 Energy Projects Program` and `SENER UI Kit Institutional Guide`) actually correct?**
   _`SENER Project Tracking Dashboard` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `loadGeoJSON()` (e.g. with `.showNotification()` and `createStandardPopup()`) actually correct?**
   _`loadGeoJSON()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `360 ENERGY SOLAR MEXICO`, `ACCIONA`, `AES MÉXICO` to the rest of the system?**
-  _323 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `allow`, `1. Variables CSS (Design Tokens)`, `Importación (Google Fonts)` to the rest of the system?**
+  _86 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.10884353741496598 - nodes in this community are weakly interconnected._

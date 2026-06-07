@@ -1,0 +1,53 @@
+C:\Proyectos\71.-Automatizaci¾n_PPT\.claude\launch.json
+C:\Proyectos\71.-Automatizaci¾n_PPT\.claude\settings.local.json
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\canvas-capture.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\dashboard-analitico.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\detalle-central.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\detalle-nuevo-proyecto.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\export-config.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\export-ui.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\fix-layer-error.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\fullscreen-toolbar.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\map-config.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\map-exporter.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\mobile-interface.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\municipios-rios-maps.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\notification-system.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\pdf-generator.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\pladese-maps.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\png-processor.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\presas-maps.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\progress-system.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\seguimiento-proyectos.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\simple-export.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\smart-labels.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\js\tablero-proyectos.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\functions\data-cne.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\functions\data-gat.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\functions\data.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\functions\kmz.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\visor_pvirce_assets\data\visor-data.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\visor_pvirce_assets\js\visor.js
+C:\Proyectos\71.-Automatizaci¾n_PPT\.github\copilot-instructions.md
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\GUIA_ESTILOS_WEB.md
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\formulario-participantes.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\index.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\index_mapa.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\login.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\sener_test.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\vistas_sener.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Fuentes\PVIRCE2026-2040.md
+C:\Proyectos\71.-Automatizaci¾n_PPT\GAT-MIXTO-DGMESNIE.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\PVIRCE-DGMESNIE.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\README.md
+C:\Proyectos\71.-Automatizaci¾n_PPT\REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\REPORTE-SEGUNDA-CONVOCATORIA.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\SEGUNDA-CONVOCATORIA-DGMESNIE.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\google-sheets-columnas.md
+C:\Proyectos\71.-Automatizaci¾n_PPT\index.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\test_fetch.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\visor_pvirce_2026_2040.html
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\img\logo_gob.png
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\img\logo_sener.png
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\img\mujer.png
+C:\Proyectos\71.-Automatizaci¾n_PPT\Estilos Institucionales\img\portada_ppt.png

@@ -1673,6 +1673,17 @@
           <option>Cargando…</option>
         </select>
       </label>
+      <label style="font-size:13px;">Tecnología:
+        <select id="techSelect">
+          <option value="__ALL__">Todas</option>
+          <option value="Fotovoltaica">Fotovoltaica</option>
+          <option value="Eólica">Eólica</option>
+          <option value="SAEE Asociado">SAEE Asociado</option>
+          <option value="SAEE No Asociado">SAEE No Asociado</option>
+          <option value="SAEE Todos">SAEE Todos</option>
+          <option value="Hidroeléctrica">Hidroeléctrica</option>
+        </select>
+      </label>
       <label style="font-size:13px;">Proyecto:
         <select id="projectSelect">
           <option value="__ALL__">Todos</option>
@@ -2346,6 +2357,7 @@
         restriccion: col(117),
         pctImpl: col(105),
         // SAEE
+        saeeRespaldo: col(73),
         saeeMW: num(col(77)),              // Potencia SAEE
         saeeAlm: num(col(76)),             // Capacidad Almacenamiento
         saeeTec: col(75),
@@ -2423,11 +2435,66 @@
       if (from > to) [from, to] = [to, from];
       return { from, to };
     }
+    function normText(s) {
+      return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    }
+
+    function getTechGroup(p) {
+      const name = normText(p.nombre);
+      const tech = normText(p.tipo);
+      const techBase = normText(p.tipoBase);
+      const combined = `${name} ${tech} ${techBase}`;
+
+      if (combined.includes('ALMACEN') || combined.includes('BATERI') || combined.includes('SAEE')) {
+        return 'Almacenamiento';
+      }
+      if (combined.includes('FOTOVOL') || combined.includes('SOLAR')) {
+        return 'Fotovoltaica';
+      }
+      if (combined.includes('EOLICA') || combined.includes('EOL')) {
+        return 'Eólica';
+      }
+      if (combined.includes('HIDRO')) {
+        return 'Hidroeléctrica';
+      }
+      return 'Otro';
+    }
+
+    function isAssociatedSaee(p) {
+      const yesLike = (v) => /^(s[ií]|true|verdadero|x|1|yes)$/i.test(String(v ?? '').trim());
+      const saeeRes = String(p.saeeRespaldo || '').trim();
+      const techVal = normText(p.saeeTec);
+      return yesLike(saeeRes) ||
+        /incorporar/i.test(saeeRes) ||
+        (Number(p.saeeMW) > 0) ||
+        (Number(p.saeeAlm) > 0) ||
+        (techVal && techVal !== 'SIN INFORMACION' && techVal !== 'NO APLICA' && techVal !== '');
+    }
+
     function filteredData() {
       const statusVal = document.getElementById('statusSelect')?.value || '__ALL__';
+      const techVal = document.getElementById('techSelect')?.value || '__ALL__';
       const { from, to } = getYearRange();
-      const rows = statusVal === '__ALL__' ? DATA : DATA.filter(r => r.status === statusVal);
-      return rows.filter(r => Number.isFinite(r.anio) && r.anio >= from && r.anio <= to);
+      let rows = statusVal === '__ALL__' ? DATA : DATA.filter(r => r.status === statusVal);
+      rows = rows.filter(r => Number.isFinite(r.anio) && r.anio >= from && r.anio <= to);
+
+      if (techVal !== '__ALL__') {
+        if (techVal === 'Fotovoltaica') {
+          rows = rows.filter(p => getTechGroup(p) === 'Fotovoltaica');
+        } else if (techVal === 'Eólica') {
+          rows = rows.filter(p => getTechGroup(p) === 'Eólica');
+        } else if (techVal === 'SAEE No Asociado') {
+          rows = rows.filter(p => getTechGroup(p) === 'Almacenamiento');
+        } else if (techVal === 'SAEE Asociado') {
+          rows = rows.filter(p => getTechGroup(p) !== 'Almacenamiento' && isAssociatedSaee(p));
+        } else if (techVal === 'SAEE Todos') {
+          rows = rows.filter(p => getTechGroup(p) === 'Almacenamiento' || isAssociatedSaee(p));
+        } else if (techVal === 'Hidroeléctrica') {
+          rows = rows.filter(p => getTechGroup(p) === 'Hidroeléctrica');
+        }
+      }
+
+      return rows;
     }
     function filteredDataByScope() {
       const scope = getMapScope();
@@ -4226,6 +4293,12 @@
         const projectSel = document.getElementById('projectSelect');
         if (projectSel) projectSel.value = '__ALL__';
       }
+      populateProjectSelect();
+      render();
+    });
+    document.getElementById('techSelect').addEventListener('change', () => {
+      const projectSel = document.getElementById('projectSelect');
+      if (projectSel) projectSel.value = '__ALL__';
       populateProjectSelect();
       render();
     });

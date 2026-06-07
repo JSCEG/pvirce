@@ -1,0 +1,267 @@
+{
+  ".claude/launch.json": {
+    "mtime": 1780081758.3355403,
+    "ast_hash": "d142b8a028fd5e8b91d284a2a69e5d73",
+    "semantic_hash": "d142b8a028fd5e8b91d284a2a69e5d73"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1780336664.5202668,
+    "ast_hash": "a475a7ae86d2206ed7c2742cf8bddada",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/js/canvas-capture.js": {
+    "mtime": 1763267924.1922371,
+    "ast_hash": "1ebaf1985f4f57097332695b07d04e9b",
+    "semantic_hash": "1ebaf1985f4f57097332695b07d04e9b"
+  },
+  "Estilos Institucionales/js/dashboard-analitico.js": {
+    "mtime": 1772823561.0236287,
+    "ast_hash": "8288552cf72568b34ce249ee6bbb8b73",
+    "semantic_hash": "8288552cf72568b34ce249ee6bbb8b73"
+  },
+  "Estilos Institucionales/js/detalle-central.js": {
+    "mtime": 1771527347.0283618,
+    "ast_hash": "77169d6061774862254fffea88661aad",
+    "semantic_hash": "77169d6061774862254fffea88661aad"
+  },
+  "Estilos Institucionales/js/detalle-nuevo-proyecto.js": {
+    "mtime": 1772815861.817066,
+    "ast_hash": "d11824ebcc3f956cf6d65fa282da33d4",
+    "semantic_hash": "d11824ebcc3f956cf6d65fa282da33d4"
+  },
+  "Estilos Institucionales/js/export-config.js": {
+    "mtime": 1762202581.9376042,
+    "ast_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a",
+    "semantic_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a"
+  },
+  "Estilos Institucionales/js/export-ui.js": {
+    "mtime": 1762218917.8647463,
+    "ast_hash": "6b0a5d34bbe2986e23f6ce9887c01e85",
+    "semantic_hash": "6b0a5d34bbe2986e23f6ce9887c01e85"
+  },
+  "Estilos Institucionales/js/fix-layer-error.js": {
+    "mtime": 1764033291.414186,
+    "ast_hash": "3ff27de11edef2d82f78e858753c9fd9",
+    "semantic_hash": "3ff27de11edef2d82f78e858753c9fd9"
+  },
+  "Estilos Institucionales/js/fullscreen-toolbar.js": {
+    "mtime": 1763063632.4225066,
+    "ast_hash": "ffe9a7884c28d2fe9985173ae67a36a1",
+    "semantic_hash": "ffe9a7884c28d2fe9985173ae67a36a1"
+  },
+  "Estilos Institucionales/js/map-config.js": {
+    "mtime": 1772818876.6728027,
+    "ast_hash": "06f4321ad7911df563faf1dada5da466",
+    "semantic_hash": "06f4321ad7911df563faf1dada5da466"
+  },
+  "Estilos Institucionales/js/map-exporter.js": {
+    "mtime": 1763054975.8162086,
+    "ast_hash": "f8cc03c481b963506b90e961196e8ca6",
+    "semantic_hash": "f8cc03c481b963506b90e961196e8ca6"
+  },
+  "Estilos Institucionales/js/mobile-interface.js": {
+    "mtime": 1772815861.8245852,
+    "ast_hash": "612717d7b36003c34c9440ae66aed9a8",
+    "semantic_hash": "612717d7b36003c34c9440ae66aed9a8"
+  },
+  "Estilos Institucionales/js/municipios-rios-maps.js": {
+    "mtime": 1764175568.7780545,
+    "ast_hash": "d374e539dae7486c04be88adcb965f48",
+    "semantic_hash": "d374e539dae7486c04be88adcb965f48"
+  },
+  "Estilos Institucionales/js/notification-system.js": {
+    "mtime": 1762202586.4439192,
+    "ast_hash": "08af642ffe64212915063fa77795bbb9",
+    "semantic_hash": "08af642ffe64212915063fa77795bbb9"
+  },
+  "Estilos Institucionales/js/pdf-generator.js": {
+    "mtime": 1762219066.1308982,
+    "ast_hash": "75874016fdad3f12629287bb02fc0d1b",
+    "semantic_hash": "75874016fdad3f12629287bb02fc0d1b"
+  },
+  "Estilos Institucionales/js/pladese-maps.js": {
+    "mtime": 1764179862.3819015,
+    "ast_hash": "e18cb9f6761f58beb5addc618641dbb3",
+    "semantic_hash": "e18cb9f6761f58beb5addc618641dbb3"
+  },
+  "Estilos Institucionales/js/png-processor.js": {
+    "mtime": 1763054975.818209,
+    "ast_hash": "4fb9a85cdb33e651a640fd1c894ade98",
+    "semantic_hash": "4fb9a85cdb33e651a640fd1c894ade98"
+  },
+  "Estilos Institucionales/js/presas-maps.js": {
+    "mtime": 1771457951.1090364,
+    "ast_hash": "64b0006156757f9998d8468afeb319c2",
+    "semantic_hash": "64b0006156757f9998d8468afeb319c2"
+  },
+  "Estilos Institucionales/js/progress-system.js": {
+    "mtime": 1762974468.0379298,
+    "ast_hash": "988e7973100d588b1f0a8e0720f8a211",
+    "semantic_hash": "988e7973100d588b1f0a8e0720f8a211"
+  },
+  "Estilos Institucionales/js/seguimiento-proyectos.js": {
+    "mtime": 1772844355.3799353,
+    "ast_hash": "809dfac2950f047df00f4614ca407270",
+    "semantic_hash": "809dfac2950f047df00f4614ca407270"
+  },
+  "Estilos Institucionales/js/simple-export.js": {
+    "mtime": 1764017334.3283217,
+    "ast_hash": "7dde62a6fd53d1ca8b33e4769cee59cb",
+    "semantic_hash": "7dde62a6fd53d1ca8b33e4769cee59cb"
+  },
+  "Estilos Institucionales/js/smart-labels.js": {
+    "mtime": 1763664572.6786892,
+    "ast_hash": "115820506cd5f7366bc3a9277925d5c3",
+    "semantic_hash": "115820506cd5f7366bc3a9277925d5c3"
+  },
+  "Estilos Institucionales/js/tablero-proyectos.js": {
+    "mtime": 1772816636.8637917,
+    "ast_hash": "5b7a3de5d258550143270696d7970f21",
+    "semantic_hash": "5b7a3de5d258550143270696d7970f21"
+  },
+  "functions/data-cne.js": {
+    "mtime": 1778272239.9059734,
+    "ast_hash": "974eeff2f0f617798825e44eae94b330",
+    "semantic_hash": "974eeff2f0f617798825e44eae94b330"
+  },
+  "functions/data-gat.js": {
+    "mtime": 1778270894.409947,
+    "ast_hash": "ad09b1b6770daa521d89a6049aaf644b",
+    "semantic_hash": "ad09b1b6770daa521d89a6049aaf644b"
+  },
+  "functions/data.js": {
+    "mtime": 1778267653.606386,
+    "ast_hash": "ebf6fba28b625487c58eacd565c51f36",
+    "semantic_hash": "ebf6fba28b625487c58eacd565c51f36"
+  },
+  "functions/kmz.js": {
+    "mtime": 1778284120.3032486,
+    "ast_hash": "1986e1f201b58ef4b8553b97ad747313",
+    "semantic_hash": "1986e1f201b58ef4b8553b97ad747313"
+  },
+  "visor_pvirce_assets/data/visor-data.js": {
+    "mtime": 1778043902.0287797,
+    "ast_hash": "09704b417bbd0fc68361ed44cc4b4ccf",
+    "semantic_hash": "09704b417bbd0fc68361ed44cc4b4ccf"
+  },
+  "visor_pvirce_assets/js/visor.js": {
+    "mtime": 1778089473.523241,
+    "ast_hash": "0f189877e0ce5cb8e5950eadcf3f2f09",
+    "semantic_hash": "0f189877e0ce5cb8e5950eadcf3f2f09"
+  },
+  "GAT-MIXTO-DGMESNIE.html": {
+    "mtime": 1780081758.3381758,
+    "ast_hash": "48979e72ec4d440d2a91b2d86d94ce93",
+    "semantic_hash": ""
+  },
+  "google-sheets-columnas.md": {
+    "mtime": 1780294822.8565876,
+    "ast_hash": "b5095d1a98d990c23107581d913ab8b2",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1780082062.3204012,
+    "ast_hash": "8bf79ff3670515dad7e578787ef466e9",
+    "semantic_hash": ""
+  },
+  "PVIRCE-DGMESNIE.html": {
+    "mtime": 1780081758.3395119,
+    "ast_hash": "5c0079d8ee40cd4e89d43da0a0090f7b",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1778260316.8869815,
+    "ast_hash": "5db66dba2b8611ff93c6b7050b3d1312",
+    "semantic_hash": ""
+  },
+  "REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html": {
+    "mtime": 1780682327.3904462,
+    "ast_hash": "23310163dca348a7016b98cd5b847158",
+    "semantic_hash": ""
+  },
+  "REPORTE-SEGUNDA-CONVOCATORIA.html": {
+    "mtime": 1780682211.273142,
+    "ast_hash": "ea5c5903491ca6359b00efb38f3a6672",
+    "semantic_hash": ""
+  },
+  "SEGUNDA-CONVOCATORIA-DGMESNIE.html": {
+    "mtime": 1780682275.3666718,
+    "ast_hash": "1b526f6b4bc508074e615ac964d0539b",
+    "semantic_hash": ""
+  },
+  "test_fetch.html": {
+    "mtime": 1778257955.6044617,
+    "ast_hash": "820ef867756dad36e156b63386b9f8c0",
+    "semantic_hash": ""
+  },
+  "visor_pvirce_2026_2040.html": {
+    "mtime": 1778088994.692846,
+    "ast_hash": "a956948a17a7336b90ace501761dc5ba",
+    "semantic_hash": ""
+  },
+  ".github/copilot-instructions.md": {
+    "mtime": 1780239166.8300471,
+    "ast_hash": "2b23503628bf2ec71d067a85ca8948ab",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/formulario-participantes.html": {
+    "mtime": 1778803878.6013079,
+    "ast_hash": "f9f1684016a22ccd31e5d411df1f7c12",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/GUIA_ESTILOS_WEB.md": {
+    "mtime": 1763772737.0844016,
+    "ast_hash": "4bf9b2256547b2f909488089d15d217c",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/index.html": {
+    "mtime": 1772844875.5368984,
+    "ast_hash": "4ff79296b44abdfe6203a7af935fd4d6",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/index_mapa.html": {
+    "mtime": 1772756048.9296222,
+    "ast_hash": "c02f73e9d70163f93fe94b35e479fbca",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/login.html": {
+    "mtime": 1772736460.5403655,
+    "ast_hash": "6e482ce73624cf61bff8e1c62732d7c0",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/sener_test.html": {
+    "mtime": 1773023978.7110298,
+    "ast_hash": "c07a8d0aa82ef78a1c3645626b54ac25",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/vistas_sener.html": {
+    "mtime": 1772555508.1270566,
+    "ast_hash": "52573539e25784fd3c7fe85745b53e16",
+    "semantic_hash": ""
+  },
+  "Fuentes/PVIRCE2026-2040.md": {
+    "mtime": 1778041032.7894995,
+    "ast_hash": "5241b45ec57a67adcfc585bdd2df4dbf",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/logo_gob.png": {
+    "mtime": 1754928710.9136615,
+    "ast_hash": "dc9f4b8e2af026d307e1e8c404ea2023",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/logo_sener.png": {
+    "mtime": 1767991869.3497143,
+    "ast_hash": "69733a7f3534e135745de0dc59d81063",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/mujer.png": {
+    "mtime": 1754615781.3760042,
+    "ast_hash": "b3163a167aef691f3cf1c04df021bcfe",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/portada_ppt.png": {
+    "mtime": 1780342247.115183,
+    "ast_hash": "dbac62f6a5d58133bf293fddde0dea50",
+    "semantic_hash": ""
+  }
+}
