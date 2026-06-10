@@ -3709,6 +3709,7 @@
       'RFC': [{ name: 'RFC' }],
       'Empresa desarrolladora': [{ name: 'Nombre' }],
       'Grupo de interés (GIE)': [{ name: 'Grupo de Interés' }],
+      'País origen GIE': [{ name: 'País origen Grupo de Interés' }],
       'Representante legal': [{ name: 'Representante' }],
       'Email': [{ name: 'Email' }],
       'Teléfono': [{ name: 'Teléfono' }],
@@ -3775,7 +3776,11 @@
       'Cap. gen. permiso': [{ name: 'Capacidad Generación Permiso' }],
       'Cap. Neta': [{ name: 'Capacidad Neta' }, { name: 'Capacidad Generación Permiso' }],
       'Gen. anual est.': [{ name: 'Generación Anual Estimada' }],
-      'Inversión reportada': [{ name: 'Monto de inversión total del proyecto:' }],
+      'Inversión reportada': [{ name: 'Monto inversión texto original' }, { name: 'Monto de inversión total del proyecto:' }],
+      'Moneda inversión': [{ name: 'Moneda inversión total' }],
+      'Inversión valor numérico': [{ name: 'Monto inversión valor numérico' }],
+      'Inversión MXN fuente': [{ name: 'Monto inversión MXN fuente' }],
+      'Inversión MDD fuente': [{ name: 'Monto inversión MDD fuente' }],
       'Inversión social': [{ name: 'Monto de inversión social destinado al proyecto' }],
       'Energía bruta mensual': [{ name: 'Energía bruta en MWh estimada a producir mensualmente:' }],
       'Irradiación solar': [{ name: 'La irradiación solar global y difusa horizontal en W/m2:' }],
@@ -4060,6 +4065,9 @@
     }
 
     function resolveGieOrigin(project) {
+      const projectOrigin = String(project?.origenGie || '').trim();
+      if (projectOrigin) return projectOrigin;
+
       const gieKey = normalizeGieKey(project?.gie);
       const entries = Object.entries(GIE_COUNTRY_BY_GROUP);
       const exact = entries.find(([gie]) => normalizeGieKey(gie) === gieKey);
@@ -4094,7 +4102,7 @@
     }
 
     function formatGieChartLabel(gieName, maxLength = 28) {
-      const projectStub = { gie: gieName };
+      const projectStub = DATA.find(project => normalizeGieKey(project.gie) === normalizeGieKey(gieName)) || { gie: gieName };
       const origin = formatGieOriginText(projectStub);
       const flag = getCountryFlagHtml(origin);
       const rawName = String(gieName || 'NO IDENTIFICADO');
@@ -4291,9 +4299,54 @@
 
       console.log(`Total de proyectos mapeados: ${DATA.length}`);
       console.log(`Registros descartados por estatus distinto de FINALIZADO: ${mappedRows.length - mappedRows.filter(r => normText(r.status) === 'FINALIZADO').length}`);
+      logSanitizedFieldsAudit(DATA);
       if (DATA.length > 0) {
         console.log('Primer proyecto:', DATA[0].nombre, DATA[0].mw, 'MW');
       }
+    }
+
+    function logSanitizedFieldsAudit(rows) {
+      const expectedColumns = [
+        'País origen Grupo de Interés',
+        'Monto inversión texto original',
+        'Moneda inversión total',
+        'Monto inversión valor numérico',
+        'Monto inversión MXN fuente',
+        'Monto inversión MDD fuente',
+        'Nota campos agregados'
+      ];
+      const missingColumns = expectedColumns.filter(name => !SHEET_COL_INDEX.hasOwnProperty(name));
+      const withOrigin = rows.filter(p => String(p.origenGie || '').trim()).length;
+      const withoutOrigin = rows.length - withOrigin;
+      const totalMxn = rows.reduce((sum, p) => sum + Number(p.inversionMxn || 0), 0);
+      const totalMdd = rows.reduce((sum, p) => sum + Number(p.inversionMdd || 0), 0);
+      const isEmptyValue = value => {
+        const normalized = normText(value);
+        return !normalized || normalized === 'SIN INFORMACION' || normalized === 'NO APLICA' || normalized === '-';
+      };
+      const investmentTextWithoutSanitizedAmount = rows
+        .filter(p => !isEmptyValue(p.inversionRaw) && !Number(p.inversionMxn || 0) && !Number(p.inversionMdd || 0))
+        .slice(0, 20)
+        .map(p => ({
+          fila: p._sheetRowNumber,
+          folio: p.folio || '',
+          gie: p.gie || '',
+          inversion: p.inversionRaw || ''
+        }));
+
+      console.groupCollapsed('Auditoría campos saneados: país origen GIE e inversión');
+      console.log('Columnas nuevas faltantes:', missingColumns.length ? missingColumns : 'Ninguna');
+      console.table([{
+        proyectos: rows.length,
+        conPaisOrigenGie: withOrigin,
+        sinPaisOrigenGie: withoutOrigin,
+        totalMxnFuente: totalMxn,
+        totalMddFuente: totalMdd
+      }]);
+      if (investmentTextWithoutSanitizedAmount.length) {
+        console.warn('Primeras filas con texto de inversión pero sin MXN/MDD saneado:', investmentTextWithoutSanitizedAmount);
+      }
+      console.groupEnd();
     }
 
     // Mapeo por nombre de columna — robusto contra reordenamiento de columnas en Google Sheets
@@ -4334,8 +4387,14 @@
 
       // Inversión: conservar valor textual reportado (con unidad original)
       const rawInv = col('Monto de inversión total del proyecto:');
-      const inversionRaw = rawInv || 'SIN INFORMACIÓN';
-      const inversion = parseInversionToMdd(rawInv);
+      const inversionTextoOriginal = col('Monto inversión texto original') || rawInv;
+      const inversionMoneda = normalizeInvestmentCurrency(col('Moneda inversión total'));
+      const inversionValorNumerico = parseSanitizedNumber(col('Monto inversión valor numérico'));
+      const inversionMxn = parseSanitizedNumber(col('Monto inversión MXN fuente'));
+      const inversionMdd = parseSanitizedNumber(col('Monto inversión MDD fuente'));
+      const inversionRaw = inversionTextoOriginal || 'SIN INFORMACIÓN';
+      const inversion = inversionMdd || parseInversionToMdd(rawInv);
+      const origenGie = col('País origen Grupo de Interés');
 
       // FEOC: buscar "Fecha prevista para entrada en operación" (primera aparición)
       const feoc = col('Fecha prevista para entrada en operación comercial:');
@@ -4369,7 +4428,7 @@
         folio: col('Folio Proyecto'),
         nombre: col('Proyecto'),
         gie: (gieRaw && gieRaw !== 'SIN INFORMACIÓN') ? gieRaw : (developer || 'NO IDENTIFICADO'),
-        origenGie: '',
+        origenGie,
         mw,
         tecnologia: col('Subtecnología') || col('Tipo Tecnología') || 'OTRA',
         techBase: col('Tipo Tecnología'),
@@ -4381,6 +4440,12 @@
         domicilio: col('Domicilio'),
         inversion,
         inversionRaw,
+        inversionTextoOriginal,
+        inversionMoneda,
+        inversionValorNumerico,
+        inversionMxn,
+        inversionMdd,
+        inversionNota: col('Nota campos agregados'),
         feoc: feoc || 'SIN INFORMACIÓN',
         tierras: tierrasStatus || 'SIN INFORMACIÓN',
         misse: colAny(['Estatus EVIS', 'Estatus EVIS/MISSE', 'Estatus MISSE']) || 'SIN INFORMACIÓN',
@@ -4611,6 +4676,24 @@
       return investment.group === 'USD' ? investment.amount / 1000000 : 0;
     }
 
+    function getProjectInvestment(project) {
+      const currency = normalizeInvestmentCurrency(project?.inversionMoneda);
+      const mdd = Number(project?.inversionMdd || 0);
+      const mxn = Number(project?.inversionMxn || 0);
+      const numeric = Number(project?.inversionValorNumerico || 0);
+
+      if (currency === 'USD' && (mdd > 0 || numeric > 0)) {
+        return { group: 'USD', amount: mdd > 0 ? mdd * 1000000 : numeric };
+      }
+      if (currency === 'MXN' && (mxn > 0 || numeric > 0)) {
+        return { group: 'MXN', amount: mxn > 0 ? mxn : numeric };
+      }
+      if (mdd > 0) return { group: 'USD', amount: mdd * 1000000 };
+      if (mxn > 0) return { group: 'MXN', amount: mxn };
+
+      return parseInvestmentReported(project?.inversionRaw);
+    }
+
     function summarizeInvestmentReported(projects) {
       const summary = {
         USD: { count: 0, amount: 0 },
@@ -4622,7 +4705,7 @@
       };
 
       projects.forEach((project) => {
-        const investment = parseInvestmentReported(project.inversionRaw);
+        const investment = getProjectInvestment(project);
         summary[investment.group].count += 1;
         summary[investment.group].amount += investment.amount;
       });
@@ -4939,6 +5022,39 @@
       return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
+    function parseSanitizedNumber(value) {
+      const raw = String(value || '').trim();
+      if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return 0;
+      const normalized = raw.replace(/[^\d,.\-]/g, '');
+      if (!normalized) return 0;
+
+      const lastDot = normalized.lastIndexOf('.');
+      const lastComma = normalized.lastIndexOf(',');
+      let decimalSeparator = '';
+      if (lastDot >= 0 && lastComma >= 0) {
+        decimalSeparator = lastDot > lastComma ? '.' : ',';
+      } else if (lastDot >= 0 || lastComma >= 0) {
+        const separator = lastDot >= 0 ? '.' : ',';
+        const right = normalized.length - normalized.lastIndexOf(separator) - 1;
+        if (right > 0 && right <= 2) decimalSeparator = separator;
+      }
+
+      const decimalIndex = decimalSeparator ? normalized.lastIndexOf(decimalSeparator) : -1;
+      const numeric = decimalSeparator
+        ? `${normalized.slice(0, decimalIndex).replace(/[.,]/g, '')}.${normalized.slice(decimalIndex + 1).replace(/[.,]/g, '')}`
+        : normalized.replace(/[.,]/g, '');
+      const n = Number(numeric);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function normalizeInvestmentCurrency(value) {
+      const raw = normText(value);
+      if (!raw || raw === 'SIN INFORMACION' || raw === 'NO APLICA') return '';
+      if (/USD|DOLAR|DOLARES|MDD|DLLS|US/.test(raw)) return 'USD';
+      if (/MXN|PESO|PESOS|MDP|MN|M N/.test(raw)) return 'MXN';
+      return raw;
+    }
+
     function getSourceColumnsForLabels(labels) {
       return (labels || []).map((label) => {
         const source = resolveSourceColumn(label);
@@ -4963,9 +5079,9 @@
         },
         {
           widget: 'kpiTotalInversion',
-          formula: 'summarizeInvestmentReported => count + sum por moneda reportada, sin conversión',
-          dataField: 'inversionRaw',
-          sourceColumns: getSourceColumnsForLabels(['Inversión reportada'])
+          formula: 'summarizeInvestmentReported => count + sum por moneda usando campos saneados; fallback a parseo texto',
+          dataField: 'inversionMoneda, inversionMxn, inversionMdd, inversionRaw',
+          sourceColumns: getSourceColumnsForLabels(['Moneda inversión', 'Inversión MXN fuente', 'Inversión MDD fuente', 'Inversión reportada'])
         },
         {
           widget: 'techList',
@@ -5406,7 +5522,8 @@
         tooltip: {
           useHTML: true,
           formatter: function () {
-            const origin = formatGieOriginText({ gie: this.point.name });
+            const project = DATA.find(p => normalizeGieKey(p.gie) === normalizeGieKey(this.point.name)) || { gie: this.point.name };
+            const origin = formatGieOriginText(project);
             return `<b>${getCountryFlagHtml(origin)}${this.point.name}</b><br><span style="color:#64748b;">${escapeHtml(origin)}</span><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
           }
         },
@@ -5550,7 +5667,7 @@
               <strong>GIE:</strong> ${p.gie}<br>
               <strong>Origen GIE:</strong> ${getCountryFlagHtml(formatGieOriginText(p))}${formatGieOriginText(p)}<br>
               <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${displayTech})<br>
-              <strong>Inversión:</strong> ${formatInvestmentReported(p.inversionRaw)}<br>
+              <strong>Inversión:</strong> ${formatInvestmentReported(p)}<br>
               <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
             </div>
           `);
@@ -5678,7 +5795,8 @@
     }
 
     function formatInvestmentReported(rawInv) {
-      const raw = String(rawInv || '').trim();
+      const project = rawInv && typeof rawInv === 'object' ? rawInv : null;
+      const raw = String(project ? (project.inversionTextoOriginal || project.inversionRaw || '') : (rawInv || '')).trim();
       if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return '—';
 
       const formatNumericToken = token => {
@@ -6034,7 +6152,7 @@
                 <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
                 <td style="max-width:110px;">${formatCell(p.tecnologia)}</td>
                 <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
-                <td class="col-right-text">${formatInvestmentReported(p.inversionRaw)}</td>
+                <td class="col-right-text">${formatInvestmentReported(p)}</td>
                 <td class="col-center-text">${formatFeoc(p.feoc)}</td>
                 <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
                 <td class="col-center-text">${formatCell(p.misse, 'status')}</td>
@@ -6130,7 +6248,7 @@
               <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
               <td style="max-width:110px;">ALMACENAMIENTO</td>
               <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
-              <td class="col-right-text">${formatInvestmentReported(p.inversionRaw)}</td>
+              <td class="col-right-text">${formatInvestmentReported(p)}</td>
               <td class="col-center-text">${formatFeoc(p.feoc)}</td>
               <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
               <td class="col-center-text">${formatCell(p.misse, 'status')}</td>
@@ -7125,7 +7243,8 @@
         tooltip: {
           useHTML: true,
           formatter: function () {
-            const origin = formatGieOriginText({ gie: this.point.name });
+            const project = gcrProjects.find(p => normalizeGieKey(p.gie) === normalizeGieKey(this.point.name)) || { gie: this.point.name };
+            const origin = formatGieOriginText(project);
             return `<b>${getCountryFlagHtml(origin)}${this.point.name}</b><br><span style="color:#64748b;">${escapeHtml(origin)}</span><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
           }
         },
@@ -7273,7 +7392,7 @@
                 <strong>GIE:</strong> ${p.gie}<br>
                 <strong>Origen GIE:</strong> ${getCountryFlagHtml(formatGieOriginText(p))}${formatGieOriginText(p)}<br>
                 <strong>Capacidad:</strong> ${finalMw.toFixed(1)} MW (${tGroup})<br>
-                <strong>Inversión:</strong> ${p.inversionRaw ? formatInvestmentReported(p.inversionRaw) : 'Sin datos'}<br>
+                <strong>Inversión:</strong> ${p.inversionRaw ? formatInvestmentReported(p) : 'Sin datos'}<br>
                 <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
               </div>
             `);
@@ -10497,7 +10616,7 @@
         fkpi('Cap. Neta', formatNumber(p.mwNeta) + ' MW', '', 'Cap. Neta'),
         fkpi('Cap. Contratada', formatNumber(p.capacidadContratada) + ' MW', '', 'Cap. contratada'),
         fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', '', 'Entrada COD'),
-        fkpi('Inversión', formatInvestmentReported(p.inversionRaw), '', 'Inversión reportada')
+        fkpi('Inversión', formatInvestmentReported(p), '', 'Inversión reportada')
       ].join('');
 
       // Página 1: Columnas
@@ -10524,7 +10643,7 @@
         ${fkv('Subtecnología', p.subtech)}
         ${fkv('Cap. instalada', p.mwInstalada ? formatNumber(p.mwInstalada) + ' MW' : '—')}
         ${fkv('Cap. contratada', p.capacidadContratada ? formatNumber(p.capacidadContratada) + ' MW' : '—')}
-        ${fkv('Inversión reportada', formatInvestmentReported(p.inversionRaw))}
+        ${fkv('Inversión reportada', formatInvestmentReported(p))}
         ${fkv('Entrada COD', formatFeoc(p.feoc))}
         ${fkv('Domicilio fiscal', p.domFiscal)}
         ${fkv('Domicilio notificaciones', p.domNotif)}
@@ -10553,7 +10672,7 @@
       document.getElementById('mFichaKpis2').innerHTML = [
         fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', '', 'Cap. instalada'),
         fkpi('Cap. Permiso', formatNumber(p.capacidadGenPermiso) + ' MW', '', 'Cap. gen. permiso'),
-        fkpi('Inversión', formatInvestmentReported(p.inversionRaw), '', 'Inversión reportada'),
+        fkpi('Inversión', formatInvestmentReported(p), '', 'Inversión reportada'),
         fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', '', 'Entrada COD'),
         fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
         fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
@@ -10569,7 +10688,7 @@
         ${fkv('N° de equipos', p.numEquipos)}
         ${fkv('Cap. gen. permiso', p.capacidadGenPermiso ? formatNumber(p.capacidadGenPermiso) + ' MW' : '—')}
         ${fkv('Gen. anual est.', p.generacionAnual ? formatNumber(p.generacionAnual) + ' GWh' : '—')}
-        ${fkv('Inversión reportada', formatInvestmentReported(p.inversionRaw))}
+        ${fkv('Inversión reportada', formatInvestmentReported(p))}
         ${fkv('Inversión social', p.inversionSocial)}
       `;
 
