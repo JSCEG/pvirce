@@ -4715,25 +4715,56 @@
 
     function renderInvestmentSummary(summary) {
       const formatMillions = amount => formatInt(amount / 1000000);
+      const optionalRows = [
+        summary.NO_CURRENCY.count > 0
+          ? `<div class="investment-summary-row"><span>Sin tipo de moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} millones</strong></div>`
+          : '',
+        (summary.ZERO.count > 0 || summary.ONE.count > 0)
+          ? `<div class="investment-summary-row"><span>Monto en 0 o 1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>`
+          : '',
+        summary.NO_INFO.count > 0
+          ? `<div class="investment-summary-row"><span>Sin información</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>`
+          : ''
+      ].join('');
       return `
-        <div class="investment-summary-title">Inversión reportada</div>
+        <div class="investment-summary-title">Inversión reportada por moneda</div>
         <div class="investment-summary-row"><span>USD (Dólares)</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
         <div class="investment-summary-row"><span>MXN (Pesos)</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
-        <div class="investment-summary-row"><span>Sin tipo de moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} millones</strong></div>
-        <div class="investment-summary-row"><span>Monto en 0 o 1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>
-        <div class="investment-summary-row"><span>Sin información</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>
+        ${optionalRows}
       `;
     }
 
     function renderInvestmentSummaryCompact(summary) {
       const formatMillions = amount => formatInt(amount / 1000000);
+      const optionalRows = [
+        summary.NO_CURRENCY.count > 0
+          ? `<div class="investment-summary-row"><span>Sin moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} MM</strong></div>`
+          : '',
+        (summary.ZERO.count > 0 || summary.ONE.count > 0)
+          ? `<div class="investment-summary-row"><span>Monto 0/1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>`
+          : '',
+        summary.NO_INFO.count > 0
+          ? `<div class="investment-summary-row"><span>Sin info</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>`
+          : ''
+      ].join('');
       return `
-        <div class="investment-summary-title">Inversión reportada</div>
+        <div class="investment-summary-title">Inversión reportada por moneda</div>
         <div class="investment-summary-row"><span>USD</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
         <div class="investment-summary-row"><span>MXN</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
-        <div class="investment-summary-row"><span>Sin moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} MM</strong></div>
-        <div class="investment-summary-row"><span>Monto 0/1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>
-        <div class="investment-summary-row"><span>Sin info</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>
+        ${optionalRows}
+      `;
+    }
+
+    function formatInvestmentSummaryCell(summary) {
+      const mdd = Number(summary?.USD?.amount || 0) / 1000000;
+      const mdp = Number(summary?.MXN?.amount || 0) / 1000000;
+      const parts = [];
+      if (mdd > 0) parts.push(`${formatInt(mdd)} MDD`);
+      if (mdp > 0) parts.push(`${formatInt(mdp)} MDP`);
+      if (!parts.length) return '—';
+      return `
+        <div style="font-weight:700; line-height:1.1;">${parts.join('<br>')}</div>
+        <div style="font-size:7.5px; color:var(--color-text-light); font-weight:600; margin-top:2px;">Sin conversión</div>
       `;
     }
 
@@ -6165,12 +6196,13 @@
           // Si es el último slide del GCR, inyectamos la fila de sumatoria total
           if (isLastPage) {
             const sumMw = projs.reduce((s, p) => s + getTableMw(p), 0);
+            const investmentTotalCell = formatInvestmentSummaryCell(summarizeInvestmentReported(projs));
             rowsHtml += `
               <tr class="total-row">
                 <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ${gcrInfo.title.toUpperCase()}</td>
                 <td class="col-right-text">${formatInt(sumMw)}</td>
                 <td colspan="2"></td>
-                <td class="col-right-text">N/A*</td>
+                <td class="col-right-text">${investmentTotalCell}</td>
                 <td colspan="5"></td>
               </tr>
             `;
@@ -6262,7 +6294,7 @@
               <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ALMACENAMIENTO</td>
               <td class="col-right-text">${formatInt(sumMw)}</td>
               <td colspan="2"></td>
-              <td class="col-right-text">N/A*</td>
+              <td class="col-right-text">${formatInvestmentSummaryCell(summarizeInvestmentReported(storageProjects))}</td>
               <td colspan="5"></td>
             </tr>
           ` : '';
