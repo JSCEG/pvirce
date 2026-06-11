@@ -1340,6 +1340,20 @@
       text-overflow: ellipsis;
     }
 
+    .report-table td.wrap-cell,
+    .report-table td.wrap-cell * {
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+
+    .report-table td.wrap-cell {
+      line-height: 1.2;
+      vertical-align: top;
+    }
+
     .report-table tr:nth-child(even) {
       background-color: #fdfdfd;
     }
@@ -4094,8 +4108,8 @@
       const origin = escapeHtml(originRaw);
       const flag = getCountryFlagHtml(originRaw);
       return `
-        <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${gie}</div>
-        <div style="margin-top:2px;font-size:8.5px;color:var(--color-text-light);font-weight:700;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        <div>${gie}</div>
+        <div style="margin-top:2px;font-size:8.5px;color:var(--color-text-light);font-weight:700;letter-spacing:.01em;">
           ${flag}${origin}
         </div>
       `;
@@ -5255,6 +5269,12 @@
         return null;
       }
 
+      const serialDate = formatSpreadsheetSerialDate(text);
+      if (serialDate) {
+        const year = parseInt(serialDate.slice(0, 4), 10);
+        if (!isNaN(year)) return year;
+      }
+
       // Caso principal: fechas con año de 4 dígitos en cualquier posición.
       const yearMatches = text.match(/\b(19\d{2}|20\d{2})\b/g);
       if (yearMatches && yearMatches.length) {
@@ -5270,6 +5290,26 @@
       }
 
       return null;
+    }
+
+    function formatSpreadsheetSerialDate(rawDate) {
+      const text = String(rawDate || '').trim();
+      if (!/^\d{4,6}(?:\.\d+)?$/.test(text)) return '';
+
+      const serial = Number(text);
+      if (!Number.isFinite(serial) || serial < 20000 || serial > 80000) return '';
+
+      const excelEpochUtc = Date.UTC(1899, 11, 30);
+      const date = new Date(excelEpochUtc + Math.floor(serial) * 86400000);
+      const yyyy = date.getUTCFullYear();
+      const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const dd = String(date.getUTCDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function formatIsoDateToMx(isoDate) {
+      const match = String(isoDate || '').match(/^(20\d{2}|19\d{2})-(\d{2})-(\d{2})$/);
+      return match ? `${match[3]}/${match[2]}/${match[1]}` : '';
     }
 
     function renderNumeralia() {
@@ -5811,19 +5851,39 @@
       return String(a.nombre || '').localeCompare(String(b.nombre || ''), 'es');
     }
 
+    function getTechnologySortLabel(project) {
+      return String(getTechBucket(project) || project?.tecnologia || 'Otro');
+    }
+
+    function compareProjectsByTechnologyAlphabetical(a, b) {
+      const techCompare = getTechnologySortLabel(a).localeCompare(getTechnologySortLabel(b), 'es-MX', { sensitivity: 'base' });
+      if (techCompare !== 0) return techCompare;
+
+      const subtechCompare = String(a.tecnologia || '').localeCompare(String(b.tecnologia || ''), 'es-MX', { sensitivity: 'base' });
+      if (subtechCompare !== 0) return subtechCompare;
+
+      const nameCompare = String(a.nombre || '').localeCompare(String(b.nombre || ''), 'es-MX', { sensitivity: 'base' });
+      if (nameCompare !== 0) return nameCompare;
+
+      return String(a.folio || '').localeCompare(String(b.folio || ''), 'es-MX', { sensitivity: 'base' });
+    }
+
     function formatFeoc(feoc) {
       const raw = String(feoc || '').trim();
       if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return '—';
 
+      const serialDate = formatSpreadsheetSerialDate(raw);
+      if (serialDate) return formatIsoDateToMx(serialDate);
+
       const iso = raw.match(/(20\d{2})-(\d{2})-(\d{2})/);
-      if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+      if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
 
       const latam = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
       if (latam) {
         const yy = latam[3].length === 2 ? `20${latam[3]}` : latam[3];
         const mm = latam[2].padStart(2, '0');
         const dd = latam[1].padStart(2, '0');
-        return `${yy}-${mm}-${dd}`;
+        return `${dd}/${mm}/${yy}`;
       }
 
       return raw.length > 10 ? raw.substring(0, 10) : raw;
@@ -6153,11 +6213,11 @@
         deck.appendChild(dashSlide);
         slideIdx++;
 
-        // Ranking regulatorio: Tierras, MISSE, MIA y CENACE; mejor avance primero.
-        const projs = rawProjs.sort(compareProjectsByRegulatoryRanking);
+        // Orden de tabla por tecnología en orden alfabético; desempate por subtecnología, proyecto y folio.
+        const projs = [...rawProjs].sort(compareProjectsByTechnologyAlphabetical);
 
         // Paginación dinámica ajustada para celdas GIE con país/bandera.
-        const rowsPerSlide = 16;
+        const rowsPerSlide = 10;
         const totalPages = Math.ceil(projs.length / rowsPerSlide);
 
         for (let pIdx = 0; pIdx < totalPages; pIdx++) {
@@ -6176,17 +6236,18 @@
             return `
               <tr>
                 <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);" title="Puntaje regulatorio: ${regulatoryRank.score}/8">${rowNum}</td>
-                <td style="font-weight:600; max-width:180px;">
+                <td class="wrap-cell" style="font-weight:600; max-width:160px;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
-                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.nombre}</span>
+                    <span>${p.nombre}</span>
                     <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
                   </div>
                 </td>
-                <td style="max-width:120px;">${formatGieWithOrigin(p)}</td>
+                <td class="wrap-cell" style="max-width:105px;">${formatGieWithOrigin(p)}</td>
                 <td class="col-center-text" style="font-size: 9px;">${p.folio || p.preFolio || '—'}</td>
                 <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
-                <td style="max-width:110px;">${formatCell(p.tecnologia)}</td>
-                <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
+                <td class="wrap-cell" style="max-width:90px;">${formatCell(p.tecnologia)}</td>
+                <td class="wrap-cell" style="max-width:100px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
+                <td class="wrap-cell" style="max-width:135px;" title="${escapeHtml(p.puntoInterconexion || '')}">${formatCell(p.puntoInterconexion)}</td>
                 <td class="col-right-text">${formatInvestmentReported(p)}</td>
                 <td class="col-center-text">${formatFeoc(p.feoc)}</td>
                 <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
@@ -6205,7 +6266,7 @@
               <tr class="total-row">
                 <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ${gcrInfo.title.toUpperCase()}</td>
                 <td class="col-right-text">${formatInt(sumMw)}</td>
-                <td colspan="2"></td>
+                <td colspan="3"></td>
                 <td class="col-right-text">${investmentTotalCell}</td>
                 <td colspan="5"></td>
               </tr>
@@ -6230,12 +6291,13 @@
                   <thead>
                     <tr>
                       <th style="width:25px; text-align:center;">#</th>
-                      <th style="width:180px;">Proyecto</th>
-                      <th style="width:120px;">GIE</th>
+                      <th style="width:160px;">Proyecto</th>
+                      <th style="width:105px;">GIE</th>
                       <th style="width:80px; text-align:center;">Folio VUPE</th>
                       <th style="width:60px; text-align:right;">MW (Contr.)</th>
-                      <th style="width:100px;">Tecnología</th>
-                      <th style="width:115px;">Ubicación</th>
+                      <th style="width:90px;">Tecnología</th>
+                      <th style="width:100px;">Ubicación</th>
+                      <th style="width:135px;">Punto interconexión</th>
                       <th style="width:90px; text-align:right;">Inversión reportada</th>
                       <th style="width:65px; text-align:center;">FEOC</th>
                       <th style="width:45px; text-align:center;">Tierras</th>
@@ -6262,7 +6324,7 @@
       const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
       if (storageProjects.length > 0) {
         const sortedStorage = storageProjects.sort(compareProjectsByRegulatoryRanking);
-        const storageRowsPerSlide = 16;
+        const storageRowsPerSlide = 10;
         const storageTotalPages = Math.ceil(sortedStorage.length / storageRowsPerSlide);
         const sumMw = sortedStorage.reduce((s, p) => s + getTableMw(p), 0);
 
@@ -6273,17 +6335,18 @@
           const rowsHtml = slice.map((p, i) => `
             <tr>
               <td class="col-center-text" style="font-weight:600; color:var(--color-text-light);" title="Puntaje regulatorio: ${getRegulatoryRanking(p).score}/8">${pIdx * storageRowsPerSlide + i + 1}</td>
-              <td style="font-weight:600; max-width:180px;">
+              <td class="wrap-cell" style="font-weight:600; max-width:160px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
-                  <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.nombre}</span>
+                  <span>${p.nombre}</span>
                   <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
                 </div>
               </td>
-              <td style="max-width:120px;">${formatGieWithOrigin(p)}</td>
+              <td class="wrap-cell" style="max-width:105px;">${formatGieWithOrigin(p)}</td>
               <td class="col-center-text" style="font-size: 9px;">${p.folio || p.preFolio || '—'}</td>
               <td class="col-right-text" style="font-weight:600;">${formatInt(getTableMw(p))}</td>
-              <td style="max-width:110px;">ALMACENAMIENTO</td>
-              <td style="max-width:110px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
+              <td class="wrap-cell" style="max-width:90px;">ALMACENAMIENTO</td>
+              <td class="wrap-cell" style="max-width:100px;">${[p.ef, p.municipio].filter(Boolean).join(' · ') || '—'}</td>
+              <td class="wrap-cell" style="max-width:135px;" title="${escapeHtml(p.puntoInterconexion || '')}">${formatCell(p.puntoInterconexion)}</td>
               <td class="col-right-text">${formatInvestmentReported(p)}</td>
               <td class="col-center-text">${formatFeoc(p.feoc)}</td>
               <td class="col-center-text">${formatCell(p.tierras, 'status')}</td>
@@ -6297,7 +6360,7 @@
             <tr class="total-row">
               <td colspan="4" style="text-align:right; font-weight:700;">TOTAL ALMACENAMIENTO</td>
               <td class="col-right-text">${formatInt(sumMw)}</td>
-              <td colspan="2"></td>
+              <td colspan="3"></td>
               <td class="col-right-text">${formatInvestmentSummaryCell(summarizeInvestmentReported(storageProjects))}</td>
               <td colspan="5"></td>
             </tr>
@@ -6325,12 +6388,13 @@
                   <thead>
                     <tr>
                       <th style="width:25px; text-align:center;">#</th>
-                      <th style="width:180px;">Proyecto</th>
-                      <th style="width:120px;">GIE</th>
+                      <th style="width:160px;">Proyecto</th>
+                      <th style="width:105px;">GIE</th>
                       <th style="width:80px; text-align:center;">Folio VUPE</th>
                       <th style="width:60px; text-align:right;">MW (Contr.)</th>
-                      <th style="width:100px;">Tecnología</th>
-                      <th style="width:115px;">Ubicación</th>
+                      <th style="width:90px;">Tecnología</th>
+                      <th style="width:100px;">Ubicación</th>
+                      <th style="width:135px;">Punto interconexión</th>
                       <th style="width:90px; text-align:right;">Inversión reportada</th>
                       <th style="width:65px; text-align:center;">FEOC</th>
                       <th style="width:45px; text-align:center;">Tierras</th>
@@ -10651,7 +10715,7 @@
         fkpi('Cap. Generación', formatNumber(p.mwGeneracion) + ' MW', '', 'Cap. gen. permiso'),
         fkpi('Cap. Neta', formatNumber(p.mwNeta) + ' MW', '', 'Cap. Neta'),
         fkpi('Cap. Contratada', formatNumber(p.capacidadContratada) + ' MW', '', 'Cap. contratada'),
-        fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', '', 'Entrada COD'),
+        fkpi('Entrada COD', formatFeoc(p.feoc), '', 'Entrada COD'),
         fkpi('Inversión', formatInvestmentReported(p), '', 'Inversión reportada')
       ].join('');
 
@@ -10709,7 +10773,7 @@
         fkpi('Cap. Instalada', formatNumber(p.mwInstalada) + ' MW', '', 'Cap. instalada'),
         fkpi('Cap. Permiso', formatNumber(p.capacidadGenPermiso) + ' MW', '', 'Cap. gen. permiso'),
         fkpi('Inversión', formatInvestmentReported(p), '', 'Inversión reportada'),
-        fkpi('Entrada COD', p.feoc ? p.feoc.substring(0, 10) : '—', '', 'Entrada COD'),
+        fkpi('Entrada COD', formatFeoc(p.feoc), '', 'Entrada COD'),
         fkpi('% Implement.', p.pctImpl ? p.pctImpl + '%' : '—', '', '% Implementación'),
         fkpi('Inversión social', p.inversionSocial || '—', '', 'Inversión social')
       ].join('');
