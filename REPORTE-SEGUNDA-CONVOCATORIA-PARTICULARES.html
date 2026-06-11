@@ -1354,6 +1354,14 @@
       vertical-align: top;
     }
 
+    .report-table .row-action-btn {
+      flex: 0 0 auto;
+      min-width: 34px;
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: clip;
+    }
+
     .report-table tr:nth-child(even) {
       background-color: #fdfdfd;
     }
@@ -6239,7 +6247,7 @@
                 <td class="wrap-cell" style="font-weight:600; max-width:160px;">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
                     <span>${p.nombre}</span>
-                    <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
+                    <button class="row-action-btn" onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
                   </div>
                 </td>
                 <td class="wrap-cell" style="max-width:105px;">${formatGieWithOrigin(p)}</td>
@@ -6338,7 +6346,7 @@
               <td class="wrap-cell" style="font-weight:600; max-width:160px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
                   <span>${p.nombre}</span>
-                  <button onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
+                  <button class="row-action-btn" onclick="openFichaModal('${p.id}')" style="background: var(--color-guinda); color: white; border: none; padding: 2px 5px; font-size: 8.5px; border-radius: 3px; cursor: pointer; font-family: 'Outfit', sans-serif;">Ver</button>
                 </div>
               </td>
               <td class="wrap-cell" style="max-width:105px;">${formatGieWithOrigin(p)}</td>
