@@ -4695,41 +4695,55 @@
     }
 
     function summarizeInvestmentReported(projects) {
+      const createBucket = () => ({ count: 0, projectCount: 0, amount: 0, projectIds: new Set() });
       const summary = {
-        USD: { count: 0, amount: 0 },
-        MXN: { count: 0, amount: 0 },
-        NO_CURRENCY: { count: 0, amount: 0 },
-        ZERO: { count: 0, amount: 0 },
-        ONE: { count: 0, amount: 0 },
-        NO_INFO: { count: 0, amount: 0 }
+        USD: createBucket(),
+        MXN: createBucket(),
+        NO_CURRENCY: createBucket(),
+        ZERO: createBucket(),
+        ONE: createBucket(),
+        NO_INFO: createBucket()
       };
 
-      projects.forEach((project) => {
+      projects.forEach((project, idx) => {
         const investment = getProjectInvestment(project);
-        summary[investment.group].count += 1;
-        summary[investment.group].amount += investment.amount;
+        const bucket = summary[investment.group] || summary.NO_INFO;
+        bucket.projectIds.add(project?.id || project?._sheetRowNumber || project?.folio || `idx_${idx}`);
+        bucket.amount += investment.amount;
+      });
+
+      Object.values(summary).forEach(bucket => {
+        bucket.projectCount = bucket.projectIds.size;
+        bucket.count = bucket.projectCount;
+        delete bucket.projectIds;
       });
 
       return summary;
     }
 
+    function getInvestmentProjectCount(summary, group) {
+      const bucket = summary?.[group] || {};
+      const count = Number(bucket.projectCount ?? bucket.count ?? 0);
+      return Number.isFinite(count) ? count : 0;
+    }
+
     function renderInvestmentSummary(summary) {
       const formatMillions = amount => formatInt(amount / 1000000);
       const optionalRows = [
-        summary.NO_CURRENCY.count > 0
-          ? `<div class="investment-summary-row"><span>Sin tipo de moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} millones</strong></div>`
+        getInvestmentProjectCount(summary, 'NO_CURRENCY') > 0
+          ? `<div class="investment-summary-row"><span>Sin tipo de moneda</span><strong>${formatInt(getInvestmentProjectCount(summary, 'NO_CURRENCY'))} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} millones</strong></div>`
           : '',
-        (summary.ZERO.count > 0 || summary.ONE.count > 0)
-          ? `<div class="investment-summary-row"><span>Monto en 0 o 1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>`
+        (getInvestmentProjectCount(summary, 'ZERO') > 0 || getInvestmentProjectCount(summary, 'ONE') > 0)
+          ? `<div class="investment-summary-row"><span>Monto en 0 o 1</span><strong>${formatInt(getInvestmentProjectCount(summary, 'ZERO'))} / ${formatInt(getInvestmentProjectCount(summary, 'ONE'))} proy.</strong></div>`
           : '',
-        summary.NO_INFO.count > 0
-          ? `<div class="investment-summary-row"><span>Sin información</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>`
+        getInvestmentProjectCount(summary, 'NO_INFO') > 0
+          ? `<div class="investment-summary-row"><span>Sin información</span><strong>${formatInt(getInvestmentProjectCount(summary, 'NO_INFO'))} proy.</strong></div>`
           : ''
       ].join('');
       return `
         <div class="investment-summary-title">Inversión reportada por moneda</div>
-        <div class="investment-summary-row"><span>USD (Dólares)</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
-        <div class="investment-summary-row"><span>MXN (Pesos)</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
+        <div class="investment-summary-row"><span>USD (Dólares)</span><strong>${formatInt(getInvestmentProjectCount(summary, 'USD'))} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
+        <div class="investment-summary-row"><span>MXN (Pesos)</span><strong>${formatInt(getInvestmentProjectCount(summary, 'MXN'))} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
         ${optionalRows}
       `;
     }
@@ -4737,20 +4751,20 @@
     function renderInvestmentSummaryCompact(summary) {
       const formatMillions = amount => formatInt(amount / 1000000);
       const optionalRows = [
-        summary.NO_CURRENCY.count > 0
-          ? `<div class="investment-summary-row"><span>Sin moneda</span><strong>${formatInt(summary.NO_CURRENCY.count)} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} MM</strong></div>`
+        getInvestmentProjectCount(summary, 'NO_CURRENCY') > 0
+          ? `<div class="investment-summary-row"><span>Sin moneda</span><strong>${formatInt(getInvestmentProjectCount(summary, 'NO_CURRENCY'))} proy. · ${formatMillions(summary.NO_CURRENCY.amount)} MM</strong></div>`
           : '',
-        (summary.ZERO.count > 0 || summary.ONE.count > 0)
-          ? `<div class="investment-summary-row"><span>Monto 0/1</span><strong>${formatInt(summary.ZERO.count)} / ${formatInt(summary.ONE.count)} proy.</strong></div>`
+        (getInvestmentProjectCount(summary, 'ZERO') > 0 || getInvestmentProjectCount(summary, 'ONE') > 0)
+          ? `<div class="investment-summary-row"><span>Monto 0/1</span><strong>${formatInt(getInvestmentProjectCount(summary, 'ZERO'))} / ${formatInt(getInvestmentProjectCount(summary, 'ONE'))} proy.</strong></div>`
           : '',
-        summary.NO_INFO.count > 0
-          ? `<div class="investment-summary-row"><span>Sin info</span><strong>${formatInt(summary.NO_INFO.count)} proy.</strong></div>`
+        getInvestmentProjectCount(summary, 'NO_INFO') > 0
+          ? `<div class="investment-summary-row"><span>Sin info</span><strong>${formatInt(getInvestmentProjectCount(summary, 'NO_INFO'))} proy.</strong></div>`
           : ''
       ].join('');
       return `
         <div class="investment-summary-title">Inversión reportada por moneda</div>
-        <div class="investment-summary-row"><span>USD</span><strong>${formatInt(summary.USD.count)} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
-        <div class="investment-summary-row"><span>MXN</span><strong>${formatInt(summary.MXN.count)} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
+        <div class="investment-summary-row"><span>USD</span><strong>${formatInt(getInvestmentProjectCount(summary, 'USD'))} proy. · ${formatMillions(summary.USD.amount)} MDD</strong></div>
+        <div class="investment-summary-row"><span>MXN</span><strong>${formatInt(getInvestmentProjectCount(summary, 'MXN'))} proy. · ${formatMillions(summary.MXN.amount)} MDP</strong></div>
         ${optionalRows}
       `;
     }
@@ -5104,9 +5118,9 @@
         },
         {
           widget: 'kpiTotalMw (generacion + almacenamiento)',
-          formula: 'sum(getContractedMw) => Capacidad Contratada o mw fallback',
-          dataField: 'capacidadContratada, mw',
-          sourceColumns: getSourceColumnsForLabels(['Cap. contratada', 'Cap. instalada']) + ' | fallback: Capacidad Generación / Capacidad Instalada Neta'
+          formula: 'sum(mw) por tipo: generación + almacenamiento no asociado, sin mezclar conteos',
+          dataField: 'mw',
+          sourceColumns: getSourceColumnsForLabels(['Cap. instalada']) + ' | fallback: Capacidad Generación / Capacidad Instalada Neta'
         },
         {
           widget: 'kpiTotalInversion',
@@ -5289,25 +5303,15 @@
       const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
       const investmentSummary = summarizeInvestmentReported(DATA);
 
-      const getContractedMw = p => {
-        const contracted = Number(p.capacidadContratada || 0);
-        if (!isNaN(contracted) && contracted > 0) return contracted;
-        const fallback = Number(p.mw || 0);
-        return isNaN(fallback) ? 0 : fallback;
-      };
-      const totalMwContracted = genProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
-      const storageMwContracted = storageProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
-
       document.getElementById('kpiTotalCount').innerText = totalCount;
       document.getElementById('techTotalProjects').textContent = `${formatInt(totalCount)} proyectos totales`;
-      const totalMwCard = Math.round(totalMwContracted).toLocaleString('es-MX');
-      const storageMwCard = Math.round(storageMwContracted).toLocaleString('es-MX');
+      const totalMwCard = Math.round(totalMw).toLocaleString('es-MX');
+      const storageMwCard = Math.round(storageMw).toLocaleString('es-MX');
       const genCountCard = formatInt(genProjects.length);
       const storageCountCard = formatInt(storageProjects.length);
       document.getElementById('kpiTotalMw').innerHTML = `
-        <span class="mw-line">${totalMwCard} MW (${genCountCard} proyectos) +</span>
-        <span class="mw-line">${storageMwCard} MW</span>
-        <span class="mw-line">Almacenamiento no asociado<span class="mw-asterisk">*</span> (${storageCountCard} proyectos)</span>
+        <span class="mw-line">${genCountCard} proyectos generación · ${totalMwCard} MW</span>
+        <span class="mw-line">${storageCountCard} proyectos almacenamiento no asociado<span class="mw-asterisk">*</span> · ${storageMwCard} MW</span>
       `;
       document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
@@ -11305,7 +11309,7 @@
         });
 
         // Contadores dinámicos
-        activeSlide.querySelectorAll('.val-main, .val-sub, .s-val, .s-mw, .t-val div, .invest-lbl strong, .tech-total').forEach(el => {
+        activeSlide.querySelectorAll('.val-main, .val-sub:not(#kpiTotalMw), .s-val, .s-mw, .t-val div, .tech-total').forEach(el => {
           animateNumberCountUp(el);
         });
 
