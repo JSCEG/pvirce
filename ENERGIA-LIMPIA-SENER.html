@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energía Limpia | SENER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+    :root {
+      --guinda: #9B2247;
+      --guinda-light: #B24C6C;
+      --verde: #1E5B4F;
+      --dorado: #A57F2C;
+      --dorado-light: #D6B46A;
+      --gris: #98989A;
+      --gris-claro: #E5E5E5;
+      --texto: #2b2b2b;
+      --fondo: #1E1E1E;
+      --scale: 1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Outfit', Arial, sans-serif;
+    }
+    #deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide.active { display: flex; }
+    .slide-container {
+      position: relative;
+      width: 1333px;
+      height: 750px;
+      padding: 35px 45px;
+      background: #fff;
+      overflow: hidden;
+      transform: scale(var(--scale));
+      transform-origin: center center;
+      box-shadow: 0 22px 80px rgba(0,0,0,.35);
+    }
+    .slide-header {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      height: 72px;
+      margin: -35px -45px 22px;
+      padding: 12px 45px 10px;
+      background: linear-gradient(180deg, #fff 0%, #f9f9f9 100%);
+      border-bottom: 5px solid var(--guinda);
+    }
+    .brand-left {
+      position: relative;
+      padding-left: 18px;
+      font-family: 'Patria', serif;
+      font-size: 18px;
+      line-height: 1.1;
+      color: var(--guinda);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .brand-left::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 6px;
+      height: 38px;
+      background: var(--dorado);
+    }
+    .ef-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      font-family: 'Patria', serif;
+      font-size: 20px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--guinda);
+      text-align: center;
+    }
+    .ef-title::before,
+    .ef-title::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--dorado);
+    }
+    .logo-right { text-align: right; }
+    .logo-sener { height: 45px; max-width: 230px; object-fit: contain; }
+    .slide-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--guinda) 0 60%, var(--dorado) 60% 100%);
+    }
+    .slide.cover .slide-container {
+      background: #6a172f;
+      color: #fff;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .slide.cover .cover-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .slide.cover .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155,34,71,.14) 0%, rgba(30,91,79,.10) 60%, rgba(0,0,0,.42) 100%);
+      z-index: 1;
+    }
+    .slide.cover .top-band,
+    .slide.cover .body,
+    .slide.cover .bottom-band {
+      position: relative;
+      z-index: 2;
+    }
+    .slide.cover .top-band {
+      background: rgba(255,255,255,.96);
+      padding: 12px 48px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      border-bottom: 4px solid var(--dorado);
+      width: 100%;
+    }
+    .slide.cover .top-band img.gob {
+      height: 48px;
+      width: auto;
+    }
+    .slide.cover .top-band img.sener {
+      height: 42px;
+      width: auto;
+    }
+    .slide.cover .top-band .divider {
+      width: 1px;
+      height: 42px;
+      background: var(--gris);
+    }
+    .slide.cover .top-band .unit {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--texto);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .slide.cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 28px 54px 86px 25%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 10px;
+      text-align: left;
+    }
+    .slide.cover .eyebrow {
+      font-size: 13px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--dorado-light);
+      font-weight: 800;
+    }
+    .slide.cover h1 {
+      font-family: 'Patria', serif;
+      font-weight: 700;
+      font-size: 56px;
+      line-height: .98;
+      max-width: 900px;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+    .slide.cover .unidad {
+      font-family: 'Patria', serif;
+      font-weight: 300;
+      font-size: 24px;
+      line-height: 1.2;
+      color: #fff;
+      max-width: 720px;
+      text-shadow: 0 2px 8px rgba(0,0,0,.4);
+      margin-top: 6px;
+      margin-bottom: 2px;
+    }
+    .slide.cover .unidad-sub {
+      font-family: 'Patria', serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.35;
+      color: rgba(255,255,255,.92);
+      max-width: 720px;
+      text-shadow: 0 1px 4px rgba(0,0,0,.3);
+      margin-top: 4px;
+      margin-bottom: 2px;
+    }
+    .slide.cover .unidad-sub-dgmesnie {
+      margin-top: 6px;
+      padding: 8px 14px 10px;
+      max-width: 860px;
+      font-size: 17px;
+      line-height: 1.35;
+      background: rgba(0,0,0,.28);
+      border-left: 4px solid var(--dorado);
+      border-radius: 0 8px 8px 0;
+      backdrop-filter: blur(1px);
+    }
+    .slide.cover .unidad-sub-dgmesnie .acronym {
+      color: var(--dorado-light);
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .slide.cover .subtitle {
+      font-family: 'Patria', serif;
+      font-weight: 600;
+      font-size: 25px;
+      line-height: 1.12;
+      color: #fff;
+      margin-top: 10px;
+      text-align: right;
+      letter-spacing: .01em;
+      text-shadow: 0 2px 8px rgba(0,0,0,.32);
+    }
+    .slide.cover .meta {
+      position: absolute;
+      right: 54px;
+      bottom: 36px;
+      margin-top: 0;
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 22px;
+      justify-content: flex-end;
+      align-items: start;
+      margin-left: auto;
+    }
+    .slide.cover .meta-item {
+      min-width: 110px;
+      text-align: right;
+    }
+    .slide.cover .meta-label {
+      display: block;
+      font-family: 'Patria', serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: rgba(214,180,106,.94);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .slide.cover .meta-value {
+      display: block;
+      font-family: 'Patria', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,.95);
+      line-height: 1.14;
+      text-shadow: 0 1px 3px rgba(0,0,0,.28);
+      white-space: nowrap;
+    }
+    .cover .slide-footer {
+      height: 12px;
+      background: linear-gradient(90deg, var(--guinda) 0 33.333%, var(--verde) 33.333% 66.666%, var(--dorado) 66.666% 100%);
+    }
+    .slide.cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
+      height: 14px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--guinda) 0 33%, var(--verde) 33% 66%, var(--dorado) 66% 100%);
+    }
+    .grid { display: grid; gap: 16px; }
+    .kpi-grid {
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 16px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(31,41,55,.08);
+    }
+    .kpi {
+      min-height: 118px;
+      padding: 18px 18px 14px;
+      border-top: 5px solid var(--guinda);
+    }
+    .kpi:nth-child(2) { border-top-color: var(--verde); }
+    .kpi:nth-child(3) { border-top-color: var(--dorado); }
+    .kpi:nth-child(4) { border-top-color: var(--gris); }
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .kpi-value {
+      margin-top: 9px;
+      font-size: 33px;
+      font-weight: 800;
+      color: var(--guinda);
+      line-height: 1;
+    }
+    .kpi-note {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #666;
+    }
+    .two-col {
+      grid-template-columns: 1.38fr .82fr;
+      height: 492px;
+    }
+    .chart-card {
+      padding: 16px 18px 12px;
+      min-height: 0;
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-family: 'Patria', serif;
+      color: var(--guinda);
+      font-size: 19px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .chart-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-left: 12px;
+    }
+    .chart-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--guinda);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: 0 5px 14px rgba(155,34,71,.22);
+    }
+    .chart-action-btn.gold { background: var(--dorado); }
+    .chart-action-btn.green { background: var(--verde); }
+    .chart-action-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .chart {
+      width: 100%;
+      height: 395px;
+    }
+    #trendChart { height: 510px; }
+    .side-panel {
+      padding: 16px;
+      background: #f7f7f7;
+      border-radius: 8px;
+      border-left: 6px solid var(--dorado);
+    }
+    .side-panel h3 {
+      margin: 0 0 10px;
+      font-family: 'Patria', serif;
+      color: var(--guinda);
+      font-size: 19px;
+      text-transform: uppercase;
+    }
+    .mini-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 9px 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+    .mini-row strong { color: var(--guinda); }
+    .story-callout {
+      margin-top: 12px;
+      padding: 14px 15px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(155,34,71,.08), rgba(30,91,79,.08));
+      border: 1px solid rgba(155,34,71,.12);
+      min-height: 415px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .story-year {
+      font-family: 'Patria', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--guinda);
+      line-height: 1;
+    }
+    .story-copy {
+      margin-top: 7px;
+      font-size: 16px;
+      line-height: 1.42;
+      color: #3f3f3f;
+    }
+    .story-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-top: 18px;
+    }
+    .story-metric {
+      padding: 8px;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #e7e7e7;
+    }
+    .story-metric span {
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #777;
+      letter-spacing: .05em;
+    }
+    .story-metric strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 16px;
+      color: var(--guinda);
+    }
+    .tech-panel {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+    .tech-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 10px;
+      min-height: 36px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fff;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tech-chip input { accent-color: var(--guinda); }
+    .toolbar-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .small-btn {
+      height: 30px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--guinda);
+      color: #fff;
+      font: 700 12px 'Outfit', sans-serif;
+      cursor: pointer;
+    }
+    .small-btn.secondary { background: var(--verde); }
+    .mix-grid {
+      grid-template-columns: 1fr 1fr;
+      height: 548px;
+    }
+    .table-wrap {
+      height: 484px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+    thead th {
+      background: var(--guinda);
+      color: #fff;
+      padding: 9px 7px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    thead th:first-child,
+    tbody td:first-child { text-align: left; }
+    tbody td {
+      padding: 8px 7px;
+      border-bottom: 1px solid #ececec;
+      text-align: right;
+    }
+    tbody tr:nth-child(even) { background: #fafafa; }
+    .method-grid {
+      grid-template-columns: 1fr;
+      height: 548px;
+    }
+    .method-grid .chart-card {
+      min-width: 0;
+    }
+    #dataTable th,
+    #dataTable td {
+      padding: 7px 5px;
+      font-size: 9.2px;
+      line-height: 1.14;
+      white-space: normal;
+    }
+    #dataTable th:first-child,
+    #dataTable td:first-child {
+      width: 45px;
+      min-width: 45px;
+    }
+    #dataTable th:nth-child(7),
+    #dataTable td:nth-child(7),
+    #dataTable th:nth-child(10),
+    #dataTable td:nth-child(10) {
+      width: 56px;
+    }
+    .note-box {
+      padding: 20px;
+      background: #f7f7f7;
+      border-left: 6px solid var(--verde);
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.35;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      overflow: hidden;
+    }
+    .note-box strong {
+      display: block;
+      font-family: 'Patria', serif;
+      color: var(--guinda);
+      font-size: 22px;
+      line-height: 1.08;
+      text-transform: uppercase;
+    }
+    .note-box p { margin: 0; }
+    .method-note-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .method-note {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid #e4e4e4;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .method-note i {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--verde);
+      color: #fff;
+      font-size: 15px;
+    }
+    .method-note h4 {
+      margin: 0 0 3px;
+      color: var(--guinda);
+      font-size: 13px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+    .method-note div:last-child {
+      min-width: 0;
+    }
+    .method-note p {
+      color: #3f3f3f;
+      font-size: 12.5px;
+      line-height: 1.28;
+    }
+    .status {
+      position: absolute;
+      top: 88px;
+      right: 45px;
+      max-width: 440px;
+      padding: 10px 14px;
+      border-radius: 7px;
+      background: #fff8e6;
+      border: 1px solid #ead28a;
+      color: #5f4700;
+      font-size: 13px;
+      display: none;
+      z-index: 5;
+    }
+    #presentationControls {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(22,22,22,.82);
+      box-shadow: 0 12px 32px rgba(0,0,0,.34);
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+    .control-btn {
+      height: 38px;
+      min-width: 38px;
+      padding: 0 13px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      color: #fff;
+      font: 700 13px 'Outfit', sans-serif;
+      cursor: pointer;
+    }
+    .control-btn:hover { background: rgba(255,255,255,.18); }
+    .control-btn.gold { background: var(--dorado); }
+    .control-btn.green { background: var(--verde); }
+    .control-btn:disabled { opacity: .35; cursor: default; }
+    .control-btn i {
+      font-size: 16px;
+      line-height: 1;
+    }
+    body.animations-ready .animate-item {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    body.animations-ready .animate-item-left {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    body.animations-ready .animate-item-right {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    body.animations-ready .animate-item-scale {
+      opacity: 0;
+      transform: scale(.92);
+    }
+    .exporting .animate-item,
+    .exporting .animate-item-left,
+    .exporting .animate-item-right,
+    .exporting .animate-item-scale {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+    #slideCounter {
+      min-width: 64px;
+      text-align: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pdf-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 14000;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(4px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .pdf-loader.show { display: flex; }
+    .pdf-loader .spinner-ring {
+      width: 56px;
+      height: 56px;
+      border: 4px solid rgba(255,255,255,.18);
+      border-top-color: #f7dca1;
+      border-radius: 50%;
+      animation: spin .9s linear infinite;
+    }
+    .pdf-loader .pl-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #f7dca1;
+    }
+    .pdf-loader .pl-step {
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      letter-spacing: .04em;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .exporting #presentationControls { display: none; }
+    .exporting .chart-fullscreen-modal { display: none !important; }
+    .chart-fullscreen-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 13000;
+      background: rgba(30,30,30,.92);
+      padding: 0;
+    }
+    .chart-fullscreen-modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-fullscreen-shell {
+      width: min(100vw, calc(100vh * 1333 / 750));
+      height: min(100vh, calc(100vw * 750 / 1333));
+      background: #fff;
+      border-radius: 0;
+      box-shadow: 0 24px 90px rgba(0,0,0,.45);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-bottom: 8px solid var(--guinda);
+    }
+    .chart-fullscreen-head {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 24px;
+      border-bottom: 4px solid var(--dorado);
+      background: linear-gradient(180deg,#fff,#f7f7f7);
+      font-family: 'Patria', serif;
+      font-weight: 700;
+      color: var(--guinda);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .chart-fullscreen-tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .chart-fullscreen-tools button {
+      height: 34px;
+      min-width: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--guinda);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .chart-fullscreen-tools button.green { background: var(--verde); }
+    #fullscreenChart {
+      flex: 1;
+      min-height: 0;
+      padding: 12px 18px 18px;
+    }
+    @media print {
+      body { background: #fff; overflow: visible; }
+      #presentationControls { display: none; }
+      .slide { position: relative; display: flex; page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+  <div id="deck">
+    <section class="slide cover active" id="slide-0">
+      <div class="slide-container">
+        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt="">
+        <div class="cover-overlay"></div>
+
+        <div class="top-band animate-item-scale">
+          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México">
+          <div class="divider"></div>
+          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
+          <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
+        </div>
+
+        <div class="body">
+          <div class="eyebrow animate-item">Seguimiento de Energía Limpia</div>
+          <h1 class="animate-item">Evolución de energía limpia</h1>
+          <div class="unidad animate-item">Subsecretaría de Planeación y Transición Energética</div>
+          <div class="unidad-sub animate-item">Unidad del Sistema Nacional de Información Energética</div>
+          <div class="unidad-sub unidad-sub-dgmesnie animate-item">Dirección General de Metodologías y Estadísticas del Sistema
+            Nacional de Información Energética - <span class="acronym">DGMESNIE</span></div>
+          <div class="subtitle animate-item" id="coverPeriod">Periodo: cargando</div>
+          <div class="meta animate-item">
+            <div class="meta-item">
+              <span class="meta-label">Unidad</span>
+              <span class="meta-value">GWh</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fecha</span>
+              <span class="meta-value" id="coverUpdated">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fuente</span>
+              <span class="meta-value">SNIE - DGMESNIE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-band animate-item-scale"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-1">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Numeralia energética</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="status" id="statusBox"></div>
+        <div class="grid kpi-grid">
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Energía limpia final</div><div class="kpi-value" id="kpiClean">--</div><div class="kpi-note" id="kpiCleanNote">GWh</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Participación limpia</div><div class="kpi-value" id="kpiPercent">--</div><div class="kpi-note" id="kpiPercentNote">del total</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Generación total</div><div class="kpi-value" id="kpiTotal">--</div><div class="kpi-note">GWh</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Distancia vs meta</div><div class="kpi-value" id="kpiGap">--</div><div class="kpi-note" id="kpiGapNote">GWh</div></div>
+        </div>
+        <div class="grid two-col">
+          <div class="card chart-card animate-item-left">
+            <div class="card-title">
+              <span>Energía limpia, fósil y total <span id="rangeLabel"></span></span>
+              <span class="chart-actions">
+                <button class="chart-action-btn green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
+                <button class="chart-action-btn" onclick="openChartFullscreen('summary','Energía limpia, fósil y total')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+              </span>
+            </div>
+            <div class="chart" id="summaryChart"></div>
+          </div>
+          <div class="side-panel animate-item-right">
+            <h3>Evolución anual</h3>
+            <div class="story-callout" id="storyCallout">
+              <div class="story-year" id="storyYear">--</div>
+              <div class="story-copy" id="storyCopy">Activa la animación para revisar la evolución anual.</div>
+              <div class="story-metrics">
+                <div class="story-metric"><span>Limpia</span><strong id="storyClean">--</strong></div>
+                <div class="story-metric"><span>Meta</span><strong id="storyTarget">--</strong></div>
+                <div class="story-metric"><span>Fósil</span><strong id="storyFossil">--</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-2">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Filtro por tecnología</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="toolbar-line animate-item">
+          <div class="card-title" style="margin:0;">Selección de tecnologías limpias</div>
+          <div>
+            <button class="small-btn" onclick="setAllTech(true)">Todas</button>
+            <button class="small-btn secondary" onclick="setAllTech(false)">Limpiar</button>
+          </div>
+        </div>
+        <div class="tech-panel animate-item" id="techPanel"></div>
+        <div class="card chart-card animate-item-scale">
+          <div class="card-title">
+            <span>Generación por tecnología seleccionada <span id="selectedTechLabel"></span></span>
+            <span class="chart-actions">
+              <button class="chart-action-btn" onclick="openChartFullscreen('trend','Generación por tecnología seleccionada')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </span>
+          </div>
+          <div class="chart" id="trendChart"></div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-3">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Mezcla y porcentaje limpio</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="grid mix-grid">
+          <div class="card chart-card animate-item-left">
+            <div class="card-title">
+              <span>Mezcla por tecnología limpia</span>
+              <span class="chart-actions">
+                <button class="chart-action-btn" onclick="openChartFullscreen('stack','Mezcla por tecnología limpia')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+              </span>
+            </div>
+            <div class="chart" id="stackChart"></div>
+          </div>
+          <div class="card chart-card animate-item-right">
+            <div class="card-title">
+              <span>Porcentaje limpio y meta derivada</span>
+              <span class="chart-actions">
+                <button class="chart-action-btn" onclick="openChartFullscreen('percent','Porcentaje limpio y meta derivada')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+              </span>
+            </div>
+            <div class="chart" id="percentChart"></div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-4">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Tabla fuente y método</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="grid method-grid">
+          <div class="card chart-card animate-item-left">
+            <div class="card-title">Serie anual en GWh</div>
+            <div class="table-wrap">
+              <table id="dataTable"></table>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="presentationControls">
+    <button class="control-btn" id="btnPrev" onclick="prevSlide()" title="Anterior"><i class="bi bi-chevron-left"></i></button>
+    <span id="slideCounter">1 / 5</span>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()" title="Siguiente"><i class="bi bi-chevron-right"></i></button>
+    <button class="control-btn" id="btnFs" onclick="toggleFullscreen()" title="Pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+    <button class="control-btn green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
+    <button class="control-btn gold" onclick="exportFullReportPDF()" title="Bajar PDF"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+    <button class="control-btn green" onclick="openDataEditor()" title="Editar datos"><i class="bi bi-pencil-square"></i></button>
+  </div>
+  <div id="pdfLoader" class="pdf-loader">
+    <div class="spinner-ring"></div>
+    <div class="pl-title">Generando PDF</div>
+    <div class="pl-step" id="pdfLoaderStep">Capturando contenido...</div>
+  </div>
+  <div id="chartFullscreenModal" class="chart-fullscreen-modal" onclick="if(event.target === this) closeChartFullscreen();">
+    <div class="chart-fullscreen-shell">
+      <div class="chart-fullscreen-head">
+        <span id="fullscreenChartTitle">Gráfico</span>
+        <div class="chart-fullscreen-tools">
+          <button class="green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
+          <button onclick="closeChartFullscreen()" title="Cerrar"><i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div id="fullscreenChart"></div>
+    </div>
+  </div>
+
+  <script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2UP85ZA-LGDtqPac8wIvkmTmhiUHVALbnOL7ffEpy8DDXQNDB8kVFMGvS3p_YvQ/pub?gid=256552368&single=true&output=csv';
+    const DATA_EDITOR_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2UP85ZA-LGDtqPac8wIvkmTmhiUHVALbnOL7ffEpy8DDXQNDB8kVFMGvS3p_YvQ/pubhtml?gid=256552368&single=true';
+    const CLEAN_TECHS = ['Hidroeléctrica', 'Nuclear', 'Geotérmica', 'Bioenergía', 'Cogeneración Eficiente', 'Hidrógeno', 'Eólica', 'Solar', 'GD-FV'];
+    const COLORS = {
+      'Hidroeléctrica': '#1E5B4F',
+      'Nuclear': '#98989A',
+      'Geotérmica': '#9B2247',
+      'Bioenergía': '#6F7D45',
+      'Cogeneración Eficiente': '#A57F2C',
+      'Hidrógeno': '#4C9EBA',
+      'Eólica': '#2E7D8F',
+      'Solar': '#D6B46A',
+      'GD-FV': '#B24C6C',
+      'Energía limpia': '#1E5B4F',
+      'Energía Fósil': '#98989A',
+      'Generación total': '#9B2247',
+      'Meta de Energía Limpia': '#A57F2C'
+    };
+    const TABLE_HEADER_COLORS = {
+      'Año': '#7D1734',
+      'Hidroeléctrica': '#1F78B4',
+      'Nuclear': '#6B7280',
+      'Geotérmica': '#B23A48',
+      'Bioenergía': '#4E7D2F',
+      'Cogeneración Eficiente': '#A57F2C',
+      'Hidrógeno': '#39A9DB',
+      'Eólica': '#2E7D8F',
+      'Solar': '#D9A441',
+      'GD-FV': '#C86B2D',
+      'Meta de energía limpia': '#A57F2C',
+      'Energía limpia': '#1E5B4F',
+      'Energía fósil': '#7E7E82',
+      'Generación total': '#9B2247',
+      'Participación de energía limpia': '#6F7D45'
+    };
+    let currentSlideIndex = 0;
+    let rows = [];
+    let selectedTechs = new Set(CLEAN_TECHS);
+    let charts = {};
+    let fullscreenChart = null;
+    let fullscreenChartKey = null;
+    let storyTimer = null;
+    window.isExportingPdf = false;
+    document.body.classList.add('animations-ready');
+
+    function normalize(value) {
+      return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase().replace(/\s+/g, ' ');
+    }
+    function parseNum(value) {
+      const raw = String(value ?? '').trim();
+      if (!raw) return null;
+      const cleaned = raw.replace(/,/g, '').replace(/\s+/g, '').replace(/%/g, '');
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
+    }
+    function fmt(value, suffix = '') {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'S/D';
+      return new Intl.NumberFormat('es-MX', { maximumFractionDigits: 0 }).format(value) + suffix;
+    }
+    function fmtPct(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'S/D';
+      return new Intl.NumberFormat('es-MX', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value) + '%';
+    }
+    function showStatus(message) {
+      const box = document.getElementById('statusBox');
+      box.textContent = message;
+      box.style.display = message ? 'block' : 'none';
+    }
+    function findHeaderRow(allRows) {
+      return allRows.findIndex(row => row.some(c => normalize(c) === 'ANO') && row.some(c => normalize(c).includes('ENERGIA LIMPIA')));
+    }
+    function parseRows(csvText) {
+      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: false });
+      const allRows = parsed.data.filter(row => row.some(cell => String(cell || '').trim() !== ''));
+      const headerIdx = findHeaderRow(allRows);
+      if (headerIdx < 0) throw new Error('No se encontró la fila de encabezados con año y energía limpia.');
+      const headers = allRows[headerIdx].map(h => String(h || '').trim());
+      const idx = {};
+      headers.forEach((h, i) => { idx[normalize(h)] = i; });
+      return allRows.slice(headerIdx + 1).map(row => {
+        const item = { raw: row };
+        headers.forEach((h, i) => {
+          if (!h) return;
+          item[h.trim()] = row[i] ?? '';
+        });
+        item.anio = parseNum(row[idx.ANO]);
+        item.clean = parseNum(row[idx['ENERGIA LIMPIA']]);
+        item.fossil = parseNum(row[idx['ENERGIA FOSIL']]);
+        item.total = parseNum(row[idx['GENERACION TOTAL']]);
+        item.target = parseNum(row[idx['META DE ENERGIA LIMPIA']]);
+        item.cleanPct = parseNum(row[idx['ENERGIA LIMPIA (%)']]);
+        item.targetPct = item.total ? (item.target / item.total) * 100 : null;
+        CLEAN_TECHS.forEach(t => { item[t] = parseNum(row[idx[normalize(t)]]); });
+        return item;
+      }).filter(r => r.anio);
+    }
+    async function loadData() {
+      try {
+        showStatus('Cargando datos...');
+        const response = await fetch(CSV_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error('No se pudo leer la fuente.');
+        const text = await response.text();
+        rows = parseRows(text);
+        if (!rows.length) throw new Error('La fuente no contiene filas anuales válidas.');
+        showStatus('');
+        renderAll();
+        requestAnimationFrame(() => animateSlide(currentSlideIndex));
+      } catch (error) {
+        showStatus('ERROR: ' + error.message);
+      }
+    }
+    function latestRow() { return rows[rows.length - 1] || {}; }
+    function firstRow() { return rows[0] || {}; }
+    function getYears() { return rows.map(r => String(r.anio)); }
+    function selectedSeries() {
+      return CLEAN_TECHS.filter(t => selectedTechs.has(t)).map(t => ({
+        name: t,
+        data: rows.map(r => r[t]),
+        color: COLORS[t]
+      }));
+    }
+    function renderAll() {
+      renderMeta();
+      renderKpis();
+      renderTechPanel();
+      renderCharts();
+      renderTable();
+      updateStory(0, false);
+      updateSlideCounter();
+    }
+    function renderMeta() {
+      const first = firstRow();
+      const last = latestRow();
+      document.getElementById('coverPeriod').textContent = `Periodo: ${first.anio || '--'}-${last.anio || '--'}`;
+      document.getElementById('coverUpdated').textContent = `Actualización: ${new Date().toLocaleDateString('es-MX')}`;
+      document.getElementById('rangeLabel').textContent = `${first.anio || ''}-${last.anio || ''}`;
+    }
+    function renderKpis() {
+      const first = firstRow();
+      const last = latestRow();
+      const gap = (last.clean ?? 0) - (last.target ?? 0);
+      const cleanGrowth = first.clean ? ((last.clean - first.clean) / first.clean) * 100 : null;
+      const fossilChange = first.fossil ? ((last.fossil - first.fossil) / first.fossil) * 100 : null;
+      document.getElementById('kpiClean').textContent = fmt(last.clean);
+      document.getElementById('kpiCleanNote').textContent = `GWh en ${last.anio || '--'} | ${fmtPct(cleanGrowth)} vs ${first.anio || '--'}`;
+      document.getElementById('kpiPercent').textContent = fmtPct(last.cleanPct);
+      document.getElementById('kpiPercentNote').textContent = `Meta derivada: ${fmtPct(last.targetPct)}`;
+      document.getElementById('kpiTotal').textContent = fmt(last.total);
+      document.getElementById('kpiGap').textContent = (gap >= 0 ? '+' : '') + fmt(gap);
+      document.getElementById('kpiGapNote').textContent = 'energía limpia menos meta';
+    }
+    function renderTechPanel() {
+      const panel = document.getElementById('techPanel');
+      panel.innerHTML = CLEAN_TECHS.map(t => `
+        <label class="tech-chip">
+          <input type="checkbox" ${selectedTechs.has(t) ? 'checked' : ''} onchange="toggleTech('${t.replace(/'/g, "\\'")}', this.checked)">
+          <span>${t}</span>
+        </label>
+      `).join('');
+      document.getElementById('selectedTechLabel').textContent = `${selectedTechs.size} seleccionadas`;
+    }
+    function baseChartOptions() {
+      return {
+        chart: { style: { fontFamily: 'Outfit, Arial, sans-serif' }, backgroundColor: 'transparent', animation: { duration: 900 } },
+        title: { text: null },
+        credits: { enabled: false },
+        exporting: { enabled: false },
+        legend: { itemStyle: { fontWeight: 700, color: '#333' } },
+        xAxis: { categories: getYears(), lineColor: '#d8d8d8', tickColor: '#d8d8d8' },
+        yAxis: { title: { text: 'GWh' }, gridLineColor: '#eeeeee' },
+        plotOptions: {
+          series: {
+            animation: { duration: 1100 },
+            marker: { enabled: true, radius: 3 },
+            dataLabels: {
+              enabled: true,
+              allowOverlap: false,
+              crop: false,
+              overflow: 'allow',
+              style: {
+                color: '#333333',
+                fontSize: '9px',
+                fontWeight: '700',
+                textOutline: '2px contrast'
+              },
+              formatter: function () {
+                if (this.y === null || this.y === undefined) return '';
+                return Highcharts.numberFormat(this.y, 0, '.', ',');
+              }
+            }
+          }
+        },
+        tooltip: { shared: true, valueSuffix: ' GWh' }
+      };
+    }
+    function chartFullscreenOptions(key, title) {
+      const source = charts[key];
+      if (!source) return null;
+      const options = Highcharts.merge({}, source.userOptions, {
+        chart: {
+          backgroundColor: '#ffffff',
+          height: null,
+          animation: { duration: 900 },
+          spacing: [28, 26, 24, 24]
+        },
+        title: {
+          text: title,
+          align: 'left',
+          style: {
+            color: '#9B2247',
+            fontFamily: 'Patria, Outfit, Arial, sans-serif',
+            fontWeight: '700',
+            textTransform: 'uppercase'
+          }
+        },
+        subtitle: {
+          text: 'Fuente: SNIE - DGMESNIE | Unidad: GWh',
+          align: 'left',
+          style: { color: '#666666', fontFamily: 'Outfit, Arial, sans-serif' }
+        },
+        exporting: { enabled: false },
+        credits: { enabled: false }
+      });
+      return options;
+    }
+    function openChartFullscreen(key, title) {
+      const options = chartFullscreenOptions(key, title);
+      if (!options) return;
+      fullscreenChartKey = key;
+      document.getElementById('fullscreenChartTitle').textContent = title;
+      const modal = document.getElementById('chartFullscreenModal');
+      modal.classList.add('show');
+      if (fullscreenChart) {
+        fullscreenChart.destroy();
+        fullscreenChart = null;
+      }
+      fullscreenChart = Highcharts.chart('fullscreenChart', options);
+      setTimeout(() => fullscreenChart && fullscreenChart.reflow(), 80);
+    }
+    function closeChartFullscreen() {
+      const modal = document.getElementById('chartFullscreenModal');
+      modal.classList.remove('show');
+      if (fullscreenChart) {
+        fullscreenChart.destroy();
+        fullscreenChart = null;
+      }
+      fullscreenChartKey = null;
+    }
+    function renderCharts() {
+      const years = getYears();
+      charts.summary = Highcharts.chart('summaryChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'line' },
+        yAxis: { title: { text: 'GWh' }, gridLineColor: '#eeeeee' },
+        series: [
+          { name: 'Energía limpia', data: rows.map(r => r.clean), color: COLORS['Energía limpia'], lineWidth: 4 },
+          { name: 'Energía fósil', data: rows.map(r => r.fossil), color: COLORS['Energía Fósil'], lineWidth: 3 },
+          { name: 'Generación total', data: rows.map(r => r.total), color: COLORS['Generación total'], lineWidth: 3 },
+          { name: 'Meta de energía limpia', data: rows.map(r => r.target), color: COLORS['Meta de Energía Limpia'], dashStyle: 'ShortDash', lineWidth: 3 }
+        ]
+      });
+      charts.trend = Highcharts.chart('trendChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'column' },
+        plotOptions: {
+          ...baseChartOptions().plotOptions,
+          column: { borderRadius: 3, groupPadding: .10, pointPadding: .05 }
+        },
+        series: selectedSeries()
+      });
+      charts.stack = Highcharts.chart('stackChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'column' },
+        plotOptions: {
+          ...baseChartOptions().plotOptions,
+          column: { stacking: 'normal', borderWidth: 0 },
+          series: {
+            ...baseChartOptions().plotOptions.series,
+            dataLabels: {
+              ...baseChartOptions().plotOptions.series.dataLabels,
+              formatter: function () {
+                if (!this.y) return '';
+                return Highcharts.numberFormat(this.y, 0, '.', ',');
+              }
+            }
+          }
+        },
+        tooltip: { shared: true, valueSuffix: ' GWh' },
+        series: CLEAN_TECHS.map(t => ({ name: t, data: rows.map(r => r[t]), color: COLORS[t] }))
+      });
+      charts.percent = Highcharts.chart('percentChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'line' },
+        yAxis: { title: { text: '%' }, labels: { format: '{value}%' }, gridLineColor: '#eeeeee' },
+        plotOptions: {
+          ...baseChartOptions().plotOptions,
+          series: {
+            ...baseChartOptions().plotOptions.series,
+            dataLabels: {
+              ...baseChartOptions().plotOptions.series.dataLabels,
+              formatter: function () {
+                if (this.y === null || this.y === undefined) return '';
+                return Highcharts.numberFormat(this.y, 1) + '%';
+              }
+            }
+          }
+        },
+        tooltip: { shared: true, valueSuffix: '%' },
+        series: [
+          { name: 'Energía limpia (%)', data: rows.map(r => r.cleanPct), color: COLORS['Energía limpia'], lineWidth: 4 },
+          { name: 'Meta derivada (%)', data: rows.map(r => r.targetPct), color: COLORS['Meta de Energía Limpia'], dashStyle: 'ShortDash', lineWidth: 3 }
+        ]
+      });
+      Object.values(charts).forEach(c => c && c.reflow());
+    }
+    function clearStoryMarkers(chart) {
+      if (!chart || !chart.xAxis || !chart.xAxis[0]) return;
+      const axis = chart.xAxis[0];
+      ['story-line', 'story-band'].forEach(id => {
+        try { axis.removePlotLine(id); } catch (e) {}
+        try { axis.removePlotBand(id); } catch (e) {}
+      });
+    }
+    function markStoryYear(chart, index) {
+      if (!chart || !chart.xAxis || !chart.xAxis[0]) return;
+      const axis = chart.xAxis[0];
+      clearStoryMarkers(chart);
+      axis.addPlotBand({
+        id: 'story-band',
+        from: index - 0.45,
+        to: index + 0.45,
+        color: 'rgba(165,127,44,.10)',
+        zIndex: 2
+      });
+      axis.addPlotLine({
+        id: 'story-line',
+        value: index,
+        color: '#9B2247',
+        width: 3,
+        zIndex: 5,
+        label: {
+          text: String(rows[index]?.anio || ''),
+          rotation: 0,
+          y: 18,
+          style: { color: '#9B2247', fontWeight: '800' }
+        }
+      });
+      chart.series.forEach(series => {
+        if (series.points && series.points[index]) {
+          series.points[index].setState('hover');
+        }
+      });
+    }
+    function updateStory(index, animate = true) {
+      if (!rows.length) return;
+      const row = rows[Math.max(0, Math.min(index, rows.length - 1))];
+      const gap = (row.clean ?? 0) - (row.target ?? 0);
+      const fossilShare = row.total ? (row.fossil / row.total) * 100 : null;
+      const cleanShare = row.cleanPct ?? (row.total ? (row.clean / row.total) * 100 : null);
+      const status = gap >= 0 ? 'cumple o supera la meta' : 'permanece por debajo de la meta';
+      const prevalence = fossilShare !== null && fossilShare > cleanShare ? 'la generación fósil aún prevalece en la matriz' : 'la energía limpia gana prevalencia frente a la fósil';
+      document.getElementById('storyYear').textContent = row.anio;
+      document.getElementById('storyCopy').textContent = `En ${row.anio}, la energía limpia representa ${fmtPct(cleanShare)} y ${status}; ${prevalence}.`;
+      document.getElementById('storyClean').textContent = fmt(row.clean);
+      document.getElementById('storyTarget').textContent = fmt(row.target);
+      document.getElementById('storyFossil').textContent = fmt(row.fossil);
+      [charts.summary, charts.percent, fullscreenChart].forEach(chart => {
+        if (chart) markStoryYear(chart, index);
+      });
+      if (animate && typeof anime !== 'undefined') {
+        anime({
+          targets: '#storyCallout',
+          scale: [0.98, 1],
+          opacity: [0.75, 1],
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      }
+    }
+    function stopEvolutionStory() {
+      if (storyTimer) {
+        clearInterval(storyTimer);
+        storyTimer = null;
+      }
+    }
+    function playEvolutionStory() {
+      if (!rows.length || window.isExportingPdf) return;
+      stopEvolutionStory();
+      showSlide(1);
+      let index = 0;
+      updateStory(index);
+      storyTimer = setInterval(() => {
+        index += 1;
+        if (index >= rows.length) {
+          stopEvolutionStory();
+          return;
+        }
+        updateStory(index);
+      }, 1250);
+    }
+    function renderTable() {
+      const table = document.getElementById('dataTable');
+      const compactTechHeaders = {
+        'Hidroeléctrica': 'Hidro.',
+        'Nuclear': 'Nuclear',
+        'Geotérmica': 'Geot.',
+        'Bioenergía': 'Bio.',
+        'Cogeneración Eficiente': 'Cog. ef.',
+        'Hidrógeno': 'H2',
+        'Eólica': 'Eólica',
+        'Solar': 'Solar',
+        'GD-FV': 'GD-FV'
+      };
+      const headers = [
+        { label: 'Año', title: 'Año' },
+        ...CLEAN_TECHS.map(t => ({ label: compactTechHeaders[t] || t, title: t })),
+        { label: 'Meta', title: 'Meta de energía limpia' },
+        { label: 'Limpia', title: 'Energía limpia' },
+        { label: 'Fósil', title: 'Energía fósil' },
+        { label: 'Total', title: 'Generación total' },
+        { label: 'Limpia %', title: 'Participación de energía limpia' }
+      ];
+      table.innerHTML = `
+        <thead><tr>${headers.map(h => `<th title="${h.title}" style="background:${TABLE_HEADER_COLORS[h.title] || TABLE_HEADER_COLORS[h.label] || '#9B2247'}">${h.label}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td><strong>${r.anio}</strong></td>
+              ${CLEAN_TECHS.map(t => `<td>${fmt(r[t])}</td>`).join('')}
+              <td>${fmt(r.target)}</td>
+              <td>${fmt(r.clean)}</td>
+              <td>${fmt(r.fossil)}</td>
+              <td>${fmt(r.total)}</td>
+              <td>${fmtPct(r.cleanPct)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+    }
+    function toggleTech(name, checked) {
+      if (checked) selectedTechs.add(name);
+      else selectedTechs.delete(name);
+      if (selectedTechs.size === 0) selectedTechs.add(name);
+      renderTechPanel();
+      if (charts.trend) {
+        while (charts.trend.series.length) charts.trend.series[0].remove(false);
+        selectedSeries().forEach(s => charts.trend.addSeries(s, false));
+        charts.trend.redraw();
+      }
+      renderKpis();
+    }
+    function setAllTech(flag) {
+      selectedTechs = new Set(flag ? CLEAN_TECHS : [CLEAN_TECHS[0]]);
+      renderTechPanel();
+      if (charts.trend) {
+        while (charts.trend.series.length) charts.trend.series[0].remove(false);
+        selectedSeries().forEach(s => charts.trend.addSeries(s, false));
+        charts.trend.redraw();
+      }
+      renderKpis();
+    }
+    function showSlide(index) {
+      stopEvolutionStory();
+      const slides = [...document.querySelectorAll('.slide')];
+      currentSlideIndex = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlideIndex));
+      updateSlideCounter();
+      setTimeout(() => Object.values(charts).forEach(c => c && c.reflow()), 80);
+      animateSlide(currentSlideIndex);
+    }
+    function resetAnimatedItems(slide) {
+      slide.querySelectorAll('.animate-item, .animate-item-left, .animate-item-right, .animate-item-scale').forEach(el => {
+        el.style.opacity = '';
+        el.style.transform = '';
+      });
+    }
+    function animateSlide(index) {
+      if (window.isExportingPdf) return;
+      const slides = document.querySelectorAll('.slide');
+      const activeSlide = slides[index];
+      if (!activeSlide) return;
+      resetAnimatedItems(activeSlide);
+      if (typeof anime === 'undefined') {
+        activeSlide.querySelectorAll('.animate-item, .animate-item-left, .animate-item-right, .animate-item-scale').forEach(el => {
+          el.style.opacity = 1;
+          el.style.transform = 'none';
+        });
+        return;
+      }
+
+      const container = activeSlide.querySelector('.slide-container');
+      if (container) {
+        const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+        anime({
+          targets: container,
+          opacity: [0.45, 1],
+          scale: [scale * 0.985, scale],
+          duration: 350,
+          easing: 'easeOutQuad'
+        });
+      }
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item'),
+        opacity: [0, 1],
+        translateY: [24, 0],
+        delay: anime.stagger(55),
+        duration: 560,
+        easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item-left'),
+        opacity: [0, 1],
+        translateX: [-28, 0],
+        delay: anime.stagger(70),
+        duration: 560,
+        easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item-right'),
+        opacity: [0, 1],
+        translateX: [28, 0],
+        delay: anime.stagger(70),
+        duration: 560,
+        easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item-scale'),
+        opacity: [0, 1],
+        scale: [0.92, 1],
+        delay: anime.stagger(65),
+        duration: 520,
+        easing: 'easeOutBack'
+      });
+      if (index === 1) {
+        anime({
+          targets: activeSlide.querySelectorAll('.kpi-value'),
+          opacity: [0, 1],
+          translateY: [10, 0],
+          delay: anime.stagger(80, { start: 180 }),
+          duration: 420,
+          easing: 'easeOutQuad'
+        });
+      }
+    }
+    function nextSlide() { showSlide(currentSlideIndex + 1); }
+    function prevSlide() { showSlide(currentSlideIndex - 1); }
+    function updateSlideCounter() {
+      const count = document.querySelectorAll('.slide').length;
+      document.getElementById('slideCounter').textContent = `${currentSlideIndex + 1} / ${count}`;
+      document.getElementById('btnPrev').disabled = currentSlideIndex === 0;
+      document.getElementById('btnNext').disabled = currentSlideIndex === count - 1;
+    }
+    function fitSlides() {
+      const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+      document.documentElement.style.setProperty('--scale', scale);
+      setTimeout(() => Object.values(charts).forEach(c => c && c.reflow()), 50);
+    }
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+    function openDataEditor() {
+      window.open(DATA_EDITOR_URL, '_blank', 'noopener,noreferrer');
+    }
+    function showPdfLoader(step) {
+      const loader = document.getElementById('pdfLoader');
+      const stepEl = document.getElementById('pdfLoaderStep');
+      if (stepEl && step) stepEl.textContent = step;
+      if (loader) loader.classList.add('show');
+    }
+    function hidePdfLoader() {
+      const loader = document.getElementById('pdfLoader');
+      if (loader) loader.classList.remove('show');
+    }
+    async function captureReportSlideForPdf(slide) {
+      const slideClone = slide.cloneNode(true);
+      const clone = slideClone.querySelector('.slide-container') || slideClone;
+      const stage = document.createElement('div');
+      stage.setAttribute('aria-hidden', 'true');
+      stage.style.position = 'fixed';
+      stage.style.left = '-10000px';
+      stage.style.top = '0';
+      stage.style.width = '1333px';
+      stage.style.height = '750px';
+      stage.style.overflow = 'hidden';
+      stage.style.background = '#ffffff';
+      stage.style.zIndex = '14001';
+      stage.style.opacity = '1';
+      stage.style.pointerEvents = 'none';
+      slideClone.classList.add('active');
+      slideClone.style.position = 'relative';
+      slideClone.style.inset = 'auto';
+      slideClone.style.display = 'flex';
+      slideClone.style.alignItems = 'center';
+      slideClone.style.justifyContent = 'center';
+      slideClone.style.width = '1333px';
+      slideClone.style.height = '750px';
+      clone.style.position = 'relative';
+      clone.style.left = '0';
+      clone.style.top = '0';
+      clone.style.margin = '0';
+      clone.style.transform = 'none';
+      clone.style.transition = 'none';
+      clone.style.width = '1333px';
+      clone.style.height = '750px';
+      clone.style.boxShadow = 'none';
+      stage.appendChild(slideClone);
+      document.body.appendChild(stage);
+      try {
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return await html2canvas(clone, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 1333,
+          height: 750,
+          windowWidth: 1333,
+          windowHeight: 750,
+          scrollX: 0,
+          scrollY: 0
+        });
+      } finally {
+        stage.remove();
+      }
+    }
+    async function exportFullReportPDF() {
+      const { jsPDF } = window.jspdf || {};
+      if (!jsPDF || !window.html2canvas) {
+        alert('No se cargaron las librerías de exportación.');
+        return;
+      }
+      const deck = document.getElementById('deck');
+      const slides = [...deck.querySelectorAll('.slide')];
+      if (!slides.length) {
+        alert('Sin diapositivas para exportar.');
+        return;
+      }
+      const original = currentSlideIndex;
+      const previousSlideState = slides.map(slide => ({ slide, display: slide.style.display }));
+      const prevActive = deck.querySelector('.slide.active');
+      document.body.classList.add('exporting');
+      document.body.classList.remove('animations-ready');
+      window.isExportingPdf = true;
+      showPdfLoader(`Preparando ${slides.length} diapositivas...`);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      try {
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < slides.length; i++) {
+          showPdfLoader(`Capturando diapositiva ${i + 1} de ${slides.length}...`);
+          slides.forEach(slide => {
+            slide.classList.remove('active');
+            slide.style.display = '';
+          });
+          slides[i].classList.add('active');
+          slides[i].style.display = 'flex';
+          currentSlideIndex = i;
+          updateSlideCounter();
+          await new Promise(resolve => setTimeout(resolve, 650));
+          Object.values(charts).forEach(chart => chart && chart.reflow());
+          await new Promise(resolve => setTimeout(resolve, 180));
+
+          const canvas = await captureReportSlideForPdf(slides[i]);
+          const img = canvas.toDataURL('image/jpeg', 0.92);
+          if (i > 0) pdf.addPage([338.6582, 190.5], 'l');
+          pdf.addImage(img, 'JPEG', 0, 0, pageW, pageH);
+        }
+
+        showPdfLoader('Guardando archivo...');
+        pdf.save('SENER_Energia_Limpia_GWh.pdf');
+      } catch (error) {
+        console.error('Error PDF reporte:', error);
+        alert('Error generando PDF: ' + error.message);
+      } finally {
+        window.isExportingPdf = false;
+        document.body.classList.add('animations-ready');
+        slides.forEach(slide => slide.classList.remove('active'));
+        previousSlideState.forEach(({ slide, display }) => {
+          slide.style.display = display;
+        });
+        if (prevActive) prevActive.classList.add('active');
+        currentSlideIndex = original;
+        showSlide(original);
+        hidePdfLoader();
+        document.body.classList.remove('exporting');
+      }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeChartFullscreen();
+        stopEvolutionStory();
+      }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+    window.addEventListener('resize', fitSlides);
+    fitSlides();
+    loadData();
+  </script>
+</body>
+</html>
