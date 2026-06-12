@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Energía Limpia | SENER</title>
+  <title>Producción Energética | SENER</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -829,8 +829,8 @@
         </div>
 
         <div class="body">
-          <div class="eyebrow animate-item">Seguimiento de Energía Limpia</div>
-          <h1 class="animate-item">Evolución de energía limpia</h1>
+          <div class="eyebrow animate-item">Seguimiento de producción energética</div>
+          <h1 class="animate-item">Producción energética anual</h1>
           <div class="unidad animate-item">Subsecretaría de Planeación y Transición Energética</div>
           <div class="unidad-sub animate-item">Unidad del Sistema Nacional de Información Energética</div>
           <div class="unidad-sub unidad-sub-dgmesnie animate-item">Dirección General de Metodologías y Estadísticas del Sistema
@@ -865,18 +865,18 @@
         </div>
         <div class="status" id="statusBox"></div>
         <div class="grid kpi-grid">
-          <div class="card kpi animate-item-scale"><div class="kpi-label">Energía limpia final</div><div class="kpi-value" id="kpiClean">--</div><div class="kpi-note" id="kpiCleanNote">GWh</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Generación limpia final</div><div class="kpi-value" id="kpiClean">--</div><div class="kpi-note" id="kpiCleanNote">GWh</div></div>
           <div class="card kpi animate-item-scale"><div class="kpi-label">Participación limpia</div><div class="kpi-value" id="kpiPercent">--</div><div class="kpi-note" id="kpiPercentNote">del total</div></div>
           <div class="card kpi animate-item-scale"><div class="kpi-label">Generación total</div><div class="kpi-value" id="kpiTotal">--</div><div class="kpi-note">GWh</div></div>
-          <div class="card kpi animate-item-scale"><div class="kpi-label">Distancia vs meta</div><div class="kpi-value" id="kpiGap">--</div><div class="kpi-note" id="kpiGapNote">GWh</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Cambio fósil</div><div class="kpi-value" id="kpiGap">--</div><div class="kpi-note" id="kpiGapNote">vs año inicial</div></div>
         </div>
         <div class="grid two-col">
           <div class="card chart-card animate-item-left">
             <div class="card-title">
-              <span>Energía limpia, fósil y total <span id="rangeLabel"></span></span>
+              <span>Producción limpia, fósil y total <span id="rangeLabel"></span></span>
               <span class="chart-actions">
                 <button class="chart-action-btn green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
-                <button class="chart-action-btn" onclick="openChartFullscreen('summary','Energía limpia, fósil y total')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+                <button class="chart-action-btn" onclick="openChartFullscreen('summary','Producción limpia, fósil y total')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
               </span>
             </div>
             <div class="chart" id="summaryChart"></div>
@@ -888,7 +888,7 @@
               <div class="story-copy" id="storyCopy">Activa la animación para revisar la evolución anual.</div>
               <div class="story-metrics">
                 <div class="story-metric"><span>Limpia</span><strong id="storyClean">--</strong></div>
-                <div class="story-metric"><span>Meta</span><strong id="storyTarget">--</strong></div>
+                <div class="story-metric"><span>Total</span><strong id="storyTarget">--</strong></div>
                 <div class="story-metric"><span>Fósil</span><strong id="storyFossil">--</strong></div>
               </div>
             </div>
@@ -902,7 +902,7 @@
       <div class="slide-container">
         <div class="slide-header">
           <div class="brand-left">SENER<br>DGMESNIE</div>
-          <div class="ef-title">Filtro por tecnología</div>
+          <div class="ef-title">Filtro por tecnología limpia</div>
           <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
         </div>
         <div class="toolbar-line animate-item">
@@ -945,9 +945,9 @@
           </div>
           <div class="card chart-card animate-item-right">
             <div class="card-title">
-              <span>Porcentaje limpio y meta limpia</span>
+          <span>Participación limpia y fósil</span>
               <span class="chart-actions">
-                <button class="chart-action-btn" onclick="openChartFullscreen('percent','Porcentaje limpio y meta limpia')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+                <button class="chart-action-btn" onclick="openChartFullscreen('percent','Participación limpia y fósil')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
               </span>
             </div>
             <div class="chart" id="percentChart"></div>
@@ -1005,19 +1005,21 @@
   </div>
 
   <script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2UP85ZA-LGDtqPac8wIvkmTmhiUHVALbnOL7ffEpy8DDXQNDB8kVFMGvS3p_YvQ/pub?gid=256552368&single=true&output=csv';
-    const DATA_EDITOR_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2UP85ZA-LGDtqPac8wIvkmTmhiUHVALbnOL7ffEpy8DDXQNDB8kVFMGvS3p_YvQ/pubhtml?gid=256552368&single=true';
-    const CLEAN_TECHS = ['Hidroeléctrica', 'Nuclear', 'Geotérmica', 'Bioenergía', 'Cogeneración Eficiente', 'Hidrógeno', 'Eólica', 'Solar', 'GD-FV'];
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR10UgmDt_wncDJa-tV4JT7evpXKDPW8AIEKwSbyzVxAM9zqaob0ncQqh_VBQooRg/pub?output=tsv';
+    const DATA_EDITOR_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR10UgmDt_wncDJa-tV4JT7evpXKDPW8AIEKwSbyzVxAM9zqaob0ncQqh_VBQooRg/pubhtml';
+    const CLEAN_TECHS = ['Fotovoltaica', 'Termosolar', 'Hidroeléctrica', 'Cogeneración', 'Eólica', 'Geotermoeléctrica', 'Bioenergía', 'Nucleoeléctrica', 'Generación distribuida', 'Hidrógeno'];
     const COLORS = {
-      'Hidroeléctrica': '#1E5B4F',
+      'Fotovoltaica': '#D9A441',
+      'Termosolar': '#F1B43C',
+      'Hidroeléctrica': '#1F78B4',
       'Nuclear': '#98989A',
-      'Geotérmica': '#9B2247',
+      'Geotermoeléctrica': '#B23A48',
       'Bioenergía': '#6F7D45',
-      'Cogeneración Eficiente': '#A57F2C',
+      'Cogeneración': '#A57F2C',
       'Hidrógeno': '#4C9EBA',
       'Eólica': '#2E7D8F',
-      'Solar': '#D6B46A',
-      'GD-FV': '#B24C6C',
+      'Nucleoeléctrica': '#6B7280',
+      'Generación distribuida': '#C86B2D',
       'Energía limpia': '#1E5B4F',
       'Energía Fósil': '#98989A',
       'Generación total': '#9B2247',
@@ -1025,21 +1027,24 @@
     };
     const TABLE_HEADER_COLORS = {
       'Año': '#7D1734',
+      'Fotovoltaica': '#D9A441',
+      'Termosolar': '#F1B43C',
       'Hidroeléctrica': '#1F78B4',
       'Nuclear': '#6B7280',
-      'Geotérmica': '#B23A48',
+      'Geotermoeléctrica': '#B23A48',
       'Bioenergía': '#4E7D2F',
-      'Cogeneración Eficiente': '#A57F2C',
+      'Cogeneración': '#A57F2C',
       'Hidrógeno': '#39A9DB',
       'Eólica': '#2E7D8F',
-      'Solar': '#D9A441',
-      'GD-FV': '#C86B2D',
+      'Nucleoeléctrica': '#6B7280',
+      'Generación distribuida': '#C86B2D',
       'Meta de energía limpia': '#A57F2C',
       'Energía limpia': '#1E5B4F',
       'Energía fósil': '#7E7E82',
       'Generación total': '#9B2247',
       'Participación de energía limpia': '#6F7D45'
     };
+    const FALLBACK_ROWS = [{"anio":2018,"clean":68021,"fossil":242665,"total":310685,"cleanPct":21.9,"fossilPct":78.1,"Fotovoltaica":2176,"Termosolar":null,"Hidroeléctrica":32234,"Cogeneración":2310,"Eólica":12435,"Geotermoeléctrica":5065,"Bioenergía":600,"Nucleoeléctrica":13200,"Generación distribuida":null,"Hidrógeno":null},{"anio":2019,"clean":68592,"fossil":249228,"total":317820,"cleanPct":21.6,"fossilPct":78.4,"Fotovoltaica":8394,"Termosolar":null,"Hidroeléctrica":23602,"Cogeneración":3259,"Eólica":16727,"Geotermoeléctrica":5061,"Bioenergía":669,"Nucleoeléctrica":10881,"Generación distribuida":null,"Hidrógeno":null},{"anio":2020,"clean":80275,"fossil":232074,"total":312348,"cleanPct":25.7,"fossilPct":74.3,"Fotovoltaica":13528,"Termosolar":null,"Hidroeléctrica":26817,"Cogeneración":4188,"Eólica":19703,"Geotermoeléctrica":4575,"Bioenergía":600,"Nucleoeléctrica":10864,"Generación distribuida":null,"Hidrógeno":null},{"anio":2021,"clean":92641,"fossil":230885,"total":323526,"cleanPct":28.6,"fossilPct":71.4,"Fotovoltaica":17069,"Termosolar":null,"Hidroeléctrica":34717,"Cogeneración":3349,"Eólica":21075,"Geotermoeléctrica":4243,"Bioenergía":582,"Nucleoeléctrica":11606,"Generación distribuida":null,"Hidrógeno":null},{"anio":2022,"clean":89109,"fossil":244854,"total":333963,"cleanPct":26.7,"fossilPct":73.3,"Fotovoltaica":16290,"Termosolar":null,"Hidroeléctrica":35561,"Cogeneración":1376,"Eólica":20314,"Geotermoeléctrica":4412,"Bioenergía":617,"Nucleoeléctrica":10539,"Generación distribuida":null,"Hidrógeno":null},{"anio":2023,"clean":80359,"fossil":266145,"total":346504,"cleanPct":23.2,"fossilPct":76.8,"Fotovoltaica":18210,"Termosolar":null,"Hidroeléctrica":20609,"Cogeneración":4136,"Eólica":20700,"Geotermoeléctrica":4161,"Bioenergía":499,"Nucleoeléctrica":12043,"Generación distribuida":null,"Hidrógeno":null},{"anio":2024,"clean":82426,"fossil":269879,"total":352305,"cleanPct":23.4,"fossilPct":76.6,"Fotovoltaica":18640,"Termosolar":null,"Hidroeléctrica":23800,"Cogeneración":3912,"Eólica":19987,"Geotermoeléctrica":3576,"Bioenergía":533,"Nucleoeléctrica":11978,"Generación distribuida":null,"Hidrógeno":null},{"anio":2025,"clean":86731,"fossil":267087,"total":353818,"cleanPct":24.5,"fossilPct":75.5,"Fotovoltaica":19238,"Termosolar":null,"Hidroeléctrica":28995,"Cogeneración":3322,"Eólica":21628,"Geotermoeléctrica":3275,"Bioenergía":439,"Nucleoeléctrica":9835,"Generación distribuida":null,"Hidrógeno":null},{"anio":2026,"clean":102333,"fossil":275198,"total":377531,"cleanPct":27.1,"fossilPct":72.9,"Fotovoltaica":20097,"Termosolar":null,"Hidroeléctrica":31204,"Cogeneración":4064,"Eólica":21837,"Geotermoeléctrica":3391,"Bioenergía":553,"Nucleoeléctrica":11182,"Generación distribuida":10005,"Hidrógeno":null},{"anio":2027,"clean":106124,"fossil":285655,"total":391779,"cleanPct":27.1,"fossilPct":72.9,"Fotovoltaica":20941,"Termosolar":null,"Hidroeléctrica":31287,"Cogeneración":4064,"Eólica":22951,"Geotermoeléctrica":3391,"Bioenergía":592,"Nucleoeléctrica":11182,"Generación distribuida":11715,"Hidrógeno":null},{"anio":2028,"clean":117766,"fossil":286072,"total":403838,"cleanPct":29.2,"fossilPct":70.8,"Fotovoltaica":29041,"Termosolar":null,"Hidroeléctrica":32145,"Cogeneración":4074,"Eólica":23482,"Geotermoeléctrica":3735,"Bioenergía":595,"Nucleoeléctrica":11211,"Generación distribuida":13482,"Hidrógeno":null},{"anio":2029,"clean":148746,"fossil":266948,"total":415694,"cleanPct":35.8,"fossilPct":64.2,"Fotovoltaica":44112,"Termosolar":61,"Hidroeléctrica":32722,"Cogeneración":6176,"Eólica":34218,"Geotermoeléctrica":4494,"Bioenergía":589,"Nucleoeléctrica":11176,"Generación distribuida":15178,"Hidrógeno":20},{"anio":2030,"clean":170053,"fossil":256620,"total":426673,"cleanPct":39.9,"fossilPct":60.1,"Fotovoltaica":52052,"Termosolar":873,"Hidroeléctrica":32896,"Cogeneración":8840,"Eólica":41329,"Geotermoeléctrica":5399,"Bioenergía":586,"Nucleoeléctrica":11110,"Generación distribuida":16916,"Hidrógeno":52}];
     let currentSlideIndex = 0;
     let rows = [];
     let selectedTechs = new Set(CLEAN_TECHS);
@@ -1073,33 +1078,52 @@
       box.textContent = message;
       box.style.display = message ? 'block' : 'none';
     }
-    function findHeaderRow(allRows) {
-      return allRows.findIndex(row => row.some(c => normalize(c) === 'ANO') && row.some(c => normalize(c).includes('ENERGIA LIMPIA')));
+    function cleanSourceName(name) {
+      const n = String(name || '').trim();
+      const normalized = normalize(n);
+      if (normalized === 'FOTOVOLTAICA') return 'Fotovoltaica';
+      if (normalized === 'EOLICOS') return 'Eólica';
+      if (normalized === 'COGENERACION') return 'Cogeneración';
+      if (normalized === 'NUCLEOELECTRICA') return 'Nucleoeléctrica';
+      return n;
     }
     function parseRows(csvText) {
-      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: false });
+      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: false, delimiter: '\t' });
       const allRows = parsed.data.filter(row => row.some(cell => String(cell || '').trim() !== ''));
-      const headerIdx = findHeaderRow(allRows);
-      if (headerIdx < 0) throw new Error('No se encontró la fila de encabezados con año y energía limpia.');
-      const headers = allRows[headerIdx].map(h => String(h || '').trim());
-      const idx = {};
-      headers.forEach((h, i) => { idx[normalize(h)] = i; });
-      return allRows.slice(headerIdx + 1).map(row => {
-        const item = { raw: row };
-        headers.forEach((h, i) => {
-          if (!h) return;
-          item[h.trim()] = row[i] ?? '';
-        });
-        item.anio = parseNum(row[idx.ANO]);
-        item.clean = parseNum(row[idx['ENERGIA LIMPIA']]);
-        item.fossil = parseNum(row[idx['ENERGIA FOSIL']]);
-        item.total = parseNum(row[idx['GENERACION TOTAL']]);
-        item.target = parseNum(row[idx['META DE ENERGIA LIMPIA']]);
-        item.cleanPct = parseNum(row[idx['ENERGIA LIMPIA (%)']]);
-        item.targetPct = item.total ? (item.target / item.total) * 100 : null;
-        CLEAN_TECHS.forEach(t => { item[t] = parseNum(row[idx[normalize(t)]]); });
-        return item;
-      }).filter(r => r.anio);
+      const headerIdx = allRows.findIndex(row => normalize(row[0]) === 'ANO' && normalize(row[1]).includes('FUENTE DE GENERACION'));
+      if (headerIdx < 0) throw new Error('No se encontró la tabla de producción energética anual.');
+      const byYear = new Map();
+      let currentYear = null;
+      for (const row of allRows.slice(headerIdx + 1)) {
+        const year = parseNum(row[0]);
+        if (year) currentYear = year;
+        if (!currentYear) continue;
+        const source = cleanSourceName(row[1]);
+        const sourceKey = normalize(source);
+        const value = parseNum(row[2]);
+        const share = parseNum(row[3]);
+        if (!byYear.has(currentYear)) {
+          const item = { anio: currentYear, clean: null, fossil: null, total: null, cleanPct: null, fossilPct: null, sources: {} };
+          CLEAN_TECHS.forEach(t => { item[t] = null; });
+          byYear.set(currentYear, item);
+        }
+        const item = byYear.get(currentYear);
+        if (sourceKey === 'TOTAL') {
+          item.total = value;
+        } else if (source && sourceKey !== 'TOTAL') {
+          item.sources[source] = { value, share };
+          if (CLEAN_TECHS.includes(source)) item[source] = value;
+        }
+        const aggregate = normalize(row[4]);
+        if (aggregate === 'LIMPIA') {
+          item.clean = parseNum(row[5]);
+          item.cleanPct = parseNum(row[6]);
+        } else if (aggregate === 'FOSIL') {
+          item.fossil = parseNum(row[5]);
+          item.fossilPct = parseNum(row[6]);
+        }
+      }
+      return [...byYear.values()].filter(r => r.anio && r.total).sort((a, b) => a.anio - b.anio);
     }
     async function loadData() {
       try {
@@ -1113,7 +1137,10 @@
         renderAll();
         requestAnimationFrame(() => animateSlide(currentSlideIndex));
       } catch (error) {
-        showStatus('ERROR: ' + error.message);
+        rows = FALLBACK_ROWS.map(row => ({ ...row }));
+        showStatus('Fuente en línea no disponible en este modo; se cargó la copia publicada integrada.');
+        renderAll();
+        requestAnimationFrame(() => animateSlide(currentSlideIndex));
       }
     }
     function latestRow() { return rows[rows.length - 1] || {}; }
@@ -1145,16 +1172,15 @@
     function renderKpis() {
       const first = firstRow();
       const last = latestRow();
-      const gap = (last.clean ?? 0) - (last.target ?? 0);
       const cleanGrowth = first.clean ? ((last.clean - first.clean) / first.clean) * 100 : null;
       const fossilChange = first.fossil ? ((last.fossil - first.fossil) / first.fossil) * 100 : null;
       document.getElementById('kpiClean').textContent = fmt(last.clean);
       document.getElementById('kpiCleanNote').textContent = `GWh en ${last.anio || '--'} | ${fmtPct(cleanGrowth)} vs ${first.anio || '--'}`;
       document.getElementById('kpiPercent').textContent = fmtPct(last.cleanPct);
-      document.getElementById('kpiPercentNote').textContent = `Meta limpia: ${fmtPct(last.targetPct)}`;
+      document.getElementById('kpiPercentNote').textContent = `Fósil: ${fmtPct(last.fossilPct)}`;
       document.getElementById('kpiTotal').textContent = fmt(last.total);
-      document.getElementById('kpiGap').textContent = (gap >= 0 ? '+' : '') + fmt(gap);
-      document.getElementById('kpiGapNote').textContent = 'energía limpia menos meta';
+      document.getElementById('kpiGap').textContent = fmtPct(fossilChange);
+      document.getElementById('kpiGapNote').textContent = `generación fósil vs ${first.anio || '--'}`;
     }
     function renderTechPanel() {
       const panel = document.getElementById('techPanel');
@@ -1262,8 +1288,7 @@
         series: [
           { name: 'Energía limpia', data: rows.map(r => r.clean), color: COLORS['Energía limpia'], lineWidth: 4 },
           { name: 'Energía fósil', data: rows.map(r => r.fossil), color: COLORS['Energía Fósil'], lineWidth: 3 },
-          { name: 'Generación total', data: rows.map(r => r.total), color: COLORS['Generación total'], lineWidth: 3 },
-          { name: 'Meta de energía limpia', data: rows.map(r => r.target), color: COLORS['Meta de Energía Limpia'], dashStyle: 'ShortDash', lineWidth: 3 }
+          { name: 'Generación total', data: rows.map(r => r.total), color: COLORS['Generación total'], lineWidth: 3 }
         ]
       });
       charts.trend = Highcharts.chart('trendChart', {
@@ -1315,7 +1340,7 @@
         tooltip: { shared: true, valueSuffix: '%' },
         series: [
           { name: 'Energía limpia (%)', data: rows.map(r => r.cleanPct), color: COLORS['Energía limpia'], lineWidth: 4 },
-          { name: 'Meta limpia (%)', data: rows.map(r => r.targetPct), color: COLORS['Meta de Energía Limpia'], dashStyle: 'ShortDash', lineWidth: 3 }
+          { name: 'Energía fósil (%)', data: rows.map(r => r.fossilPct), color: COLORS['Energía Fósil'], lineWidth: 3 }
         ]
       });
       Object.values(charts).forEach(c => c && c.reflow());
@@ -1361,15 +1386,13 @@
     function updateStory(index, animate = true) {
       if (!rows.length) return;
       const row = rows[Math.max(0, Math.min(index, rows.length - 1))];
-      const gap = (row.clean ?? 0) - (row.target ?? 0);
       const fossilShare = row.total ? (row.fossil / row.total) * 100 : null;
       const cleanShare = row.cleanPct ?? (row.total ? (row.clean / row.total) * 100 : null);
-      const status = gap >= 0 ? 'cumple o supera la meta' : 'permanece por debajo de la meta';
-      const prevalence = fossilShare !== null && fossilShare > cleanShare ? 'la generación fósil aún prevalece en la matriz' : 'la energía limpia gana prevalencia frente a la fósil';
+      const prevalence = fossilShare !== null && fossilShare > cleanShare ? 'la generación fósil prevalece en la matriz' : 'la generación limpia gana prevalencia frente a la fósil';
       document.getElementById('storyYear').textContent = row.anio;
-      document.getElementById('storyCopy').textContent = `En ${row.anio}, la energía limpia representa ${fmtPct(cleanShare)} y ${status}; ${prevalence}.`;
+      document.getElementById('storyCopy').textContent = `En ${row.anio}, la generación limpia representa ${fmtPct(cleanShare)} del total; ${prevalence}.`;
       document.getElementById('storyClean').textContent = fmt(row.clean);
-      document.getElementById('storyTarget').textContent = fmt(row.target);
+      document.getElementById('storyTarget').textContent = fmt(row.total);
       document.getElementById('storyFossil').textContent = fmt(row.fossil);
       [charts.summary, charts.percent, fullscreenChart].forEach(chart => {
         if (chart) markStoryYear(chart, index);
@@ -1408,20 +1431,20 @@
     function renderTable() {
       const table = document.getElementById('dataTable');
       const compactTechHeaders = {
+        'Fotovoltaica': 'FV',
+        'Termosolar': 'Term.',
         'Hidroeléctrica': 'Hidro.',
-        'Nuclear': 'Nuclear',
-        'Geotérmica': 'Geot.',
         'Bioenergía': 'Bio.',
-        'Cogeneración Eficiente': 'Cog. ef.',
+        'Cogeneración': 'Cog.',
         'Hidrógeno': 'H2',
         'Eólica': 'Eólica',
-        'Solar': 'Solar',
-        'GD-FV': 'GD-FV'
+        'Geotermoeléctrica': 'Geot.',
+        'Nucleoeléctrica': 'Nuclear',
+        'Generación distribuida': 'GD'
       };
       const headers = [
         { label: 'Año', title: 'Año' },
         ...CLEAN_TECHS.map(t => ({ label: compactTechHeaders[t] || t, title: t })),
-        { label: 'Meta', title: 'Meta de energía limpia' },
         { label: 'Limpia', title: 'Energía limpia' },
         { label: 'Fósil', title: 'Energía fósil' },
         { label: 'Total', title: 'Generación total' },
@@ -1434,7 +1457,6 @@
             <tr>
               <td><strong>${r.anio}</strong></td>
               ${CLEAN_TECHS.map(t => `<td>${fmt(r[t])}</td>`).join('')}
-              <td>${fmt(r.target)}</td>
               <td>${fmt(r.clean)}</td>
               <td>${fmt(r.fossil)}</td>
               <td>${fmt(r.total)}</td>
