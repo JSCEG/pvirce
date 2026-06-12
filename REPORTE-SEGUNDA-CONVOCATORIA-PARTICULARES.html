@@ -67,6 +67,16 @@
       align-items: center;
     }
 
+    /* Highcharts 12 renderiza labels useHTML dentro de <foreignObject><body>;
+       ese body hereda el display:flex/100vw global y desplaza el contenido
+       fuera del área visible del label. Neutralizarlo aquí. */
+    foreignObject body {
+      display: block;
+      width: auto;
+      height: auto;
+      background: transparent;
+    }
+
     /* PRELOADER */
     #preloader {
       position: fixed;
