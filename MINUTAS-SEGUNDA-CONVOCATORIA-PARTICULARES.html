@@ -12511,8 +12511,10 @@
         if (/cenace/i.test(d)) return 'CENACE';
         if (/\bcfe\b|cfe\.mx|cfe\.gob/i.test(d)) return 'CFE';
         if (/energia\.gob/i.test(d)) return 'SENER';
-        return d || '—';
+        if (!d) return 'SENER';   // sin correo (p.ej. convocante de SENER) → SENER
+        return d;
       }
+      function correoDe(a) { return (a && a.email && a.email.indexOf('@') >= 0) ? a.email : '—'; }
       function fechaLegible(f) {
         const m = String(f || '').slice(0, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
         if (!m) return String(f || '');
@@ -12551,7 +12553,7 @@
         const fmt = n => Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 });
         const mwCont = cont.reduce((s, r) => s + (Number(r.mw) || 0), 0);
 
-        const asisRows = (reun.asistentes || []).map(a => `| ${mdCell(a.nombre)} | — | ${areaDeCorreo(a.email)} |`).join('\n');
+        const asisRows = (reun.asistentes || []).map(a => `| ${mdCell(a.nombre)} | — | ${areaDeCorreo(a.email)} | ${correoDe(a)} |`).join('\n');
         const votoRows = rows.map(r => `| ${mdCell(r.proyecto)} | ${mdCell(r.folio)} | ${mdCell(r.decision)} | ${mdCell(r.motivo_no_continua ? '⛔ ' + r.motivo_no_continua + (r.comentarios ? ' — ' + r.comentarios : '') : (r.comentarios || ''))} |`).join('\n');
         const archivo = 'Minuta_' + fileSafe((reun.gcr || 'sesion') + '_' + (reun.fecha || '')) + '.docx';
 
@@ -12576,9 +12578,9 @@ formato: word
 | Elaboró la minuta | ${mdCell(reun.capturadoPor) || '—'} |
 
 # Asistentes
-| Nombre | Cargo | Área |
-|--------|-------|------|
-${asisRows || '| — | — | — |'}
+| Nombre | Cargo | Área | Correo |
+|--------|-------|------|--------|
+${asisRows || '| — | — | — | — |'}
 
 # Resumen de la votación
 - Proyectos revisados: ${rows.length}
