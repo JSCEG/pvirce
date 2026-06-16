@@ -12382,6 +12382,13 @@
         ta.focus();
       }
       function presetSyntheticId(p) { return [p.fecha, p.gcr, p.nombre].join('|'); }
+      // Asistentes de una reunión: de la primera fila que los tenga; si ninguna,
+      // del roster del preset que coincida. Garantiza que SIEMPRE aparezcan.
+      function asistentesDeReunion(reunionId) {
+        let s = (logAll().find(r => r.reunion_id === reunionId && r.asistentes) || {}).asistentes || '';
+        if (!s && typeof PRESETS !== 'undefined') { const pre = PRESETS.find(pp => presetSyntheticId(pp) === reunionId); if (pre) s = pre.asistentes || ''; }
+        return s;
+      }
       function setReunionFromPreset(id) {
         const p = PRESETS.find(x => x.id === id); if (!p) return;
         const r = { reunionId: presetSyntheticId(p), gcr: p.gcr, fecha: p.fecha, nombre: p.nombre, capturadoPor: p.capturadoPor || '', asistentes: parseAsistentes(p.asistentes) };
@@ -12580,7 +12587,7 @@
           rows = latestPerFolio(log.filter(r => r.reunion_id === reunionId));
           const first = log.find(r => r.reunion_id === reunionId) || {};
           const gcrs = [...new Set(rows.map(r => r.gcr).filter(Boolean))].join(', ');
-          meta = { titulo: first.reunion_nombre || 'Reunión', gcr: gcrs || (first.gcr || '—'), fecha: first.fecha_reunion || '—', asistentes: (first.asistentes || '').split(/\s*;\s*/).filter(Boolean), capturadoPor: first.capturado_por || '' };
+          meta = { titulo: first.reunion_nombre || 'Reunión', gcr: gcrs || (first.gcr || '—'), fecha: first.fecha_reunion || '—', asistentes: asistentesDeReunion(reunionId).split(/\s*;\s*/).filter(Boolean), capturadoPor: first.capturado_por || '' };
         }
         const cont = rows.filter(r => r.decision === 'Continúa');
         const no = rows.filter(r => r.decision === 'No continúa');
@@ -12707,7 +12714,7 @@
             nombre: first.reunion_nombre || 'Reunión', fecha: first.fecha_reunion || '',
             gcr: [...new Set(rows.map(r => r.gcr).filter(Boolean))].join(', '),
             capturadoPor: first.capturado_por || '',
-            asistentes: parseAsistentes(first.asistentes || '')
+            asistentes: parseAsistentes(asistentesDeReunion(id))
           };
         } else {
           rows = latestPerFolio(log);
