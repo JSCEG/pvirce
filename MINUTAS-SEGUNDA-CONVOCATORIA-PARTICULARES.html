@@ -12538,7 +12538,9 @@
       function projMeta(folio) {
         const p = getData().find(x => x.folio === folio) || {};
         let flag = '';
-        try { if (typeof getCountryFlagHtml !== 'undefined' && typeof formatGieOriginText !== 'undefined') flag = getCountryFlagHtml(formatGieOriginText(p)); } catch (e) { }
+        // No mostrar bandera para GIE genéricos/placeholder (mapean a país equivocado).
+        const GENERICO = /^(convocatoria|electricidad|empresarial|energ[íi]a$|energ[íi]a\b|permisos de generaci|almacenamiento|sin informaci|no identificado|n\/a)/i;
+        try { if (typeof getCountryFlagHtml !== 'undefined' && typeof formatGieOriginText !== 'undefined' && !GENERICO.test(String(p.gie || '').trim())) flag = getCountryFlagHtml(formatGieOriginText(p)); } catch (e) { }
         return {
           gie: p.gie || '', tec: (p.tecnologia || p.techBase || ''), pi: (p.puntoInterconexion || ''), flag,
           mwContr: (p.capacidadContratada != null && p.capacidadContratada !== '') ? p.capacidadContratada : '',
@@ -12632,9 +12634,39 @@
       async function exportReportePDF() {
         const node = document.getElementById('minutaRepDoc');
         if (!node) return;
+        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') { toast('Librerías PDF no cargadas.', true); return; }
+        const { jsPDF } = window.jspdf;
         const fname = 'Minuta_' + ((typeof fileSafe !== 'undefined') ? fileSafe(repReunionId === '__all__' ? 'estado_vigente' : repReunionId) : 'sesion') + '.pdf';
-        if (typeof captureElementAsPdf !== 'undefined') { await captureElementAsPdf(node, fname, 'l'); }
-        else { toast('Exportador PDF no disponible.', true); }
+        toast('Generando PDF…');
+        try {
+          if (typeof inlineRemoteImagesForPdf !== 'undefined') { try { await inlineRemoteImagesForPdf(node); } catch (e) { } }
+          // Captura el ANCHO COMPLETO del documento (scrollWidth) para que no se corte.
+          const canvas = await html2canvas(node, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, windowWidth: node.scrollWidth, windowHeight: node.scrollHeight });
+          // Página tamaño PPT 16:9 (igual que el deck), no A4.
+          const fmt = [338.6582, 190.5];
+          const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: fmt });
+          const pageW = pdf.internal.pageSize.getWidth();
+          const pageH = pdf.internal.pageSize.getHeight();
+          const margin = 6;
+          const imgW = pageW - margin * 2;
+          const imgH = canvas.height * imgW / canvas.width;
+          const img = canvas.toDataURL('image/jpeg', 0.92);
+          if (imgH <= pageH - margin * 2) {
+            pdf.addImage(img, 'JPEG', margin, margin, imgW, imgH);
+          } else {
+            let heightLeft = imgH, position = margin;
+            pdf.addImage(img, 'JPEG', margin, position, imgW, imgH);
+            heightLeft -= (pageH - margin * 2);
+            while (heightLeft > 0) {
+              position = margin - (imgH - heightLeft);
+              pdf.addPage(fmt, 'l');
+              pdf.addImage(img, 'JPEG', margin, position, imgW, imgH);
+              heightLeft -= (pageH - margin * 2);
+            }
+          }
+          pdf.save(fname);
+          toast('PDF generado.');
+        } catch (e) { console.error('PDF reporte:', e); toast('Error generando PDF: ' + e.message, true); }
       }
       function exportTSV() {
         const cols = ['timestamp', 'fecha_reunion', 'gcr', 'reunion_id', 'reunion_nombre', 'folio', 'proyecto_id', 'fila_sheet', 'proyecto', 'empresa_gie', 'mw', 'asistentes', 'comentarios', 'decision', 'motivo_no_continua', 'capturado_por'];
