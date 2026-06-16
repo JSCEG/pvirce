@@ -3295,6 +3295,7 @@
 
   <!-- PANEL DE NAVEGACIÓN -->
   <div id="presentationControls">
+    <button class="control-btn" id="btnHome" onclick="showSlide(0)" title="Ir al inicio (portada)"><i class="bi bi-house-fill"></i></button>
     <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
     <span id="slideCounter">1 / 2</span>
     <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
@@ -11827,6 +11828,16 @@
       overflow: auto; padding: 0; box-shadow: 0 24px 80px rgba(0,0,0,.5);
       border-bottom: 8px solid var(--color-guinda);
     }
+
+    /* El formulario de VOTO no es un diálogo flotante: ocupa pantalla completa
+       y no se cierra al hacer clic fuera ni con Esc (solo Guardar/Cancelar/X),
+       para no perder la captura. */
+    #minutaVotoModal { background: rgba(30, 30, 30, .97); }
+    #minutaVotoModal .minuta-panel {
+      width: 100vw; max-width: none; height: 100vh; max-height: 100vh;
+      border-radius: 0; border-bottom: none;
+    }
+    #minutaVotoModal .minuta-body { max-width: 980px; margin: 0 auto; width: 100%; }
     .minuta-panel-head {
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
       padding: 16px 24px; border-bottom: 3px solid var(--color-dorado);
@@ -11983,9 +11994,76 @@
       // Reunión 4 (Noreste/Norte): mismo grupo SIN Jocelyn Gabriela Velázquez Naranjo.
       const ROSTER_R4 = ROSTER_PRESELECCION.split('; ').filter(s => !/Jocelyn|Velázquez/i.test(s)).join('; ');
 
+      // Reunión 2 (GCR Occidental) — 33 asistentes reales. Correos donde se conocen.
+      const ROSTER_R2_OCCIDENTAL = [
+        'Ramón Avilés Zamorano <ravilesz@energia.gob.mx>',
+        'Jocelyn Gabriela Velázquez Naranjo <jgvelazquez@energia.gob.mx>',
+        'Raúl Adame Ortiz <radame@energia.gob.mx>',
+        'Claudia Marcela Meza Vega <cmeza@energia.gob.mx>',
+        'Manuel Torres Ahumada',
+        'Sergio Antonio Vargas Sánchez',
+        'David Santillán Morales',
+        'Gabriela Aparicio Rangel <gabriela.aparicio@cfe.mx>',
+        'Luis Enrique Ángeles Cervantes',
+        'Víctor Nolasco Miguel <victor.nolasco@cfe.mx>',
+        'José Luis Díaz Selvas',
+        'Jesús David Bravo Anaya',
+        'Tania Areli Salazar Terán',
+        'Carlos Salvador Valencia',
+        'Pedro Guillermo Padrón Alvarado',
+        'David Salvador Velasco Olmos <david.velasco@cfe.mx>',
+        'Rafael de Jesús Funes Ríos',
+        'Gerónimo Ramírez Popo',
+        'Jassiel Misael Campos Martínez',
+        'Rubén Martínez Alonso <ruben.martinez@cenace.gob.mx>',
+        'Alí Gervacio Hernández',
+        'Javier Sasso Celaya <jsasso@energia.gob.mx>',
+        'José María Rivera Fosado',
+        'Edder Tuxpan Salazar',
+        'Daniel Hilario Flores Vargas <dflores@energia.gob.mx>',
+        'José Edmundo Martínez Camargo',
+        'Gilberto Valencia Félix',
+        'Raúl García Kasusky',
+        'Sergio Hernández Vázquez',
+        'Janett Salas',
+        'Antonino López Ríos <antonino.lopez@cenace.gob.mx>',
+        'Raúl de Jesús Ronquillo',
+        'Amaury Alfredo Aguirre'
+      ].join('; ');
+
+      // Reunión 1 (GCR Oriental) — lista de asistentes real (25). Correos donde se conocen.
+      const ROSTER_R1_ORIENTAL = [
+        'Claudia Marcela Meza Vega <cmeza@energia.gob.mx>',
+        'Pedro Guillermo Padrón Alvarado',
+        'Ofelio Gaona López',
+        'Gabriela Aparicio Rangel <gabriela.aparicio@cfe.mx>',
+        'José María Rivera Fosado',
+        'Víctor Nolasco Miguel <victor.nolasco@cfe.mx>',
+        'Antonino López Ríos <antonino.lopez@cenace.gob.mx>',
+        'Gerónimo Ramírez Popo',
+        'Raúl Adame Ortiz <radame@energia.gob.mx>',
+        'Alí Gervacio Hernández',
+        'Jocelyn Gabriela Velázquez Naranjo <jgvelazquez@energia.gob.mx>',
+        'Rubén Martínez Alonso <ruben.martinez@cenace.gob.mx>',
+        'José Luis Díaz Selvas',
+        'Javier Sasso Celaya <jsasso@energia.gob.mx>',
+        'Moisés Salazar Espino',
+        'José Edmundo Martínez Camargo',
+        'Gabriel Rosas Martín Del Campo',
+        'Enrique Hernández Álvarez',
+        'Gilberto Valencia Félix',
+        'Luis Enrique Ángeles Cervantes',
+        'David Salvador Velasco Olmos <david.velasco@cfe.mx>',
+        'Tania Areli Salazar Terán',
+        'Julio César Guadalupe Rivera Pizaña',
+        'Raúl García Kasusky',
+        'Daniel Álvarez Hernández',
+        'Daniel Hilario Flores Vargas <dflores@energia.gob.mx>'
+      ].join('; ');
+
       const PRESETS = [
-        { id: 'r1-oriental', label: '1ª · GCR Oriental · 16/06 08:00', gcr: 'ORIENTAL', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Oriental', capturadoPor: '', asistentes: ROSTER_PRESELECCION, cc: CC_PRESELECCION },
-        { id: 'r2-occidente', label: '2ª · GCR Occidente · 16/06', gcr: 'OCCIDENTE', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Occidental', capturadoPor: '', asistentes: ROSTER_PRESELECCION, cc: CC_PRESELECCION },
+        { id: 'r1-oriental', label: '1ª · GCR Oriental · 16/06 08:00', gcr: 'ORIENTAL', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Oriental', capturadoPor: '', asistentes: ROSTER_R1_ORIENTAL, cc: CC_PRESELECCION },
+        { id: 'r2-occidente', label: '2ª · GCR Occidente · 16/06', gcr: 'OCCIDENTE', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Occidental', capturadoPor: 'DGMESNIE', asistentes: ROSTER_R2_OCCIDENTAL, cc: '' },
         { id: 'r3-central-bcs', label: '3ª · GCR Central/BCS · 16/06', gcr: 'CENTRAL', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Central/BCS', capturadoPor: '', asistentes: ROSTER_PRESELECCION, cc: CC_PRESELECCION },
         { id: 'r4-noreste-norte', label: '4ª · GCR Noreste/Norte · 16/06', gcr: 'NORESTE', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Noreste/Norte', capturadoPor: '', asistentes: ROSTER_R4, cc: CC_PRESELECCION }
       ];
@@ -12075,22 +12153,30 @@
           if (!Array.isArray(sheetRows)) return;
           // Filtra filas-eco del encabezado (títulos duplicados) y vacías.
           const clean = sheetRows.filter(r => r && r.folio && r.folio !== 'folio' && r.timestamp !== 'timestamp');
-          // Fusiona el historial del Sheet (fuente de verdad) con el log local
-          // (conserva votos capturados aquí que aún no se sincronizaron).
-          const seen = new Set();
-          const merged = [];
-          [...clean, ...logAll()].forEach(r => {
-            const k = (r.folio || '') + '|' + (r.timestamp || '');
-            if (seen.has(k)) return; seen.add(k); merged.push(r);
-          });
-          jsave(LS.log, merged);
-          // Reconstruye el estatus vigente por folio (última fila por timestamp) y el índice.
+          // EL GOOGLE SHEET ES LA ÚNICA FUENTE DE VERDAD: reemplaza por completo lo local
+          // (NO fusiona). Así desaparecen votos de prueba u obsoletos que solo existían local.
+          jsave(LS.log, clean);
+          // Purga todos los votos locales previos (incluye los que ya no están en el Sheet).
+          Object.keys(localStorage).filter(k => k.indexOf('minuta.voto.') === 0).forEach(k => localStorage.removeItem(k));
+          // Reconstruye el estatus vigente por folio (última fila por timestamp) y el índice, solo desde el Sheet.
           const latest = {};
-          merged.forEach(r => { if (!latest[r.folio] || (r.timestamp || '') > (latest[r.folio].timestamp || '')) latest[r.folio] = r; });
+          clean.forEach(r => { if (!latest[r.folio] || (r.timestamp || '') > (latest[r.folio].timestamp || '')) latest[r.folio] = r; });
           Object.keys(latest).forEach(f => jsave(LS.voto(f), latest[f]));
           jsave(LS.index, Object.keys(latest));
           repaintBadges();
-        } catch (e) { /* sin red o CORS: se queda con lo local */ }
+          // Si el reporte está abierto, repuebla el selector y re-renderiza con lo que llegó del Sheet.
+          const rep = document.getElementById('minutaReporteModal');
+          if (rep && rep.classList.contains('show')) { populateReporteSelect(true); renderReporte(repReunionId); }
+          return true;
+        } catch (e) { /* sin red o CORS: se queda con lo local */ return false; }
+      }
+      async function refreshFromSheet() {
+        if (!WEBAPP_URL) { toast('Sin URL de Sheets (modo local).', true); return; }
+        toast('Actualizando desde el Sheet…');
+        const ok = await loadFromSheet();
+        const rep = document.getElementById('minutaReporteModal');
+        if (rep && rep.classList.contains('show')) { populateReporteSelect(true); renderReporte(repReunionId); }
+        toast(ok ? 'Minuta actualizada desde el Sheet.' : 'No se pudo leer el Sheet (revisa conexión).', !ok);
       }
 
       // ====== TOAST ======
@@ -12375,6 +12461,7 @@
                 <select id="mrepSel" onchange="Minuta.renderReporte(this.value)" style="padding:7px 10px;border-radius:8px;border:1px solid var(--color-gris-claro);font-family:inherit;font-size:13px;"></select>
               </div>
               <div style="display:flex;gap:8px;">
+                <button class="minuta-btn" onclick="Minuta.refreshFromSheet()" title="Actualizar desde el Google Sheet"><i class="bi bi-arrow-repeat"></i> Actualizar</button>
                 <button class="minuta-btn dorado" onclick="Minuta.exportReportePDF()"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</button>
                 <button class="minuta-btn verde" onclick="Minuta.exportMinutaMD()" title="Exportar minuta (.md institucional para /resumen-institucional)"><i class="bi bi-filetype-md"></i> Minuta .md</button>
                 <button class="minuta-btn gris" onclick="Minuta.exportTSV()"><i class="bi bi-filetype-csv"></i> TSV</button>
@@ -12393,8 +12480,8 @@
       function reunionesConVotos() {
         const log = logAll();
         const map = {};
-        jload(LS.reuniones, []).forEach(r => map[r.reunionId] = { id: r.reunionId, label: r.nombre + ' · ' + r.gcr + ' · ' + r.fecha });
-        log.forEach(r => { if (!map[r.reunion_id]) map[r.reunion_id] = { id: r.reunion_id, label: r.reunion_nombre + ' · ' + r.gcr + ' · ' + r.fecha_reunion }; });
+        jload(LS.reuniones, []).forEach(r => map[r.reunionId] = { id: r.reunionId, label: r.nombre + ' · ' + r.gcr + ' · ' + fmtFecha(r.fecha) });
+        log.forEach(r => { if (!map[r.reunion_id]) map[r.reunion_id] = { id: r.reunion_id, label: r.reunion_nombre + ' · ' + r.gcr + ' · ' + fmtFecha(r.fecha_reunion) }; });
         return Object.values(map);
       }
       function latestPerFolio(rows) {
@@ -12402,18 +12489,29 @@
         rows.forEach(r => { if (!m[r.folio] || (r.timestamp || '') > (m[r.folio].timestamp || '')) m[r.folio] = r; });
         return Object.values(m);
       }
-      function openReporte() {
-        const sel = document.getElementById('mrepSel');
+      function populateReporteSelect(keepValue) {
+        const sel = document.getElementById('mrepSel'); if (!sel) return null;
+        const prev = keepValue ? sel.value : null;
         const reuns = reunionesConVotos();
         sel.innerHTML = '<option value="__all__">Todas — estado vigente</option>' +
           '<option value="__historial__">Historial completo (trazabilidad)</option>' +
           reuns.map(r => `<option value="${esc(r.id)}">${esc(r.label)}</option>`).join('');
+        if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+        return sel;
+      }
+      function openReporte() {
+        const sel = populateReporteSelect(false);
         repReunionId = reunion ? reunion.reunionId : '__all__';
-        if (reunion && reuns.find(r => r.id === reunion.reunionId)) sel.value = reunion.reunionId; else sel.value = '__all__';
+        if (reunion && [...sel.options].some(o => o.value === reunion.reunionId)) sel.value = reunion.reunionId; else sel.value = '__all__';
         renderReporte(sel.value);
         document.getElementById('minutaReporteModal').classList.add('show');
       }
       function decClass(d) { return DECISIONES[d] ? DECISIONES[d].cls : ''; }
+      // Datos del proyecto (GIE, tecnología, punto de interconexión) por folio, desde DATA.
+      function projMeta(folio) {
+        const p = getData().find(x => x.folio === folio) || {};
+        return { gie: p.gie || '', tec: (p.tecnologia || p.techBase || ''), pi: (p.puntoInterconexion || '') };
+      }
       function renderReporte(reunionId) {
         repReunionId = reunionId;
         const fmt = n => Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 });
@@ -12460,16 +12558,18 @@
 
         const body = rows.length ? `
           <table class="minuta-rep-table">
-            <thead><tr><th>#</th><th>Folio</th><th>Proyecto</th>${showSesion ? '' : '<th>GIE</th>'}<th>MW</th>${showSesion ? '<th>Sesión / Fecha</th>' : ''}<th>Decisión</th><th>Motivo / Comentarios</th></tr></thead>
+            <thead><tr><th>#</th><th>Folio</th><th>Proyecto</th><th>GIE</th><th>Tecnología</th><th>Interconexión</th><th>MW</th>${showSesion ? '<th>Sesión / Fecha</th>' : ''}<th>Decisión</th><th>Motivo / Comentarios</th></tr></thead>
             <tbody>
-              ${rows.map((r, i) => `<tr>
+              ${rows.map((r, i) => { const pm = projMeta(r.folio); return `<tr>
                 <td>${i + 1}</td><td>${esc(r.folio)}</td><td>${esc(r.proyecto)}</td>
-                ${showSesion ? '' : `<td>${esc(r.empresa_gie)}</td>`}
+                <td>${esc(r.empresa_gie || pm.gie)}</td>
+                <td>${esc(pm.tec)}</td>
+                <td>${esc(pm.pi)}</td>
                 <td style="text-align:right;">${fmt(r.mw)}</td>
                 ${showSesion ? `<td>${esc(r.reunion_nombre || '')}<br><span style="color:var(--color-text-light);font-size:10.5px;">🕑 ${esc(fmtFechaHora(r.timestamp))}</span></td>` : ''}
                 <td class="dec ${decClass(r.decision)}">${esc(r.decision)}</td>
                 <td>${r.motivo_no_continua ? '⛔ ' + esc(r.motivo_no_continua) + (r.comentarios ? ' — ' : '') : ''}${esc(r.comentarios || '')}</td>
-              </tr>`).join('')}
+              </tr>`; }).join('')}
             </tbody>
           </table>` : '<div class="minuta-empty">Aún no hay votos registrados para esta vista.</div>';
         document.getElementById('mrepDoc').innerHTML = `
@@ -12511,8 +12611,7 @@
         if (/cenace/i.test(d)) return 'CENACE';
         if (/\bcfe\b|cfe\.mx|cfe\.gob/i.test(d)) return 'CFE';
         if (/energia\.gob/i.test(d)) return 'SENER';
-        if (!d) return 'SENER';   // sin correo (p.ej. convocante de SENER) → SENER
-        return d;
+        return d || '—';   // sin correo → área desconocida (pásame correo/área y la ajusto)
       }
       function correoDe(a) { return (a && a.email && a.email.indexOf('@') >= 0) ? a.email : '—'; }
       function fechaLegible(f) {
@@ -12554,7 +12653,7 @@
         const mwCont = cont.reduce((s, r) => s + (Number(r.mw) || 0), 0);
 
         const asisRows = (reun.asistentes || []).map(a => `| ${mdCell(a.nombre)} | — | ${areaDeCorreo(a.email)} | ${correoDe(a)} |`).join('\n');
-        const votoRows = rows.map(r => `| ${mdCell(r.proyecto)} | ${mdCell(r.folio)} | ${mdCell(r.decision)} | ${mdCell(r.motivo_no_continua ? '⛔ ' + r.motivo_no_continua + (r.comentarios ? ' — ' + r.comentarios : '') : (r.comentarios || ''))} |`).join('\n');
+        const votoRows = rows.map(r => { const pm = projMeta(r.folio); return `| ${mdCell(r.proyecto)} | ${mdCell(r.folio)} | ${mdCell(r.empresa_gie || pm.gie)} | ${mdCell(pm.tec)} | ${mdCell(pm.pi)} | ${mdCell(r.decision)} | ${mdCell(r.motivo_no_continua ? '⛔ ' + r.motivo_no_continua + (r.comentarios ? ' — ' + r.comentarios : '') : (r.comentarios || ''))} |`; }).join('\n');
         const archivo = 'Minuta_' + fileSafe((reun.gcr || 'sesion') + '_' + (reun.fecha || '')) + '.docx';
 
         const md = `---
@@ -12590,8 +12689,8 @@ ${asisRows || '| — | — | — | — |'}
 - Capacidad que continúa: ${fmt(mwCont)} MW
 
 # Resultados por proyecto
-| Proyecto | Folio | Decisión | Motivo / Comentarios |
-|----------|-------|----------|----------------------|
+| Proyecto | Folio | GIE | Tecnología | Punto de interconexión | Decisión | Motivo / Comentarios |
+|----------|-------|-----|------------|------------------------|----------|----------------------|
 ${votoRows}
 
 # Desarrollo de la reunión
@@ -12616,14 +12715,19 @@ ${votoRows}
         buildReporteModal();
         updateBadgeReunion();
         repaintBadges();
-        // Cerrar al clic en el fondo
-        document.querySelectorAll('.minuta-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); }));
-        // Teclado: Esc cierra; flechas no navegan slides con modal abierto
+        // Cerrar al clic en el fondo — EXCEPTO el voto (solo Guardar/Cancelar/X).
+        document.querySelectorAll('.minuta-overlay').forEach(o => {
+          if (o.id === 'minutaVotoModal') return;
+          o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
+        });
+        // Teclado: Esc cierra (menos el voto); flechas no navegan slides con modal abierto.
         document.addEventListener('keydown', e => {
           const open = document.querySelector('.minuta-overlay.show');
           if (!open) return;
-          if (e.key === 'Escape') { open.classList.remove('show'); e.stopPropagation(); }
-          else if (['ArrowRight', 'ArrowLeft', 'PageUp', 'PageDown', ' '].includes(e.key)) { e.stopPropagation(); }
+          if (e.key === 'Escape') {
+            if (open.id !== 'minutaVotoModal') open.classList.remove('show');
+            e.stopPropagation();
+          } else if (['ArrowRight', 'ArrowLeft', 'PageUp', 'PageDown', ' '].includes(e.key)) { e.stopPropagation(); }
         }, true);
         loadFromSheet();
       }
@@ -12631,7 +12735,7 @@ ${votoRows}
       return {
         init, openReunion, saveReunion, openVoto, openVotoFromFicha, saveVoto,
         pickDecision, insertTag, openReporte, renderReporte, exportReportePDF, exportTSV,
-        retrySync, repaintBadges, close, loadPreset, changeVotoReunion, exportMinutaMD, hasReunion: () => !!reunion
+        retrySync, repaintBadges, close, loadPreset, changeVotoReunion, exportMinutaMD, refreshFromSheet, hasReunion: () => !!reunion
       };
     })();
   </script>
