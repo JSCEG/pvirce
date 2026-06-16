@@ -12031,6 +12031,33 @@
         'Amaury Alfredo Aguirre'
       ].join('; ');
 
+      // Reunión 3 (GCR Central/BCS) — asistentes presentes (de la lista de Teams).
+      // NOTA: faltan 6 ocultos tras "Ver más" en el screenshot; agregar cuando se tengan.
+      const ROSTER_R3_CENTRAL = [
+        'Claudia Marcela Meza Vega <cmeza@energia.gob.mx>',
+        'Javier Sasso Celaya <jsasso@energia.gob.mx>',
+        'Alfonso Márquez Chávez',
+        'Alí Gervacio Hernández',
+        'Daniel Álvarez Hernández',
+        'Daniel Hilario Flores Vargas <dflores@energia.gob.mx>',
+        'David Salvador Velasco Olmos <david.velasco@cfe.mx>',
+        'Edder Tuxpan Salazar',
+        'Eliel Mendoza López',
+        'Gabriel Aguilar García',
+        'Gabriela Aparicio Rangel <gabriela.aparicio@cfe.mx>',
+        'Gerónimo Ramírez Popo',
+        'Gilberto Valencia Félix',
+        'Isidro Ernesto Olivas Félix',
+        'Jocelyn Gabriela Velázquez Naranjo <jgvelazquez@energia.gob.mx>',
+        'José María Rivera Fosado',
+        'Luis Eduardo Quirazco González',
+        'Luis Enrique Ángeles Cervantes',
+        'Marian Olvera Lucas',
+        'Mauricio Cuéllar Ahumada',
+        'Noé Cruz Ramírez'
+      ].join('; ');
+      const CC_R3 = 'Jorge Marcial Islas Samperio; Liliana Rosales Contreras; María Alejandra Martínez Cárdenas; Rafael Enrique Fonseca Chávez';
+
       // Reunión 1 (GCR Oriental) — lista de asistentes real (25). Correos donde se conocen.
       const ROSTER_R1_ORIENTAL = [
         'Claudia Marcela Meza Vega <cmeza@energia.gob.mx>',
@@ -12064,7 +12091,7 @@
       const PRESETS = [
         { id: 'r1-oriental', label: '1ª · GCR Oriental · 16/06 08:00', gcr: 'ORIENTAL', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Oriental', capturadoPor: '', asistentes: ROSTER_R1_ORIENTAL, cc: CC_PRESELECCION },
         { id: 'r2-occidente', label: '2ª · GCR Occidente · 16/06', gcr: 'OCCIDENTE', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Occidental', capturadoPor: 'DGMESNIE', asistentes: ROSTER_R2_OCCIDENTAL, cc: '' },
-        { id: 'r3-central-bcs', label: '3ª · GCR Central/BCS · 16/06', gcr: 'CENTRAL', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Central/BCS', capturadoPor: '', asistentes: ROSTER_PRESELECCION, cc: CC_PRESELECCION },
+        { id: 'r3-central-bcs', label: '3ª · GCR Central/BCS · 16/06', gcr: 'CENTRAL', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Central/BCS', capturadoPor: 'DGMESNIE', asistentes: ROSTER_R3_CENTRAL, cc: CC_R3 },
         { id: 'r4-noreste-norte', label: '4ª · GCR Noreste/Norte · 16/06', gcr: 'NORESTE', fecha: '2026-06-16', nombre: 'Preselección técnica de proyectos GCR Noreste/Norte', capturadoPor: '', asistentes: ROSTER_R4, cc: CC_PRESELECCION }
       ];
 
