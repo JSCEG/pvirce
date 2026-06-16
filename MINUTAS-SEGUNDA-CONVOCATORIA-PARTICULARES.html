@@ -12534,10 +12534,23 @@
         document.getElementById('minutaReporteModal').classList.add('show');
       }
       function decClass(d) { return DECISIONES[d] ? DECISIONES[d].cls : ''; }
-      // Datos del proyecto (GIE, tecnología, punto de interconexión) por folio, desde DATA.
+      // Datos del proyecto (GIE+bandera, tecnología, interconexión, MW) por folio, desde DATA.
       function projMeta(folio) {
         const p = getData().find(x => x.folio === folio) || {};
-        return { gie: p.gie || '', tec: (p.tecnologia || p.techBase || ''), pi: (p.puntoInterconexion || '') };
+        let flag = '';
+        try { if (typeof getCountryFlagHtml !== 'undefined' && typeof formatGieOriginText !== 'undefined') flag = getCountryFlagHtml(formatGieOriginText(p)); } catch (e) { }
+        return {
+          gie: p.gie || '', tec: (p.tecnologia || p.techBase || ''), pi: (p.puntoInterconexion || ''), flag,
+          mwContr: (p.capacidadContratada != null && p.capacidadContratada !== '') ? p.capacidadContratada : '',
+          mwNeta: (p.mwNeta != null && p.mwNeta !== '') ? p.mwNeta : ''
+        };
+      }
+      // Ícono por decisión (Bootstrap Icons; hereda el color de la clase .dec).
+      function decIcon(d) {
+        if (d === 'Continúa') return '<i class="bi bi-check-circle-fill"></i> ';
+        if (d === 'No continúa') return '<i class="bi bi-x-circle-fill"></i> ';
+        if (d === 'Pendiente') return '<i class="bi bi-clock-fill"></i> ';
+        return '';
       }
       function renderReporte(reunionId) {
         repReunionId = reunionId;
@@ -12585,17 +12598,18 @@
 
         const body = rows.length ? `
           <table class="minuta-rep-table">
-            <thead><tr><th>#</th><th>Folio</th><th>Proyecto</th><th>GIE</th><th>Tecnología</th><th>Interconexión</th><th>MW</th>${showSesion ? '<th>Sesión / Fecha</th>' : ''}<th>Decisión</th><th>Motivo / Comentarios</th></tr></thead>
+            <thead><tr><th>#</th><th>Folio</th><th>Proyecto</th><th>GIE</th><th>Tecnología</th><th>Interconexión</th><th>MW Contr.</th><th>MW Neta</th>${showSesion ? '<th>Sesión / Fecha</th>' : ''}<th>Decisión</th><th>Motivo / Comentarios</th></tr></thead>
             <tbody>
-              ${rows.map((r, i) => { const pm = projMeta(r.folio); return `<tr>
+              ${rows.map((r, i) => { const pm = projMeta(r.folio); const exc = /excluyent/i.test(r.comentarios || ''); return `<tr>
                 <td>${i + 1}</td><td>${esc(r.folio)}</td><td>${esc(r.proyecto)}</td>
-                <td>${esc(r.empresa_gie || pm.gie)}</td>
+                <td>${pm.flag}${esc(r.empresa_gie || pm.gie)}</td>
                 <td>${esc(pm.tec)}</td>
                 <td>${esc(pm.pi)}</td>
-                <td style="text-align:right;">${fmt(r.mw)}</td>
+                <td style="text-align:right;">${pm.mwContr !== '' ? fmt(pm.mwContr) : (r.mw ? fmt(r.mw) : '—')}</td>
+                <td style="text-align:right;">${pm.mwNeta !== '' ? fmt(pm.mwNeta) : '—'}</td>
                 ${showSesion ? `<td>${esc(r.reunion_nombre || '')}<br><span style="color:var(--color-text-light);font-size:10.5px;">🕑 ${esc(fmtFechaHora(r.timestamp))}</span></td>` : ''}
-                <td class="dec ${decClass(r.decision)}">${esc(r.decision)}</td>
-                <td>${r.motivo_no_continua ? '⛔ ' + esc(r.motivo_no_continua) + (r.comentarios ? ' — ' : '') : ''}${esc(r.comentarios || '')}</td>
+                <td class="dec ${decClass(r.decision)}" style="white-space:nowrap;">${decIcon(r.decision)}${esc(r.decision)}</td>
+                <td>${exc ? '<span style="display:inline-block;background:#611232;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-right:4px;">⇄ EXCLUYENTE</span>' : ''}${r.motivo_no_continua ? '⛔ ' + esc(r.motivo_no_continua) + (r.comentarios ? ' — ' : '') : ''}${esc(r.comentarios || '')}</td>
               </tr>`; }).join('')}
             </tbody>
           </table>` : '<div class="minuta-empty">Aún no hay votos registrados para esta vista.</div>';
