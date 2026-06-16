@@ -11924,13 +11924,18 @@
     .minuta-rep-head .t2 { font-size: 13px; color: var(--color-text-light); font-weight: 600; }
     .minuta-rep-meta { display: flex; flex-wrap: wrap; gap: 10px 28px; padding: 12px 26px; font-size: 12.5px; }
     .minuta-rep-meta b { color: var(--color-guinda); }
-    .minuta-rep-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; padding: 8px 26px 16px; }
+    .minuta-rep-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; padding: 8px 26px 16px; }
     .minuta-rep-kpi { background: var(--color-bg-light); border-radius: 10px; padding: 12px 14px; }
     .minuta-rep-kpi .v { font-size: 30px; font-weight: 800; line-height: 1; color: var(--color-guinda); }
     .minuta-rep-kpi .l { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-text-light); margin-top: 5px; }
     .minuta-rep-kpi.continua .v { color: var(--color-verde); }
     .minuta-rep-kpi.no .v { color: var(--color-guinda); }
     .minuta-rep-kpi.pendiente .v { color: #7a5e1f; }
+    .minuta-rep-kpi.exclu .v { color: #611232; }
+    .minuta-rep-kpi .dual { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+    .minuta-rep-kpi .dual > div { display: flex; flex-direction: column; }
+    .minuta-rep-kpi .dual .v { font-size: 21px; }
+    .minuta-rep-kpi .dual .u { font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--color-text-light); margin-top: 2px; letter-spacing: .02em; }
     .minuta-rep-table { width: calc(100% - 52px); margin: 0 26px 22px; border-collapse: collapse; font-size: 11.5px; }
     .minuta-rep-table th {
       background: var(--color-guinda); color: #fff; text-align: left; padding: 7px 9px; font-size: 10.5px;
@@ -12565,6 +12570,12 @@
         repReunionId = reunionId;
         const fmt = n => Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 });
         const mw = arr => arr.reduce((s, r) => s + (Number(r.mw) || 0), 0);
+        // MW por fila, reflejando EXACTAMENTE las columnas de la tabla: contratada con respaldo a r.mw; neta solo si existe.
+        const mwContrDe = r => { const pm = projMeta(r.folio); return pm.mwContr !== '' ? (Number(pm.mwContr) || 0) : (Number(r.mw) || 0); };
+        const mwNetaDe = r => { const pm = projMeta(r.folio); return pm.mwNeta !== '' ? (Number(pm.mwNeta) || 0) : 0; };
+        const sumContr = arr => arr.reduce((s, r) => s + mwContrDe(r), 0);
+        const sumNeta = arr => arr.reduce((s, r) => s + mwNetaDe(r), 0);
+        const esExcluyente = r => /excluyent/i.test(r.comentarios || '');
         const logoSener = 'Estilos Institucionales/img/logo_sener.png';
         const logoGob = 'Estilos Institucionales/img/logo_gob.png';
         const log = logAll();
@@ -12592,6 +12603,7 @@
         const cont = rows.filter(r => r.decision === 'Continúa');
         const no = rows.filter(r => r.decision === 'No continúa');
         const pend = rows.filter(r => r.decision === 'Pendiente');
+        const exclu = rows.filter(esExcluyente);
 
         const kpis = historial ? `
           <div class="minuta-rep-kpi"><div class="v">${rows.length}</div><div class="l">Votaciones</div></div>
@@ -12603,7 +12615,9 @@
           <div class="minuta-rep-kpi continua"><div class="v">${cont.length}</div><div class="l">Continúan</div></div>
           <div class="minuta-rep-kpi no"><div class="v">${no.length}</div><div class="l">No continúan</div></div>
           <div class="minuta-rep-kpi pendiente"><div class="v">${pend.length}</div><div class="l">Pendientes</div></div>
-          <div class="minuta-rep-kpi"><div class="v">${fmt(mw(cont))}</div><div class="l">MW continúan</div></div>`;
+          <div class="minuta-rep-kpi exclu"><div class="v">${exclu.length}</div><div class="l">Excluyentes</div></div>
+          <div class="minuta-rep-kpi continua"><div class="dual"><div><span class="v">${fmt(sumContr(cont))}</span><span class="u">contratada</span></div><div><span class="v">${fmt(sumNeta(cont))}</span><span class="u">neta</span></div></div><div class="l">MW Continúan</div></div>
+          <div class="minuta-rep-kpi no"><div class="dual"><div><span class="v">${fmt(sumContr(no))}</span><span class="u">contratada</span></div><div><span class="v">${fmt(sumNeta(no))}</span><span class="u">neta</span></div></div><div class="l">MW No continúan</div></div>`;
 
         const body = rows.length ? `
           <table class="minuta-rep-table">
