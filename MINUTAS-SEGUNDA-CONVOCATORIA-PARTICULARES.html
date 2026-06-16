@@ -12657,18 +12657,40 @@
           const margin = 6;
           const imgW = pageW - margin * 2;
           const imgH = canvas.height * imgW / canvas.width;
-          const img = canvas.toDataURL('image/jpeg', 0.92);
           if (imgH <= pageH - margin * 2) {
-            pdf.addImage(img, 'JPEG', margin, margin, imgW, imgH);
+            // Cabe en una sola página.
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, imgH);
           } else {
-            let heightLeft = imgH, position = margin;
-            pdf.addImage(img, 'JPEG', margin, position, imgW, imgH);
-            heightLeft -= (pageH - margin * 2);
-            while (heightLeft > 0) {
-              position = margin - (imgH - heightLeft);
-              pdf.addPage(fmt, 'l');
-              pdf.addImage(img, 'JPEG', margin, position, imgW, imgH);
-              heightLeft -= (pageH - margin * 2);
+            // Multipágina: cortar SOLO entre filas (nunca a media fila de la tabla).
+            const mmPerPx = imgW / canvas.width;                  // mm por píxel del canvas
+            const pageContentPx = (pageH - margin * 2) / mmPerPx; // alto útil de página, en px del canvas
+            // Cortes permitidos: fin de KPIs, fin del encabezado de tabla y fin de cada fila del cuerpo.
+            const docRect = node.getBoundingClientRect();
+            const sc = canvas.height / docRect.height;            // px del canvas por px CSS (~scale de html2canvas)
+            const safe = [];
+            node.querySelectorAll('.minuta-rep-kpis, .minuta-rep-table thead tr, .minuta-rep-table tbody tr')
+              .forEach(el => { safe.push((el.getBoundingClientRect().bottom - docRect.top) * sc); });
+            safe.push(canvas.height);
+            const cuts = Array.from(new Set(safe.map(v => Math.round(v)))).sort((a, b) => a - b);
+            let y0 = 0, firstPage = true;
+            while (y0 < canvas.height - 1) {
+              const maxY = y0 + pageContentPx;
+              let y1;
+              if (maxY >= canvas.height) {
+                y1 = canvas.height;
+              } else {
+                // El mayor corte seguro que entra en la página (y que avanza desde y0).
+                y1 = cuts.filter(c => c > y0 + 1 && c <= maxY).pop();
+                if (!y1) y1 = Math.round(maxY); // fila más alta que una página: corte forzado para no trabar el bucle
+              }
+              const sliceH = y1 - y0;
+              const slice = document.createElement('canvas');
+              slice.width = canvas.width; slice.height = sliceH;
+              slice.getContext('2d').drawImage(canvas, 0, y0, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+              if (!firstPage) pdf.addPage(fmt, 'l');
+              firstPage = false;
+              pdf.addImage(slice.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, sliceH * mmPerPx);
+              y0 = y1;
             }
           }
           pdf.save(fname);
