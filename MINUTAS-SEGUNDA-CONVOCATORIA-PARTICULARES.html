@@ -12376,6 +12376,7 @@
               </div>
               <div style="display:flex;gap:8px;">
                 <button class="minuta-btn dorado" onclick="Minuta.exportReportePDF()"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</button>
+                <button class="minuta-btn verde" onclick="Minuta.exportMinutaMD()" title="Exportar minuta (.md institucional para /resumen-institucional)"><i class="bi bi-filetype-md"></i> Minuta .md</button>
                 <button class="minuta-btn gris" onclick="Minuta.exportTSV()"><i class="bi bi-filetype-csv"></i> TSV</button>
                 <button class="minuta-x" onclick="Minuta.close('minutaReporteModal')"><i class="bi bi-x-lg"></i></button>
               </div>
@@ -12504,6 +12505,106 @@
         toast(log.length + ' fila(s) exportada(s).');
       }
 
+      // ====== EXPORTAR MINUTA .md (para /resumen-institucional, tipo: minuta_reunion) ======
+      function areaDeCorreo(email) {
+        const d = String(email || '').split('@')[1] || '';
+        if (/cenace/i.test(d)) return 'CENACE';
+        if (/\bcfe\b|cfe\.mx|cfe\.gob/i.test(d)) return 'CFE';
+        if (/energia\.gob/i.test(d)) return 'SENER';
+        return d || '—';
+      }
+      function fechaLegible(f) {
+        const m = String(f || '').slice(0, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return String(f || '');
+        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        return `${parseInt(m[3], 10)} de ${meses[parseInt(m[2], 10) - 1]} de ${m[1]}`;
+      }
+      function mdCell(s) { return String(s == null ? '' : s).replace(/\|/g, '/').replace(/\r?\n/g, ' ').trim(); }
+
+      function exportMinutaMD() {
+        const log = logAll();
+        const id = repReunionId;
+        let rows, reun;
+        if (id && id !== '__all__' && id !== '__historial__') {
+          rows = latestPerFolio(log.filter(r => r.reunion_id === id));
+          const first = log.find(r => r.reunion_id === id) || {};
+          rows.sort((a, b) => (a.gcr === b.gcr) ? (a.proyecto < b.proyecto ? -1 : 1) : (a.gcr < b.gcr ? -1 : 1));
+          reun = {
+            nombre: first.reunion_nombre || 'Reunión', fecha: first.fecha_reunion || '',
+            gcr: [...new Set(rows.map(r => r.gcr).filter(Boolean))].join(', '),
+            capturadoPor: first.capturado_por || '',
+            asistentes: parseAsistentes(first.asistentes || '')
+          };
+        } else {
+          rows = latestPerFolio(log);
+          reun = {
+            nombre: 'Estado vigente — todas las reuniones', fecha: '', gcr: 'Varias',
+            capturadoPor: reunion ? (reunion.capturadoPor || '') : '',
+            asistentes: reunion ? reunion.asistentes : []
+          };
+        }
+        if (!rows.length) { toast('No hay votos para exportar en esta vista.', true); return; }
+
+        const cont = rows.filter(r => r.decision === 'Continúa');
+        const no = rows.filter(r => r.decision === 'No continúa');
+        const pend = rows.filter(r => r.decision === 'Pendiente');
+        const fmt = n => Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 });
+        const mwCont = cont.reduce((s, r) => s + (Number(r.mw) || 0), 0);
+
+        const asisRows = (reun.asistentes || []).map(a => `| ${mdCell(a.nombre)} | — | ${areaDeCorreo(a.email)} |`).join('\n');
+        const votoRows = rows.map(r => `| ${mdCell(r.proyecto)} | ${mdCell(r.folio)} | ${mdCell(r.decision)} | ${mdCell(r.motivo_no_continua ? '⛔ ' + r.motivo_no_continua + (r.comentarios ? ' — ' + r.comentarios : '') : (r.comentarios || ''))} |`).join('\n');
+        const archivo = 'Minuta_' + fileSafe((reun.gcr || 'sesion') + '_' + (reun.fecha || '')) + '.docx';
+
+        const md = `---
+tipo: minuta_reunion
+titulo: "Minuta — ${reun.nombre}"
+subtitulo: "Segunda Convocatoria a Particulares · Preselección técnica de proyectos"
+fecha: "${fechaLegible(reun.fecha) || '—'}"
+entidad: "Secretaría de Energía"
+archivo_salida: "${archivo}"
+formato: word
+---
+
+# Identificación
+| Campo | Detalle |
+|-------|---------|
+| Órgano | GCR ${mdCell(reun.gcr)} |
+| Tipo de reunión | Preselección técnica de proyectos (criterios técnicos, sociales y ambientales) |
+| Fecha | ${fechaLegible(reun.fecha) || '—'} |
+| Modalidad | Reunión de Microsoft Teams |
+| Convocante | Claudia Marcela Meza Vega |
+| Elaboró la minuta | ${mdCell(reun.capturadoPor) || '—'} |
+
+# Asistentes
+| Nombre | Cargo | Área |
+|--------|-------|------|
+${asisRows || '| — | — | — |'}
+
+# Resumen de la votación
+- Proyectos revisados: ${rows.length}
+- Continúan: ${cont.length}
+- No continúan: ${no.length}
+- Pendientes: ${pend.length}
+- Capacidad que continúa: ${fmt(mwCont)} MW
+
+# Resultados por proyecto
+| Proyecto | Folio | Decisión | Motivo / Comentarios |
+|----------|-------|----------|----------------------|
+${votoRows}
+
+# Desarrollo de la reunión
+> Pega aquí la transcripción de la sesión (o súbela como segundo .md junto con este para /resumen-institucional).
+
+# Acuerdos y próximos pasos
+> Redactar a partir de la votación y la transcripción.
+`;
+        const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = 'Minuta_' + fileSafe((reun.gcr || 'sesion') + '_' + (reun.fecha || '')) + '.md';
+        a.click(); URL.revokeObjectURL(a.href);
+        toast('Minuta .md exportada (' + rows.length + ' proyectos).');
+      }
+
       function close(id) { const m = document.getElementById(id); if (m) m.classList.remove('show'); }
 
       // ====== INIT ======
@@ -12528,7 +12629,7 @@
       return {
         init, openReunion, saveReunion, openVoto, openVotoFromFicha, saveVoto,
         pickDecision, insertTag, openReporte, renderReporte, exportReportePDF, exportTSV,
-        retrySync, repaintBadges, close, loadPreset, changeVotoReunion, hasReunion: () => !!reunion
+        retrySync, repaintBadges, close, loadPreset, changeVotoReunion, exportMinutaMD, hasReunion: () => !!reunion
       };
     })();
   </script>
