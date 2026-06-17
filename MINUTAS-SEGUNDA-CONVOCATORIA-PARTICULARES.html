@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segunda Convocatoria - Reporte de Proyectos Particulares</title>
+  <link rel="icon" href="data:,">
 
   <!-- Hojas de estilo y Fuentes -->
   <link
@@ -3582,7 +3583,7 @@
     function redirectFileProtocolToLocalServer() {
       if (window.location.protocol !== 'file:') return false;
 
-      const targetUrl = 'http://127.0.0.1:8090/REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html';
+      const targetUrl = 'http://127.0.0.1:5502/MINUTAS-SEGUNDA-CONVOCATORIA-PARTICULARES.html';
       const loaderText = document.getElementById('loaderText');
       if (loaderText) {
         loaderText.innerHTML = `
@@ -6553,6 +6554,7 @@
       COORD_FUERA_MX: 'Coordenadas (A)',
       VERTICES_INCONSISTENTES: 'N° de vértices',
       MW_CERO: 'Cap. instalada',
+      CAP_NETA_MAYOR_CONTRATADA: 'Cap. Neta',
       SIN_EF: 'Entidad federativa',
       SIN_MUNICIPIO: 'Municipio',
       SIN_GERENCIA: 'Gerencia regional',
@@ -6674,16 +6676,22 @@
           push(p, 'MW_CERO', 'alta', 'Capacidad instalada = 0 MW');
         }
 
-        // 9) Sin EF
+        // 9) Capacidad neta no debe exceder la capacidad contratada
+        if (Number.isFinite(p.mwNeta) && Number.isFinite(p.capacidadContratada) &&
+          p.mwNeta > 0 && p.capacidadContratada > 0 && p.mwNeta > p.capacidadContratada) {
+          push(p, 'CAP_NETA_MAYOR_CONTRATADA', 'alta', `Capacidad neta (${p.mwNeta.toLocaleString('es-MX')} MW) mayor que capacidad contratada (${p.capacidadContratada.toLocaleString('es-MX')} MW)`);
+        }
+
+        // 10) Sin EF
         if (isMissing(p.ef)) push(p, 'SIN_EF', 'alta', 'Sin entidad federativa');
 
-        // 10) Sin municipio
+        // 11) Sin municipio
         if (isMissing(p.municipio)) push(p, 'SIN_MUNICIPIO', 'media', 'Sin municipio/alcaldía');
 
-        // 11) Sin gerencia regional
+        // 12) Sin gerencia regional
         if (isMissing(p.gerencia)) push(p, 'SIN_GERENCIA', 'media', 'Sin gerencia regional');
 
-        // 12) Trámites en "Sí" pero estatus regulatorios todos SIN INFORMACIÓN
+        // 13) Trámites en "Sí" pero estatus regulatorios todos SIN INFORMACIÓN
         const regStatuses = [p.tierras, p.mia, p.misse, p.cenace, p.cenaceVal];
         const allMissing = regStatuses.every(isMissing);
         const tramiteYes = yesLike(p.creStatusPresentada) || yesLike(p.creStatusPrevencion);
@@ -6691,26 +6699,26 @@
           push(p, 'TRAMITE_INCONSISTENTE', 'media', 'Marcado en trámite pero todos los estatus regulatorios son SIN INFORMACIÓN');
         }
 
-        // 13) MIA declarada pero sin estatus reportado
+        // 14) MIA declarada pero sin estatus reportado
         if (yesLike(p.tieneMia) && isMissing(p.estatusMia)) {
           push(p, 'MIA_SI_SIN_ESTATUS', 'media', '¿Tiene MIA? = SI, pero Estatus MIA está SIN INFORMACIÓN');
         }
 
-        // 14) FEOC vacío
+        // 15) FEOC vacío
         if (isMissing(p.feoc)) push(p, 'FEOC_FALTA', 'baja', 'Sin fecha prevista de entrada en operación comercial');
 
-        // 15) Sin tecnología
+        // 16) Sin tecnología
         if (isMissing(p.tecnologia)) push(p, 'SIN_TECNOLOGIA', 'alta', 'Sin clasificación de tecnología');
 
-        // 16) Folio faltante
+        // 17) Folio faltante
         if (isMissing(p.folio)) push(p, 'FOLIO_FALTA', 'media', 'Sin folio de proyecto');
 
-        // 17) GIE faltante
+        // 18) GIE faltante
         if (isMissing(p.gie) || /NO IDENTIFICADO/i.test(p.gie || '')) {
           push(p, 'GIE_FALTA', 'media', 'Grupo de interés no identificado');
         }
 
-        // 18) EVIS/MISSE inconsistencias
+        // 19) EVIS/MISSE inconsistencias
         const hasFolioEvis = p.folioEvis && !isMissing(p.folioEvis);
         const misseStatus = classifyStatus(p.misse);
         if (hasFolioEvis && misseStatus === 'EMPTY') {
@@ -6720,7 +6728,7 @@
           push(p, 'EVIS_APROBADA_SIN_FOLIO', 'media', 'Estatus EVIS es Aprobado/Autorizado, pero no reporta Folio EVIS');
         }
 
-        // 19) Tierras no aseguradas en trámites avanzados
+        // 20) Tierras no aseguradas en trámites avanzados
         const isCreAdvanced = p.creStatus && !isMissing(p.creStatus) && !/SIN SOLICITUD/i.test(p.creStatus);
         const isContratoAdvanced = p.contratoStatus && !isMissing(p.contratoStatus) && !/SIN SOLICITUD|NO INICIADO/i.test(p.contratoStatus);
         if ((isCreAdvanced || isContratoAdvanced) && (classifyStatus(p.tierras) === 'NO' || isMissing(p.tierras))) {
@@ -6728,7 +6736,7 @@
         }
       });
 
-      // 20) Detección de duplicados por Proyecto + Empresa + Capacidad MW
+      // 21) Detección de duplicados por Proyecto + Empresa + Capacidad MW
       const groups = {};
       data.forEach(p => {
         if (!p.nombre || p.mw <= 0) return;
@@ -6773,6 +6781,7 @@
       COORD_FUERA_MX: { label: 'Coordenadas fuera de México', color: ISSUE_PALETTE.guindaOscuro },
       VERTICES_INCONSISTENTES: { label: 'Vértices declarados ≠ capturados', color: ISSUE_PALETTE.dorado },
       MW_CERO: { label: 'MW = 0', color: ISSUE_PALETTE.guinda },
+      CAP_NETA_MAYOR_CONTRATADA: { label: 'Capacidad neta mayor que contratada', color: ISSUE_PALETTE.guindaOscuro },
       SIN_EF: { label: 'Sin entidad federativa', color: ISSUE_PALETTE.guindaOscuro },
       SIN_MUNICIPIO: { label: 'Sin municipio', color: ISSUE_PALETTE.dorado },
       SIN_GERENCIA: { label: 'Sin gerencia regional', color: ISSUE_PALETTE.dorado },
@@ -12504,6 +12513,7 @@
                 <button class="minuta-btn dorado" onclick="Minuta.exportReportePDF()"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</button>
                 <button class="minuta-btn verde" onclick="Minuta.exportMinutaMD()" title="Exportar minuta (.md institucional para /resumen-institucional)"><i class="bi bi-filetype-md"></i> Minuta .md</button>
                 <button class="minuta-btn gris" onclick="Minuta.exportTSV()"><i class="bi bi-filetype-csv"></i> TSV</button>
+                <button class="minuta-btn" style="background:#9B2247;" onclick="Minuta.exportInconsistencias()" title="Reporte descargable de inconsistencias de información de los proyectos votados en esta vista"><i class="bi bi-exclamation-triangle-fill"></i> Inconsistencias</button>
                 <button class="minuta-x" onclick="Minuta.close('minutaReporteModal')"><i class="bi bi-x-lg"></i></button>
               </div>
             </div>
@@ -12822,6 +12832,152 @@ ${votoRows}
         toast('Minuta .md exportada (' + rows.length + ' proyectos).');
       }
 
+      // ====== REPORTE DE INCONSISTENCIAS (solo proyectos votados de la vista actual) ======
+      async function exportInconsistencias() {
+        const log = logAll();
+        const id = repReunionId;
+        let rows, meta;
+        if (id === '__all__' || id === '__historial__' || !id) {
+          rows = latestPerFolio(log);
+          meta = { titulo: 'Estado vigente — todas las reuniones', gcr: '—', fecha: '' };
+        } else {
+          rows = latestPerFolio(log.filter(r => r.reunion_id === id));
+          const first = log.find(r => r.reunion_id === id) || {};
+          const gcrs = [...new Set(rows.map(r => r.gcr).filter(Boolean))].join(', ');
+          meta = { titulo: first.reunion_nombre || 'Reunión', gcr: gcrs || (first.gcr || '—'), fecha: first.fecha_reunion || '' };
+        }
+        if (!rows.length) { toast('No hay proyectos votados en esta vista.', true); return; }
+
+        const data = (typeof DATA !== 'undefined' && DATA) ? DATA : (typeof getData === 'function' ? getData() : []);
+        if (!data.length) { toast('Aún no carga la base de proyectos; usa «Actualizar» y reintenta.', true); return; }
+        let allIssues;
+        try { allIssues = detectVupeInconsistencies(data); }
+        catch (e) { toast('No se pudo auditar: ' + e.message, true); return; }
+
+        const folios = new Set(rows.map(r => r.folio));
+        const decByFolio = {}; rows.forEach(r => decByFolio[r.folio] = r.decision);
+        const issues = allIssues.filter(it => folios.has(it.folio));
+
+        const fmt = n => Number(n || 0).toLocaleString('es-MX');
+        const sevRank = { alta: 0, media: 1, baja: 2 };
+        const sevColor = { alta: '#9B2247', media: '#A57F2C', baja: '#6b7280' };
+        const labelOf = t => (typeof ISSUE_LABELS !== 'undefined' && ISSUE_LABELS[t]) || { label: t, color: '#64748b' };
+
+        const byType = {}; issues.forEach(it => (byType[it.type] = byType[it.type] || []).push(it));
+        const byFolio = {}; issues.forEach(it => (byFolio[it.folio] = byFolio[it.folio] || []).push(it));
+        const proyAfectados = Object.keys(byFolio).length;
+        const sinInc = rows.length - proyAfectados;
+
+        const tipoRows = Object.entries(byType).sort((a, b) => b[1].length - a[1].length).map(([type, arr]) => {
+          const cfg = labelOf(type);
+          return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${cfg.color};margin-right:7px;vertical-align:middle;"></span>${esc(cfg.label)}</td><td style="text-align:right;font-weight:800;">${arr.length}</td></tr>`;
+        }).join('');
+
+        const decClassOf = d => d === 'Continúa' ? 'c' : d === 'No continúa' ? 'n' : 'p';
+        const detRows = Object.entries(byFolio).sort((a, b) => b[1].length - a[1].length).map(([folio, arr]) => {
+          const p0 = arr[0]; const dec = decByFolio[folio] || '—';
+          const items = arr.slice().sort((a, b) => (sevRank[a.severity] ?? 9) - (sevRank[b.severity] ?? 9)).map(it => {
+            const cfg = labelOf(it.type);
+            const src = it.cellRef ? ` <span style="color:#94a3b8;">[${esc(it.sourceColumn || '')}${it.cellRef ? (' · ' + esc(it.cellRef)) : ''}]</span>` : '';
+            return `<li><span style="display:inline-block;min-width:54px;font-weight:800;color:${sevColor[it.severity] || '#555'};text-transform:uppercase;font-size:9px;">${esc(it.severity || '')}</span> <b>${esc(cfg.label)}</b>: ${esc(it.detail || '')}${src}</li>`;
+          }).join('');
+          return `<tr><td><b>${esc(p0.nombre || '—')}</b><br><span style="color:#64748b;font-size:10px;">${esc(folio)}</span></td><td>${esc(p0.gie || '—')}</td><td><span class="dec ${decClassOf(dec)}">${esc(dec)}</span></td><td style="text-align:center;font-weight:800;">${arr.length}</td><td><ul style="margin:0;padding-left:16px;">${items}</ul></td></tr>`;
+        }).join('');
+
+        const stamp = new Date().toLocaleString('es-MX');
+        const html = `
+<style>
+*{box-sizing:border-box}
+.doc{max-width:1100px;margin:0 auto;background:#fff;padding:30px 36px;box-shadow:0 2px 14px rgba(0,0,0,.08);}
+.head{border-bottom:3px solid #9B2247;padding-bottom:14px;}
+.head .t1{font-size:22px;font-weight:800;color:#9B2247;}.head .t2{font-size:13px;color:#555;margin-top:3px;}
+.meta{font-size:12px;color:#444;margin-top:10px;}.meta b{color:#9B2247;}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0;}
+.card{background:#f8f4f5;border-radius:10px;padding:14px 16px;}
+.card .v{font-size:28px;font-weight:800;color:#9B2247;line-height:1;}.card.ok2 .v{color:#1E5B4F;}
+.card .l{font-size:10.5px;font-weight:700;text-transform:uppercase;color:#777;margin-top:5px;}
+h3{font-size:13px;color:#9B2247;border-bottom:2px solid #eadfe3;padding-bottom:5px;margin:22px 0 10px;}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px;}
+th{background:#9B2247;color:#fff;text-align:left;padding:7px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;}
+td{padding:7px 9px;border-bottom:1px solid #eee;vertical-align:top;}tr:nth-child(even) td{background:#fafbfc;}
+.dec{font-weight:800;white-space:nowrap;font-size:11px;}.dec.c{color:#1E5B4F;}.dec.n{color:#9B2247;}.dec.p{color:#7a5e1f;}
+.ok{padding:34px;text-align:center;color:#1E5B4F;font-weight:700;font-size:16px;}
+.foot{margin-top:22px;font-size:10px;color:#9ca3af;text-align:center;border-top:1px solid #eee;padding-top:10px;}
+</style><div class="doc">
+<div class="head"><div class="t1">Reporte de inconsistencias de información</div><div class="t2">Segunda Convocatoria a Particulares · Proyectos evaluados en la sesión</div>
+<div class="meta"><b>Reunión:</b> ${esc(meta.titulo)} &nbsp;·&nbsp; <b>GCR:</b> ${esc(meta.gcr)}${meta.fecha ? (' &nbsp;·&nbsp; <b>Fecha:</b> ' + esc(meta.fecha)) : ''} &nbsp;·&nbsp; <b>Generado:</b> ${esc(stamp)}</div></div>
+<div class="cards">
+<div class="card"><div class="v">${fmt(rows.length)}</div><div class="l">Proyectos votados</div></div>
+<div class="card"><div class="v">${fmt(proyAfectados)}</div><div class="l">Con inconsistencias</div></div>
+<div class="card ok2"><div class="v">${fmt(sinInc)}</div><div class="l">Sin inconsistencias</div></div>
+<div class="card"><div class="v">${fmt(issues.length)}</div><div class="l">Inconsistencias totales</div></div></div>
+${issues.length ? `<h3>Resumen por tipo de inconsistencia</h3>
+<table><thead><tr><th>Tipo</th><th style="text-align:right;">Casos</th></tr></thead><tbody>${tipoRows}</tbody></table>
+<h3>Detalle por proyecto</h3>
+<table><thead><tr><th>Proyecto / Folio</th><th>GIE</th><th>Decisión</th><th style="text-align:center;">N°</th><th>Inconsistencias detectadas</th></tr></thead><tbody>${detRows}</tbody></table>`
+: `<div class="ok">✓ Sin inconsistencias detectadas en los proyectos votados de esta vista.</div>`}
+<div class="foot">Generado desde el reporte de minutas · Auditoría VUPE · Secretaría de Energía — DGMESNIE</div>
+</div>`;
+
+        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') { toast('Librerías PDF no cargadas.', true); return; }
+        const stage = document.createElement('div');
+        stage.style.cssText = 'position:fixed;left:-12000px;top:0;width:1164px;background:#f5f5f5;padding:32px;font-family:Segoe UI,system-ui,Arial,sans-serif;color:#1a1a1a;z-index:-1;';
+        stage.innerHTML = html;
+        document.body.appendChild(stage);
+
+        const fname = 'Inconsistencias_' + ((typeof fileSafe !== 'undefined') ? fileSafe(meta.titulo || 'sesion') : 'sesion') + '.pdf';
+        toast('Generando PDF de inconsistencias…');
+        try {
+          const { jsPDF } = window.jspdf;
+          const node = stage.querySelector('.doc') || stage;
+          const canvas = await html2canvas(node, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, windowWidth: node.scrollWidth, windowHeight: node.scrollHeight });
+          const pdfFmt = [338.6582, 190.5];
+          const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: pdfFmt });
+          const pageW = pdf.internal.pageSize.getWidth();
+          const pageH = pdf.internal.pageSize.getHeight();
+          const margin = 6;
+          const imgW = pageW - margin * 2;
+          const mmPerPx = imgW / canvas.width;
+          const pageContentPx = (pageH - margin * 2) / mmPerPx;
+
+          if (canvas.height * mmPerPx <= pageH - margin * 2) {
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, canvas.height * mmPerPx);
+          } else {
+            const docRect = node.getBoundingClientRect();
+            const sc = canvas.height / docRect.height;
+            const safe = [];
+            node.querySelectorAll('.cards, h3, table thead tr, table tbody tr, .ok, .foot')
+              .forEach(el => safe.push((el.getBoundingClientRect().bottom - docRect.top) * sc));
+            safe.push(canvas.height);
+            const cuts = Array.from(new Set(safe.map(v => Math.round(v)))).sort((a, b) => a - b);
+            let y0 = 0;
+            let firstPage = true;
+            while (y0 < canvas.height - 1) {
+              const maxY = y0 + pageContentPx;
+              let y1 = maxY >= canvas.height ? canvas.height : cuts.filter(c => c > y0 + 1 && c <= maxY).pop();
+              if (!y1) y1 = Math.round(maxY);
+              const sliceH = y1 - y0;
+              const slice = document.createElement('canvas');
+              slice.width = canvas.width;
+              slice.height = sliceH;
+              slice.getContext('2d').drawImage(canvas, 0, y0, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+              if (!firstPage) pdf.addPage(pdfFmt, 'l');
+              firstPage = false;
+              pdf.addImage(slice.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, sliceH * mmPerPx);
+              y0 = y1;
+            }
+          }
+
+          pdf.save(fname);
+          toast(issues.length ? (issues.length + ' inconsistencia(s) en ' + proyAfectados + ' proyecto(s) — PDF descargado.') : 'Sin inconsistencias — PDF descargado.');
+        } catch (e) {
+          console.error('PDF inconsistencias:', e);
+          toast('Error generando PDF de inconsistencias: ' + e.message, true);
+        } finally {
+          stage.remove();
+        }
+      }
+
       function close(id) { const m = document.getElementById(id); if (m) m.classList.remove('show'); }
 
       // ====== INIT ======
@@ -12850,7 +13006,7 @@ ${votoRows}
 
       return {
         init, openReunion, saveReunion, openVoto, openVotoFromFicha, saveVoto,
-        pickDecision, insertTag, openReporte, renderReporte, exportReportePDF, exportTSV,
+        pickDecision, insertTag, openReporte, renderReporte, exportReportePDF, exportTSV, exportInconsistencias,
         retrySync, repaintBadges, close, loadPreset, changeVotoReunion, exportMinutaMD, refreshFromSheet, hasReunion: () => !!reunion
       };
     })();
