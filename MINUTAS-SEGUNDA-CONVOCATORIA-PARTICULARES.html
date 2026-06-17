@@ -5125,21 +5125,21 @@
       const name = normText(p.nombre);
       const tech = normText(p.tecnologia);
       const techBase = normText(p.techBase);
-      const combined = `${name} ${tech} ${techBase}`;
+      const techStr = `${tech} ${techBase}`;     // columnas de tecnología — fuente autoritativa
+      const combined = `${techStr} ${name}`;     // nombre solo como respaldo
 
-      if (combined.includes('ALMACEN') || combined.includes('BATERI') || combined.includes('SAEE')) {
-        return 'Almacenamiento';
-      }
-      if (combined.includes('FOTOVOL') || combined.includes('SOLAR')) {
-        return 'Fotovoltaica';
-      }
-      if (combined.includes('EOLICA') || combined.includes('EOL')) {
-        return 'Eólica';
-      }
-      if (combined.includes('HIDRO')) {
-        return 'Hidroeléctrica';
-      }
-      return 'Otro';
+      // Clasifica por la TECNOLOGÍA declarada (no por el nombre), para que p. ej.
+      // "Parque eólico y solar X" con tecnología EÓLICA no caiga como fotovoltaica.
+      // Hidro: HIDRO (hidroeléctrica/minihidro) o HIDRAUL (hidráulica/filo de agua); excluye HIDRÓGENO.
+      const isHydro = s => (s.includes('HIDRO') || s.includes('HIDRAUL')) && !s.includes('HIDROGEN');
+      const classify = s => {
+        if (s.includes('ALMACEN') || s.includes('BATERI') || s.includes('SAEE')) return 'Almacenamiento';
+        if (s.includes('FOTOVOL') || s.includes('SOLAR')) return 'Fotovoltaica';
+        if (s.includes('EOLICA') || s.includes('EOL')) return 'Eólica';
+        if (isHydro(s)) return 'Hidroeléctrica';
+        return null;
+      };
+      return classify(techStr) || classify(combined) || 'Otro';
     }
 
     function isAssociatedSaee(p) {
