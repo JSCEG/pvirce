@@ -3326,7 +3326,7 @@
     </button>
     <div class="tech-filter-nav" style="display: flex; align-items: center; gap: 8px; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 15px; margin-left: 5px;">
       <i class="bi bi-funnel-fill" style="color: var(--color-dorado-light);"></i>
-      <select id="techFilterSelect" onchange="filterDataAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none;">
+      <select id="techFilterSelect" autocomplete="off" onchange="filterDataAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none;">
         <option value="ALL">Todas las Tecnologías</option>
         <option value="Fotovoltaica">Fotovoltaica</option>
         <option value="Eólica">Eólica</option>
@@ -3334,7 +3334,10 @@
         <option value="SAEE No Asociado">SAEE No Asociado</option>
         <option value="Hidroeléctrica">Hidroeléctrica</option>
       </select>
-      <select id="gieFilterSelect" onchange="filterGieAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 260px;">
+      <select id="gcrFilterSelect" autocomplete="off" onchange="filterGcrAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 190px;">
+        <option value="ALL">Todas las GCR</option>
+      </select>
+      <select id="gieFilterSelect" autocomplete="off" onchange="filterGieAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 260px;">
         <option value="ALL">Todos los GIE</option>
       </select>
     </div>
@@ -3715,6 +3718,7 @@
     let ALL_DATA = [];
     let ACTIVE_TECH_FILTER = null;
     let ACTIVE_GIE_FILTER = null;
+    let ACTIVE_GCR_FILTER = null;
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
@@ -5054,13 +5058,22 @@
       return String(p.gie || 'NO IDENTIFICADO') === selectedGie;
     }
 
+    function matchesGcrFilter(p, selectedGcr) {
+      if (!selectedGcr || selectedGcr === 'ALL') return true;
+      return String(p.gerencia || 'SIN GCR') === selectedGcr;
+    }
+
     function getRowsForTechFilter(selectedTech = ACTIVE_TECH_FILTER) {
       if (!selectedTech) return ALL_DATA;
       return ALL_DATA.filter(p => matchesTechFilter(p, selectedTech));
     }
 
+    function getRowsForTechAndGieFilter() {
+      return getRowsForTechFilter().filter(p => matchesGieFilter(p, ACTIVE_GIE_FILTER));
+    }
+
     function applyActiveFilters() {
-      DATA = getRowsForTechFilter().filter(p => matchesGieFilter(p, ACTIVE_GIE_FILTER));
+      DATA = getRowsForTechAndGieFilter().filter(p => matchesGcrFilter(p, ACTIVE_GCR_FILTER));
     }
 
     function populateGieFilterSelect() {
@@ -5082,6 +5095,25 @@
       selectEl.disabled = gies.length === 0;
     }
 
+    function populateGcrFilterSelect() {
+      const selectEl = document.getElementById('gcrFilterSelect');
+      if (!selectEl) return;
+
+      const rowsForTechAndGie = getRowsForTechAndGieFilter();
+      const gcrs = [...new Set(rowsForTechAndGie.map(p => p.gerencia || 'SIN GCR'))]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'es-MX'));
+
+      if (ACTIVE_GCR_FILTER && !gcrs.includes(ACTIVE_GCR_FILTER)) {
+        ACTIVE_GCR_FILTER = null;
+      }
+
+      selectEl.innerHTML = '<option value="ALL">Todas las GCR</option>' +
+        gcrs.map(gcr => `<option value="${escapeHtml(gcr)}">${escapeHtml(gcr)}</option>`).join('');
+      selectEl.value = ACTIVE_GCR_FILTER || 'ALL';
+      selectEl.disabled = gcrs.length === 0;
+    }
+
     function getTechBucket(p) {
       const group = getTechGroup(p);
       if (group === 'Almacenamiento') return 'SAEE No Asociado';
@@ -5092,6 +5124,7 @@
     function getActiveTechTitleSuffix() {
       const parts = [];
       if (ACTIVE_TECH_FILTER) parts.push(ACTIVE_TECH_FILTER);
+      if (ACTIVE_GCR_FILTER) parts.push(`GCR: ${ACTIVE_GCR_FILTER}`);
       if (ACTIVE_GIE_FILTER) parts.push(`GIE: ${ACTIVE_GIE_FILTER}`);
       return parts.length ? ` · ${parts.join(' · ')}` : '';
     }
@@ -6480,6 +6513,31 @@
       }
     }
 
+    function rebuildFilteredReport(targetSlideIndex = currentSlideIndex) {
+      populateGieFilterSelect();
+      populateGcrFilterSelect();
+      applyActiveFilters();
+
+      const techSelect = document.getElementById('techFilterSelect');
+      if (techSelect) techSelect.value = ACTIVE_TECH_FILTER || 'ALL';
+
+      const gieSelect = document.getElementById('gieFilterSelect');
+      if (gieSelect) gieSelect.value = ACTIVE_GIE_FILTER || 'ALL';
+
+      const gcrSelect = document.getElementById('gcrFilterSelect');
+      if (gcrSelect) gcrSelect.value = ACTIVE_GCR_FILTER || 'ALL';
+
+      renderNumeralia();
+      clearGcrWidgets();
+      generateGcrTables();
+
+      if (mapInstance) {
+        drawProjectMarkersOnMap();
+      }
+
+      showSlide(Math.min(targetSlideIndex, slidesCount - 1));
+    }
+
     function filterDataAndRebuild(selectedTech) {
       const targetSlideIndex = currentSlideIndex;
 
@@ -6489,50 +6547,19 @@
         ACTIVE_TECH_FILTER = selectedTech;
       }
 
-      populateGieFilterSelect();
-      applyActiveFilters();
-
-      // Sincronizar el select de presentación
-      const selectEl = document.getElementById('techFilterSelect');
-      if (selectEl) {
-        selectEl.value = ACTIVE_TECH_FILTER || 'ALL';
-      }
-
-      // Re-renderizar Numeralia
-      renderNumeralia();
-
-      // Limpiar widgets y generar tablas de nuevo
-      clearGcrWidgets();
-      generateGcrTables();
-
-      // Redibujar marcadores en el mapa general
-      if (mapInstance) {
-        drawProjectMarkersOnMap();
-      }
-
-      // Mantener al usuario en la diapositiva donde aplicó el filtro.
-      showSlide(Math.min(targetSlideIndex, slidesCount - 1));
+      rebuildFilteredReport(targetSlideIndex);
     }
 
     function filterGieAndRebuild(selectedGie) {
       const targetSlideIndex = currentSlideIndex;
       ACTIVE_GIE_FILTER = selectedGie && selectedGie !== 'ALL' ? selectedGie : null;
-      applyActiveFilters();
+      rebuildFilteredReport(targetSlideIndex);
+    }
 
-      const selectEl = document.getElementById('gieFilterSelect');
-      if (selectEl) {
-        selectEl.value = ACTIVE_GIE_FILTER || 'ALL';
-      }
-
-      renderNumeralia();
-      clearGcrWidgets();
-      generateGcrTables();
-
-      if (mapInstance) {
-        drawProjectMarkersOnMap();
-      }
-
-      showSlide(Math.min(targetSlideIndex, slidesCount - 1));
+    function filterGcrAndRebuild(selectedGcr) {
+      const targetSlideIndex = currentSlideIndex;
+      ACTIVE_GCR_FILTER = selectedGcr && selectedGcr !== 'ALL' ? selectedGcr : null;
+      rebuildFilteredReport(targetSlideIndex);
     }
 
     // ==========================================
@@ -11537,6 +11564,7 @@
         .then(loadData)
         .then(() => {
           populateGieFilterSelect();
+          populateGcrFilterSelect();
           applyActiveFilters();
           renderNumeralia();
           generateGcrTables();
@@ -12647,6 +12675,17 @@
           mwNeta: (p.mwNeta != null && p.mwNeta !== '') ? p.mwNeta : ''
         };
       }
+      function hasPresentationFilters() {
+        return !!((typeof ACTIVE_TECH_FILTER !== 'undefined' && ACTIVE_TECH_FILTER) ||
+          (typeof ACTIVE_GIE_FILTER !== 'undefined' && ACTIVE_GIE_FILTER) ||
+          (typeof ACTIVE_GCR_FILTER !== 'undefined' && ACTIVE_GCR_FILTER));
+      }
+      function applyPresentationFiltersToVoteRows(rows) {
+        if (!hasPresentationFilters()) return rows;
+        const visibleFolios = new Set(getData().map(p => p.folio).filter(Boolean));
+        if (!visibleFolios.size) return [];
+        return rows.filter(r => visibleFolios.has(r.folio));
+      }
       // Ícono por decisión (Bootstrap Icons; hereda el color de la clase .dec).
       function decIcon(d) {
         if (d === 'Continúa') return '<i class="bi bi-check-circle-fill"></i> ';
@@ -12688,6 +12727,7 @@
           const gcrs = [...new Set(rows.map(r => r.gcr).filter(Boolean))].join(', ');
           meta = { titulo: first.reunion_nombre || 'Reunión', gcr: gcrs || (first.gcr || '—'), fecha: first.fecha_reunion || '—', asistentes: asistentesDeReunion(reunionId).split(/\s*;\s*/).filter(Boolean), capturadoPor: first.capturado_por || '' };
         }
+        rows = applyPresentationFiltersToVoteRows(rows);
         const cont = rows.filter(r => r.decision === 'Continúa');
         const no = rows.filter(r => r.decision === 'No continúa');
         const pend = rows.filter(r => r.decision === 'Pendiente');
@@ -12833,6 +12873,7 @@
         if (id && id !== '__all__' && id !== '__historial__') {
           rows = latestPerFolio(log.filter(r => r.reunion_id === id));
           const first = log.find(r => r.reunion_id === id) || {};
+          rows = applyPresentationFiltersToVoteRows(rows);
           rows.sort((a, b) => (a.gcr === b.gcr) ? (a.proyecto < b.proyecto ? -1 : 1) : (a.gcr < b.gcr ? -1 : 1));
           reun = {
             nombre: first.reunion_nombre || 'Reunión', fecha: first.fecha_reunion || '',
@@ -12842,6 +12883,7 @@
           };
         } else {
           rows = latestPerFolio(log);
+          rows = applyPresentationFiltersToVoteRows(rows);
           reun = {
             nombre: 'Estado vigente — todas las reuniones', fecha: '', gcr: 'Varias',
             capturadoPor: reunion ? (reunion.capturadoPor || '') : '',
@@ -12924,6 +12966,7 @@ ${votoRows}
           const gcrs = [...new Set(rows.map(r => r.gcr).filter(Boolean))].join(', ');
           meta = { titulo: first.reunion_nombre || 'Reunión', gcr: gcrs || (first.gcr || '—'), fecha: first.fecha_reunion || '' };
         }
+        rows = applyPresentationFiltersToVoteRows(rows);
         if (!rows.length) { toast('No hay proyectos votados en esta vista.', true); return; }
 
         const data = (typeof DATA !== 'undefined' && DATA) ? DATA : (typeof getData === 'function' ? getData() : []);
