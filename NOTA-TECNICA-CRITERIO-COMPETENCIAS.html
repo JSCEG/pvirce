@@ -1,0 +1,2846 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criterio de competencias en transparencia · DGMESNIE</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
+      font-weight: 300;
+    }
+
+    /* IDENTIDAD SENER: Guinda / Verde / Dorado */
+    :root {
+      --color-guinda: #9B2247;
+      --color-guinda-light: #B24C6C;
+      --color-verde: #1E5B4F;
+      --color-dorado: #A57F2C;
+      --color-dorado-light: #D6B46A;
+      --color-gris: #98989A;
+      --color-gris-claro: #E5E5E5;
+      --color-bg-dark: #1E1E1E;
+      --color-text-dark: #2b2b2b;
+      --color-text-light: #666666;
+      --color-bg-light: #F4F6F8;
+      --scale: 1.0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      background-color: var(--color-bg-dark);
+      color: var(--color-text-dark);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    foreignObject body {
+      display: block;
+      width: auto;
+      height: auto;
+      background: transparent;
+    }
+
+    /* PRELOADER */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--color-bg-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      transition: opacity 0.5s ease;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--color-dorado);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* DECK */
+    #deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--color-bg-dark);
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+      z-index: 1;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      z-index: 2;
+    }
+
+    .slide-container {
+      width: 1333px;
+      height: 750px;
+      background-color: #ffffff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 35px 45px;
+      transform-origin: center center;
+    }
+
+    /* HEADER DE SLIDE */
+    .slide-header {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      padding: 12px 28px;
+      display: grid;
+      grid-template-columns: 1fr 2.4fr 1fr;
+      align-items: center;
+      border-bottom: 2px solid var(--color-guinda);
+      margin: -35px -45px 16px;
+      width: calc(100% + 90px);
+    }
+
+    .slide-header .brand-left {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      letter-spacing: .02em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.15;
+    }
+
+    .slide-header .brand-left .brand-line-2 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-dorado);
+    }
+
+    .slide-header .ef-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+
+    .slide-header .ef-title::before,
+    .slide-header .ef-title::after {
+      content: '·';
+      color: var(--color-dorado);
+      margin: 0 12px;
+      font-size: 22px;
+    }
+
+    .slide-header .logo-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .slide-header .logo-sener {
+      height: 38px;
+    }
+
+    /* FOOTER TRICOLOR */
+    .slide-footer {
+      margin-top: auto;
+      height: 8px;
+      width: calc(100% + 90px);
+      margin-left: -45px;
+      margin-bottom: -35px;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 60%, var(--color-dorado) 60%, var(--color-dorado) 100%);
+      flex-shrink: 0;
+    }
+
+    .page-num {
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-gris);
+      letter-spacing: .06em;
+    }
+
+    /* CONTROLES */
+    #presentationControls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 8px 18px;
+      border-radius: 30px;
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      gap: 15px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .control-btn:disabled {
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    /* PORTADA */
+    .slide.cover .slide-container {
+      background: #6a172f;
+      color: white;
+      padding: 0;
+      justify-content: flex-start;
+    }
+
+    .slide.cover .cover-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .slide.cover .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155, 34, 71, .35) 0%, rgba(30, 91, 79, .25) 60%, rgba(0, 0, 0, .45) 100%);
+      z-index: 1;
+    }
+
+    .slide.cover .top-band,
+    .slide.cover .body,
+    .slide.cover .bottom-band {
+      position: relative;
+      z-index: 2;
+    }
+
+    .slide.cover .top-band {
+      background: rgba(255, 255, 255, .96);
+      padding: 18px 56px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      border-bottom: 4px solid var(--color-dorado);
+      width: 100%;
+    }
+
+    .slide.cover .top-band img.gob {
+      height: 56px;
+      width: auto;
+    }
+
+    .slide.cover .top-band img.sener {
+      height: 48px;
+      width: auto;
+    }
+
+    .slide.cover .top-band .divider {
+      width: 1px;
+      height: 48px;
+      background: var(--color-gris);
+    }
+
+    .slide.cover .top-band .unit {
+      font-size: 11px;
+      color: var(--color-text-dark);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-left: auto;
+    }
+
+    .slide.cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 36px 60px 60px 28%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .slide.cover .eyebrow {
+      font-size: 14px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--color-dorado);
+      font-weight: 700;
+    }
+
+    .slide.cover h1 {
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 1.05;
+      max-width: 940px;
+      color: white;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
+    }
+
+    .slide.cover .unidad {
+      font-weight: 300;
+      font-size: 26px;
+      line-height: 1.3;
+      color: white;
+      max-width: 760px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+      margin-top: 8px;
+    }
+
+    .slide.cover .unidad-sub {
+      font-weight: 300;
+      font-size: 21px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, .92);
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+      margin-top: 4px;
+    }
+
+    .slide.cover .unidad-sub-destacada {
+      margin-top: 8px;
+      padding: 8px 14px 10px;
+      max-width: 880px;
+      font-size: 18px;
+      line-height: 1.45;
+      background: rgba(0, 0, 0, 0.28);
+      border-left: 4px solid var(--color-dorado);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .slide.cover .unidad-sub-destacada .acronym {
+      color: var(--color-dorado);
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .slide.cover .subtitle {
+      font-weight: 600;
+      font-size: 24px;
+      color: #fff;
+      margin-top: 18px;
+      text-align: right;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .32);
+    }
+
+    .slide.cover .meta {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 24px;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .slide.cover .meta-item {
+      min-width: 110px;
+      text-align: right;
+    }
+
+    .slide.cover .meta-item .meta-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: rgba(214, 180, 106, .95);
+      margin-bottom: 2px;
+    }
+
+    .slide.cover .meta-item .meta-value {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .95);
+      white-space: nowrap;
+    }
+
+    .slide.cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 33%, var(--color-verde) 33%, var(--color-verde) 66%, var(--color-dorado) 66%);
+    }
+
+    /* COMPONENTES DE CONTENIDO */
+    .content-grid {
+      display: grid;
+      gap: 16px;
+      flex-grow: 1;
+      min-height: 0;
+    }
+
+    .panel-card {
+      background: #fff;
+      border: 1px solid #EFEFEF;
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .panel-card .chart-host {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .panel-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--color-guinda);
+      border-bottom: 2px solid var(--color-dorado);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .kpi-box {
+      background: var(--color-bg-light);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-box .s-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--color-text-light);
+    }
+
+    .kpi-box .s-val {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      line-height: 1.1;
+    }
+
+    .kpi-box .s-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-dark);
+    }
+
+    /* TABLAS */
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+    }
+
+    .report-table thead th {
+      background: var(--color-guinda);
+      color: #fff;
+      padding: 8px 10px;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-align: left;
+    }
+
+    .report-table tbody td {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--color-gris-claro);
+      vertical-align: top;
+    }
+
+    .report-table tbody tr:nth-child(even) {
+      background: #FAFBFC;
+    }
+
+    /* LOADER PDF */
+    #pdfLoader {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 20, .82);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      z-index: 10000;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+    }
+
+    body.exporting #presentationControls {
+      display: none;
+    }
+
+    /* ============================================================
+       ESTILOS ESPECÍFICOS DE ESTA PRESENTACIÓN
+       ============================================================ */
+
+    .slide-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin: -4px 0 12px;
+      line-height: 1.4;
+    }
+
+    .slide-sub strong {
+      color: var(--color-guinda);
+    }
+
+    /* Callouts institucionales */
+    .callout {
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .callout .co-lbl {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .callout.def {
+      background: var(--color-bg-light);
+      border-left: 5px solid var(--color-verde);
+    }
+
+    .callout.def .co-lbl {
+      color: var(--color-verde);
+    }
+
+    .callout.gold {
+      background: rgba(165, 127, 44, .08);
+      border-left: 5px solid var(--color-dorado);
+    }
+
+    .callout.gold .co-lbl {
+      color: var(--color-dorado);
+    }
+
+    .callout.risk {
+      background: linear-gradient(135deg, #9B2247 0%, #611232 100%);
+      color: #fff;
+    }
+
+    .callout.risk .co-lbl {
+      color: var(--color-dorado-light);
+    }
+
+    /* Tarjetas de modelo (slide 1) */
+    .model-card {
+      border: 1px solid #EFEFEF;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #fff;
+    }
+
+    .model-card.operando {
+      border-top: 3px solid var(--color-gris);
+    }
+
+    .model-card.propuesto {
+      border-top: 3px solid var(--color-verde);
+    }
+
+    .model-card .m-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+    }
+
+    .model-card.propuesto .m-tag {
+      color: var(--color-verde);
+    }
+
+    .model-card .m-title {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      line-height: 1.15;
+    }
+
+    .model-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 2px;
+    }
+
+    .model-card ul li {
+      font-size: 14px;
+      line-height: 1.4;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .model-card ul li::before {
+      content: '·';
+      position: absolute;
+      left: 6px;
+      color: var(--color-dorado);
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    /* Línea del tiempo */
+    .tl-legend {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .tl-legend .lg-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--color-text-light);
+      margin-right: 2px;
+    }
+
+    .actor-chip {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 2px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .actor-coord {
+      background: rgba(30, 91, 79, .12);
+      color: var(--color-verde);
+    }
+
+    .actor-enlace {
+      background: rgba(165, 127, 44, .16);
+      color: #7a5e20;
+    }
+
+    .actor-dgme {
+      background: rgba(155, 34, 71, .12);
+      color: var(--color-guinda);
+    }
+
+    .actor-ut {
+      background: #EFEFEF;
+      color: #555;
+    }
+
+    .tl {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+      justify-content: space-evenly;
+    }
+
+    .tl .tl-line {
+      position: absolute;
+      left: 116px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: var(--color-gris-claro);
+      transform-origin: top center;
+    }
+
+    .tl-row {
+      display: grid;
+      grid-template-columns: 92px 30px 1fr;
+      column-gap: 10px;
+      align-items: start;
+      padding: 6px 8px 6px 0;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .tl-row.hl {
+      background: linear-gradient(90deg, rgba(155, 34, 71, .07), rgba(155, 34, 71, .015) 70%, transparent);
+    }
+
+    .tl-row.warn {
+      background: linear-gradient(90deg, rgba(165, 127, 44, .10), rgba(165, 127, 44, .02) 70%, transparent);
+    }
+
+    .tl-date {
+      text-align: right;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      line-height: 1.25;
+      padding-top: 1px;
+    }
+
+    .tl-date .tl-time {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-gris);
+    }
+
+    .tl-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3.5px solid var(--color-gris);
+      margin: 2px auto 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tl-dot.d-coord {
+      border-color: var(--color-verde);
+    }
+
+    .tl-dot.d-enlace {
+      border-color: var(--color-dorado);
+    }
+
+    .tl-dot.d-dgme {
+      border-color: var(--color-guinda);
+      background: var(--color-guinda);
+    }
+
+    .tl-dot.d-ut {
+      border-color: var(--color-gris);
+    }
+
+    .tl-body {
+      font-size: 13.5px;
+      line-height: 1.38;
+      color: var(--color-text-dark);
+    }
+
+    .tl-body .actor-chip {
+      margin-right: 7px;
+      position: relative;
+      top: -1px;
+    }
+
+    .tl-body strong {
+      color: var(--color-guinda);
+    }
+
+    .folio-chip {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--color-verde);
+      white-space: nowrap;
+    }
+
+    /* Tarjetas de artículo (marco normativo) */
+    .art-card {
+      border: 1px solid #EFEFEF;
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #fff;
+      position: relative;
+    }
+
+    .art-card .art-num {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--color-verde);
+      line-height: 1;
+      font-family: 'Patria', 'Outfit', sans-serif;
+    }
+
+    .art-card .art-org {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      line-height: 1.2;
+    }
+
+    .art-card .art-desc {
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--color-text-light);
+    }
+
+    .art-card.destacada {
+      border-color: var(--color-guinda);
+      background: linear-gradient(180deg, rgba(155, 34, 71, .05), #fff 55%);
+    }
+
+    .art-card.destacada .art-num {
+      color: var(--color-guinda);
+    }
+
+    .art-card .art-badge {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--color-guinda);
+      border-radius: 999px;
+      padding: 3px 9px;
+    }
+
+    /* Filas de artículo LGTAIP */
+    .lg-row {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--color-gris-claro);
+      border-radius: 12px;
+      padding: 11px 14px;
+      background: #fff;
+    }
+
+    .lg-row .lg-art {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      line-height: 1.1;
+    }
+
+    .lg-row .lg-art span {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--color-dorado);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .lg-row .lg-txt {
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: var(--color-text-dark);
+    }
+
+    /* Listas con icono (sanciones / balance) */
+    .ic-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ic-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 8px 2px;
+      border-bottom: 1px dashed var(--color-gris-claro);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .ic-list li:last-child {
+      border-bottom: none;
+    }
+
+    .ic-list li i {
+      flex: 0 0 auto;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .ic-list .i-bad {
+      color: var(--color-guinda);
+    }
+
+    .ic-list .i-ok {
+      color: #2E7D32;
+    }
+
+    .ic-list .i-warn {
+      color: var(--color-dorado);
+    }
+
+    /* Tarjetas de expediente (slide 6) */
+    .exp-card {
+      border: 1px solid #EFEFEF;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .exp-card .exp-head {
+      background: var(--color-guinda);
+      color: #fff;
+      padding: 12px 16px;
+    }
+
+    .exp-card .exp-head .exp-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-dorado-light);
+    }
+
+    .exp-card .exp-head .exp-folio {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .exp-card .exp-head .exp-que {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, .9);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    .exp-card .exp-body {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1 1 auto;
+    }
+
+    .exp-card .exp-sec .e-lbl {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--color-dorado);
+      margin-bottom: 3px;
+    }
+
+    .exp-card .exp-sec p {
+      font-size: 13px;
+      line-height: 1.42;
+      color: var(--color-text-dark);
+    }
+
+    .exp-card .exp-risk {
+      margin-top: auto;
+      background: rgba(155, 34, 71, .07);
+      border-left: 4px solid var(--color-guinda);
+      border-radius: 0 8px 8px 0;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      color: var(--color-text-dark);
+    }
+
+    .exp-card .exp-risk strong {
+      color: var(--color-guinda);
+    }
+
+    /* Debilidades numeradas (slide 7) */
+    .num-card {
+      border: 1px solid #F0F0F0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      background: #FCFCFD;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .num-card .n-num {
+      flex: 0 0 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--color-guinda);
+      background: #fff;
+      color: var(--color-guinda);
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .num-card .n-txt {
+      font-size: 13.5px;
+      line-height: 1.42;
+    }
+
+    .num-card .n-txt strong {
+      color: var(--color-guinda);
+    }
+
+    /* Contraste solicitado / respondido */
+    .vs-card {
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .vs-card .vs-lbl {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .vs-card p {
+      font-size: 14.5px;
+      line-height: 1.45;
+    }
+
+    .vs-card.pide {
+      background: var(--color-bg-light);
+      border: 1px solid var(--color-gris-claro);
+    }
+
+    .vs-card.pide .vs-lbl {
+      color: var(--color-verde);
+    }
+
+    .vs-card.resp {
+      background: rgba(155, 34, 71, .06);
+      border: 1px solid rgba(155, 34, 71, .25);
+    }
+
+    .vs-card.resp .vs-lbl {
+      color: var(--color-guinda);
+    }
+
+    /* Tarjetas de protección (slide 12) */
+    .prot-card {
+      border: 1px solid #EFEFEF;
+      border-radius: 12px;
+      padding: 16px 18px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .prot-card i {
+      font-size: 24px;
+      color: var(--color-dorado);
+    }
+
+    .prot-card .p-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      line-height: 1.2;
+    }
+
+    .prot-card p {
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: var(--color-text-light);
+    }
+
+    .prot-card.hero {
+      background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%);
+      border: none;
+      color: #fff;
+    }
+
+    .prot-card.hero i {
+      color: #F2CB67;
+    }
+
+    .prot-card.hero .p-title {
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .prot-card.hero p {
+      color: rgba(255, 255, 255, .92);
+      font-size: 14px;
+    }
+
+    /* Flujo propuesta operativa */
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr 30px 1fr 30px 1fr 30px 1fr;
+      gap: 0 4px;
+      align-items: stretch;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .flow-step {
+      border: 1px solid #EFEFEF;
+      border-top: 3px solid var(--color-verde);
+      border-radius: 12px;
+      background: #fff;
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .flow-step.s2 {
+      border-top-color: var(--color-guinda);
+    }
+
+    .flow-step.s3 {
+      border-top-color: var(--color-dorado);
+    }
+
+    .flow-step.s4 {
+      border-top-color: var(--color-verde);
+    }
+
+    .flow-step .f-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-bg-light);
+      color: var(--color-guinda);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-step .f-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--color-text-dark);
+    }
+
+    .flow-step .f-desc {
+      font-size: 12.5px;
+      line-height: 1.42;
+      color: var(--color-text-light);
+      flex: 1 1 auto;
+    }
+
+    .flow-step .f-fund {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--color-verde);
+      background: rgba(30, 91, 79, .08);
+      border-radius: 999px;
+      padding: 3px 10px;
+      align-self: flex-start;
+    }
+
+    .flow-arrow {
+      align-self: center;
+      text-align: center;
+      color: var(--color-dorado);
+      font-size: 20px;
+    }
+
+    /* Recomendaciones (slide 14) */
+    .rec-card {
+      border: 1px solid #F0F0F0;
+      border-left: 3px solid var(--color-guinda);
+      border-radius: 12px;
+      padding: 13px 16px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .rec-card .r-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-dorado);
+      line-height: 1;
+    }
+
+    .rec-card .r-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      line-height: 1.25;
+    }
+
+    .rec-card p {
+      font-size: 12.5px;
+      line-height: 1.4;
+      color: var(--color-text-light);
+    }
+
+    .footnote {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: var(--color-text-light);
+      line-height: 1.4;
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--color-gris-claro);
+    }
+
+    .footnote i {
+      color: var(--color-dorado);
+      margin-right: 5px;
+    }
+
+    /* Barra de progreso del deck */
+    #deckProgress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background: rgba(255, 255, 255, .08);
+      z-index: 1200;
+    }
+
+    #deckProgress .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--color-guinda), var(--color-dorado));
+      transition: width .45s ease;
+    }
+
+    body.exporting #deckProgress {
+      display: none;
+    }
+
+    /* Gantt de expedientes (slide 6) */
+    .gantt {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .gantt-row .g-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: right;
+      letter-spacing: .02em;
+    }
+
+    .gantt-row .g-track {
+      position: relative;
+      height: 18px;
+      background: var(--color-bg-light);
+      border-radius: 999px;
+      overflow: visible;
+    }
+
+    .gantt-row .g-bar {
+      position: absolute;
+      top: 0;
+      height: 18px;
+      border-radius: 999px;
+      opacity: .92;
+      transform-origin: left center;
+    }
+
+    .g-bar.gb-guinda {
+      background: var(--color-guinda);
+    }
+
+    .g-bar.gb-dorado {
+      background: var(--color-dorado);
+    }
+
+    .g-bar.gb-verde {
+      background: var(--color-verde);
+    }
+
+    .gantt-row .g-mark {
+      position: absolute;
+      top: -3px;
+      width: 8px;
+      height: 24px;
+      border-radius: 4px;
+      background: #fff;
+      border: 2px solid var(--color-guinda);
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    .gantt-axis {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 12px;
+      margin-top: 2px;
+    }
+
+    .gantt-axis .g-scale {
+      position: relative;
+      height: 16px;
+    }
+
+    .gantt-axis .g-tick {
+      position: absolute;
+      transform: translateX(-50%);
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--color-gris);
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    .gantt-note {
+      display: flex;
+      gap: 16px;
+      margin-top: 6px;
+      font-size: 10.5px;
+      color: var(--color-text-light);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .gantt-note .g-dotmark {
+      display: inline-block;
+      width: 8px;
+      height: 12px;
+      border-radius: 3px;
+      background: #fff;
+      border: 2px solid var(--color-guinda);
+      margin-right: 5px;
+      vertical-align: -2px;
+    }
+
+    /* Centro de la dona */
+    .donut-wrap {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .donut-wrap .chart-host {
+      position: absolute;
+      inset: 0;
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    .donut-center .dc-val {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      line-height: 1;
+    }
+
+    .donut-center .dc-lbl {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-top: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="spinner"></div>
+    <p id="preloaderMsg">Preparando presentación…</p>
+  </div>
+
+  <div id="pdfLoader">
+    <div class="spinner"></div>
+    <p id="pdfLoaderMsg">Generando PDF…</p>
+  </div>
+
+  <div id="deck">
+
+    <!-- SLIDE 0: PORTADA -->
+    <section class="slide cover active" id="slide-0">
+      <div class="slide-container">
+        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt=""
+          onerror="this.style.display='none'">
+        <div class="cover-overlay"></div>
+
+        <div class="top-band">
+          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México"
+            onerror="this.style.display='none'">
+          <div class="divider"></div>
+          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"
+            onerror="this.style.display='none'">
+          <div class="unit">DGMESNIE · Subsecretaría de Planeación y Transición Energética</div>
+        </div>
+
+        <div class="body">
+          <div class="eyebrow">Nota técnica · Análisis de riesgos</div>
+          <h1>Atención de solicitudes de transparencia por criterio de competencias</h1>
+          <div class="unidad">Subsecretaría de Planeación y Transición Energética</div>
+          <div class="unidad-sub">Unidad del Sistema Nacional de Información Energética</div>
+          <div class="unidad-sub unidad-sub-destacada">Dirección General de Metodologías y Estadísticas del Sistema
+            Nacional de Información Energética - <span class="acronym">DGMESNIE</span></div>
+          <div class="subtitle">Recuento documental del esquema de enlaces · 13 de mayo — 12 de junio de 2026</div>
+          <div class="meta">
+            <div class="meta-item">
+              <span class="meta-label">Versión</span>
+              <span class="meta-value">1.0</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fecha</span>
+              <span class="meta-value">12 de junio de 2026</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Elaboró</span>
+              <span class="meta-value">DGMESNIE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-band"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 1: OBJETIVO Y PLANTEAMIENTO -->
+    <section class="slide" id="slide-1">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Objetivo y planteamiento</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="callout def" style="margin-bottom:16px;">
+          <span class="co-lbl">Objetivo</span>
+          Documentar la cronología del esquema de atención de solicitudes de acceso a la información en la
+          Subsecretaría de Planeación y Transición Energética (SPTE), contrastar el modelo de
+          <strong>enlace concentrador</strong> que se está operando con el <strong>criterio de respuesta por
+            competencias</strong>, y sustentar con el marco normativo vigente por qué el segundo protege jurídicamente
+          a cada unidad administrativa y al propio C. Subsecretario frente a recursos de revisión.
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 1.05fr 1.05fr 0.9fr; grid-template-rows: 1fr auto;">
+          <div class="model-card operando">
+            <span class="m-tag">Modelo en operación</span>
+            <span class="m-title">Enlace concentrador</span>
+            <ul>
+              <li>Una sola oficina consolida, redacta y firma las respuestas de todas las unidades.</li>
+              <li>Respuestas breves, con envío por correo y plazo interno de seis días.</li>
+              <li>Las versiones finales se cierran entre el enlace y la Unidad de Transparencia; las direcciones
+                generales las conocen después de tomadas las decisiones.</li>
+            </ul>
+          </div>
+
+          <div class="model-card propuesto">
+            <span class="m-tag">Criterio que esta nota sustenta</span>
+            <span class="m-title">Respuesta por competencias</span>
+            <ul>
+              <li>Cada unidad busca en sus propios archivos, se pronuncia sobre su materia y firma su anexo.</li>
+              <li>El enlace coordina plazos, recopila los anexos y emite el oficio de remisión.</li>
+              <li>Las inexistencias se confirman ante el Comité de Transparencia, como ordena la LGTAIP.</li>
+            </ul>
+          </div>
+
+          <div class="panel-card">
+            <h3>Hechos por actor · 13 may — 12 jun</h3>
+            <div class="donut-wrap">
+              <div class="chart-host" id="chartActores"></div>
+              <div class="donut-center">
+                <span class="dc-val" data-count="15">15</span>
+                <span class="dc-lbl">Hechos<br>documentados</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="grid-column: 1 / -1; display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;">
+            <div class="kpi-box">
+              <span class="s-lbl">Expedientes en curso</span>
+              <span class="s-val" data-count="3">3</span>
+              <span class="s-sub">Dos solicitudes y un cumplimiento de recurso</span>
+            </div>
+            <div class="kpi-box">
+              <span class="s-lbl">Hechos documentados</span>
+              <span class="s-val" data-count="15">15</span>
+              <span class="s-sub">Correos institucionales conservados</span>
+            </div>
+            <div class="kpi-box">
+              <span class="s-lbl">Periodo documentado</span>
+              <span class="s-val" data-count="31">31</span>
+              <span class="s-sub">Días: 13 de mayo — 12 de junio de 2026</span>
+            </div>
+            <div class="kpi-box">
+              <span class="s-lbl">Recurso ya revocado</span>
+              <span class="s-val" data-count="1">1</span>
+              <span class="s-sub">SENER2603242, en etapa de cumplimiento</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-num">02 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: CRONOLOGÍA 1/2 -->
+    <section class="slide" id="slide-2">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Cronología documentada · 1 de 2</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="tl-legend">
+          <span class="lg-title">Actores</span>
+          <span class="actor-chip actor-coord">Coordinación SPTE</span>
+          <span class="actor-chip actor-enlace">Unidad del SNIE · Oficina del enlace</span>
+          <span class="actor-chip actor-dgme">DGMESNIE</span>
+          <span class="actor-chip actor-ut">Unidad de Transparencia (UT)</span>
+          <span
+            style="margin-left:auto; font-size:11px; color:var(--color-text-light); font-family:'Montserrat',sans-serif;">
+            Fechas y horas tomadas de los encabezados de los correos institucionales.</span>
+        </div>
+
+        <div class="tl">
+          <div class="tl-line"></div>
+          <div class="tl-row">
+            <div class="tl-date">13 MAY</div>
+            <div class="tl-dot d-coord"></div>
+            <div class="tl-body"><span class="actor-chip actor-coord">Coordinación SPTE</span>
+              Reunión de coordinación con las direcciones generales: se solicita designar enlace y se acuerda el
+              esquema de atención — envío por correo, consolidación y firma por la oficina del enlace, plazo de seis
+              días, respuestas breves.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">2 JUN<span class="tl-time">12:55</span></div>
+            <div class="tl-dot d-coord"></div>
+            <div class="tl-body"><span class="actor-chip actor-coord">Coordinación SPTE</span>
+              Convoca a la Unidad del SNIE y a la DGMESNIE a reunión con la Unidad de Transparencia (3 de junio) por la
+              <strong>revocación del recurso SENER2603242</strong>.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">2 JUN<span class="tl-time">19:18</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Unidad del SNIE</span>
+              La titularidad de la Unidad delega el tema en su equipo de trabajo.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">3 JUN<span class="tl-time">19:12</span></div>
+            <div class="tl-dot d-coord"></div>
+            <div class="tl-body"><span class="actor-chip actor-coord">Coordinación SPTE</span>
+              Por instrucción del C. Subsecretario, turna el folio <span class="folio-chip">340026100048826</span> a
+              las unidades, para la parte que les corresponda, con plazo al 15 de junio.</div>
+          </div>
+          <div class="tl-row warn">
+            <div class="tl-date">5 JUN<span class="tl-time">14:53</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Oficina del enlace</span>
+              Responde el punto 2 del cumplimiento del SENER2603242 <strong>a nombre de una unidad administrativa sin
+                precisar</strong>, invocando los transitorios Cuarto y Quinto del RLPTE.</div>
+          </div>
+          <div class="tl-row warn">
+            <div class="tl-date">8–9 JUN</div>
+            <div class="tl-dot d-ut"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Enlace</span><span
+                class="actor-chip actor-ut">UT</span>
+              La versión del cumplimiento del SENER2603242 se consolida directamente entre la oficina del enlace y la
+              Unidad de Transparencia, <strong>sin participación de las direcciones generales</strong> en la revisión
+              final.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">9 JUN<span class="tl-time">19:15</span></div>
+            <div class="tl-dot d-coord"></div>
+            <div class="tl-body"><span class="actor-chip actor-coord">Coordinación SPTE</span>
+              Turna el folio <span class="folio-chip">340026100051426</span>, dirigido expresamente a la
+              <strong>DGMESNIE</strong> (art. 12 del RISENER) y al <strong>C. Subsecretario</strong> (art. 9).
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">9 JUN<span class="tl-time">20:05</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Unidad del SNIE</span>
+              Reenvía el mismo folio a la DGMESNIE y a su propio equipo «para su revisión y en su caso atención», en
+              paralelo al conducto acordado en mayo.</div>
+          </div>
+        </div>
+
+        <div class="page-num">03 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: CRONOLOGÍA 2/2 -->
+    <section class="slide" id="slide-3">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Cronología documentada · 2 de 2</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub">Los días <strong>10 a 12 de junio</strong> concentran las decisiones que motivan esta
+          nota: una parte de solicitud sin pronunciamiento, la petición de avalar búsquedas ajenas y la intención de
+          retirar un oficio suscrito.</div>
+
+        <div class="tl">
+          <div class="tl-line"></div>
+          <div class="tl-row warn">
+            <div class="tl-date">10 JUN<span class="tl-time">09:33</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Oficina del enlace</span>
+              Responde el folio <span class="folio-chip">340026100051426</span> declarando no competente a la
+              <strong>DGRIEG</strong> (art. 11), con fundamento en los arts. 16 y 17 de la LGTAIP. <strong>La parte
+                dirigida a la DGMESNIE queda sin pronunciamiento.</strong>
+            </div>
+          </div>
+          <div class="tl-row hl">
+            <div class="tl-date">10 JUN</div>
+            <div class="tl-dot d-dgme"></div>
+            <div class="tl-body"><span class="actor-chip actor-dgme">DGMESNIE</span>
+              La titular suscribe y entrega en la UT el oficio <strong>SPTE/DGMESNIE/222.012.2026</strong>, respuesta
+              al folio <span class="folio-chip">340026100048826</span>: búsqueda en su ámbito, solicitud de
+              confirmación de inexistencia al Comité de Transparencia (arts. 140 y 141) y sugerencia de turno por
+              competencias.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">10 JUN<span class="tl-time">18:00</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Oficina del enlace</span>
+              Envía nueva propuesta para el folio <span class="folio-chip">340026100048826</span> y solicita a la
+              DGMESNIE <strong>confirmar la búsqueda exhaustiva de toda la Unidad</strong>.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">10 JUN<span class="tl-time">18:28</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Unidad del SNIE</span>
+              Mediante correo con asunto «Solicitud de enlace», pide a las direcciones generales designar enlace a más
+              tardar el 12 de junio y comunica la designación del enlace de la propia Unidad.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">12 JUN<span class="tl-time">12:00</span></div>
+            <div class="tl-dot d-ut"></div>
+            <div class="tl-body"><span class="actor-chip actor-ut">Reunión con UT</span>
+              Se acuerda que la oficina del enlace concentre las respuestas de las unidades; se plantea
+              <strong>suprimir del oficio de la DGMESNIE el petitorio dirigido al Comité de Transparencia</strong>.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">12 JUN<span class="tl-time">13:46</span></div>
+            <div class="tl-dot d-coord"></div>
+            <div class="tl-body"><span class="actor-chip actor-coord">Coordinación SPTE</span>
+              Remite a la oficina del enlace la última versión del cumplimiento del SENER2603242.</div>
+          </div>
+          <div class="tl-row warn">
+            <div class="tl-date">12 JUN<span class="tl-time">17:15</span></div>
+            <div class="tl-dot d-enlace"></div>
+            <div class="tl-body"><span class="actor-chip actor-enlace">Oficina del enlace</span>
+              Informa por mensajería que se entregará el cumplimiento elaborado por el enlace y que <strong>se
+                recogerá el oficio de la DGMESNIE ya entregado en la UT</strong> dentro del expediente SENER2603242
+              (folio <span class="folio-chip">340026100011826</span>), para que obre una respuesta única de toda la
+              Subsecretaría.</div>
+          </div>
+        </div>
+
+        <div class="page-num">04 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: MARCO NORMATIVO RISENER -->
+    <section class="slide" id="slide-4">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Marco normativo · RISENER</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub">El Reglamento Interior de la Secretaría de Energía (<strong>DOF 17/04/2025</strong>)
+          asigna atribuciones diferenciadas dentro de la SPTE: cada unidad responde por una materia propia.</div>
+
+        <div class="content-grid"
+          style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr auto auto; align-items: stretch;">
+          <div class="art-card">
+            <span class="art-num">Art. 9</span>
+            <span class="art-org">C. Subsecretario</span>
+            <span class="art-desc">Propone la política energética, coordina el Sistema Nacional de Información
+              Energética y conduce los instrumentos de planeación del sector.</span>
+          </div>
+          <div class="art-card">
+            <span class="art-num">Art. 10</span>
+            <span class="art-org">Unidad del SNIE</span>
+            <span class="art-desc">Implementa, administra y norma el Sistema Nacional de Información
+              Energética.</span>
+          </div>
+          <div class="art-card">
+            <span class="art-num">Art. 11</span>
+            <span class="art-org">DGRIEG</span>
+            <span class="art-desc">Coordina el acopio y la publicación de información geoespacial, incluido el Atlas
+              Nacional de Zonas con Potencial de Energías Renovables.</span>
+          </div>
+          <div class="art-card destacada">
+            <span class="art-badge">Área que suscribe</span>
+            <span class="art-num">Art. 12</span>
+            <span class="art-org">DGMESNIE</span>
+            <span class="art-desc">Emite las metodologías analíticas, elabora y publica las estadísticas oficiales y
+              los catálogos tecnológicos del sector.</span>
+          </div>
+
+          <div class="callout def" style="grid-column: 1 / -1;">
+            <span class="co-lbl">Distinción central</span>
+            La <strong>jerarquía</strong> define quién coordina y por dónde fluyen los oficios; la
+            <strong>competencia</strong> define quién está facultado para pronunciarse sobre una materia. Son planos
+            distintos: un enlace puede concentrar y remitir, <strong>no puede sustituir el pronunciamiento del área
+              competente</strong>.
+          </div>
+
+          <div class="callout gold" style="grid-column: 1 / -1;">
+            <span class="co-lbl">Implicación</span>
+            Que la Unidad del SNIE se ubique orgánicamente por encima de las direcciones generales no transfiere a su
+            titular ni a su enlace las atribuciones que el artículo 12 del RISENER confiere a la DGMESNIE.
+          </div>
+        </div>
+
+        <div class="page-num">05 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: MARCO NORMATIVO LGTAIP -->
+    <section class="slide" id="slide-5">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Marco normativo · LGTAIP</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub">La Ley General de Transparencia y Acceso a la Información Pública
+          (<strong>DOF 20/03/2025</strong>) fija reglas precisas para atender solicitudes. Cuatro preceptos rigen los
+          expedientes de esta nota.</div>
+
+        <div class="content-grid" style="grid-template-columns: 1.15fr 1fr; grid-template-rows: 1fr auto;">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div class="lg-row">
+              <div class="lg-art">131<span>Facultades</span></div>
+              <div class="lg-txt">Los sujetos obligados otorgan los documentos <strong>conforme a sus facultades,
+                  competencias o funciones</strong>.</div>
+            </div>
+            <div class="lg-row">
+              <div class="lg-art">133<span>Turno y búsqueda</span></div>
+              <div class="lg-txt">Las solicitudes se turnan a <strong>todas las áreas competentes</strong> que cuenten
+                con la información o deban tenerla, para que realicen una búsqueda exhaustiva y razonable.</div>
+            </div>
+            <div class="lg-row">
+              <div class="lg-art">138<span>Incompetencia</span></div>
+              <div class="lg-txt">Cuando un área no es competente, <strong>lo declara de manera fundada</strong> y
+                orienta hacia la instancia que sí lo es.</div>
+            </div>
+            <div class="lg-row">
+              <div class="lg-art">140-141<span>Inexistencia</span></div>
+              <div class="lg-txt">La inexistencia de información solo se sostiene cuando el <strong>Comité de
+                  Transparencia</strong> la confirma mediante resolución que precise las circunstancias de tiempo, modo
+                y lugar de la búsqueda.</div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Lo que el órgano garante sanciona</h3>
+            <ul class="ic-list">
+              <li><i class="bi bi-x-circle-fill i-bad"></i>La respuesta genérica sin fundamento.</li>
+              <li><i class="bi bi-x-circle-fill i-bad"></i>El silencio del área expresamente requerida.</li>
+              <li><i class="bi bi-x-circle-fill i-bad"></i>Las inexistencias declaradas sin procedimiento ante el
+                Comité.</li>
+            </ul>
+            <h3 style="margin-top:12px;">Lo que el órgano garante ordena</h3>
+            <ul class="ic-list">
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Turnar a todas las áreas competentes y que cada una
+                busque en sus archivos.</li>
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Declarar la incompetencia de forma fundada, señalando a
+                quién sí corresponde.</li>
+            </ul>
+          </div>
+
+          <div class="callout gold" style="grid-column: 1 / -1;">
+            <span class="co-lbl">Punto que conviene dejar asentado</span>
+            Declarar «no me corresponde; corresponde a tal dirección conforme al artículo N» <strong>no es trasladar el
+              problema</strong>: es exactamente la conducta que ordenan los artículos 133 y 138. Lo que se sanciona no
+            es la canalización fundada.
+          </div>
+        </div>
+
+        <div class="page-num">06 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: TRES EXPEDIENTES -->
+    <section class="slide" id="slide-6">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Tres expedientes, tres situaciones</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub">Son expedientes distintos que <strong>no deben cruzarse</strong>: las posturas adoptadas
+          en uno no rigen a los demás. Los tres corren en paralelo y se decidieron en la misma semana.</div>
+
+        <div class="content-grid" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: auto 1fr;">
+          <div class="panel-card" style="grid-column: 1 / -1; padding: 12px 18px 10px;">
+            <div class="gantt">
+              <div class="gantt-row">
+                <span class="g-lbl">SENER2603242</span>
+                <div class="g-track">
+                  <div class="g-bar gb-guinda" style="left:60.6%; width:30.3%;"></div>
+                  <div class="g-mark" style="left:90.9%;" title="12 jun: intención de retiro del oficio"></div>
+                </div>
+              </div>
+              <div class="gantt-row">
+                <span class="g-lbl">Folio …48826</span>
+                <div class="g-track">
+                  <div class="g-bar gb-dorado" style="left:63.6%; width:36.4%;"></div>
+                  <div class="g-mark" style="left:84.8%;" title="10 jun: oficio DGMESNIE entregado"></div>
+                </div>
+              </div>
+              <div class="gantt-row">
+                <span class="g-lbl">Folio …51426</span>
+                <div class="g-track">
+                  <div class="g-bar gb-verde" style="left:81.8%; width:3.1%; min-width:14px;"></div>
+                  <div class="g-mark" style="left:84.8%;" title="10 jun: respuesta sin pronunciamiento de la DGMESNIE">
+                  </div>
+                </div>
+              </div>
+              <div class="gantt-axis">
+                <span></span>
+                <div class="g-scale">
+                  <span class="g-tick" style="left:0%;">13 MAY</span>
+                  <span class="g-tick" style="left:21.2%;">20 MAY</span>
+                  <span class="g-tick" style="left:42.4%;">27 MAY</span>
+                  <span class="g-tick" style="left:60.6%;">2 JUN</span>
+                  <span class="g-tick" style="left:81.8%;">9 JUN</span>
+                  <span class="g-tick" style="left:100%;">15 JUN</span>
+                </div>
+              </div>
+              <div class="gantt-note">
+                <span><span class="g-dotmark"></span>Hecho clave: 12 jun intención de retiro del oficio (SENER2603242) ·
+                  10 jun oficio DGMESNIE entregado (…48826) · 10 jun respuesta sin pronunciamiento del área requerida
+                  (…51426)</span>
+              </div>
+            </div>
+          </div>
+          <div class="exp-card">
+            <div class="exp-head">
+              <span class="exp-tag">Expediente I · Solicitud</span>
+              <div class="exp-folio">340026100051426</div>
+              <div class="exp-que">Dirigida expresamente a la DGMESNIE (art. 12) y al C. Subsecretario (art. 9).</div>
+            </div>
+            <div class="exp-body">
+              <div class="exp-sec">
+                <span class="e-lbl">Situación</span>
+                <p>La respuesta del 10 de junio declaró incompetente a una unidad distinta (DGRIEG) con fundamento
+                  inexacto; el área expresamente requerida quedó <strong>sin pronunciamiento</strong>.</p>
+              </div>
+              <div class="exp-risk"><strong>Riesgo:</strong> recurso de revisión altamente probable; el cumplimiento
+                recaería en el área que nunca fue consultada.</div>
+            </div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head">
+              <span class="exp-tag">Expediente II · Solicitud</span>
+              <div class="exp-folio">340026100048826</div>
+              <div class="exp-que">Turnada a las unidades por instrucción del C. Subsecretario, con plazo al 15 de
+                junio.</div>
+            </div>
+            <div class="exp-body">
+              <div class="exp-sec">
+                <span class="e-lbl">Situación</span>
+                <p>Se pide a la DGMESNIE <strong>avalar la búsqueda exhaustiva de toda la Unidad</strong> y suprimir de
+                  su oficio el petitorio dirigido al Comité de Transparencia.</p>
+              </div>
+              <div class="exp-risk"><strong>Riesgo:</strong> inexistencias de hecho sin respaldo formal y firmas que
+                avalan archivos ajenos.</div>
+            </div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head">
+              <span class="exp-tag">Expediente III · Cumplimiento de recurso</span>
+              <div class="exp-folio">SENER2603242</div>
+              <div class="exp-que">Recurso ya revocado por el órgano garante; cumplimiento en integración.</div>
+            </div>
+            <div class="exp-body">
+              <div class="exp-sec">
+                <span class="e-lbl">Situación</span>
+                <p>La versión final se consolidó sin las direcciones generales y se comunicó la intención de
+                  <strong>retirar el oficio de la DGMESNIE</strong> ya entregado (folio 340026100011826).
+                </p>
+              </div>
+              <div class="exp-risk"><strong>Riesgo:</strong> probable declaratoria de incumplimiento y repetición del
+                ciclo ante el órgano garante.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-num">07 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: EXPEDIENTE I -->
+    <section class="slide" id="slide-7">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Expediente I · Folio 340026100051426</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub"><strong>El área expresamente requerida quedó sin responder.</strong> Contraste entre lo
+          solicitado y lo respondido el 10 de junio.</div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr auto;">
+          <div class="vs-card pide">
+            <span class="vs-lbl"><i class="bi bi-envelope-paper"></i> Lo que la solicitud invoca</span>
+            <p>De manera expresa, a la <strong>DGMESNIE</strong> (artículo 12 del RISENER) y al
+              <strong>C. Subsecretario</strong> (artículo 9, fracciones V, XVIII y XX).
+            </p>
+          </div>
+          <div class="vs-card resp">
+            <span class="vs-lbl"><i class="bi bi-reply"></i> Lo que se respondió</span>
+            <p>La oficina del enlace declaró <strong>no competente a la DGRIEG</strong> (artículo 11), citando como
+              fundamento los artículos 16 y 17 de la LGTAIP.</p>
+          </div>
+
+          <div style="grid-column: 1 / -1; display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;">
+            <div class="num-card">
+              <div class="n-num">1</div>
+              <div class="n-txt"><strong>Responde una unidad que no fue la requerida.</strong> La solicitud nombraba a
+                la DGMESNIE; se pronunció la DGRIEG.</div>
+            </div>
+            <div class="num-card">
+              <div class="n-num">2</div>
+              <div class="n-txt"><strong>El fundamento no corresponde al supuesto.</strong> El artículo 16 establece la
+                presunción de existencia de la información; la incompetencia se rige por el artículo 138.</div>
+            </div>
+            <div class="num-card">
+              <div class="n-num">3</div>
+              <div class="n-txt"><strong>La parte dirigida a la DGMESNIE quedó sin pronunciamiento alguno</strong>,
+                pese a ser el área expresamente señalada.</div>
+            </div>
+          </div>
+
+          <div class="callout risk" style="grid-column: 1 / -1;">
+            <span class="co-lbl">Riesgo</span>
+            Si esa respuesta se carga así a la Plataforma Nacional de Transparencia, el recurso de revisión es
+            altamente probable y su cumplimiento recaerá en el área que nunca fue consultada — como ya ocurre con el
+            expediente SENER2603242.
+          </div>
+        </div>
+
+        <div class="page-num">08 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: EXPEDIENTE II -->
+    <section class="slide" id="slide-8">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Expediente II · Folio 340026100048826</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub"><strong>Avalar búsquedas ajenas carece de sustento jurídico.</strong> Dos planteamientos
+          del borrador del enlace comprometen a las unidades firmantes.</div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto;">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="num-card" style="flex:1;">
+              <div class="n-num">1</div>
+              <div class="n-txt"><strong>Se pide a la DGMESNIE confirmar la búsqueda exhaustiva de toda la
+                  Unidad.</strong> Una dirección general no puede certificar búsquedas en archivos que no administra:
+                los artículos 140 y 141 exigen precisar tiempo, modo y lugar, y eso únicamente puede declararlo cada
+                unidad respecto de sus propios registros. El propio borrador reconoce que el Atlas Nacional de Zonas
+                con Potencial de Energías Renovables (atribución del artículo 11) no ha sido atendido durante el último
+                año; una respuesta consolidada arrastraría esa omisión a todas las firmantes.</div>
+            </div>
+            <div class="num-card" style="flex:1;">
+              <div class="n-num">2</div>
+              <div class="n-txt"><strong>Se plantea suprimir el petitorio dirigido al Comité de
+                  Transparencia.</strong> Ese petitorio no es prescindible: es la consecuencia obligada de una
+                respuesta que declara la no localización de información. Suprimirlo dejaría una inexistencia de hecho
+                sin respaldo formal; además, el criterio adoptado en el cumplimiento de un expediente distinto no rige
+                esta solicitud.</div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3><i class="bi bi-shield-check" style="margin-right:6px;"></i>Lo actuado por la DGMESNIE</h3>
+            <p style="font-size:14px; line-height:1.5; margin-bottom:10px;">
+              El 10 de junio, la titular suscribió y entregó en la Unidad de Transparencia el oficio
+              <strong>SPTE/DGMESNIE/222.012.2026</strong>, que sigue puntualmente el procedimiento legal:
+            </p>
+            <ul class="ic-list">
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Búsqueda realizada en el ámbito de su competencia
+                (artículo 133).</li>
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Solicitud de confirmación de inexistencia al Comité de
+                Transparencia (artículos 140 y 141).</li>
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Sugerencia de turno por competencias hacia las áreas
+                facultadas (artículo 138).</li>
+            </ul>
+            <p style="font-size:13px; line-height:1.45; margin-top:10px; color:var(--color-text-light);">
+              Es la conducta que el órgano garante exige: pronunciamiento propio, fundado y con procedimiento.</p>
+          </div>
+
+          <div class="callout gold" style="grid-column: 1 / -1;">
+            <span class="co-lbl">Consecuencia</span>
+            Una respuesta consolidada que arrastre omisiones ajenas comprometería a todas las unidades firmantes,
+            <strong>incluidas las que sí realizaron su búsqueda en forma</strong>.
+          </div>
+        </div>
+
+        <div class="page-num">09 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: EXPEDIENTE III -->
+    <section class="slide" id="slide-9">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Expediente III · Recurso SENER2603242</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub"><strong>El oficio de la DGMESNIE no contradice el cumplimiento: lo fundamenta.</strong>
+          El 12 de junio se comunicó la intención de recogerlo del expediente (folio 340026100011826).</div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 1.25fr; grid-template-rows: 1fr;">
+          <div class="vs-card pide" style="height:100%;">
+            <span class="vs-lbl"><i class="bi bi-file-earmark-text"></i> El oficio en cuestión</span>
+            <p style="margin-top:4px;">Entregado por la titular de la DGMESNIE dentro del expediente SENER2603242
+              (folio <strong>340026100011826</strong>):</p>
+            <ul class="ic-list" style="margin-top:6px;">
+              <li><i class="bi bi-dot i-warn" style="font-size:22px;"></i>Declara la incompetencia de la DGMESNIE
+                conforme al artículo 12 del RISENER.</li>
+              <li><i class="bi bi-dot i-warn" style="font-size:22px;"></i>Señala que la materia de los Polos de
+                Desarrollo corresponde al C. Subsecretario conforme al artículo 9.</li>
+            </ul>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="num-card" style="flex:1;">
+              <div class="n-num">1</div>
+              <div class="n-txt"><strong>Fundamenta el cumplimiento consolidado.</strong> El documento de la
+                Subsecretaría responde desde la participación en el Comité Intersecretarial de Promoción — exactamente
+                la competencia del artículo 9 que el oficio señaló. Integrarlo como anexo fortalecería el
+                expediente.</div>
+            </div>
+            <div class="num-card" style="flex:1;">
+              <div class="n-num">2</div>
+              <div class="n-txt"><strong>Es constancia de cumplimiento.</strong> El órgano garante ordenó la búsqueda
+                sin omitir a las unidades administrativas adjuntas; este oficio acredita que una de ellas se pronunció
+                conforme a esa instrucción. Retirarlo elimina evidencia.</div>
+            </div>
+            <div class="num-card" style="flex:1;">
+              <div class="n-num">3</div>
+              <div class="n-txt"><strong>El retiro no es decisión del enlace.</strong> Un oficio suscrito solo puede
+                retirarse con autorización de quien lo firmó; una respuesta única concentra en un solo firmante la
+                responsabilidad por contenidos que sus áreas no generaron ni verificaron.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-num">10 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: INCONSISTENCIAS DEL CUMPLIMIENTO -->
+    <section class="slide" id="slide-10">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Cumplimiento consolidado · Revisión</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub">Revisión del documento de cumplimiento del SENER2603242 (fechado el 8 de junio).
+          <strong>En su favor:</strong> las declaraciones de falta de facultades sobre presupuesto, interconexión,
+          demanda eléctrica y gas natural están razonablemente fundadas y con orientación al solicitante. Presenta, sin
+          embargo, <strong>cinco inconsistencias frente a la resolución que él mismo transcribe</strong>.
+        </div>
+
+        <table class="report-table" style="font-size:11.5px;">
+          <thead>
+            <tr>
+              <th style="width:21%;">Inconsistencia</th>
+              <th style="width:46%;">Detalle</th>
+              <th style="width:33%;">Riesgo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Negativa al trámite ante el Comité de Transparencia</strong></td>
+              <td>La resolución instruye fundar la no localización y someter la inexistencia al Comité. El documento
+                reporta no localización en al menos cinco extremos y concluye que «no es necesario declarar la
+                inexistencia».</td>
+              <td>Incumplimiento directo de la instrucción del órgano garante; probable declaratoria de incumplimiento
+                y repetición del ciclo.</td>
+            </tr>
+            <tr>
+              <td><strong>Búsqueda acreditada solo a nivel Subsecretaría</strong></td>
+              <td>La resolución ordena buscar también en las unidades administrativas adjuntas; las circunstancias
+                asentadas se limitan a los archivos de la Subsecretaría y al correo institucional del titular.</td>
+              <td>El estándar de búsqueda exhaustiva no se acredita; el oficio de la DGMESNIE es precisamente la
+                constancia de una unidad adjunta — retirarlo debilita el cumplimiento.</td>
+            </tr>
+            <tr>
+              <td><strong>Fundamento de la búsqueda exhaustiva</strong></td>
+              <td>Cita en dos ocasiones el artículo 134 de la LGTAIP; el precepto que rige el turno a las áreas
+                competentes y la búsqueda exhaustiva es el artículo 133.</td>
+              <td>Cita normativa imprecisa en un documento sujeto a verificación del órgano garante.</td>
+            </tr>
+            <tr>
+              <td><strong>Redacción de las circunstancias de tiempo</strong></td>
+              <td>Confunde el periodo objeto de la búsqueda (1 de enero de 2024 — 6 de febrero de 2026) con la fecha de
+                ejecución de la diligencia.</td>
+              <td>Debilita la certeza de tiempo, modo y lugar exigida por la resolución.</td>
+            </tr>
+            <tr>
+              <td><strong>Afirmaciones no verificadas</strong></td>
+              <td>Afirma que el Programa Especial de la Industria Eléctrica 2025-2030 «no se localizó como instrumento
+                oficial de planeación», sin verificación documental previa.</td>
+              <td>Una negación categórica inexacta sobre un instrumento oficial es impugnable por sí misma.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout gold" style="margin-top:12px;">
+          <span class="co-lbl">La paradoja</span>
+          El paso ante el Comité de Transparencia no contradice la estrategia del documento: <strong>la
+            perfecciona</strong>. Una resolución que confirme la inexistencia, motivada en la falta de facultades, es
+          el vehículo que brinda la certeza que el resolutivo exige.
+        </div>
+
+        <div class="page-num">11 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: BALANCE -->
+    <section class="slide" id="slide-11">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Balance de la operación</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto;">
+          <div class="panel-card">
+            <h3 style="color:var(--color-verde); border-bottom-color: var(--color-verde);">
+              <i class="bi bi-check-circle-fill" style="margin-right:6px;"></i>Lo que se está haciendo bien
+            </h3>
+            <ul class="ic-list">
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Existe coordinación de plazos y un conducto único de
+                salida hacia la Unidad de Transparencia.</li>
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Las canalizaciones por falta de facultades del
+                cumplimiento (presupuesto, interconexión, demanda, gas natural) están razonablemente fundadas y
+                orientan al solicitante.</li>
+              <li><i class="bi bi-check-circle-fill i-ok"></i>La DGMESNIE respondió en tiempo, con búsqueda en su
+                ámbito, fundamento y petitorio al Comité de Transparencia: el procedimiento que la LGTAIP exige.</li>
+              <li><i class="bi bi-check-circle-fill i-ok"></i>Las unidades han atendido los turnos en plazos breves,
+                incluso de un día para otro.</li>
+            </ul>
+          </div>
+
+          <div class="panel-card">
+            <h3><i class="bi bi-exclamation-triangle-fill" style="margin-right:6px;"></i>Lo que expone a riesgo</h3>
+            <ul class="ic-list">
+              <li><i class="bi bi-x-circle-fill i-bad"></i>Respuestas firmadas por unidades que no fueron las
+                requeridas, con partes de la solicitud sin pronunciamiento.</li>
+              <li><i class="bi bi-x-circle-fill i-bad"></i>Fundamentos imprecisos: artículos 16 y 17 donde rige el 138;
+                artículo 134 donde rige el 133.</li>
+              <li><i class="bi bi-x-circle-fill i-bad"></i>No localizaciones que no se someten al Comité de
+                Transparencia (artículos 140 y 141).</li>
+              <li><i class="bi bi-x-circle-fill i-bad"></i>Decisiones sobre oficios suscritos por titulares —
+                supresión de petitorios, retiro de oficios — comunicadas como instrucción y después de tomadas, sin
+                solicitud formal ni autorización por escrito.</li>
+            </ul>
+          </div>
+
+          <div class="callout risk" style="grid-column: 1 / -1;">
+            <span class="co-lbl">Riesgo de fondo</span>
+            Bajo el modelo de enlace concentrador, las piezas del expediente quedan firmadas por quien no es
+            competente, con fundamentos imprecisos y partes sin atender. Ante un recurso de revisión, la unidad
+            expresamente requerida no podrá acreditar su búsqueda ni defender un contenido que no elaboró:
+            <strong>esa es la indefensión que se busca evitar</strong>.
+          </div>
+        </div>
+
+        <div class="page-num">12 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: POR QUÉ PROTEGE A TODOS -->
+    <section class="slide" id="slide-12">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">El criterio de competencias protege a todos</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
+          <div class="prot-card hero" style="grid-row: 1 / 3; justify-content:center; gap:12px;">
+            <i class="bi bi-shield-fill-check"></i>
+            <span class="p-title">Protección del C. Subsecretario</span>
+            <p style="font-size:15px;">Si todo se contesta a nombre de la Subsecretaría, la responsabilidad por cada
+              afirmación, omisión o inexistencia mal declarada se concentra en su titular.</p>
+            <p style="font-size:15px;">El artículo 9 le confiere <strong style="color:#F2CB67;">coordinación</strong>,
+              no la carga de sustituir los pronunciamientos de sus direcciones. Responder por competencias distribuye y
+              precisa la responsabilidad: <strong style="color:#F2CB67;">eso lo blinda</strong>.</p>
+          </div>
+
+          <div class="prot-card">
+            <i class="bi bi-files"></i>
+            <span class="p-title">Defendibilidad pieza por pieza</span>
+            <p>Cada dirección se pronuncia sobre lo suyo, con su fundamento y su firma. Ante el órgano garante, cada
+              parte del expediente tiene un responsable identificado que puede acreditar su actuación.</p>
+          </div>
+
+          <div class="prot-card">
+            <i class="bi bi-archive"></i>
+            <span class="p-title">Inexistencias sostenibles</span>
+            <p>La búsqueda exhaustiva con tiempo, modo y lugar (artículos 140 y 141) solo puede declararla cada unidad
+              sobre sus propios archivos. Las respuestas genéricas de hoy son los cumplimientos de revocación de
+              mañana.</p>
+          </div>
+
+          <div class="prot-card" style="grid-column: 2;">
+            <i class="bi bi-diagram-3"></i>
+            <span class="p-title">La coordinación no se pierde</span>
+            <p>Responder por competencias no impide consolidar: la integración de las contribuciones es precisamente la
+              función natural de un enlace.</p>
+          </div>
+        </div>
+
+        <div class="page-num">13 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: PROPUESTA OPERATIVA -->
+    <section class="slide" id="slide-13">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Propuesta operativa</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="slide-sub"><strong>Oficio concentrador con anexos por dirección general.</strong> Los dos objetivos
+          son compatibles: la coordinación que busca la Unidad del SNIE se ejerce con un oficio de remisión; la certeza
+          jurídica que exige la LGTAIP se logra con anexos firmados por cada unidad competente.</div>
+
+        <div class="flow">
+          <div class="flow-step s1">
+            <div class="f-num">1</div>
+            <div class="f-title">Unidad de Transparencia</div>
+            <div class="f-desc">Turna la solicitud a todas las áreas competentes e integra el expediente final.</div>
+            <div class="f-fund">Art. 133 LGTAIP</div>
+          </div>
+          <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+          <div class="flow-step s2">
+            <div class="f-num">2</div>
+            <div class="f-title">Cada dirección general</div>
+            <div class="f-desc">Busca en sus propios archivos, se pronuncia sobre su materia y firma su anexo. Si no es
+              competente, lo declara de forma fundada y señala a la unidad que sí lo es.</div>
+            <div class="f-fund">Arts. 131, 133 y 138 LGTAIP · 11 y 12 RISENER</div>
+          </div>
+          <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+          <div class="flow-step s3">
+            <div class="f-num">3</div>
+            <div class="f-title">Enlace coordinador</div>
+            <div class="f-desc">Administra plazos, recopila los anexos de las unidades y emite el oficio de remisión.
+              <strong>No sustituye pronunciamientos.</strong>
+            </div>
+            <div class="f-fund">Coordinación jerárquica · Arts. 9 y 10 RISENER</div>
+          </div>
+          <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+          <div class="flow-step s4">
+            <div class="f-num">4</div>
+            <div class="f-title">Comité de Transparencia</div>
+            <div class="f-desc">Confirma las inexistencias mediante resolución con las circunstancias de tiempo, modo y
+              lugar de la búsqueda.</div>
+            <div class="f-fund">Arts. 140 y 141 LGTAIP</div>
+          </div>
+        </div>
+
+        <div class="callout def" style="margin-top:16px;">
+          <span class="co-lbl">Directriz</span>
+          Cada contribución se acota al punto de su competencia e incluye una <strong>cláusula de alcance</strong>: la
+          aportación se emite únicamente para efectos de la consolidación y la responsabilidad por el contenido de la
+          respuesta integrada recae en la autoridad que la suscriba. Con ello, ninguna dirección avala búsquedas o
+          afirmaciones ajenas.
+        </div>
+
+        <div class="page-num">14 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: CONCLUSIONES -->
+    <section class="slide" id="slide-14">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>NOTA TÉCNICA</span><span class="brand-line-2">DGMESNIE · SPTE</span></div>
+          <div class="ef-title">Conclusiones y recomendaciones</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr;">
+          <div class="rec-card">
+            <span class="r-num">01</span>
+            <span class="r-title">Mantener la respuesta por criterio de competencias</span>
+            <p>La coordinación jerárquica se ejerce en la integración del expediente, no en la sustitución de los
+              pronunciamientos de las áreas.</p>
+          </div>
+          <div class="rec-card">
+            <span class="r-num">02</span>
+            <span class="r-title">No retirar oficios suscritos sin autorización de quien los firmó</span>
+            <p>Expresa y por escrito. Toda sustitución debe quedar asentada en el expediente.</p>
+          </div>
+          <div class="rec-card">
+            <span class="r-num">03</span>
+            <span class="r-title">Corregir el cumplimiento del SENER2603242 antes de su entrega</span>
+            <p>Anexar las constancias de búsqueda de cada unidad adjunta — incluido el oficio de la DGMESNIE —,
+              someter al Comité los extremos no localizados y verificar citas y afirmaciones categóricas.</p>
+          </div>
+          <div class="rec-card">
+            <span class="r-num">04</span>
+            <span class="r-title">Incorporar a las titulares en las revisiones</span>
+            <p>En toda versión que afecte documentos suscritos por ellas, dejando constancia por escrito de los
+              acuerdos.</p>
+          </div>
+          <div class="rec-card">
+            <span class="r-num">05</span>
+            <span class="r-title">Declarar incompetencias con el fundamento correcto</span>
+            <p>Artículo 138 de la LGTAIP, señalando siempre a la unidad competente, en lugar de respuestas genéricas
+              que el órgano garante revocará.</p>
+          </div>
+          <div class="rec-card">
+            <span class="r-num">06</span>
+            <span class="r-title">Formalizar el oficio concentrador con anexos por dirección</span>
+            <p>Conforme a la distribución de participaciones de la propuesta operativa, con cláusula de alcance en cada
+              contribución.</p>
+          </div>
+        </div>
+
+        <div class="footnote"><i class="bi bi-info-circle-fill"></i>
+          Supuesto de verificación: los números de artículo citados de la LGTAIP (DOF 20/03/2025) y del RISENER
+          (DOF 17/04/2025) deben cotejarse contra el texto publicado en el Diario Oficial de la Federación antes de la
+          firma de cualquier documento derivado de esta nota. — Elaboró: DGMESNIE.</div>
+
+        <div class="page-num">15 / 15</div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- PROGRESO DEL DECK -->
+  <div id="deckProgress">
+    <div class="bar"></div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <div id="presentationControls">
+    <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+    <span id="slideCounter">1 / 1</span>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+    <button class="control-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)"><i
+        class="bi bi-arrows-fullscreen"></i></button>
+    <button class="control-btn" onclick="exportPDF()" title="Exportar a PDF"
+      style="background:var(--color-guinda);color:#fff;"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+  </div>
+
+  <!-- CDN -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <script>
+    // ==========================================
+    // CONFIGURACIÓN — presentación estática:
+    // el contenido proviene de la nota técnica de la DGMESNIE,
+    // no de una hoja de cálculo externa.
+    // ==========================================
+    const CONFIG = {
+      titulo: 'Atención de solicitudes de transparencia por criterio de competencias',
+      archivoPdf: 'NOTA-TECNICA-CRITERIO-COMPETENCIAS.pdf'
+    };
+
+    let currentSlideIndex = 0;
+    let slidesCount = 1;
+
+    // ==========================================
+    // TEMA HIGHCHARTS INSTITUCIONAL
+    // ==========================================
+    Highcharts.setOptions({
+      colors: ['#9B2247', '#A57F2C', '#1E5B4F', '#B24C6C', '#D6B46A', '#98989A', '#611232', '#2D3748'],
+      chart: { backgroundColor: 'transparent', style: { fontFamily: 'Montserrat, sans-serif' } },
+      title: { text: '' },
+      credits: { enabled: false },
+      legend: { itemStyle: { fontSize: '11px' } },
+      accessibility: { enabled: false }
+    });
+
+    // Las gráficas se crean la primera vez que su slide se muestra:
+    // Highcharts mide mal dentro de display:none.
+    const renderedCharts = new Set();
+
+    function renderChartsForSlide(index) {
+      if (index === 1 && !renderedCharts.has('chartActores') && document.getElementById('chartActores')) {
+        renderedCharts.add('chartActores');
+        Highcharts.chart('chartActores', {
+          // Sin animación durante el export: la captura saldría con la dona a medias.
+          chart: { type: 'pie', spacing: [4, 4, 4, 4], animation: !window.isExportingPdf },
+          tooltip: { pointFormat: '<b>{point.y}</b> hechos ({point.percentage:.0f}%)' },
+          plotOptions: {
+            pie: {
+              animation: window.isExportingPdf ? false : undefined,
+              innerSize: '70%',
+              borderWidth: 2,
+              borderColor: '#ffffff',
+              dataLabels: {
+                enabled: true,
+                distance: 10,
+                format: '{point.name} · <b>{point.y}</b>',
+                style: { fontSize: '10px', fontWeight: '600', color: '#2b2b2b', textOutline: 'none' }
+              }
+            }
+          },
+          series: [{
+            name: 'Hechos documentados',
+            data: [
+              { name: 'Unidad del SNIE · enlace', y: 8, color: '#A57F2C' },
+              { name: 'Coordinación SPTE', y: 5, color: '#1E5B4F' },
+              { name: 'Reunión con UT', y: 1, color: '#98989A' },
+              { name: 'DGMESNIE', y: 1, color: '#9B2247' }
+            ]
+          }]
+        });
+      }
+    }
+
+    // ==========================================
+    // NAVEGACIÓN
+    // ==========================================
+    function showSlide(index) {
+      if (index < 0 || index >= slidesCount) return;
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      currentSlideIndex = index;
+      updateControls();
+      setTimeout(() => {
+        renderChartsForSlide(index);
+        animateSlide(index);
+      }, 120);
+    }
+
+    function nextSlide() { showSlide(currentSlideIndex + 1); }
+    function prevSlide() { showSlide(currentSlideIndex - 1); }
+
+    function updateControls() {
+      document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${slidesCount}`;
+      document.getElementById('btnPrev').disabled = currentSlideIndex === 0;
+      document.getElementById('btnNext').disabled = currentSlideIndex === slidesCount - 1;
+      document.querySelector('#deckProgress .bar').style.width =
+        ((currentSlideIndex + 1) / slidesCount * 100) + '%';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => { });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'Home') showSlide(0);
+      else if (e.key === 'End') showSlide(slidesCount - 1);
+      else if (e.key.toLowerCase() === 'f') toggleFullscreen();
+    });
+
+    // ==========================================
+    // ESCALADO 16:9
+    // ==========================================
+    function fitSlides() {
+      const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+      document.documentElement.style.setProperty('--scale', scale.toFixed(4));
+      document.querySelectorAll('.slide-container').forEach(c => {
+        c.style.transform = `scale(${scale.toFixed(4)})`;
+      });
+    }
+    window.addEventListener('resize', fitSlides);
+
+    function getCurrentScale() {
+      return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
+    }
+
+    // ==========================================
+    // ANIMACIONES (anime.js)
+    // ==========================================
+    function animateSlide(index) {
+      if (window.isExportingPdf) return;
+      const activeSlide = document.querySelectorAll('.slide')[index];
+      if (!activeSlide) return;
+
+      const container = activeSlide.querySelector('.slide-container');
+      if (container) {
+        const s = getCurrentScale();
+        anime({ targets: container, opacity: [0.4, 1], scale: [s * 0.985, s], duration: 350, easing: 'easeOutQuad' });
+      }
+
+      if (index === 0) {
+        anime({
+          targets: '#slide-0 h1, #slide-0 .eyebrow, #slide-0 .unidad, #slide-0 .unidad-sub, #slide-0 .subtitle',
+          opacity: [0, 1], translateY: [25, 0], delay: anime.stagger(60), duration: 600, easing: 'easeOutQuad'
+        });
+        anime({ targets: '#slide-0 .top-band, #slide-0 .bottom-band', scaleX: [0, 1], duration: 500, easing: 'easeOutQuad' });
+        return;
+      }
+
+      // Tarjetas y paneles
+      anime({
+        targets: activeSlide.querySelectorAll(
+          '.panel-card, .kpi-box, .model-card, .art-card, .exp-card, .num-card, .vs-card, .prot-card, .rec-card, .callout'),
+        opacity: [0, 1], translateY: [16, 0], delay: anime.stagger(45), duration: 450, easing: 'easeOutQuad'
+      });
+
+      // Flujo operativo: pasos y flechas en secuencia
+      const flowEls = activeSlide.querySelectorAll('.flow-step, .flow-arrow');
+      if (flowEls.length) {
+        anime({
+          targets: flowEls,
+          opacity: [0, 1], translateX: [-12, 0], delay: anime.stagger(110), duration: 420, easing: 'easeOutQuad'
+        });
+      }
+
+      // Línea del tiempo: la espina se dibuja, los puntos brotan, las filas entran
+      const line = activeSlide.querySelector('.tl-line');
+      if (line) anime({ targets: line, scaleY: [0, 1], duration: 700, easing: 'easeInOutQuad' });
+      const dots = activeSlide.querySelectorAll('.tl-dot');
+      if (dots.length) {
+        anime({
+          targets: dots,
+          scale: [0, 1], delay: anime.stagger(70, { start: 120 }), duration: 320, easing: 'easeOutBack'
+        });
+      }
+      anime({
+        targets: activeSlide.querySelectorAll('.tl-row, .report-table tbody tr, .lg-row'),
+        opacity: [0, 1], translateX: [-14, 0], delay: anime.stagger(55), duration: 400, easing: 'easeOutQuad'
+      });
+
+      // Gantt de expedientes: barras crecen, marcadores aparecen
+      const bars = activeSlide.querySelectorAll('.g-bar');
+      if (bars.length) {
+        anime({
+          targets: bars,
+          scaleX: [0, 1], delay: anime.stagger(140, { start: 150 }), duration: 600, easing: 'easeOutQuad'
+        });
+      }
+      const marks = activeSlide.querySelectorAll('.g-mark');
+      if (marks.length) {
+        // Solo opacidad: los marcadores centran con translateX(-50%) y anime
+        // sobrescribiría ese transform.
+        anime({
+          targets: marks,
+          opacity: [0, 1], delay: anime.stagger(140, { start: 650 }), duration: 300, easing: 'easeOutQuad'
+        });
+      }
+
+      // Contadores numéricos. El HTML trae el valor final; solo se anima con la
+      // pestaña visible: con rAF congelado el contador quedaría a medias.
+      if (!document.hidden) {
+        activeSlide.querySelectorAll('[data-count]').forEach(el => {
+          const target = Number(el.dataset.count);
+          const obj = { v: 0 };
+          anime({
+            targets: obj, v: target, round: 1, duration: 900, easing: 'easeOutQuad',
+            update: () => { el.innerText = obj.v; },
+            complete: () => { el.innerText = target; }
+          });
+        });
+      }
+    }
+
+    function setCountersFinal(root) {
+      root.querySelectorAll('[data-count]').forEach(el => { el.innerText = el.dataset.count; });
+    }
+
+    // ==========================================
+    // EXPORTAR PDF (13.333 x 7.5 in panorámico)
+    // ==========================================
+    function showPdfLoader(msg) {
+      document.getElementById('pdfLoaderMsg').innerText = msg;
+      document.getElementById('pdfLoader').style.display = 'flex';
+    }
+    function hidePdfLoader() {
+      document.getElementById('pdfLoader').style.display = 'none';
+    }
+
+    async function captureSlideForPdf(slide) {
+      const slideClone = slide.cloneNode(true);
+      const clone = slideClone.querySelector('.slide-container') || slideClone;
+      const stage = document.createElement('div');
+      stage.setAttribute('aria-hidden', 'true');
+      stage.style.cssText =
+        'position:fixed;left:-10000px;top:0;width:1333px;height:750px;overflow:hidden;' +
+        'background:#fff;z-index:14001;opacity:1;pointer-events:none;';
+      slideClone.classList.add('active');
+      slideClone.style.cssText =
+        'position:relative;inset:auto;display:flex;align-items:center;justify-content:center;' +
+        'width:1333px;height:750px;opacity:1;';
+      clone.style.cssText +=
+        ';position:relative;left:0;top:0;margin:0;transform:none;transition:none;' +
+        'width:1333px;height:750px;box-shadow:none;';
+      stage.appendChild(slideClone);
+      document.body.appendChild(stage);
+      try {
+        await new Promise(r => {
+          let settled = false;
+          const settle = () => { if (!settled) { settled = true; r(); } };
+          requestAnimationFrame(() => requestAnimationFrame(settle));
+          setTimeout(settle, 400);
+        });
+        return await html2canvas(clone, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 1333,
+          height: 750,
+          windowWidth: 1333,
+          windowHeight: 750,
+          scrollX: 0,
+          scrollY: 0
+        });
+      } finally {
+        stage.remove();
+      }
+    }
+
+    async function exportPDF() {
+      const { jsPDF } = window.jspdf;
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const prevIndex = currentSlideIndex;
+
+      document.body.classList.add('exporting');
+      showPdfLoader(`Preparando ${slides.length} diapositivas…`);
+      window.isExportingPdf = true;
+
+      try {
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < slides.length; i++) {
+          showPdfLoader(`Capturando slide ${i + 1}/${slides.length}…`);
+          slides.forEach(s => s.classList.remove('active'));
+          slides[i].classList.add('active');
+          renderChartsForSlide(i);
+          setCountersFinal(slides[i]);
+          await new Promise(r => setTimeout(r, 650));
+          Highcharts.charts.forEach(c => c && c.reflow());
+          await new Promise(r => setTimeout(r, 180));
+
+          const canvas = await captureSlideForPdf(slides[i]);
+          if (i > 0) pdf.addPage([338.6582, 190.5], 'l');
+          pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageW, pageH);
+        }
+
+        showPdfLoader('Guardando archivo…');
+        pdf.save(CONFIG.archivoPdf);
+      } catch (err) {
+        console.error('Error PDF:', err);
+        alert('Error generando PDF: ' + err.message);
+      } finally {
+        window.isExportingPdf = false;
+        document.body.classList.remove('exporting');
+        slides.forEach(s => s.classList.remove('active'));
+        showSlide(prevIndex);
+        hidePdfLoader();
+      }
+    }
+
+    // ==========================================
+    // ARRANQUE
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      slidesCount = document.querySelectorAll('.slide').length;
+      fitSlides();
+      updateControls();
+
+      const pre = document.getElementById('preloader');
+      pre.style.opacity = 0;
+      setTimeout(() => { pre.style.display = 'none'; animateSlide(0); }, 400);
+    });
+  </script>
+</body>
+
+</html>
