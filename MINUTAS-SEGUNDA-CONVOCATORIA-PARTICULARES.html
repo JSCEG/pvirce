@@ -6555,6 +6555,14 @@
       VERTICES_INCONSISTENTES: 'N° de vértices',
       MW_CERO: 'Cap. instalada',
       CAP_NETA_MAYOR_CONTRATADA: 'Cap. Neta',
+      CAP_CONTRATADA_MAYOR_INSTALADA: 'Cap. contratada',
+      CAP_PERMISO_DIFIERE_CONTRATADA: 'Cap. gen. permiso',
+      GENERACION_FACTOR_PLANTA_IRREAL: 'Gen. anual est.',
+      SIN_INTERCONEXION: 'Punto interconex.',
+      TENSION_FALTANTE_CON_INTERCONEXION: 'Nivel de tensión',
+      TENSION_FUERA_RANGO: 'Nivel de tensión',
+      GERENCIA_CENACE_DISTINTA: 'Gerencia CENACE',
+      DISTANCIA_SE_FUERA_RANGO: 'Distancia a SE',
       SIN_EF: 'Entidad federativa',
       SIN_MUNICIPIO: 'Municipio',
       SIN_GERENCIA: 'Gerencia regional',
@@ -6594,6 +6602,10 @@
         return !s || s === 'SIN INFORMACIÓN' || s === 'NO APLICA' || s === '—' || s === 'N/A';
       };
       const yesLike = (v) => /^(s[ií]|true|verdadero|x|1|yes)$/i.test(String(v ?? '').trim());
+      const clean = (v) => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+      const fmtMw = (n) => Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 2 });
+      const relDiff = (a, b) => Math.abs(a - b) / Math.max(Math.abs(a), Math.abs(b), 1);
+      const effectiveInstalledMw = (p) => Number(p.mwInstalada || p.mwGeneracion || p.mw || 0);
 
       const push = (p, type, severity, detail) => {
         issues.push({
@@ -6679,19 +6691,77 @@
         // 9) Capacidad neta no debe exceder la capacidad contratada
         if (Number.isFinite(p.mwNeta) && Number.isFinite(p.capacidadContratada) &&
           p.mwNeta > 0 && p.capacidadContratada > 0 && p.mwNeta > p.capacidadContratada) {
-          push(p, 'CAP_NETA_MAYOR_CONTRATADA', 'alta', `Capacidad neta (${p.mwNeta.toLocaleString('es-MX')} MW) mayor que capacidad contratada (${p.capacidadContratada.toLocaleString('es-MX')} MW)`);
+          push(p, 'CAP_NETA_MAYOR_CONTRATADA', 'alta', `Capacidad neta (${fmtMw(p.mwNeta)} MW) mayor que capacidad contratada (${fmtMw(p.capacidadContratada)} MW)`);
         }
 
-        // 10) Sin EF
+        // 10) Capacidad contratada no debe exceder la instalada/generación declarada
+        const installedMw = effectiveInstalledMw(p);
+        if (installedMw > 0 && p.capacidadContratada > 0 &&
+          p.capacidadContratada > installedMw && (p.capacidadContratada - installedMw) > 1 && relDiff(p.capacidadContratada, installedMw) > 0.05) {
+          push(p, 'CAP_CONTRATADA_MAYOR_INSTALADA', 'alta', `Capacidad contratada (${fmtMw(p.capacidadContratada)} MW) mayor que capacidad instalada/generación (${fmtMw(installedMw)} MW)`);
+        }
+
+        // 11) Capacidad de permiso CRE/CENACE no debe diferir materialmente de la contratada
+        if (p.capacidadGenPermiso > 0 && p.capacidadContratada > 0 &&
+          Math.abs(p.capacidadGenPermiso - p.capacidadContratada) > 1 && relDiff(p.capacidadGenPermiso, p.capacidadContratada) > 0.05) {
+          push(p, 'CAP_PERMISO_DIFIERE_CONTRATADA', 'media', `Capacidad generación permiso (${fmtMw(p.capacidadGenPermiso)} MW) difiere de capacidad contratada (${fmtMw(p.capacidadContratada)} MW)`);
+        }
+
+        // 12) Generación anual incompatible con la capacidad declarada
+        const genGwh = Number(p.generacionAnual || 0);
+        const baseMw = Number(p.mwNeta || p.capacidadContratada || installedMw || 0);
+        if (genGwh > 0 && baseMw > 0) {
+          const factor = genGwh / (baseMw * 8.76);
+          const tech = clean(`${p.techBase || ''} ${p.subtech || ''} ${p.tecnologia || ''}`);
+          let maxFactor = 1.0;
+          let techLabel = 'general';
+          if (/FOTOVOLTA|SOLAR/.test(tech)) { maxFactor = 0.38; techLabel = 'solar'; }
+          else if (/EOLIC/.test(tech)) { maxFactor = 0.62; techLabel = 'eólica'; }
+          else if (/HIDRO/.test(tech)) { maxFactor = 0.75; techLabel = 'hidroeléctrica'; }
+          else if (/BIO|COGEN|GEOTER/.test(tech)) { maxFactor = 0.92; techLabel = 'base/gestionable'; }
+          if (factor > maxFactor) {
+            push(p, 'GENERACION_FACTOR_PLANTA_IRREAL', factor > 1 ? 'alta' : 'media', `Generación anual (${genGwh.toLocaleString('es-MX')} GWh) implica factor de planta ${(factor * 100).toFixed(1)}% para tecnología ${techLabel}`);
+          }
+        }
+
+        // 13) Campos mínimos de interconexión
+        const missingSub = isMissing(p.subestacion);
+        const missingPi = isMissing(p.puntoInterconexion);
+        if (missingSub || missingPi) {
+          const missing = [missingSub ? 'subestación' : '', missingPi ? 'punto de interconexión' : ''].filter(Boolean).join(' y ');
+          push(p, 'SIN_INTERCONEXION', missingSub && missingPi ? 'alta' : 'media', `Sin ${missing} reportado`);
+        }
+        if ((!missingSub || !missingPi) && isMissing(p.tension)) {
+          push(p, 'TENSION_FALTANTE_CON_INTERCONEXION', 'media', 'Tiene subestación/punto de interconexión, pero no reporta nivel de tensión');
+        }
+        if (!isMissing(p.tension)) {
+          const kv = parseFloat(String(p.tension).replace(',', '.').replace(/[^\d.]/g, ''));
+          if (!Number.isFinite(kv) || kv <= 0 || kv > 500) {
+            push(p, 'TENSION_FUERA_RANGO', 'media', `Nivel de tensión no interpretable o fuera de rango: "${String(p.tension).slice(0, 40)}"`);
+          }
+        }
+        const cenaceGcr = isMissing(p.cenaceGerencia) ? '' : clean(p.cenaceGerencia);
+        const projectGcr = clean(p.gerencia);
+        if (cenaceGcr && projectGcr && !cenaceGcr.includes(projectGcr) && !projectGcr.includes(cenaceGcr)) {
+          push(p, 'GERENCIA_CENACE_DISTINTA', 'media', `Gerencia CENACE (${p.cenaceGerencia}) distinta de gerencia regional calculada (${p.gerencia})`);
+        }
+        if (!isMissing(p.distanciaSE)) {
+          const distKm = parseFloat(String(p.distanciaSE).replace(',', '.').replace(/[^\d.]/g, ''));
+          if (!Number.isFinite(distKm) || distKm < 0 || distKm > 200) {
+            push(p, 'DISTANCIA_SE_FUERA_RANGO', 'baja', `Distancia a subestación no interpretable o fuera de rango: "${String(p.distanciaSE).slice(0, 40)}"`);
+          }
+        }
+
+        // 14) Sin EF
         if (isMissing(p.ef)) push(p, 'SIN_EF', 'alta', 'Sin entidad federativa');
 
-        // 11) Sin municipio
+        // 15) Sin municipio
         if (isMissing(p.municipio)) push(p, 'SIN_MUNICIPIO', 'media', 'Sin municipio/alcaldía');
 
-        // 12) Sin gerencia regional
+        // 16) Sin gerencia regional
         if (isMissing(p.gerencia)) push(p, 'SIN_GERENCIA', 'media', 'Sin gerencia regional');
 
-        // 13) Trámites en "Sí" pero estatus regulatorios todos SIN INFORMACIÓN
+        // 17) Trámites en "Sí" pero estatus regulatorios todos SIN INFORMACIÓN
         const regStatuses = [p.tierras, p.mia, p.misse, p.cenace, p.cenaceVal];
         const allMissing = regStatuses.every(isMissing);
         const tramiteYes = yesLike(p.creStatusPresentada) || yesLike(p.creStatusPrevencion);
@@ -6699,26 +6769,26 @@
           push(p, 'TRAMITE_INCONSISTENTE', 'media', 'Marcado en trámite pero todos los estatus regulatorios son SIN INFORMACIÓN');
         }
 
-        // 14) MIA declarada pero sin estatus reportado
+        // 18) MIA declarada pero sin estatus reportado
         if (yesLike(p.tieneMia) && isMissing(p.estatusMia)) {
           push(p, 'MIA_SI_SIN_ESTATUS', 'media', '¿Tiene MIA? = SI, pero Estatus MIA está SIN INFORMACIÓN');
         }
 
-        // 15) FEOC vacío
+        // 19) FEOC vacío
         if (isMissing(p.feoc)) push(p, 'FEOC_FALTA', 'baja', 'Sin fecha prevista de entrada en operación comercial');
 
-        // 16) Sin tecnología
+        // 20) Sin tecnología
         if (isMissing(p.tecnologia)) push(p, 'SIN_TECNOLOGIA', 'alta', 'Sin clasificación de tecnología');
 
-        // 17) Folio faltante
+        // 21) Folio faltante
         if (isMissing(p.folio)) push(p, 'FOLIO_FALTA', 'media', 'Sin folio de proyecto');
 
-        // 18) GIE faltante
+        // 22) GIE faltante
         if (isMissing(p.gie) || /NO IDENTIFICADO/i.test(p.gie || '')) {
           push(p, 'GIE_FALTA', 'media', 'Grupo de interés no identificado');
         }
 
-        // 19) EVIS/MISSE inconsistencias
+        // 23) EVIS/MISSE inconsistencias
         const hasFolioEvis = p.folioEvis && !isMissing(p.folioEvis);
         const misseStatus = classifyStatus(p.misse);
         if (hasFolioEvis && misseStatus === 'EMPTY') {
@@ -6728,7 +6798,7 @@
           push(p, 'EVIS_APROBADA_SIN_FOLIO', 'media', 'Estatus EVIS es Aprobado/Autorizado, pero no reporta Folio EVIS');
         }
 
-        // 20) Tierras no aseguradas en trámites avanzados
+        // 24) Tierras no aseguradas en trámites avanzados
         const isCreAdvanced = p.creStatus && !isMissing(p.creStatus) && !/SIN SOLICITUD/i.test(p.creStatus);
         const isContratoAdvanced = p.contratoStatus && !isMissing(p.contratoStatus) && !/SIN SOLICITUD|NO INICIADO/i.test(p.contratoStatus);
         if ((isCreAdvanced || isContratoAdvanced) && (classifyStatus(p.tierras) === 'NO' || isMissing(p.tierras))) {
@@ -6736,7 +6806,7 @@
         }
       });
 
-      // 21) Detección de duplicados por Proyecto + Empresa + Capacidad MW
+      // 25) Detección de duplicados por Proyecto + Empresa + Capacidad MW
       const groups = {};
       data.forEach(p => {
         if (!p.nombre || p.mw <= 0) return;
@@ -6782,6 +6852,14 @@
       VERTICES_INCONSISTENTES: { label: 'Vértices declarados ≠ capturados', color: ISSUE_PALETTE.dorado },
       MW_CERO: { label: 'MW = 0', color: ISSUE_PALETTE.guinda },
       CAP_NETA_MAYOR_CONTRATADA: { label: 'Capacidad neta mayor que contratada', color: ISSUE_PALETTE.guindaOscuro },
+      CAP_CONTRATADA_MAYOR_INSTALADA: { label: 'Capacidad contratada mayor que instalada', color: ISSUE_PALETTE.guindaOscuro },
+      CAP_PERMISO_DIFIERE_CONTRATADA: { label: 'Capacidad permiso difiere de contratada', color: ISSUE_PALETTE.dorado },
+      GENERACION_FACTOR_PLANTA_IRREAL: { label: 'Generación anual técnicamente improbable', color: ISSUE_PALETTE.dorado },
+      SIN_INTERCONEXION: { label: 'Interconexión incompleta', color: ISSUE_PALETTE.guinda },
+      TENSION_FALTANTE_CON_INTERCONEXION: { label: 'Sin tensión con interconexión', color: ISSUE_PALETTE.dorado },
+      TENSION_FUERA_RANGO: { label: 'Tensión fuera de rango', color: ISSUE_PALETTE.dorado },
+      GERENCIA_CENACE_DISTINTA: { label: 'Gerencia CENACE distinta', color: ISSUE_PALETTE.dorado },
+      DISTANCIA_SE_FUERA_RANGO: { label: 'Distancia a subestación fuera de rango', color: ISSUE_PALETTE.gris },
       SIN_EF: { label: 'Sin entidad federativa', color: ISSUE_PALETTE.guindaOscuro },
       SIN_MUNICIPIO: { label: 'Sin municipio', color: ISSUE_PALETTE.dorado },
       SIN_GERENCIA: { label: 'Sin gerencia regional', color: ISSUE_PALETTE.dorado },
