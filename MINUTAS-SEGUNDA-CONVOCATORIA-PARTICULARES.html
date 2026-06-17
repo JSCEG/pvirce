@@ -5328,8 +5328,11 @@
     // ==========================================
     // CÁLCULO E INYECCIÓN DE LA NUMERALIA (SLIDE 2)
     // ==========================================
+    function mw2(n) {
+      return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
     function formatMw(n) {
-      return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MW';
+      return mw2(n) + ' MW';   // 2 decimales para evitar redondeos en los totales
     }
     function formatMdd(n) {
       return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MDD';
@@ -5339,10 +5342,14 @@
     }
 
     function getContractedMw(p) {
+      // SOLO capacidad contratada, directa. No se suple por neta ni instalada:
+      // todos los gráficos, KPIs y desgloses por tecnología usan la contratada.
       const contracted = Number(p?.capacidadContratada || 0);
-      if (Number.isFinite(contracted) && contracted > 0) return contracted;
-      const fallback = Number(p?.mw || 0);
-      return Number.isFinite(fallback) ? fallback : 0;
+      return Number.isFinite(contracted) && contracted > 0 ? contracted : 0;
+    }
+    function mwSinContratada(p) {
+      // Proyecto sin capacidad contratada reportada (cuenta 0; se marca aparte).
+      return !(Number(p?.capacidadContratada || 0) > 0);
     }
 
     function parseSanitizedNumber(value) {
@@ -5609,13 +5616,15 @@
 
       document.getElementById('kpiTotalCount').innerText = totalCount;
       document.getElementById('techTotalProjects').textContent = `${formatInt(totalCount)} proyectos totales`;
-      const totalMwCard = Math.round(totalMw).toLocaleString('es-MX');
-      const storageMwCard = Math.round(storageMw).toLocaleString('es-MX');
+      const totalMwCard = mw2(totalMw);
+      const storageMwCard = mw2(storageMw);
       const genCountCard = formatInt(genProjects.length);
       const storageCountCard = formatInt(storageProjects.length);
+      const sinContratadaCount = genProjects.filter(mwSinContratada).length;
       document.getElementById('kpiTotalMw').innerHTML = `
         <span class="mw-line">${genCountCard} proyectos generación · ${totalMwCard} MW</span>
         <span class="mw-line">${storageCountCard} proyectos almacenamiento no asociado<span class="mw-asterisk">*</span> · ${storageMwCard} MW</span>
+        ${sinContratadaCount > 0 ? `<span class="mw-line" style="font-size:.82em;opacity:.85;">${formatInt(sinContratadaCount)} sin capacidad contratada reportada (cuentan 0)<span class="mw-asterisk">†</span></span>` : ''}
       `;
       document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
@@ -5710,7 +5719,7 @@
           <tr class="gcr-row-interactive" data-gcr="${gcr}">
             <td class="gcr-name-cell"><span class="gcr-chip ${gcrClass}">GCR ${gcr}</span></td>
             <td class="col-right-text">${gcrData[gcr].count}</td>
-            <td class="col-right-text" style="font-weight: 600;">${formatInt(gcrData[gcr].mw)}</td>
+            <td class="col-right-text" style="font-weight: 600;">${mw2(gcrData[gcr].mw)}</td>
             <td class="col-right-text">${pct.toFixed(0)}%</td>
           </tr>
         `;
@@ -5721,7 +5730,7 @@
         <tr>
           <td>TOTALES</td>
           <td class="col-right-text">${genProjects.length}</td>
-          <td class="col-right-text">${formatInt(totalMw)}</td>
+          <td class="col-right-text">${mw2(totalMw)}</td>
           <td class="col-right-text">100%</td>
         </tr>
       `;
@@ -5760,7 +5769,7 @@
       let tierrasCount = 0, tierrasMw = 0;
       let cenaceCount = 0, cenaceMw = 0;
 
-      DATA.forEach(p => {
+      genProjects.forEach(p => {   // solo generación; los SAEE no asociados van aparte
         const miaStatus = classifyStatus(p.mia);
         const evisStatus = classifyStatus(p.misse);
         const terrenoStatus = classifyStatus(p.tierras);
@@ -5802,7 +5811,7 @@
 
     function renderGroupChart() {
       const groups = {};
-      DATA.forEach(p => {
+      DATA.filter(p => getTechGroup(p) !== 'Almacenamiento').forEach(p => {   // solo generación
         const gie = p.gie || 'NO IDENTIFICADO';
         if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
         groups[gie].count += 1;
@@ -6414,8 +6423,8 @@
       setText(ids.count, formatInt(totalCount));
       setText(ids.techTotal, `${formatInt(totalCount)} proyectos totales`);
       setHtml(ids.mw, `
-        <span class="mw-line">${formatInt(genProjects.length)} proyectos generación · ${formatInt(Math.round(totalMw))} MW</span>
-        <span class="mw-line">${formatInt(storageProjects.length)} proyectos almacenamiento no asociado<span class="mw-asterisk">*</span> · ${formatInt(Math.round(storageMw))} MW</span>
+        <span class="mw-line">${formatInt(genProjects.length)} proyectos generación · ${mw2(totalMw)} MW</span>
+        <span class="mw-line">${formatInt(storageProjects.length)} proyectos almacenamiento no asociado<span class="mw-asterisk">*</span> · ${mw2(storageMw)} MW</span>
       `);
       setHtml(ids.inversion, renderInvestmentSummary(investmentSummary));
 
@@ -6490,7 +6499,7 @@
           <tr class="gcr-row-interactive" data-gcr="${escapeHtml(gcr)}">
             <td class="gcr-name-cell"><span class="gcr-chip ${gcrClass}">GCR ${escapeHtml(gcr)}</span></td>
             <td class="col-right-text">${formatInt(gcrData[gcr].count)}</td>
-            <td class="col-right-text" style="font-weight: 600;">${formatInt(gcrData[gcr].mw)}</td>
+            <td class="col-right-text" style="font-weight: 600;">${mw2(gcrData[gcr].mw)}</td>
             <td class="col-right-text">${pct.toFixed(0)}%</td>
           </tr>
         `;
@@ -6498,7 +6507,7 @@
         <tr>
           <td>TOTALES</td>
           <td class="col-right-text">${formatInt(genProjects.length)}</td>
-          <td class="col-right-text">${formatInt(totalMw)}</td>
+          <td class="col-right-text">${mw2(totalMw)}</td>
           <td class="col-right-text">${totalMw > 0 ? '100%' : '0%'}</td>
         </tr>
       `;
@@ -7341,6 +7350,7 @@
         ['Municipio', p => p.municipio],
         ['Capacidad Contratada (MW)', p => p.capacidadContratada],
         ['Capacidad Instalada Neta (MW)', p => p.mwNeta],
+        ['Fuente capacidad', p => (mwSinContratada(p) ? 'Sin contratada (cuenta 0)' : 'Contratada')],
         ['FEOC', p => (typeof formatFeoc === 'function' ? formatFeoc(p.feoc) : p.feoc)]
       ];
       const cell = v => {
