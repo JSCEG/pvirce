@@ -12953,14 +12953,22 @@ ${votoRows}
         const tipoRows = typeRows.join('');
 
         const decClassOf = d => d === 'Continúa' ? 'c' : d === 'No continúa' ? 'n' : 'p';
-        const detailRows = Object.entries(byFolio).sort((a, b) => b[1].length - a[1].length).map(([folio, arr]) => {
-          const p0 = arr[0]; const dec = decByFolio[folio] || '—';
+        const detailRows = rows.slice().sort((a, b) => {
+          const ai = (byFolio[a.folio] || []).length;
+          const bi = (byFolio[b.folio] || []).length;
+          return bi === ai ? String(a.proyecto || '').localeCompare(String(b.proyecto || ''), 'es') : bi - ai;
+        }).map((row) => {
+          const folio = row.folio;
+          const arr = byFolio[folio] || [];
+          const p0 = arr[0] || { nombre: row.proyecto, gie: row.empresa_gie || row.gcr || '—' };
+          const dec = decByFolio[folio] || row.decision || '—';
           const items = arr.slice().sort((a, b) => (sevRank[a.severity] ?? 9) - (sevRank[b.severity] ?? 9)).map(it => {
             const cfg = labelOf(it.type);
             const src = it.cellRef ? ` <span style="color:#94a3b8;">[${esc(it.sourceColumn || '')}${it.cellRef ? (' · ' + esc(it.cellRef)) : ''}]</span>` : '';
             return `<li><span style="display:inline-block;min-width:54px;font-weight:800;color:${sevColor[it.severity] || '#555'};text-transform:uppercase;font-size:9px;">${esc(it.severity || '')}</span> <b>${esc(cfg.label)}</b>: ${esc(it.detail || '')}${src}</li>`;
-          }).join('');
-          return `<tr><td><b>${esc(p0.nombre || '—')}</b><br><span style="color:#64748b;font-size:10px;">${esc(folio)}</span></td><td>${esc(p0.gie || '—')}</td><td><span class="dec ${decClassOf(dec)}">${esc(dec)}</span></td><td style="text-align:center;font-weight:800;">${arr.length}</td><td><ul style="margin:0;padding-left:16px;">${items}</ul></td></tr>`;
+          }).join('') || '<span style="color:#1E5B4F;font-weight:800;">Sin inconsistencias detectadas</span>';
+          const countStyle = arr.length ? 'color:#9B2247;' : 'color:#1E5B4F;';
+          return `<tr><td><b>${esc(p0.nombre || row.proyecto || '—')}</b><br><span style="color:#64748b;font-size:10px;">${esc(folio || '—')}</span></td><td>${esc(p0.gie || row.empresa_gie || row.gcr || '—')}</td><td><span class="dec ${decClassOf(dec)}">${esc(dec)}</span></td><td style="text-align:center;font-weight:800;${countStyle}">${arr.length}</td><td>${arr.length ? `<ul style="margin:0;padding-left:16px;">${items}</ul>` : items}</td></tr>`;
         });
         const detailTableHead = '<tr><th>Proyecto / Folio</th><th>GIE</th><th>Decisión</th><th style="text-align:center;">N°</th><th>Inconsistencias detectadas</th></tr>';
         const detRows = detailRows.join('');
