@@ -734,7 +734,8 @@
       margin-bottom: 5px;
     }
 
-    #chartGrupo {
+    #chartGrupo,
+    .group-chart-target {
       width: 100%;
       flex-grow: 1;
     }
@@ -754,7 +755,8 @@
       position: relative;
     }
 
-    #miniMap {
+    #miniMap,
+    .numeralia-map {
       width: 100%;
       height: 100%;
       border-radius: 8px;
@@ -962,7 +964,8 @@
       opacity: 0.95;
     }
 
-    #slide-1 .numeralia-grid {
+    #slide-1 .numeralia-grid,
+    .numeralia-dashboard-slide .numeralia-grid {
       grid-template-columns: 286px 1fr 418px;
       gap: 18px;
       height: calc(100% - 64px);
@@ -973,13 +976,20 @@
     #slide-1 .gcr-table-card,
     #slide-1 .group-chart-card,
     #slide-1 .map-card,
-    #slide-1 .status-card {
+    #slide-1 .status-card,
+    .numeralia-dashboard-slide .kpi-card-main,
+    .numeralia-dashboard-slide .tech-card,
+    .numeralia-dashboard-slide .gcr-table-card,
+    .numeralia-dashboard-slide .group-chart-card,
+    .numeralia-dashboard-slide .map-card,
+    .numeralia-dashboard-slide .status-card {
       border-radius: 14px;
       border: 1px solid #d6dbe1;
       box-shadow: 0 6px 14px rgba(16, 24, 40, 0.07);
     }
 
-    #slide-1 .kpi-card-main {
+    #slide-1 .kpi-card-main,
+    .numeralia-dashboard-slide .kpi-card-main {
       background: linear-gradient(160deg, #a11f4d 0%, #6f1433 100%);
       min-height: 224px;
       padding: 18px;
@@ -987,7 +997,8 @@
       gap: 4px;
     }
 
-    #slide-1 .kpi-card-main .lbl {
+    #slide-1 .kpi-card-main .lbl,
+    .numeralia-dashboard-slide .kpi-card-main .lbl {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 13px;
       letter-spacing: .07em;
@@ -995,7 +1006,8 @@
       color: rgba(255, 255, 255, 0.95);
     }
 
-    #slide-1 .kpi-card-main .val-main {
+    #slide-1 .kpi-card-main .val-main,
+    .numeralia-dashboard-slide .kpi-card-main .val-main {
       font-size: clamp(52px, 3.9vw, 62px);
       line-height: .95;
       color: #ffffff;
@@ -1003,7 +1015,8 @@
       margin-bottom: 2px;
     }
 
-    #slide-1 .kpi-card-main .val-sub {
+    #slide-1 .kpi-card-main .val-sub,
+    .numeralia-dashboard-slide .kpi-card-main .val-sub {
       font-size: clamp(15px, 1.15vw, 18px);
       line-height: 1.12;
       color: #f7dca1;
@@ -1014,11 +1027,13 @@
       margin-top: 2px;
     }
 
-    #slide-1 .kpi-card-main .val-sub .mw-line {
+    #slide-1 .kpi-card-main .val-sub .mw-line,
+    .numeralia-dashboard-slide .kpi-card-main .val-sub .mw-line {
       display: block;
     }
 
-    #slide-1 .kpi-card-main .val-sub .mw-asterisk {
+    #slide-1 .kpi-card-main .val-sub .mw-asterisk,
+    .numeralia-dashboard-slide .kpi-card-main .val-sub .mw-asterisk {
       font-size: .78em;
       vertical-align: super;
     }
@@ -1026,14 +1041,22 @@
     #slide-1 .tech-card,
     #slide-1 .gcr-table-card,
     #slide-1 .group-chart-card,
-    #slide-1 .status-card {
+    #slide-1 .status-card,
+    .numeralia-dashboard-slide .tech-card,
+    .numeralia-dashboard-slide .gcr-table-card,
+    .numeralia-dashboard-slide .group-chart-card,
+    .numeralia-dashboard-slide .status-card {
       background: #fbfbfc;
     }
 
     #slide-1 .tech-card h3,
     #slide-1 .gcr-table-card h3,
     #slide-1 .group-chart-card h3,
-    #slide-1 .status-card h3 {
+    #slide-1 .status-card h3,
+    .numeralia-dashboard-slide .tech-card h3,
+    .numeralia-dashboard-slide .gcr-table-card h3,
+    .numeralia-dashboard-slide .group-chart-card h3,
+    .numeralia-dashboard-slide .status-card h3 {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 18px;
       color: #b71e4f;
@@ -1043,35 +1066,42 @@
       padding-bottom: 8px;
     }
 
-    #slide-1 .gcr-minitable {
+    #slide-1 .gcr-minitable,
+    .numeralia-dashboard-slide .gcr-minitable {
       font-size: 10px;
     }
 
-    #slide-1 .gcr-minitable th {
+    #slide-1 .gcr-minitable th,
+    .numeralia-dashboard-slide .gcr-minitable th {
       font-size: 10px;
       background: #eef1f4;
     }
 
-    #slide-1 .gcr-row-interactive {
+    #slide-1 .gcr-row-interactive,
+    .numeralia-dashboard-slide .gcr-row-interactive {
       cursor: pointer;
       transition: background-color 0.15s ease;
     }
 
-    #slide-1 .gcr-row-interactive:hover {
+    #slide-1 .gcr-row-interactive:hover,
+    .numeralia-dashboard-slide .gcr-row-interactive:hover {
       background-color: rgba(183, 30, 79, 0.08) !important;
     }
 
-    #slide-1 .gcr-row-interactive.active {
+    #slide-1 .gcr-row-interactive.active,
+    .numeralia-dashboard-slide .gcr-row-interactive.active {
       background-color: rgba(183, 30, 79, 0.15) !important;
       font-weight: bold;
     }
 
-    #slide-1 .gcr-table-card {
+    #slide-1 .gcr-table-card,
+    .numeralia-dashboard-slide .gcr-table-card {
       height: 260px;
       padding: 12px 14px;
     }
 
-    #slide-1 .gcr-table-card h3 {
+    #slide-1 .gcr-table-card h3,
+    .numeralia-dashboard-slide .gcr-table-card h3 {
       font-size: 15px;
       line-height: 1.12;
       letter-spacing: .02em;
@@ -1079,54 +1109,71 @@
       padding-bottom: 6px;
     }
 
-    #slide-1 .gcr-minitable {
+    #slide-1 .gcr-minitable,
+    .numeralia-dashboard-slide .gcr-minitable {
       font-size: 9px;
       line-height: 1.15;
       table-layout: fixed;
     }
 
     #slide-1 .gcr-minitable th,
-    #slide-1 .gcr-minitable td {
+    #slide-1 .gcr-minitable td,
+    .numeralia-dashboard-slide .gcr-minitable th,
+    .numeralia-dashboard-slide .gcr-minitable td {
       padding: 3px 6px;
       vertical-align: middle;
     }
 
     #slide-1 .gcr-minitable th:nth-child(1),
-    #slide-1 .gcr-minitable td:nth-child(1) {
+    #slide-1 .gcr-minitable td:nth-child(1),
+    .numeralia-dashboard-slide .gcr-minitable th:nth-child(1),
+    .numeralia-dashboard-slide .gcr-minitable td:nth-child(1) {
       width: 54%;
     }
 
     #slide-1 .gcr-minitable th:nth-child(2),
-    #slide-1 .gcr-minitable td:nth-child(2) {
+    #slide-1 .gcr-minitable td:nth-child(2),
+    .numeralia-dashboard-slide .gcr-minitable th:nth-child(2),
+    .numeralia-dashboard-slide .gcr-minitable td:nth-child(2) {
       width: 15%;
     }
 
     #slide-1 .gcr-minitable th:nth-child(3),
-    #slide-1 .gcr-minitable td:nth-child(3) {
+    #slide-1 .gcr-minitable td:nth-child(3),
+    .numeralia-dashboard-slide .gcr-minitable th:nth-child(3),
+    .numeralia-dashboard-slide .gcr-minitable td:nth-child(3) {
       width: 18%;
     }
 
     #slide-1 .gcr-minitable th:nth-child(4),
-    #slide-1 .gcr-minitable td:nth-child(4) {
+    #slide-1 .gcr-minitable td:nth-child(4),
+    .numeralia-dashboard-slide .gcr-minitable th:nth-child(4),
+    .numeralia-dashboard-slide .gcr-minitable td:nth-child(4) {
       width: 13%;
     }
 
     #slide-1 .gcr-minitable th:first-child,
-    #slide-1 .gcr-minitable td:first-child {
+    #slide-1 .gcr-minitable td:first-child,
+    .numeralia-dashboard-slide .gcr-minitable th:first-child,
+    .numeralia-dashboard-slide .gcr-minitable td:first-child {
       text-align: left;
     }
 
     #slide-1 .gcr-minitable th:not(:first-child),
-    #slide-1 .gcr-minitable td:not(:first-child) {
+    #slide-1 .gcr-minitable td:not(:first-child),
+    .numeralia-dashboard-slide .gcr-minitable th:not(:first-child),
+    .numeralia-dashboard-slide .gcr-minitable td:not(:first-child) {
       text-align: right;
     }
 
-    #slide-1 .gcr-name-cell {
+    #slide-1 .gcr-name-cell,
+    .numeralia-dashboard-slide .gcr-name-cell {
       font-weight: 700;
       letter-spacing: .01em;
     }
 
-    #slide-1 .gcr-chip {
+    #slide-1 .gcr-chip,
+    .numeralia-dashboard-slide .gcr-chip {
       display: inline-block;
       max-width: 100%;
       padding: 1px 6px;
@@ -1141,72 +1188,84 @@
       text-overflow: ellipsis;
     }
 
-    #slide-1 .gcr-chip.gcr-noreste {
+    #slide-1 .gcr-chip.gcr-noreste,
+    .numeralia-dashboard-slide .gcr-chip.gcr-noreste {
       background: #d7f1ea;
       border-color: #9dd5c5;
       color: #1f6f5e;
     }
 
-    #slide-1 .gcr-chip.gcr-occidente {
+    #slide-1 .gcr-chip.gcr-occidente,
+    .numeralia-dashboard-slide .gcr-chip.gcr-occidente {
       background: #fbe7cf;
       border-color: #f0c690;
       color: #8a4b16;
     }
 
-    #slide-1 .gcr-chip.gcr-peninsular {
+    #slide-1 .gcr-chip.gcr-peninsular,
+    .numeralia-dashboard-slide .gcr-chip.gcr-peninsular {
       background: #e2ebfb;
       border-color: #b8c9ee;
       color: #314f8f;
     }
 
-    #slide-1 .gcr-chip.gcr-norte {
+    #slide-1 .gcr-chip.gcr-norte,
+    .numeralia-dashboard-slide .gcr-chip.gcr-norte {
       background: #efe7fd;
       border-color: #ccb9f4;
       color: #5f3d99;
     }
 
-    #slide-1 .gcr-chip.gcr-oriental {
+    #slide-1 .gcr-chip.gcr-oriental,
+    .numeralia-dashboard-slide .gcr-chip.gcr-oriental {
       background: #fde5ee;
       border-color: #f3bfd4;
       color: #9c2f63;
     }
 
-    #slide-1 .gcr-chip.gcr-central {
+    #slide-1 .gcr-chip.gcr-central,
+    .numeralia-dashboard-slide .gcr-chip.gcr-central {
       background: #e8ecf2;
       border-color: #c9d2dd;
       color: #34465e;
     }
 
-    #slide-1 .gcr-chip.gcr-baja-california {
+    #slide-1 .gcr-chip.gcr-baja-california,
+    .numeralia-dashboard-slide .gcr-chip.gcr-baja-california {
       background: #e0f0ff;
       border-color: #b2d7fb;
       color: #1f5f99;
     }
 
-    #slide-1 .gcr-chip.gcr-baja-california-sur {
+    #slide-1 .gcr-chip.gcr-baja-california-sur,
+    .numeralia-dashboard-slide .gcr-chip.gcr-baja-california-sur {
       background: #fff1d9;
       border-color: #f3d19a;
       color: #8c5c19;
     }
 
-    #slide-1 .gcr-chip.gcr-otro {
+    #slide-1 .gcr-chip.gcr-otro,
+    .numeralia-dashboard-slide .gcr-chip.gcr-otro {
       background: #f0f2f5;
       border-color: #d8dde5;
       color: #4b5563;
     }
 
-    #slide-1 .map-card {
+    #slide-1 .map-card,
+    .numeralia-dashboard-slide .map-card {
       padding: 9px;
       height: 320px;
       background: #f9fafb;
     }
 
-    #slide-1 .status-card {
+    #slide-1 .status-card,
+    .numeralia-dashboard-slide .status-card {
       min-height: 322px;
       padding: 14px;
     }
 
-    #slide-1 .map-lbl {
+    #slide-1 .map-lbl,
+    .numeralia-dashboard-slide .map-lbl {
       background: rgba(255, 255, 255, 0.94);
       border-radius: 8px;
       font-family: 'Patria', 'Outfit', sans-serif;
@@ -1216,7 +1275,8 @@
       color: #2a2f37;
     }
 
-    #slide-1 .invest-lbl {
+    #slide-1 .invest-lbl,
+    .numeralia-dashboard-slide .invest-lbl {
       position: static;
       background: #b71e4f;
       border-radius: 10px;
@@ -1229,13 +1289,15 @@
       overflow: hidden;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-title {
+    #slide-1 .kpi-card-main .investment-summary-title,
+    .numeralia-dashboard-slide .kpi-card-main .investment-summary-title {
       font-size: 10px;
       margin-bottom: 3px;
       letter-spacing: .02em;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row {
+    #slide-1 .kpi-card-main .investment-summary-row,
+    .numeralia-dashboard-slide .kpi-card-main .investment-summary-row {
       gap: 6px;
       padding-top: 1px;
       line-height: 1.2;
@@ -1245,15 +1307,19 @@
     }
 
     #slide-1 .kpi-card-main .investment-summary-row span,
-    #slide-1 .kpi-card-main .investment-summary-row strong {
+    #slide-1 .kpi-card-main .investment-summary-row strong,
+    .numeralia-dashboard-slide .kpi-card-main .investment-summary-row span,
+    .numeralia-dashboard-slide .kpi-card-main .investment-summary-row strong {
       min-width: 0;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row span {
+    #slide-1 .kpi-card-main .investment-summary-row span,
+    .numeralia-dashboard-slide .kpi-card-main .investment-summary-row span {
       flex: 1 1 auto;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row strong {
+    #slide-1 .kpi-card-main .investment-summary-row strong,
+    .numeralia-dashboard-slide .kpi-card-main .investment-summary-row strong {
       flex: 0 1 auto;
       text-align: right;
       font-size: 8px;
@@ -1283,31 +1349,36 @@
       font-weight: 700;
     }
 
-    #slide-1 .status-grid {
+    #slide-1 .status-grid,
+    .numeralia-dashboard-slide .status-grid {
       gap: 10px;
     }
 
-    #slide-1 .status-box {
+    #slide-1 .status-box,
+    .numeralia-dashboard-slide .status-box {
       border: 1px solid #e3e6eb;
       background: #f1f3f6;
       min-height: 94px;
       padding: 11px 12px;
     }
 
-    #slide-1 .status-box .s-lbl {
+    #slide-1 .status-box .s-lbl,
+    .numeralia-dashboard-slide .status-box .s-lbl {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 11px;
       letter-spacing: .03em;
       color: #4a5565;
     }
 
-    #slide-1 .status-box .s-val {
+    #slide-1 .status-box .s-val,
+    .numeralia-dashboard-slide .status-box .s-val {
       font-size: clamp(40px, 3.15vw, 52px);
       line-height: .95;
       color: #b71e4f;
     }
 
-    #slide-1 .status-box .s-mw {
+    #slide-1 .status-box .s-mw,
+    .numeralia-dashboard-slide .status-box .s-mw {
       font-size: clamp(16px, 1.3vw, 21px);
       line-height: 1.1;
       color: #1f2937;
@@ -3296,7 +3367,8 @@
 
   <!-- PANEL DE NAVEGACIÓN -->
   <div id="presentationControls">
-    <button class="control-btn" id="btnHome" onclick="showSlide(0)" title="Ir al inicio (portada)"><i class="bi bi-house-fill"></i></button>
+    <button class="control-btn" id="btnHome" onclick="resetToFullDeck()" title="Ir al inicio y mostrar toda la PPT"><i class="bi bi-house-fill"></i></button>
+    <button class="control-btn" id="btnContinuaSlide" onclick="jumpToContinuaSynthesisSlide()" title="Filtrar PPT por selección técnica: continúan, pendientes y excluyentes"><i class="bi bi-geo-alt-fill"></i></button>
     <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
     <span id="slideCounter">1 / 2</span>
     <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
@@ -3719,6 +3791,7 @@
     let ACTIVE_TECH_FILTER = null;
     let ACTIVE_GIE_FILTER = null;
     let ACTIVE_GCR_FILTER = null;
+    let ACTIVE_SELECTION_SCOPE = false;
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
@@ -3751,6 +3824,8 @@
     let geoAnalysisOverlayControl = null;
     let geoAnalysisFocusTargets = new Map();
     let currentGeoAnalysisContext = null;
+    let continuaSynthesisMap = null;
+    let continuaSynthesisState = { projects: [], mapId: '' };
 
     // Mapeo etiqueta ficha -> columnas de Google Sheets.
     // Si una columna se repite, preferLast usa la última ocurrencia.
@@ -5147,6 +5222,13 @@
       return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
+    function getContractedMw(p) {
+      const contracted = Number(p?.capacidadContratada || 0);
+      if (Number.isFinite(contracted) && contracted > 0) return contracted;
+      const fallback = Number(p?.mw || 0);
+      return Number.isFinite(fallback) ? fallback : 0;
+    }
+
     function parseSanitizedNumber(value) {
       const raw = String(value || '').trim();
       if (!raw || raw === 'SIN INFORMACIÓN' || raw === 'NO APLICA' || raw === '—') return 0;
@@ -5405,8 +5487,8 @@
       document.getElementById('coverVersion').textContent = `${now.getFullYear()} · v1.0`;
 
       const totalCount = DATA.length;
-      const totalMw = genProjects.reduce((sum, p) => sum + p.mw, 0);
-      const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
+      const totalMw = genProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
+      const storageMw = storageProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
       const investmentSummary = summarizeInvestmentReported(DATA);
 
       document.getElementById('kpiTotalCount').innerText = totalCount;
@@ -5430,16 +5512,16 @@
         const tg = getTechGroup(p);
         if (tg === 'Fotovoltaica') {
           techCounts['Fotovoltaica']++;
-          techMws['Fotovoltaica'] += p.mw;
+          techMws['Fotovoltaica'] += getContractedMw(p);
         } else if (tg === 'Eólica') {
           techCounts['Eólica']++;
-          techMws['Eólica'] += p.mw;
+          techMws['Eólica'] += getContractedMw(p);
         } else if (tg === 'Hidroeléctrica') {
           techCounts['Hidroeléctrica']++;
-          techMws['Hidroeléctrica'] += p.mw;
+          techMws['Hidroeléctrica'] += getContractedMw(p);
         } else if (tg === 'Almacenamiento') {
           techCounts['SAEE No Asociado']++;
-          techMws['SAEE No Asociado'] += p.mw;
+          techMws['SAEE No Asociado'] += getContractedMw(p);
         }
 
         if (tg !== 'Almacenamiento' && isAssociatedSaee(p)) {
@@ -5499,7 +5581,7 @@
         const gcr = p.gerencia || 'OTRO';
         gcrData[gcr] = gcrData[gcr] || { count: 0, mw: 0 };
         gcrData[gcr].count++;
-        gcrData[gcr].mw += p.mw;
+        gcrData[gcr].mw += getContractedMw(p);
       });
 
       const sortedGcr = Object.keys(gcrData).sort((a, b) => gcrData[b].mw - gcrData[a].mw);
@@ -5570,19 +5652,19 @@
 
         if (miaStatus === 'TRAMITE') {
           miaCount++;
-          miaMw += p.mw;
+          miaMw += getContractedMw(p);
         }
         if (evisStatus === 'SI') {
           evisCount++;
-          evisMw += p.mw;
+          evisMw += getContractedMw(p);
         }
         if (terrenoStatus === 'SI') {
           tierrasCount++;
-          tierrasMw += p.mw;
+          tierrasMw += getContractedMw(p);
         }
         if (cenaceStatus === 'SI') {
           cenaceCount++;
-          cenaceMw += p.mw;
+          cenaceMw += getContractedMw(p);
         }
       });
 
@@ -5608,7 +5690,7 @@
         const gie = p.gie || 'NO IDENTIFICADO';
         if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
         groups[gie].count += 1;
-        groups[gie].mw += p.mw;
+        groups[gie].mw += getContractedMw(p);
       });
 
       // Ordenar y tomar los top 12
@@ -5637,7 +5719,7 @@
           lineColor: '#CBD5E0'
         },
         yAxis: {
-          title: { text: 'Capacidad (MW)', style: { fontSize: '9px' } },
+          title: { text: 'Capacidad contratada (MW)', style: { fontSize: '9px' } },
           labels: {
             formatter: function () { return formatInt(this.value); },
             style: { fontSize: '9px' }
@@ -5795,7 +5877,7 @@
           }
 
           const marker = L.circleMarker(p.coords, {
-            radius: Math.max(3, Math.min(8, Math.sqrt(p.mw) * 0.5)),
+            radius: Math.max(3, Math.min(8, Math.sqrt(getContractedMw(p)) * 0.5)),
             fillColor: col,
             fillOpacity: 0.85,
             color: '#ffffff',
@@ -5807,7 +5889,7 @@
               <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
               <strong>GIE:</strong> ${p.gie}<br>
               <strong>Origen GIE:</strong> ${getCountryFlagHtml(formatGieOriginText(p))}${formatGieOriginText(p)}<br>
-              <strong>Capacidad:</strong> ${p.mw.toFixed(1)} MW (${displayTech})<br>
+              <strong>Capacidad contratada:</strong> ${getContractedMw(p).toFixed(1)} MW (${displayTech})<br>
               <strong>Inversión:</strong> ${formatInvestmentReported(p)}<br>
               <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
             </div>
@@ -6012,20 +6094,576 @@
       return str;
     }
 
+    function getLatestMinutaVotes() {
+      let log = [];
+      try { log = JSON.parse(localStorage.getItem('minuta.log') || '[]'); } catch (e) { log = []; }
+      const latest = {};
+      log.forEach(row => {
+        if (!row || !row.folio) return;
+        if (!latest[row.folio] || String(row.timestamp || '') > String(latest[row.folio].timestamp || '')) {
+          latest[row.folio] = row;
+        }
+      });
+      return latest;
+    }
+
+    function getContinuaProjectsForCurrentFilters() {
+      const latestVotes = getLatestMinutaVotes();
+      return DATA
+        .map(p => ({ ...p, _minutaVote: latestVotes[p.folio] || null }))
+        .filter(p => p._minutaVote && p._minutaVote.decision === 'Continúa');
+    }
+
+    function isMinutaSelectionVote(vote) {
+      if (!vote) return false;
+      const decision = String(vote.decision || '').trim();
+      const text = `${vote.comentarios || ''} ${vote.motivo_no_continua || ''}`.toLowerCase();
+      return decision === 'Continúa'
+        || decision === 'Pendiente'
+        || /excluyent|reserva/.test(text);
+    }
+
+    function getMinutaSelectionProjectsForCurrentFilters() {
+      const latestVotes = getLatestMinutaVotes();
+      return DATA
+        .map(p => ({ ...p, _minutaVote: latestVotes[p.folio] || null }))
+        .filter(p => isMinutaSelectionVote(p._minutaVote));
+    }
+
+    function getDynamicReportProjects() {
+      return ACTIVE_SELECTION_SCOPE ? getMinutaSelectionProjectsForCurrentFilters() : DATA;
+    }
+
+    function getGcrClass(gcr) {
+      const key = normText(gcr).toLowerCase().replace(/\s+/g, '-');
+      if (key.includes('noreste')) return 'gcr-noreste';
+      if (key.includes('occidente')) return 'gcr-occidente';
+      if (key.includes('peninsular')) return 'gcr-peninsular';
+      if (key === 'norte') return 'gcr-norte';
+      if (key.includes('oriental')) return 'gcr-oriental';
+      if (key.includes('central')) return 'gcr-central';
+      if (key.includes('baja-california-sur')) return 'gcr-baja-california-sur';
+      if (key.includes('baja-california')) return 'gcr-baja-california';
+      return 'gcr-otro';
+    }
+
+    function getGcrColor(gcr) {
+      const cls = getGcrClass(gcr);
+      const colors = {
+        'gcr-noreste': '#FED7D7',
+        'gcr-occidente': '#FEEBC8',
+        'gcr-norte': '#EBF8FF',
+        'gcr-oriental': '#E6FFFA',
+        'gcr-peninsular': '#EDF2F7',
+        'gcr-central': '#E2E8F0',
+        'gcr-baja-california-sur': '#FAF5FF',
+        'gcr-baja-california': '#E0F2FE',
+        'gcr-otro': '#E5E7EB'
+      };
+      return colors[cls] || colors['gcr-otro'];
+    }
+
+    function getTechColor(p) {
+      const group = getTechGroup(p);
+      return TECH_COLORS[group] || TECH_COLORS['Otro'] || '#9B2247';
+    }
+
+    function buildContinuaSynthesisSlide(deck, slideIdx) {
+      const projects = getMinutaSelectionProjectsForCurrentFilters();
+      const ids = {
+        title: `continuaSlideTitle_${slideIdx}`,
+        count: `continuaKpiTotalCount_${slideIdx}`,
+        mw: `continuaKpiTotalMw_${slideIdx}`,
+        inversion: `continuaKpiTotalInversion_${slideIdx}`,
+        techTotal: `continuaTechTotalProjects_${slideIdx}`,
+        techList: `continuaTechList_${slideIdx}`,
+        gcrBody: `continuaGcrMiniTableBody_${slideIdx}`,
+        chart: `continuaChartGrupo_${slideIdx}`,
+        map: `continuaMiniMap_${slideIdx}`,
+        miaCount: `continuaSMiaCount_${slideIdx}`,
+        miaMw: `continuaSMiaMw_${slideIdx}`,
+        evisCount: `continuaSEvisCount_${slideIdx}`,
+        evisMw: `continuaSEvisMw_${slideIdx}`,
+        tierrasCount: `continuaSTierrasCount_${slideIdx}`,
+        tierrasMw: `continuaSTierrasMw_${slideIdx}`,
+        cenaceCount: `continuaSCenaceCount_${slideIdx}`,
+        cenaceMw: `continuaSCenaceMw_${slideIdx}`
+      };
+      continuaSynthesisState = { projects, mapId: ids.map, ids, layerGerencias: null, layerEstados: null, markersGroup: null };
+      const slide = document.createElement('section');
+      slide.className = 'slide continua-synthesis-slide numeralia-dashboard-slide';
+      slide.id = `slide-${slideIdx}`;
+      slide.innerHTML = `
+        <div class="slide-container">
+          <div class="slide-header">
+            <div class="brand-left">
+              <span class="brand-line-1">Segunda Convocatoria 2026</span>
+              <span class="brand-line-2">Particulares</span>
+            </div>
+            <div class="ef-title" id="${ids.title}">Selección Técnica: Continúan, Pendientes y Excluyentes${getActiveTechTitleSuffix()}</div>
+            <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+          </div>
+
+          <div class="numeralia-grid">
+            <div class="col-left">
+              <div class="kpi-card-main">
+                <span class="lbl">Selección técnica</span>
+                <span class="val-main" id="${ids.count}">0</span>
+                <span class="val-sub" id="${ids.mw}">0 MW</span>
+                <div class="invest-lbl" id="${ids.inversion}">Inversión reportada</div>
+              </div>
+
+              <div class="tech-card">
+                <h3>Tipo de Tecnología</h3>
+                <div class="tech-total" id="${ids.techTotal}">0 proyectos totales</div>
+                <div id="${ids.techList}" style="display: flex; flex-direction: column; gap: 8px;"></div>
+              </div>
+            </div>
+
+            <div class="col-center">
+              <div class="gcr-table-card">
+                <h3>Gerencias Nacionales de Transmisión</h3>
+                <table class="gcr-minitable">
+                  <thead>
+                    <tr>
+                      <th>GCR</th>
+                      <th class="col-right-text">Proyectos</th>
+                      <th class="col-right-text">MW</th>
+                      <th class="col-right-text">%</th>
+                    </tr>
+                  </thead>
+                  <tbody id="${ids.gcrBody}"></tbody>
+                </table>
+              </div>
+
+              <div class="group-chart-card">
+                <h3>Proyectos por Grupo Económico (MW)</h3>
+                <div id="${ids.chart}" class="group-chart-target"></div>
+              </div>
+            </div>
+
+            <div class="col-right">
+              <div class="map-card">
+                <div class="map-lbl">Distribución de Proyectos</div>
+                <div id="${ids.map}" class="numeralia-map"></div>
+              </div>
+
+              <div class="status-card">
+                <h3>Avance en Trámites y Estudios</h3>
+                <div class="status-grid">
+                  <div class="status-box">
+                    <span class="s-lbl">MIA en Trámite</span>
+                    <span class="s-val" id="${ids.miaCount}">0</span>
+                    <span class="s-mw" id="${ids.miaMw}">0 MW</span>
+                  </div>
+                  <div class="status-box">
+                    <span class="s-lbl">EvIS/MISSE Aprobada</span>
+                    <span class="s-val" id="${ids.evisCount}">0</span>
+                    <span class="s-mw" id="${ids.evisMw}">0 MW</span>
+                  </div>
+                  <div class="status-box">
+                    <span class="s-lbl">Propiedad de Tierras</span>
+                    <span class="s-val" id="${ids.tierrasCount}">0</span>
+                    <span class="s-mw" id="${ids.tierrasMw}">0 MW</span>
+                  </div>
+                  <div class="status-box">
+                    <span class="s-lbl">Estudios CENACE</span>
+                    <span class="s-val" id="${ids.cenaceCount}">0</span>
+                    <span class="s-mw" id="${ids.cenaceMw}">0 MW</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-footer"></div>
+        </div>`;
+      deck.appendChild(slide);
+      renderContinuaNumeraliaSlide();
+      return slideIdx + 1;
+    }
+
+    function renderContinuaNumeraliaSlide() {
+      const { ids, projects = [] } = continuaSynthesisState || {};
+      if (!ids) return;
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+      const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      const storageProjects = projects.filter(p => getTechGroup(p) === 'Almacenamiento');
+      const genProjects = projects.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      const totalCount = projects.length;
+      const totalMw = genProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
+      const storageMw = storageProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
+      const investmentSummary = summarizeInvestmentReported(projects);
+
+      setText(ids.title, `Selección Técnica: Continúan, Pendientes y Excluyentes${getActiveTechTitleSuffix()}`);
+      setText(ids.count, formatInt(totalCount));
+      setText(ids.techTotal, `${formatInt(totalCount)} proyectos totales`);
+      setHtml(ids.mw, `
+        <span class="mw-line">${formatInt(genProjects.length)} proyectos generación · ${formatInt(Math.round(totalMw))} MW</span>
+        <span class="mw-line">${formatInt(storageProjects.length)} proyectos almacenamiento no asociado<span class="mw-asterisk">*</span> · ${formatInt(Math.round(storageMw))} MW</span>
+      `);
+      setHtml(ids.inversion, renderInvestmentSummary(investmentSummary));
+
+      const techCounts = {};
+      const techMws = {};
+      techs.forEach(t => { techCounts[t] = 0; techMws[t] = 0; });
+      projects.forEach(p => {
+        const tg = getTechGroup(p);
+        if (tg === 'Fotovoltaica') {
+          techCounts['Fotovoltaica']++;
+          techMws['Fotovoltaica'] += getContractedMw(p);
+        } else if (tg === 'Eólica') {
+          techCounts['Eólica']++;
+          techMws['Eólica'] += getContractedMw(p);
+        } else if (tg === 'Hidroeléctrica') {
+          techCounts['Hidroeléctrica']++;
+          techMws['Hidroeléctrica'] += getContractedMw(p);
+        } else if (tg === 'Almacenamiento') {
+          techCounts['SAEE No Asociado']++;
+          techMws['SAEE No Asociado'] += getContractedMw(p);
+        }
+        if (tg !== 'Almacenamiento' && isAssociatedSaee(p)) {
+          techCounts['SAEE Asociado']++;
+          techMws['SAEE Asociado'] += Number(p.saeeMW || 0);
+        }
+      });
+      const techIcons = {
+        'Fotovoltaica': '<i class="bi bi-sun-fill" aria-hidden="true"></i>',
+        'Eólica': '<i class="bi bi-wind" aria-hidden="true"></i>',
+        'SAEE Asociado': '<i class="bi bi-battery-charging" aria-hidden="true"></i>',
+        'SAEE No Asociado': '<i class="bi bi-battery" aria-hidden="true"></i>',
+        'Hidroeléctrica': '<i class="bi bi-droplet-fill" aria-hidden="true"></i>'
+      };
+      const totalTechCount = techCounts['Fotovoltaica'] + techCounts['Eólica'] + techCounts['SAEE No Asociado'] + techCounts['Hidroeléctrica'];
+      const totalTechMw = techMws['Fotovoltaica'] + techMws['Eólica'] + techMws['SAEE No Asociado'] + techMws['Hidroeléctrica'];
+      setHtml(ids.techList, techs.map(t => {
+        const genCount = projects.length - techCounts['SAEE No Asociado'];
+        const pctProj = t === 'SAEE Asociado'
+          ? (genCount > 0 ? (techCounts[t] / genCount * 100).toFixed(2) : '0.00')
+          : (totalTechCount > 0 ? (techCounts[t] / totalTechCount * 100).toFixed(2) : '0.00');
+        const pctMw = totalTechMw > 0 ? (techMws[t] / totalTechMw * 100).toFixed(2) : '0.00';
+        const isActive = ACTIVE_TECH_FILTER === t;
+        const isDimmed = ACTIVE_TECH_FILTER && ACTIVE_TECH_FILTER !== t;
+        return `
+          <div class="tech-item tech-item-interactive ${isActive ? 'tech-item-active' : ''} ${isDimmed ? 'tech-item-dimmed' : ''}"
+               onclick="filterDataAndRebuild('${t}')">
+            <div class="icon-bg">${techIcons[t]}</div>
+            <div class="t-info">
+              <div class="t-name">${t}</div>
+              <div class="t-sub">${formatInt(techCounts[t])} proyectos (${pctProj}%)</div>
+            </div>
+            <div class="t-val">
+              <div>${formatMw(techMws[t])}</div>
+              <div style="font-size: 10px; color: var(--color-text-light); font-weight: normal; margin-top: 1px;">${pctMw}%</div>
+            </div>
+          </div>
+        `;
+      }).join(''));
+
+      const gcrData = {};
+      genProjects.forEach(p => {
+        const gcr = p.gerencia || 'OTRO';
+        gcrData[gcr] = gcrData[gcr] || { count: 0, mw: 0 };
+        gcrData[gcr].count++;
+        gcrData[gcr].mw += getContractedMw(p);
+      });
+      const sortedGcr = Object.keys(gcrData).sort((a, b) => gcrData[b].mw - gcrData[a].mw);
+      const gcrRowsHtml = sortedGcr.map(gcr => {
+        const pct = totalMw > 0 ? (gcrData[gcr].mw / totalMw) * 100 : 0;
+        const gcrClass = toGcrClassName(gcr);
+        return `
+          <tr class="gcr-row-interactive" data-gcr="${escapeHtml(gcr)}">
+            <td class="gcr-name-cell"><span class="gcr-chip ${gcrClass}">GCR ${escapeHtml(gcr)}</span></td>
+            <td class="col-right-text">${formatInt(gcrData[gcr].count)}</td>
+            <td class="col-right-text" style="font-weight: 600;">${formatInt(gcrData[gcr].mw)}</td>
+            <td class="col-right-text">${pct.toFixed(0)}%</td>
+          </tr>
+        `;
+      }).join('') + `
+        <tr>
+          <td>TOTALES</td>
+          <td class="col-right-text">${formatInt(genProjects.length)}</td>
+          <td class="col-right-text">${formatInt(totalMw)}</td>
+          <td class="col-right-text">${totalMw > 0 ? '100%' : '0%'}</td>
+        </tr>
+      `;
+      setHtml(ids.gcrBody, gcrRowsHtml);
+      const gcrTableBody = document.getElementById(ids.gcrBody);
+      let activeGcr = null;
+      gcrTableBody?.querySelectorAll('.gcr-row-interactive').forEach(row => {
+        const gcrName = row.getAttribute('data-gcr');
+        row.addEventListener('mouseenter', () => highlightContinuaGcrOnMap(gcrName));
+        row.addEventListener('mouseleave', () => highlightContinuaGcrOnMap(activeGcr));
+        row.addEventListener('click', () => {
+          if (activeGcr === gcrName) {
+            activeGcr = null;
+            row.classList.remove('active');
+            highlightContinuaGcrOnMap(null);
+          } else {
+            gcrTableBody.querySelectorAll('.gcr-row-interactive').forEach(r => r.classList.remove('active'));
+            activeGcr = gcrName;
+            row.classList.add('active');
+            highlightContinuaGcrOnMap(gcrName);
+          }
+        });
+      });
+
+      let miaCount = 0, miaMw = 0;
+      let evisCount = 0, evisMw = 0;
+      let tierrasCount = 0, tierrasMw = 0;
+      let cenaceCount = 0, cenaceMw = 0;
+      projects.forEach(p => {
+        const mw = getContractedMw(p);
+        if (classifyStatus(p.mia) === 'TRAMITE') { miaCount++; miaMw += mw; }
+        if (classifyStatus(p.misse) === 'SI') { evisCount++; evisMw += mw; }
+        if (classifyStatus(p.tierras) === 'SI') { tierrasCount++; tierrasMw += mw; }
+        if (classifyStatus(p.cenace) === 'SI') { cenaceCount++; cenaceMw += mw; }
+      });
+      setText(ids.miaCount, formatInt(miaCount));
+      setText(ids.miaMw, formatMw(miaMw));
+      setText(ids.evisCount, formatInt(evisCount));
+      setText(ids.evisMw, formatMw(evisMw));
+      setText(ids.tierrasCount, formatInt(tierrasCount));
+      setText(ids.tierrasMw, formatMw(tierrasMw));
+      setText(ids.cenaceCount, formatInt(cenaceCount));
+      setText(ids.cenaceMw, formatMw(cenaceMw));
+      renderContinuaGroupChart(projects);
+    }
+
+    function renderContinuaGroupChart(projects) {
+      const chartId = continuaSynthesisState?.ids?.chart;
+      if (!chartId || typeof Highcharts === 'undefined') return;
+      const groups = {};
+      projects.forEach(p => {
+        const gie = p.gie || 'NO IDENTIFICADO';
+        if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
+        groups[gie].count += 1;
+        groups[gie].mw += getContractedMw(p);
+      });
+      const sortedGroups = Object.keys(groups)
+        .map(name => ({ name, y: groups[name].mw, projectCount: groups[name].count }))
+        .sort((a, b) => b.y - a.y)
+        .slice(0, 12);
+      Highcharts.chart(chartId, {
+        chart: { type: 'bar', backgroundColor: 'transparent', marginRight: 115, marginTop: 10, marginBottom: 40, style: { fontFamily: 'Montserrat, sans-serif' } },
+        title: { text: '' },
+        xAxis: {
+          categories: sortedGroups.map(g => g.name),
+          labels: { useHTML: true, formatter: function () { return formatGieChartLabel(String(this.value || ''), 28); }, style: { fontSize: '9px', color: '#333', fontWeight: '500' } },
+          lineColor: '#CBD5E0'
+        },
+        yAxis: {
+          title: { text: 'Capacidad contratada (MW)', style: { fontSize: '9px' } },
+          labels: { formatter: function () { return formatInt(this.value); }, style: { fontSize: '9px' } },
+          gridLineColor: '#EDF2F7'
+        },
+        legend: { enabled: false },
+        plotOptions: {
+          series: {
+            color: '#691B31',
+            borderRadius: 3,
+            dataLabels: {
+              enabled: true,
+              formatter: function () { return `${formatInt(this.point.projectCount)} proy. · ${formatInt(this.y)} MW`; },
+              crop: false,
+              overflow: 'allow',
+              style: { fontSize: '8px', fontWeight: 'bold' }
+            }
+          }
+        },
+        tooltip: {
+          useHTML: true,
+          formatter: function () {
+            const project = projects.find(p => normalizeGieKey(p.gie) === normalizeGieKey(this.point.name)) || { gie: this.point.name };
+            const origin = formatGieOriginText(project);
+            return `<b>${getCountryFlagHtml(origin)}${this.point.name}</b><br><span style="color:#64748b;">${escapeHtml(origin)}</span><br>${formatInt(this.point.projectCount)} proyectos<br>${formatInt(this.y)} MW`;
+          }
+        },
+        credits: { enabled: false },
+        series: [{ data: sortedGroups }]
+      });
+    }
+
+    async function initContinuaSynthesisMap() {
+      const mapEl = document.getElementById(continuaSynthesisState.mapId);
+      if (!mapEl || typeof L === 'undefined') return;
+      if (continuaSynthesisMap) {
+        try { continuaSynthesisMap.remove(); } catch (e) { }
+        continuaSynthesisMap = null;
+      }
+      continuaSynthesisState.layerGerencias = null;
+      continuaSynthesisState.layerEstados = null;
+      continuaSynthesisState.markersGroup = null;
+      mapEl.innerHTML = '';
+      if (mapEl._leaflet_id) delete mapEl._leaflet_id;
+      const projects = continuaSynthesisState.projects || [];
+      const MEXICO_BOUNDS = L.latLngBounds([13.0, -120.0], [33.8, -85.0]);
+      continuaSynthesisMap = L.map(mapEl, {
+        zoomControl: false,
+        attributionControl: false,
+        preferCanvas: true,
+        minZoom: 4,
+        maxZoom: 9,
+        maxBounds: MEXICO_BOUNDS,
+        maxBoundsViscosity: 1.0
+      });
+      continuaSynthesisMap.setView([23.5, -102.2], 4.5);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: 'OpenStreetMap'
+      }).addTo(continuaSynthesisMap);
+
+      try {
+        let geojson = cachedGerenciasGeoJSON;
+        if (!geojson) {
+          const res = await fetch(GEOJSON_GERENCIAS_URL);
+          geojson = await res.json();
+          cachedGerenciasGeoJSON = geojson;
+        }
+        const gcrColors = {
+          'NORESTE': '#D7F1EA',
+          'OCCIDENTE': '#FBE7CF',
+          'NORTE': '#EFE7FD',
+          'ORIENTAL': '#FDE5EE',
+          'PENINSULAR': '#E2EBFB',
+          'CENTRAL': '#E8ECF2',
+          'BAJA CALIFORNIA SUR': '#FFF1D9',
+          'BAJA CALIFORNIA': '#E0F0FF'
+        };
+        continuaSynthesisState.layerGerencias = L.geoJSON(geojson, {
+          style: (feature) => {
+            const name = normalizeGcrName(getGerenciaNameFromMapFeature(feature));
+            let fill = '#EDF2F7';
+            Object.keys(gcrColors).forEach(k => {
+              if (name.includes(k)) fill = gcrColors[k];
+            });
+            return {
+              fillColor: fill,
+              fillOpacity: 0.5,
+              color: '#8B93A3',
+              weight: 1.1
+            };
+          }
+        }).addTo(continuaSynthesisMap);
+      } catch (e) {
+        console.warn('No se pudo cargar capa GCR para mapa de proyectos que continúan:', e);
+      }
+
+      try {
+        let geojsonEf = cachedEstadosGeoJSON;
+        if (!geojsonEf) {
+          const res = await fetch(GEOJSON_EF_URL);
+          geojsonEf = await res.json();
+          cachedEstadosGeoJSON = geojsonEf;
+        }
+        continuaSynthesisState.layerEstados = L.geoJSON(geojsonEf, {
+          style: {
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            color: '#ffffff',
+            weight: 1.0,
+            dashArray: '2, 3'
+          }
+        });
+      } catch (e) {
+        console.warn('No se pudo cargar el GeoJSON de estados en mapa de proyectos que continúan:', e);
+      }
+
+      const overlayMaps = {};
+      if (continuaSynthesisState.layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = continuaSynthesisState.layerGerencias;
+      if (continuaSynthesisState.layerEstados) overlayMaps["Límites Estatales"] = continuaSynthesisState.layerEstados;
+      if (Object.keys(overlayMaps).length) {
+        L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(continuaSynthesisMap);
+      }
+
+      continuaSynthesisState.markersGroup = L.layerGroup().addTo(continuaSynthesisMap);
+      const markers = [];
+      const isValidLatLng = coords => Array.isArray(coords)
+        && coords.length >= 2
+        && Number.isFinite(Number(coords[0]))
+        && Number.isFinite(Number(coords[1]));
+      projects.forEach(p => {
+        if (!isValidLatLng(p.coords)) return;
+        const latlng = [Number(p.coords[0]), Number(p.coords[1])];
+        const tGroup = getTechGroup(p);
+        let col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
+        let displayTech = tGroup;
+        if (tGroup !== 'Almacenamiento' && isAssociatedSaee(p)) {
+          col = TECH_COLORS['Almacenamiento'] || '#A57F2C';
+          displayTech = `${tGroup} + SAEE`;
+        }
+        const marker = L.circleMarker(latlng, {
+          radius: Math.max(3, Math.min(8, Math.sqrt(getContractedMw(p)) * 0.5)),
+          fillColor: col,
+          fillOpacity: 0.85,
+          color: '#ffffff',
+          weight: 1
+        });
+        marker.bindPopup(`
+          <div style="font-family:Montserrat,sans-serif; font-size:11px; line-height:1.4;">
+            <strong style="color:var(--color-guinda);">${escapeHtml(p.nombre || '—')}</strong><br>
+            <strong>GIE:</strong> ${escapeHtml(p.gie || '—')}<br>
+            <strong>Origen GIE:</strong> ${getCountryFlagHtml(formatGieOriginText(p))}${escapeHtml(formatGieOriginText(p))}<br>
+            <strong>Capacidad contratada:</strong> ${getContractedMw(p).toFixed(1)} MW (${escapeHtml(displayTech)})<br>
+            <strong>Inversión:</strong> ${formatInvestmentReported(p)}<br>
+            <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
+          </div>
+        `);
+        continuaSynthesisState.markersGroup.addLayer(marker);
+        markers.push(marker);
+      });
+      if (markers.length) {
+        const bounds = L.latLngBounds(markers.map(marker => marker.getLatLng()));
+        if (bounds.isValid()) {
+          continuaSynthesisMap.fitBounds(bounds.pad(0.18), { animate: false });
+        } else {
+          continuaSynthesisMap.setView([23.5, -102.2], 4.5);
+        }
+      } else {
+        continuaSynthesisMap.setView([23.5, -102.2], 4.5);
+      }
+      setTimeout(() => continuaSynthesisMap?.invalidateSize({ pan: false, animate: false }), 80);
+    }
+
+    function highlightContinuaGcrOnMap(gcrName) {
+      const layer = continuaSynthesisState?.layerGerencias;
+      if (!layer || !continuaSynthesisMap) return;
+      const gcrColors = {
+        'NORESTE': '#D7F1EA',
+        'OCCIDENTE': '#FBE7CF',
+        'NORTE': '#EFE7FD',
+        'ORIENTAL': '#FDE5EE',
+        'PENINSULAR': '#E2EBFB',
+        'CENTRAL': '#E8ECF2',
+        'BAJA CALIFORNIA SUR': '#FFF1D9',
+        'BAJA CALIFORNIA': '#E0F0FF'
+      };
+      const target = normalizeGcrName(gcrName || '');
+      layer.eachLayer(l => {
+        const featureName = normalizeGcrName(getGerenciaNameFromMapFeature(l.feature));
+        let fill = '#EDF2F7';
+        Object.keys(gcrColors).forEach(k => {
+          if (featureName.includes(k)) fill = gcrColors[k];
+        });
+        const isMatch = target && (featureName.includes(target) || target.includes(featureName));
+        l.setStyle({
+          fillColor: isMatch ? '#9B2247' : fill,
+          fillOpacity: isMatch ? 0.72 : 0.5,
+          color: isMatch ? '#611232' : '#8B93A3',
+          weight: isMatch ? 2.3 : 1.1
+        });
+        if (isMatch && l.bringToFront) l.bringToFront();
+      });
+    }
+
     function generateGcrTables() {
       const deck = document.getElementById('deck');
       const existingDynamicSlides = deck.querySelectorAll('section.slide:not(#slide-0):not(#slide-1)');
       existingDynamicSlides.forEach(s => s.remove());
 
-      const getTableMw = p => {
-        const contracted = Number(p.capacidadContratada || 0);
-        if (!isNaN(contracted) && contracted > 0) return contracted;
-        const fallback = Number(p.mw || 0);
-        return isNaN(fallback) ? 0 : fallback;
-      };
+      const getTableMw = getContractedMw;
 
-      // 1. Agrupar proyectos de generación por GCR
-      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      const reportProjects = getDynamicReportProjects();
+      const genProjects = reportProjects.filter(p => getTechGroup(p) !== 'Almacenamiento');
       const groups = {};
 
       genProjects.forEach(p => {
@@ -6048,6 +6686,9 @@
       ];
 
       let slideIdx = 2; // Portada=0, Numeralia=1, las tablas empiezan en slideIndex=2
+      if (ACTIVE_SELECTION_SCOPE) {
+        slideIdx = buildContinuaSynthesisSlide(deck, slideIdx);
+      }
 
       gcrOrder.forEach(gcrInfo => {
         const rawProjs = groups[gcrInfo.key] || [];
@@ -6390,7 +7031,7 @@
       });
 
       // 2. Diapositiva para el Sistema de Almacenamiento (Slide 15 dedicada)
-      const storageProjects = DATA.filter(p => getTechGroup(p) === 'Almacenamiento');
+      const storageProjects = reportProjects.filter(p => getTechGroup(p) === 'Almacenamiento');
       if (storageProjects.length > 0) {
         const sortedStorage = storageProjects.sort(compareProjectsByRegulatoryRanking);
         const storageRowsPerSlide = 10;
@@ -6492,7 +7133,7 @@
       // ==========================================
       // SLIDES DE REPORTE DE INCONSISTENCIAS (VUPE)
       // ==========================================
-      const inconsistencies = detectVupeInconsistencies(DATA);
+      const inconsistencies = detectVupeInconsistencies(reportProjects);
       slideIdx = buildInconsistencyReportSlides(deck, inconsistencies, slideIdx);
 
       slidesCount = slideIdx;
@@ -6501,6 +7142,10 @@
     }
 
     function clearGcrWidgets() {
+      if (continuaSynthesisMap) {
+        try { continuaSynthesisMap.remove(); } catch (e) { }
+        continuaSynthesisMap = null;
+      }
       for (const key in activeGcrWidgets) {
         const widgets = activeGcrWidgets[key];
         if (widgets?.chart) {
@@ -6560,6 +7205,15 @@
       const targetSlideIndex = currentSlideIndex;
       ACTIVE_GCR_FILTER = selectedGcr && selectedGcr !== 'ALL' ? selectedGcr : null;
       rebuildFilteredReport(targetSlideIndex);
+    }
+
+    function resetToFullDeck() {
+      if (ACTIVE_SELECTION_SCOPE) {
+        ACTIVE_SELECTION_SCOPE = false;
+        rebuildFilteredReport(0);
+        return;
+      }
+      showSlide(0);
     }
 
     // ==========================================
@@ -6912,6 +7566,19 @@
         showSlide(_inconsistencySlideStart);
       } else {
         alert('Reporte de inconsistencias no disponible.');
+      }
+    }
+
+    function jumpToContinuaSynthesisSlide() {
+      if (!ACTIVE_SELECTION_SCOPE) {
+        ACTIVE_SELECTION_SCOPE = true;
+        rebuildFilteredReport(2);
+        return;
+      }
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const targetIndex = slides.findIndex(slide => slide.classList.contains('continua-synthesis-slide'));
+      if (targetIndex >= 0) {
+        showSlide(targetIndex);
       }
     }
 
@@ -7424,17 +8091,12 @@
       }
 
       const gcrSafeId = gcrKey.replace(/[^a-zA-Z0-9]/g, '_');
-      const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
+      const genProjects = getDynamicReportProjects().filter(p => getTechGroup(p) !== 'Almacenamiento');
       const gcrProjects = genProjects.filter(p => (p.gerencia || 'OTRO') === gcrKey);
 
       if (!gcrProjects.length) return;
 
-      const getProjectCapacity = p => {
-        const contracted = Number(p.capacidadContratada || 0);
-        if (!isNaN(contracted) && contracted > 0) return contracted;
-        const fallback = Number(p.mw || 0);
-        return isNaN(fallback) ? 0 : fallback;
-      };
+      const getProjectCapacity = getContractedMw;
 
       // 1. Inicializar Highcharts
       const groups = {};
@@ -7644,7 +8306,7 @@
                 <strong style="color:var(--color-guinda);">${p.nombre}</strong><br>
                 <strong>GIE:</strong> ${p.gie}<br>
                 <strong>Origen GIE:</strong> ${getCountryFlagHtml(formatGieOriginText(p))}${formatGieOriginText(p)}<br>
-                <strong>Capacidad:</strong> ${finalMw.toFixed(1)} MW (${tGroup})<br>
+                <strong>Capacidad contratada:</strong> ${finalMw.toFixed(1)} MW (${tGroup})<br>
                 <strong>Inversión:</strong> ${p.inversionRaw ? formatInvestmentReported(p) : 'Sin datos'}<br>
                 <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
               </div>
@@ -7724,6 +8386,11 @@
         const gcrKey = activeSlide.dataset.gcr;
         setTimeout(() => {
           initGcrDashboardWidgets(gcrKey);
+          animateSlide(index);
+        }, 150);
+      } else if (activeSlide && activeSlide.classList.contains('continua-synthesis-slide')) {
+        setTimeout(() => {
+          initContinuaSynthesisMap();
           animateSlide(index);
         }, 150);
       } else {
@@ -13162,3 +13829,4 @@ ${issues.length ? `<h3>Resumen por tipo de inconsistencia</h3>
 </body>
 
 </html>
+
