@@ -3458,6 +3458,7 @@
       <select id="efFilterSelect" autocomplete="off" onchange="filterEfAndRebuild(this.value)" title="Filtrar por Entidad Federativa (columna del Sheet)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 220px;">
         <option value="ALL">Todas las entidades</option>
       </select>
+      <button type="button" id="btnExportFiltrado" onclick="exportFilteredToExcel()" title="Descargar a Excel los proyectos del filtro actual" style="background: var(--color-verde, #1E5B4F); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 9px; font-size: 12px; font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;"><i class="bi bi-file-earmark-excel-fill"></i> Excel</button>
     </div>
   </div>
 
@@ -7323,6 +7324,38 @@
       const targetSlideIndex = currentSlideIndex;
       ACTIVE_EF_FILTER = selectedEf && selectedEf !== 'ALL' ? selectedEf : null;
       rebuildFilteredReport(targetSlideIndex);
+    }
+
+    // Descarga los proyectos del filtro activo (Tecnología + GCR + GIE + Entidad) a CSV (abre en Excel).
+    function exportFilteredToExcel() {
+      const rows = (typeof DATA !== 'undefined' && DATA) ? DATA : [];
+      if (!rows.length) { alert('No hay proyectos en el filtro actual.'); return; }
+      const cols = [
+        ['Folio', p => p.folio],
+        ['Proyecto', p => p.nombre],
+        ['GIE', p => p.gie],
+        ['Tecnología', p => p.tecnologia],
+        ['Grupo', p => getTechGroup(p)],
+        ['GCR', p => p.gerencia],
+        ['Entidad Federativa', p => p.ef],
+        ['Municipio', p => p.municipio],
+        ['Capacidad Contratada (MW)', p => p.capacidadContratada],
+        ['Capacidad Instalada Neta (MW)', p => p.mwNeta],
+        ['FEOC', p => (typeof formatFeoc === 'function' ? formatFeoc(p.feoc) : p.feoc)]
+      ];
+      const cell = v => {
+        let s = String(v == null ? '' : v);
+        if (/[",\n\r;]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      };
+      const lines = [cols.map(c => cell(c[0])).join(',')];
+      rows.forEach(p => lines.push(cols.map(c => cell(c[1](p))).join(',')));
+      const suffix = (typeof getActiveTechTitleSuffix === 'function' ? getActiveTechTitleSuffix() : '')
+        .replace(/[·:]/g, ' ').replace(/[^0-9A-Za-zÁÉÍÓÚÑáéíóúñ]+/g, '_').replace(/^_+|_+$/g, '');
+      const fname = 'Proyectos_filtrados' + (suffix ? '_' + suffix : '') + '.csv';
+      const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = fname; a.click(); URL.revokeObjectURL(a.href);
     }
 
     function filterGcrAndRebuild(selectedGcr) {
