@@ -3446,9 +3446,12 @@
         <option value="SAEE No Asociado">SAEE No Asociado</option>
         <option value="Hidroeléctrica">Hidroeléctrica</option>
       </select>
-      <select id="gcrFilterSelect" autocomplete="off" onchange="filterGcrAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 190px;">
-        <option value="ALL">Todas las GCR</option>
-      </select>
+      <div id="gcrFilterWrap" style="position: relative; display: inline-block;">
+        <button type="button" id="gcrFilterBtn" onclick="toggleGcrPanel(event)" title="Filtrar por GCR — una o varias" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 190px; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden;">
+          <span id="gcrFilterLabel" style="overflow: hidden; text-overflow: ellipsis;">Todas</span><i class="bi bi-caret-down-fill" style="font-size: 9px;"></i>
+        </button>
+        <div id="gcrFilterPanel" onclick="event.stopPropagation()" style="display: none; position: absolute; top: 0; right: calc(100% + 10px); background: #1f1f1f; border: 1px solid rgba(255,255,255,0.18); border-radius: 8px; padding: 6px; min-width: 175px; max-height: 260px; overflow: auto; z-index: 1100; box-shadow: 0 10px 25px rgba(0,0,0,.5);"></div>
+      </div>
       <select id="gieFilterSelect" autocomplete="off" onchange="filterGieAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 260px;">
         <option value="ALL">Todos los GIE</option>
       </select>
@@ -5175,7 +5178,9 @@
 
     function matchesGcrFilter(p, selectedGcr) {
       if (!selectedGcr || selectedGcr === 'ALL') return true;
-      return String(p.gerencia || 'SIN GCR') === selectedGcr;
+      const g = String(p.gerencia || 'SIN GCR');
+      if (Array.isArray(selectedGcr)) return selectedGcr.length === 0 || selectedGcr.includes(g);
+      return g === selectedGcr;
     }
 
     function getRowsForTechFilter(selectedTech = ACTIVE_TECH_FILTER) {
@@ -5211,22 +5216,65 @@
     }
 
     function populateGcrFilterSelect() {
-      const selectEl = document.getElementById('gcrFilterSelect');
-      if (!selectEl) return;
+      const panel = document.getElementById('gcrFilterPanel');
+      if (!panel) return;
 
       const rowsForTechAndGie = getRowsForTechAndGieFilter();
       const gcrs = [...new Set(rowsForTechAndGie.map(p => p.gerencia || 'SIN GCR'))]
         .filter(Boolean)
         .sort((a, b) => a.localeCompare(b, 'es-MX'));
 
-      if (ACTIVE_GCR_FILTER && !gcrs.includes(ACTIVE_GCR_FILTER)) {
+      // Poda la selección a las GCR disponibles (mantén null = todas; nunca [] para no romper checks de "filtro activo").
+      if (Array.isArray(ACTIVE_GCR_FILTER)) {
+        const keep = ACTIVE_GCR_FILTER.filter(g => gcrs.includes(g));
+        ACTIVE_GCR_FILTER = keep.length ? keep : null;
+      } else if (ACTIVE_GCR_FILTER && !gcrs.includes(ACTIVE_GCR_FILTER)) {
         ACTIVE_GCR_FILTER = null;
       }
 
-      selectEl.innerHTML = '<option value="ALL">Todas las GCR</option>' +
-        gcrs.map(gcr => `<option value="${escapeHtml(gcr)}">${escapeHtml(gcr)}</option>`).join('');
-      selectEl.value = ACTIVE_GCR_FILTER || 'ALL';
-      selectEl.disabled = gcrs.length === 0;
+      const sel = Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER : (ACTIVE_GCR_FILTER ? [ACTIVE_GCR_FILTER] : []);
+      const allChecked = sel.length === 0;
+      const row = (val, text, checked) =>
+        `<label style="display:flex;align-items:center;gap:7px;padding:4px 6px;color:#fff;font-size:11px;cursor:pointer;border-radius:5px;white-space:nowrap;">` +
+        `<input type="checkbox" ${checked ? 'checked' : ''} onchange="onGcrCheck('${String(val).replace(/'/g, "\\'")}', this.checked)" style="accent-color:var(--color-dorado-light);cursor:pointer;margin:0;">${text}</label>`;
+      panel.innerHTML =
+        row('ALL', '<b>Todas</b>', allChecked) +
+        '<div style="height:1px;background:rgba(255,255,255,.15);margin:4px 2px;"></div>' +
+        gcrs.map(g => row(g, escapeHtml(g), sel.includes(g))).join('');
+
+      const label = document.getElementById('gcrFilterLabel');
+      if (label) label.textContent = allChecked ? 'Todas' : (sel.length === 1 ? sel[0] : sel.length + ' GCR');
+      const btn = document.getElementById('gcrFilterBtn');
+      if (btn) btn.disabled = gcrs.length === 0;
+    }
+
+    function toggleGcrPanel(e) {
+      if (e) e.stopPropagation();
+      const panel = document.getElementById('gcrFilterPanel');
+      if (!panel) return;
+      const show = panel.style.display === 'none' || !panel.style.display;
+      panel.style.display = show ? 'block' : 'none';
+      if (show) {
+        populateGcrFilterSelect();
+        setTimeout(() => document.addEventListener('click', closeGcrPanelOutside), 0);
+      } else {
+        document.removeEventListener('click', closeGcrPanelOutside);
+      }
+    }
+    function closeGcrPanelOutside(ev) {
+      const wrap = document.getElementById('gcrFilterWrap');
+      if (wrap && !wrap.contains(ev.target)) {
+        const panel = document.getElementById('gcrFilterPanel');
+        if (panel) panel.style.display = 'none';
+        document.removeEventListener('click', closeGcrPanelOutside);
+      }
+    }
+    function onGcrCheck(value, checked) {
+      if (value === 'ALL') { filterGcrAndRebuild(null); return; }
+      let cur = Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER.slice() : [];
+      if (checked) { if (!cur.includes(value)) cur.push(value); }
+      else { cur = cur.filter(x => x !== value); }
+      filterGcrAndRebuild(cur.length ? cur : null);
     }
 
     function getTechBucket(p) {
@@ -5239,7 +5287,7 @@
     function getActiveTechTitleSuffix() {
       const parts = [];
       if (ACTIVE_TECH_FILTER) parts.push(ACTIVE_TECH_FILTER);
-      if (ACTIVE_GCR_FILTER) parts.push(`GCR: ${ACTIVE_GCR_FILTER}`);
+      if (ACTIVE_GCR_FILTER) parts.push('GCR: ' + (Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER.join(' + ') : ACTIVE_GCR_FILTER));
       if (ACTIVE_GIE_FILTER) parts.push(`GIE: ${ACTIVE_GIE_FILTER}`);
       return parts.length ? ` · ${parts.join(' · ')}` : '';
     }
@@ -7209,8 +7257,7 @@
       const gieSelect = document.getElementById('gieFilterSelect');
       if (gieSelect) gieSelect.value = ACTIVE_GIE_FILTER || 'ALL';
 
-      const gcrSelect = document.getElementById('gcrFilterSelect');
-      if (gcrSelect) gcrSelect.value = ACTIVE_GCR_FILTER || 'ALL';
+      populateGcrFilterSelect();
 
       renderNumeralia();
       clearGcrWidgets();
@@ -7243,7 +7290,8 @@
 
     function filterGcrAndRebuild(selectedGcr) {
       const targetSlideIndex = currentSlideIndex;
-      ACTIVE_GCR_FILTER = selectedGcr && selectedGcr !== 'ALL' ? selectedGcr : null;
+      if (Array.isArray(selectedGcr)) ACTIVE_GCR_FILTER = selectedGcr.length ? selectedGcr : null;
+      else ACTIVE_GCR_FILTER = (selectedGcr && selectedGcr !== 'ALL') ? selectedGcr : null;
       rebuildFilteredReport(targetSlideIndex);
     }
 
@@ -13058,12 +13106,59 @@
       }
 
       // ====== MODAL: CONFIGURAR REUNIÓN ======
+      function mrGcrList() {
+        return [...new Set(getData().map(p => p.gerencia).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es-MX'));
+      }
       function populateGcrSelect() {
-        const sel = document.getElementById('mrGcr'); if (!sel) return;
-        const gcrs = [...new Set(getData().map(p => p.gerencia).filter(Boolean))].sort();
-        const prev = sel.value;
-        sel.innerHTML = gcrs.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
-        if (prev && gcrs.includes(prev)) sel.value = prev;
+        const panel = document.getElementById('mrGcrPanel'); if (!panel) return;
+        const hidden = document.getElementById('mrGcr');
+        const gcrs = mrGcrList();
+        const cur = (hidden && hidden.value ? hidden.value.split(' / ') : []).filter(Boolean);
+        const allChecked = gcrs.length > 0 && cur.length === gcrs.length;
+        const row = (val, text, checked) =>
+          `<label style="display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:13px;cursor:pointer;border-radius:6px;color:var(--color-text-dark);">` +
+          `<input type="checkbox" ${checked ? 'checked' : ''} onchange="Minuta.onMrGcrCheck('${String(val).replace(/'/g, "\\'")}', this.checked)" style="accent-color:var(--color-guinda);cursor:pointer;margin:0;">${text}</label>`;
+        panel.innerHTML =
+          row('__ALL__', '<b>Todas</b>', allChecked) +
+          '<div style="height:1px;background:var(--color-gris-claro);margin:4px 2px;"></div>' +
+          gcrs.map(g => row(g, esc(g), cur.includes(g))).join('');
+        syncMrGcrLabel();
+      }
+      function syncMrGcrLabel() {
+        const hidden = document.getElementById('mrGcr'); const label = document.getElementById('mrGcrLabel');
+        if (!label) return;
+        const cur = (hidden && hidden.value ? hidden.value.split(' / ') : []).filter(Boolean);
+        label.textContent = cur.length === 0 ? '— Selecciona una o varias —' : (cur.length === 1 ? cur[0] : cur.length + ' GCR seleccionadas');
+        label.style.color = cur.length ? 'var(--color-text-dark)' : 'var(--color-text-light)';
+      }
+      function onMrGcrCheck(value, checked) {
+        const hidden = document.getElementById('mrGcr'); if (!hidden) return;
+        const gcrs = mrGcrList();
+        let cur = (hidden.value ? hidden.value.split(' / ') : []).filter(Boolean);
+        if (value === '__ALL__') {
+          cur = checked ? gcrs.slice() : [];
+        } else if (checked) {
+          if (!cur.includes(value)) cur.push(value);
+        } else {
+          cur = cur.filter(x => x !== value);
+        }
+        hidden.value = gcrs.filter(g => cur.includes(g)).join(' / ');   // conserva orden
+        populateGcrSelect();
+      }
+      function toggleMrGcrPanel(e) {
+        if (e) e.stopPropagation();
+        const panel = document.getElementById('mrGcrPanel'); if (!panel) return;
+        const show = panel.style.display === 'none' || !panel.style.display;
+        panel.style.display = show ? 'block' : 'none';
+        if (show) { populateGcrSelect(); setTimeout(() => document.addEventListener('click', closeMrGcrOutside), 0); }
+        else document.removeEventListener('click', closeMrGcrOutside);
+      }
+      function closeMrGcrOutside(ev) {
+        const wrap = document.getElementById('mrGcrWrap');
+        if (wrap && !wrap.contains(ev.target)) {
+          const panel = document.getElementById('mrGcrPanel'); if (panel) panel.style.display = 'none';
+          document.removeEventListener('click', closeMrGcrOutside);
+        }
       }
       function buildReunionModal() {
         const o = document.createElement('div');
@@ -13081,7 +13176,13 @@
               </div>
               <div class="minuta-row2">
                 <div class="minuta-field"><label>Gerencia de Control Regional (GCR)</label>
-                  <select id="mrGcr"></select></div>
+                  <div id="mrGcrWrap" style="position: relative;">
+                    <input type="hidden" id="mrGcr">
+                    <button type="button" id="mrGcrBtn" onclick="Minuta.toggleMrGcrPanel(event)" title="Selecciona una o varias GCR" style="width:100%; text-align:left; background:#fff; border:1px solid var(--color-gris-claro); border-radius:8px; padding:9px 12px; font-family:inherit; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                      <span id="mrGcrLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--color-text-light);">— Selecciona una o varias —</span><i class="bi bi-caret-down-fill" style="font-size:10px; color:var(--color-text-light);"></i>
+                    </button>
+                    <div id="mrGcrPanel" onclick="event.stopPropagation()" style="display:none; position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid var(--color-gris-claro); border-radius:8px; padding:6px; max-height:230px; overflow:auto; z-index:60; box-shadow:0 12px 28px rgba(0,0,0,.18);"></div>
+                  </div></div>
                 <div class="minuta-field"><label>Fecha de la reunión</label><input type="date" id="mrFecha"></div>
               </div>
               <div class="minuta-row2">
@@ -13113,8 +13214,8 @@
       }
       function loadPreset(id) {
         const p = PRESETS.find(x => x.id === id); if (!p) return;
-        populateGcrSelect();
         document.getElementById('mrGcr').value = p.gcr;
+        populateGcrSelect();
         document.getElementById('mrFecha').value = p.fecha;
         document.getElementById('mrNombre').value = p.nombre;
         document.getElementById('mrCaptura').value = p.capturadoPor || '';
@@ -13124,8 +13225,8 @@
       function openReunion() {
         const m = document.getElementById('minutaReunionModal');
         populatePresetSelect();
+        document.getElementById('mrGcr').value = reunion ? reunion.gcr : '';
         populateGcrSelect();
-        document.getElementById('mrGcr').value = reunion ? reunion.gcr : (document.getElementById('mrGcr').options[0] || {}).value || '';
         document.getElementById('mrFecha').value = reunion ? reunion.fecha : defaultFecha();
         document.getElementById('mrNombre').value = reunion ? reunion.nombre : '';
         document.getElementById('mrCaptura').value = reunion ? (reunion.capturadoPor || '') : '';
@@ -13143,6 +13244,7 @@
         const nombre = document.getElementById('mrNombre').value.trim() || ('Sesión ' + gcr);
         const capturadoPor = document.getElementById('mrCaptura').value.trim();
         const asistentes = parseAsistentes(document.getElementById('mrAsistentes').value);
+        if (!gcr) { toast('Selecciona al menos una GCR.', true); return; }
         if (!fecha) { toast('Indica la fecha de la reunión.', true); return; }
         const reunionId = [fecha, gcr, nombre].join('|');
         reunion = { reunionId, gcr, fecha, nombre, capturadoPor, asistentes };
@@ -13861,7 +13963,7 @@ ${issues.length ? `<h3>Resumen por tipo de inconsistencia</h3>
       return {
         init, openReunion, saveReunion, openVoto, openVotoFromFicha, saveVoto,
         pickDecision, insertTag, openReporte, renderReporte, exportReportePDF, exportTSV, exportInconsistencias,
-        retrySync, repaintBadges, close, loadPreset, changeVotoReunion, exportMinutaMD, refreshFromSheet, hasReunion: () => !!reunion
+        retrySync, repaintBadges, close, loadPreset, changeVotoReunion, exportMinutaMD, refreshFromSheet, toggleMrGcrPanel, onMrGcrCheck, hasReunion: () => !!reunion
       };
     })();
   </script>
