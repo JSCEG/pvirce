@@ -3455,6 +3455,9 @@
       <select id="gieFilterSelect" autocomplete="off" onchange="filterGieAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 260px;">
         <option value="ALL">Todos los GIE</option>
       </select>
+      <select id="efFilterSelect" autocomplete="off" onchange="filterEfAndRebuild(this.value)" title="Filtrar por Entidad Federativa (columna del Sheet)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 220px;">
+        <option value="ALL">Todas las entidades</option>
+      </select>
     </div>
   </div>
 
@@ -3833,6 +3836,7 @@
     let ALL_DATA = [];
     let ACTIVE_TECH_FILTER = null;
     let ACTIVE_GIE_FILTER = null;
+    let ACTIVE_EF_FILTER = null;
     let ACTIVE_GCR_FILTER = null;
     let ACTIVE_SELECTION_SCOPE = false;
     let DATA = [];
@@ -5192,8 +5196,15 @@
       return getRowsForTechFilter().filter(p => matchesGieFilter(p, ACTIVE_GIE_FILTER));
     }
 
+    function matchesEfFilter(p, selectedEf) {
+      if (!selectedEf || selectedEf === 'ALL') return true;
+      return String(p.ef || 'SIN ENTIDAD') === selectedEf;   // columna Entidad Federativa (no coordenadas)
+    }
+    function getRowsBeforeEf() {
+      return getRowsForTechAndGieFilter().filter(p => matchesGcrFilter(p, ACTIVE_GCR_FILTER));
+    }
     function applyActiveFilters() {
-      DATA = getRowsForTechAndGieFilter().filter(p => matchesGcrFilter(p, ACTIVE_GCR_FILTER));
+      DATA = getRowsBeforeEf().filter(p => matchesEfFilter(p, ACTIVE_EF_FILTER));
     }
 
     function populateGieFilterSelect() {
@@ -5213,6 +5224,21 @@
         gies.map(gie => `<option value="${escapeHtml(gie)}">${escapeHtml(gie)}</option>`).join('');
       selectEl.value = ACTIVE_GIE_FILTER || 'ALL';
       selectEl.disabled = gies.length === 0;
+    }
+
+    function populateEfFilterSelect() {
+      const selectEl = document.getElementById('efFilterSelect');
+      if (!selectEl) return;
+      const efs = [...new Set(getRowsBeforeEf().map(p => p.ef || 'SIN ENTIDAD'))]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'es-MX'));
+      if (ACTIVE_EF_FILTER && !efs.includes(ACTIVE_EF_FILTER)) {
+        ACTIVE_EF_FILTER = null;
+      }
+      selectEl.innerHTML = '<option value="ALL">Todas las entidades</option>' +
+        efs.map(ef => `<option value="${escapeHtml(ef)}">${escapeHtml(ef)}</option>`).join('');
+      selectEl.value = ACTIVE_EF_FILTER || 'ALL';
+      selectEl.disabled = efs.length === 0;
     }
 
     function populateGcrFilterSelect() {
@@ -5289,6 +5315,7 @@
       if (ACTIVE_TECH_FILTER) parts.push(ACTIVE_TECH_FILTER);
       if (ACTIVE_GCR_FILTER) parts.push('GCR: ' + (Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER.join(' + ') : ACTIVE_GCR_FILTER));
       if (ACTIVE_GIE_FILTER) parts.push(`GIE: ${ACTIVE_GIE_FILTER}`);
+      if (ACTIVE_EF_FILTER) parts.push(`Entidad: ${ACTIVE_EF_FILTER}`);
       return parts.length ? ` · ${parts.join(' · ')}` : '';
     }
 
@@ -7249,6 +7276,7 @@
     function rebuildFilteredReport(targetSlideIndex = currentSlideIndex) {
       populateGieFilterSelect();
       populateGcrFilterSelect();
+      populateEfFilterSelect();
       applyActiveFilters();
 
       const techSelect = document.getElementById('techFilterSelect');
@@ -7256,6 +7284,9 @@
 
       const gieSelect = document.getElementById('gieFilterSelect');
       if (gieSelect) gieSelect.value = ACTIVE_GIE_FILTER || 'ALL';
+
+      const efSelect = document.getElementById('efFilterSelect');
+      if (efSelect) efSelect.value = ACTIVE_EF_FILTER || 'ALL';
 
       populateGcrFilterSelect();
 
@@ -7285,6 +7316,12 @@
     function filterGieAndRebuild(selectedGie) {
       const targetSlideIndex = currentSlideIndex;
       ACTIVE_GIE_FILTER = selectedGie && selectedGie !== 'ALL' ? selectedGie : null;
+      rebuildFilteredReport(targetSlideIndex);
+    }
+
+    function filterEfAndRebuild(selectedEf) {
+      const targetSlideIndex = currentSlideIndex;
+      ACTIVE_EF_FILTER = selectedEf && selectedEf !== 'ALL' ? selectedEf : null;
       rebuildFilteredReport(targetSlideIndex);
     }
 
@@ -12320,6 +12357,7 @@
         .then(() => {
           populateGieFilterSelect();
           populateGcrFilterSelect();
+          populateEfFilterSelect();
           applyActiveFilters();
           renderNumeralia();
           generateGcrTables();
@@ -13487,7 +13525,8 @@
       function hasPresentationFilters() {
         return !!((typeof ACTIVE_TECH_FILTER !== 'undefined' && ACTIVE_TECH_FILTER) ||
           (typeof ACTIVE_GIE_FILTER !== 'undefined' && ACTIVE_GIE_FILTER) ||
-          (typeof ACTIVE_GCR_FILTER !== 'undefined' && ACTIVE_GCR_FILTER));
+          (typeof ACTIVE_GCR_FILTER !== 'undefined' && ACTIVE_GCR_FILTER) ||
+          (typeof ACTIVE_EF_FILTER !== 'undefined' && ACTIVE_EF_FILTER));
       }
       function applyPresentationFiltersToVoteRows(rows) {
         if (!hasPresentationFilters()) return rows;
