@@ -12946,13 +12946,14 @@ ${votoRows}
         const proyAfectados = Object.keys(byFolio).length;
         const sinInc = rows.length - proyAfectados;
 
-        const tipoRows = Object.entries(byType).sort((a, b) => b[1].length - a[1].length).map(([type, arr]) => {
+        const typeRows = Object.entries(byType).sort((a, b) => b[1].length - a[1].length).map(([type, arr]) => {
           const cfg = labelOf(type);
           return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${cfg.color};margin-right:7px;vertical-align:middle;"></span>${esc(cfg.label)}</td><td style="text-align:right;font-weight:800;">${arr.length}</td></tr>`;
-        }).join('');
+        });
+        const tipoRows = typeRows.join('');
 
         const decClassOf = d => d === 'Continúa' ? 'c' : d === 'No continúa' ? 'n' : 'p';
-        const detRows = Object.entries(byFolio).sort((a, b) => b[1].length - a[1].length).map(([folio, arr]) => {
+        const detailRows = Object.entries(byFolio).sort((a, b) => b[1].length - a[1].length).map(([folio, arr]) => {
           const p0 = arr[0]; const dec = decByFolio[folio] || '—';
           const items = arr.slice().sort((a, b) => (sevRank[a.severity] ?? 9) - (sevRank[b.severity] ?? 9)).map(it => {
             const cfg = labelOf(it.type);
@@ -12960,7 +12961,9 @@ ${votoRows}
             return `<li><span style="display:inline-block;min-width:54px;font-weight:800;color:${sevColor[it.severity] || '#555'};text-transform:uppercase;font-size:9px;">${esc(it.severity || '')}</span> <b>${esc(cfg.label)}</b>: ${esc(it.detail || '')}${src}</li>`;
           }).join('');
           return `<tr><td><b>${esc(p0.nombre || '—')}</b><br><span style="color:#64748b;font-size:10px;">${esc(folio)}</span></td><td>${esc(p0.gie || '—')}</td><td><span class="dec ${decClassOf(dec)}">${esc(dec)}</span></td><td style="text-align:center;font-weight:800;">${arr.length}</td><td><ul style="margin:0;padding-left:16px;">${items}</ul></td></tr>`;
-        }).join('');
+        });
+        const detailTableHead = '<tr><th>Proyecto / Folio</th><th>GIE</th><th>Decisión</th><th style="text-align:center;">N°</th><th>Inconsistencias detectadas</th></tr>';
+        const detRows = detailRows.join('');
 
         const stamp = new Date().toLocaleString('es-MX');
         const html = `
@@ -12981,6 +12984,9 @@ td{padding:7px 9px;border-bottom:1px solid #eee;vertical-align:top;}tr:nth-child
 .dec{font-weight:800;white-space:nowrap;font-size:11px;}.dec.c{color:#1E5B4F;}.dec.n{color:#9B2247;}.dec.p{color:#7a5e1f;}
 .ok{padding:34px;text-align:center;color:#1E5B4F;font-weight:700;font-size:16px;}
 .foot{margin-top:22px;font-size:10px;color:#9ca3af;text-align:center;border-top:1px solid #eee;padding-top:10px;}
+.page-mini-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid #9B2247;padding-bottom:8px;margin-bottom:10px;}
+.page-mini-head .t1{font-size:15px;font-weight:800;color:#9B2247;}.page-mini-head .t2{font-size:10.5px;color:#555;margin-top:2px;}
+.page-mini-head .pnum{font-size:10px;color:#64748b;font-weight:700;text-align:right;}
 </style><div class="doc">
 <div class="head"><div class="t1">Reporte de inconsistencias de información</div><div class="t2">Segunda Convocatoria a Particulares · Proyectos evaluados en la sesión</div>
 <div class="meta"><b>Reunión:</b> ${esc(meta.titulo)} &nbsp;·&nbsp; <b>GCR:</b> ${esc(meta.gcr)}${meta.fecha ? (' &nbsp;·&nbsp; <b>Fecha:</b> ' + esc(meta.fecha)) : ''} &nbsp;·&nbsp; <b>Generado:</b> ${esc(stamp)}</div></div>
@@ -12992,7 +12998,7 @@ td{padding:7px 9px;border-bottom:1px solid #eee;vertical-align:top;}tr:nth-child
 ${issues.length ? `<h3>Resumen por tipo de inconsistencia</h3>
 <table><thead><tr><th>Tipo</th><th style="text-align:right;">Casos</th></tr></thead><tbody>${tipoRows}</tbody></table>
 <h3>Detalle por proyecto</h3>
-<table><thead><tr><th>Proyecto / Folio</th><th>GIE</th><th>Decisión</th><th style="text-align:center;">N°</th><th>Inconsistencias detectadas</th></tr></thead><tbody>${detRows}</tbody></table>`
+<table><thead>${detailTableHead}</thead><tbody>${detRows}</tbody></table>`
 : `<div class="ok">✓ Sin inconsistencias detectadas en los proyectos votados de esta vista.</div>`}
 <div class="foot">Generado desde el reporte de minutas · Auditoría VUPE · Secretaría de Energía — DGMESNIE</div>
 </div>`;
@@ -13007,43 +13013,55 @@ ${issues.length ? `<h3>Resumen por tipo de inconsistencia</h3>
         toast('Generando PDF de inconsistencias…');
         try {
           const { jsPDF } = window.jspdf;
-          const node = stage.querySelector('.doc') || stage;
-          const canvas = await html2canvas(node, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, windowWidth: node.scrollWidth, windowHeight: node.scrollHeight });
           const pdfFmt = [338.6582, 190.5];
           const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: pdfFmt });
           const pageW = pdf.internal.pageSize.getWidth();
           const pageH = pdf.internal.pageSize.getHeight();
           const margin = 6;
-          const imgW = pageW - margin * 2;
-          const mmPerPx = imgW / canvas.width;
-          const pageContentPx = (pageH - margin * 2) / mmPerPx;
 
-          if (canvas.height * mmPerPx <= pageH - margin * 2) {
-            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, canvas.height * mmPerPx);
-          } else {
-            const docRect = node.getBoundingClientRect();
-            const sc = canvas.height / docRect.height;
-            const safe = [];
-            node.querySelectorAll('.cards, h3, table thead tr, table tbody tr, .ok, .foot')
-              .forEach(el => safe.push((el.getBoundingClientRect().bottom - docRect.top) * sc));
-            safe.push(canvas.height);
-            const cuts = Array.from(new Set(safe.map(v => Math.round(v)))).sort((a, b) => a - b);
-            let y0 = 0;
-            let firstPage = true;
-            while (y0 < canvas.height - 1) {
-              const maxY = y0 + pageContentPx;
-              let y1 = maxY >= canvas.height ? canvas.height : cuts.filter(c => c > y0 + 1 && c <= maxY).pop();
-              if (!y1) y1 = Math.round(maxY);
-              const sliceH = y1 - y0;
-              const slice = document.createElement('canvas');
-              slice.width = canvas.width;
-              slice.height = sliceH;
-              slice.getContext('2d').drawImage(canvas, 0, y0, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
-              if (!firstPage) pdf.addPage(pdfFmt, 'l');
-              firstPage = false;
-              pdf.addImage(slice.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, sliceH * mmPerPx);
-              y0 = y1;
+          const addNodeToPdf = async (node, addNewPage) => {
+            const canvas = await html2canvas(node, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, windowWidth: node.scrollWidth, windowHeight: node.scrollHeight });
+            const imgW = pageW - margin * 2;
+            const imgH = canvas.height * imgW / canvas.width;
+            if (addNewPage) pdf.addPage(pdfFmt, 'l');
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgW, Math.min(imgH, pageH - margin * 2));
+          };
+
+          if (issues.length) {
+            const styleHtml = stage.querySelector('style')?.outerHTML || '';
+            const pages = [{ kind: 'cover' }];
+            for (let i = 0; i < typeRows.length; i += 12) {
+              pages.push({ kind: 'types', rows: typeRows.slice(i, i + 12) });
             }
+            for (let i = 0; i < detailRows.length; i += 4) {
+              pages.push({ kind: 'detail', rows: detailRows.slice(i, i + 4) });
+            }
+            const totalPages = Math.max(1, pages.length);
+            for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+              const page = pages[pageIndex] || { kind: 'cover' };
+              const isFirst = page.kind === 'cover';
+              const pageHeader = isFirst
+                ? `<div class="head"><div class="t1">Reporte de inconsistencias de información</div><div class="t2">Segunda Convocatoria a Particulares · Proyectos evaluados en la sesión</div><div class="meta"><b>Reunión:</b> ${esc(meta.titulo)} &nbsp;·&nbsp; <b>GCR:</b> ${esc(meta.gcr)}${meta.fecha ? (' &nbsp;·&nbsp; <b>Fecha:</b> ' + esc(meta.fecha)) : ''} &nbsp;·&nbsp; <b>Generado:</b> ${esc(stamp)}</div></div>`
+                : `<div class="page-mini-head"><div><div class="t1">Reporte de inconsistencias de información</div><div class="t2">${esc(meta.titulo)} · Detalle por proyecto</div></div><div class="pnum">Página ${pageIndex + 1} de ${totalPages}<br>${esc(stamp)}</div></div>`;
+              let pageBody = '';
+              if (page.kind === 'cover') {
+                pageBody = `<div class="cards">
+<div class="card"><div class="v">${fmt(rows.length)}</div><div class="l">Proyectos votados</div></div>
+<div class="card"><div class="v">${fmt(proyAfectados)}</div><div class="l">Con inconsistencias</div></div>
+<div class="card ok2"><div class="v">${fmt(sinInc)}</div><div class="l">Sin inconsistencias</div></div>
+<div class="card"><div class="v">${fmt(issues.length)}</div><div class="l">Inconsistencias totales</div></div></div>
+<div class="ok" style="font-size:13px;color:#64748b;">El resumen por tipo y el detalle por proyecto continúan en las siguientes páginas.</div>`;
+              } else if (page.kind === 'types') {
+                pageBody = `<h3>Resumen por tipo de inconsistencia</h3><table><thead><tr><th>Tipo</th><th style="text-align:right;">Casos</th></tr></thead><tbody>${(page.rows || []).join('')}</tbody></table>`;
+              } else {
+                pageBody = `<h3>Detalle por proyecto</h3><table><thead>${detailTableHead}</thead><tbody>${(page.rows || []).join('')}</tbody></table>`;
+              }
+              stage.innerHTML = `${styleHtml}<div class="doc">${pageHeader}${pageBody}<div class="foot">Generado desde el reporte de minutas · Auditoría VUPE · Secretaría de Energía — DGMESNIE</div></div>`;
+              await addNodeToPdf(stage.querySelector('.doc') || stage, pageIndex > 0);
+            }
+          } else {
+            const node = stage.querySelector('.doc') || stage;
+            await addNodeToPdf(node, false);
           }
 
           pdf.save(fname);
