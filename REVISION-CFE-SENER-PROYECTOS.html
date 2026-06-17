@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisión CFE y SENER — Conciliación a nivel proyecto · Segunda Convocatoria 2026</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    @font-face { font-family: 'Patria'; src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype'); font-weight: 400; }
+    @font-face { font-family: 'Patria'; src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype'); font-weight: 700; }
+    @font-face { font-family: 'Patria'; src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype'); font-weight: 300; }
+
+    :root {
+      --color-guinda: #9B2247;
+      --color-guinda-light: #B24C6C;
+      --color-verde: #1E5B4F;
+      --color-dorado: #A57F2C;
+      --color-dorado-light: #D6B46A;
+      --color-gris: #98989A;
+      --color-gris-claro: #E5E5E5;
+      --color-bg-dark: #1E1E1E;
+      --color-text-dark: #2b2b2b;
+      --color-text-light: #666666;
+      --color-bg-light: #F4F6F8;
+      --color-cfe: #1E5B4F;
+      --color-sener: #9B2247;
+      --scale: 1.0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      background-color: var(--color-bg-dark);
+      color: var(--color-text-dark);
+      overflow: hidden;
+      width: 100vw; height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    foreignObject body { display: block; width: auto; height: auto; background: transparent; }
+
+    #preloader {
+      position: fixed; inset: 0; background: var(--color-bg-dark);
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 9999; color: #fff; font-family: 'Outfit', sans-serif; transition: opacity 0.5s ease;
+    }
+    .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 255, 255, 0.1); border-top-color: var(--color-dorado); border-radius: 50%; animation: spin 1s infinite linear; margin-bottom: 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+    .slide {
+      width: 100vw; height: 100vh; position: absolute; inset: 0; display: none;
+      justify-content: center; align-items: center; background-color: var(--color-bg-dark);
+      opacity: 0; transition: opacity 0.4s ease-in-out; z-index: 1;
+    }
+    .slide.active { display: flex; opacity: 1; z-index: 2; }
+
+    .slide-container {
+      width: 1333px; height: 750px; background-color: #ffffff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); position: relative; flex-shrink: 0;
+      overflow: hidden; display: flex; flex-direction: column; padding: 35px 45px; transform-origin: center center;
+    }
+
+    .slide-header {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%); padding: 14px 28px;
+      display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center;
+      border-bottom: 2px solid var(--color-guinda); margin: -35px -45px 15px; width: calc(100% + 90px);
+    }
+    .slide-header .brand-left { font-size: 19px; font-weight: 700; color: var(--color-guinda); letter-spacing: .02em; display: flex; flex-direction: column; justify-content: center; line-height: 1.15; }
+    .slide-header .brand-left .brand-line-2 { font-size: 13px; font-weight: 600; color: var(--color-dorado); }
+    .slide-header .ef-title { font-size: 23px; font-weight: 700; color: var(--color-text-dark); text-align: center; text-transform: uppercase; letter-spacing: .02em; }
+    .slide-header .ef-title::before, .slide-header .ef-title::after { content: '·'; color: var(--color-dorado); margin: 0 12px; font-size: 23px; }
+    .slide-header .logo-right { display: flex; justify-content: flex-end; align-items: center; }
+    .slide-header .logo-sener { height: 38px; }
+
+    .slide-footer {
+      margin-top: auto; height: 8px; width: calc(100% + 90px); margin-left: -45px; margin-bottom: -35px;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 60%, var(--color-dorado) 60%, var(--color-dorado) 100%); flex-shrink: 0;
+    }
+
+    #presentationControls {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; background: rgba(30, 30, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+      padding: 8px 18px; border-radius: 30px; z-index: 1000; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      gap: 15px; color: #fff; font-family: 'Outfit', sans-serif; font-size: 14px;
+    }
+    .control-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 16px; display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; border-radius: 50%; transition: background 0.2s; }
+    .control-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .control-btn:disabled { color: #666; cursor: not-allowed; }
+
+    .slide.cover .slide-container { background: #6a172f; color: white; padding: 0; justify-content: flex-start; }
+    .slide.cover .cover-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .slide.cover .cover-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(155, 34, 71, .35) 0%, rgba(30, 91, 79, .25) 60%, rgba(0, 0, 0, .45) 100%); z-index: 1; }
+    .slide.cover .top-band, .slide.cover .body, .slide.cover .bottom-band { position: relative; z-index: 2; }
+    .slide.cover .top-band { background: rgba(255, 255, 255, .96); padding: 18px 56px; display: flex; align-items: center; gap: 24px; border-bottom: 4px solid var(--color-dorado); width: 100%; }
+    .slide.cover .top-band img.gob { height: 56px; width: auto; }
+    .slide.cover .top-band img.sener { height: 48px; width: auto; }
+    .slide.cover .top-band .divider { width: 1px; height: 48px; background: var(--color-gris); }
+    .slide.cover .top-band .unit { font-size: 11px; color: var(--color-text-dark); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; margin-left: auto; }
+    .slide.cover .body { flex: 1 1 auto; min-height: 0; padding: 40px 60px 64px 26%; display: flex; flex-direction: column; justify-content: flex-start; gap: 14px; text-align: left; }
+    .slide.cover .eyebrow { font-size: 14px; letter-spacing: .25em; text-transform: uppercase; color: var(--color-dorado); font-weight: 700; }
+    .slide.cover h1 { font-weight: 700; font-size: 56px; line-height: 1.02; max-width: 920px; color: white; text-shadow: 0 2px 12px rgba(0, 0, 0, .3); }
+    .slide.cover .unidad { font-weight: 300; font-size: 26px; line-height: 1.3; color: white; max-width: 760px; text-shadow: 0 2px 8px rgba(0, 0, 0, .4); margin-top: 10px; }
+    .slide.cover .unidad-sub { font-weight: 300; font-size: 20px; line-height: 1.7; color: rgba(255, 255, 255, .92); max-width: 760px; text-shadow: 0 1px 4px rgba(0, 0, 0, .3); margin-top: 6px; }
+    .slide.cover .unidad-sub-destacada { margin-top: 10px; padding: 8px 14px 10px; max-width: 880px; font-size: 18px; line-height: 1.45; background: rgba(0, 0, 0, 0.28); border-left: 4px solid var(--color-dorado); border-radius: 0 8px 8px 0; }
+    .slide.cover .unidad-sub-destacada .acronym { color: var(--color-dorado); font-weight: 700; letter-spacing: .04em; }
+    .slide.cover .subtitle { font-weight: 600; font-size: 26px; color: #fff; margin-top: 22px; text-align: right; text-shadow: 0 2px 8px rgba(0, 0, 0, .32); }
+    .slide.cover .meta { margin-top: 16px; display: grid; grid-template-columns: repeat(3, max-content); gap: 24px; justify-content: flex-end; margin-left: auto; }
+    .slide.cover .meta-item { min-width: 110px; text-align: right; }
+    .slide.cover .meta-item .meta-label { display: block; font-size: 15px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: rgba(165, 127, 44, .92); margin-bottom: 2px; }
+    .slide.cover .meta-item .meta-value { display: block; font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, .95); white-space: nowrap; }
+    .slide.cover .bottom-band { margin-top: auto; flex: 0 0 14px; width: 100%; background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 33%, var(--color-verde) 33%, var(--color-verde) 66%, var(--color-dorado) 66%); }
+
+    .content-grid { display: grid; gap: 20px; flex-grow: 1; min-height: 0; }
+    .col-stack { display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+
+    .kpi-card-main { background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%); color: #fff; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 8px 20px rgba(105, 27, 49, .25); }
+    .kpi-card-main .lbl { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--color-dorado-light); }
+    .kpi-card-main .val-main { font-size: 56px; font-weight: 700; line-height: 1.05; color: #F2CB67; }
+    .kpi-card-main .val-sub { font-size: 18px; font-weight: 600; color: #fff; }
+
+    .panel-card { background: #fff; border: 1px solid var(--color-gris-claro); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; min-height: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .06); }
+    .panel-card h3 { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--color-guinda); border-bottom: 2px solid var(--color-dorado); padding-bottom: 6px; margin-bottom: 10px; }
+    .panel-card .chart-host { flex: 1 1 auto; min-height: 0; }
+
+    .kpi-box { background: var(--color-bg-light); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+    .kpi-box.cfe { border-left: 5px solid var(--color-cfe); }
+    .kpi-box.sener { border-left: 5px solid var(--color-sener); }
+    .kpi-box.dorado { border-left: 5px solid var(--color-dorado); }
+    .kpi-box.cfe .s-val { color: var(--color-cfe); }
+    .kpi-box.sener .s-val { color: var(--color-sener); }
+    .kpi-box.dorado .s-val { color: var(--color-dorado); }
+    .kpi-box .s-lbl { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--color-text-light); }
+    .kpi-box .s-val { font-size: 34px; font-weight: 700; color: var(--color-guinda); line-height: 1.1; }
+    .kpi-box .s-sub { font-size: 14px; font-weight: 600; color: var(--color-text-dark); }
+
+    .report-table { width: 100%; border-collapse: collapse; font-family: 'Montserrat', sans-serif; font-size: 12px; }
+    .report-table thead th { background: var(--color-guinda); color: #fff; padding: 8px 10px; text-transform: uppercase; font-size: 11px; letter-spacing: .04em; text-align: left; }
+    .report-table tbody td { padding: 8px 10px; border-bottom: 1px solid var(--color-gris-claro); vertical-align: middle; }
+    .report-table tbody tr:nth-child(even) { background: #FAFBFC; }
+    .report-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .report-table .pos { color: var(--color-cfe); font-weight: 700; }
+    .report-table .zero { color: var(--color-gris); }
+    .report-table tfoot td { padding: 9px 10px; font-weight: 700; border-top: 2px solid var(--color-guinda); color: var(--color-guinda); }
+    .report-table tr.row-hl { background: #FBEFD6 !important; }
+
+    .note-body { font-family: 'Outfit', sans-serif; font-size: 15px; line-height: 1.5; color: #3a3a3a; flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+    .note-body p strong { color: var(--color-guinda); }
+    .note-body .src-cfe { color: var(--color-cfe); font-weight: 700; }
+    .note-body .src-sener { color: var(--color-sener); font-weight: 700; }
+
+    .diff-pill { display: inline-block; padding: 3px 12px; border-radius: 999px; font-weight: 700; font-size: 13px; font-family: 'Outfit', sans-serif; }
+    .diff-pill.pos { background: #E3F1EC; color: var(--color-cfe); }
+    .diff-pill.neg { background: #F6E1E8; color: var(--color-sener); }
+    .diff-pill.neu { background: #EEEEEE; color: #666; }
+
+    .badge-status { display: inline-block; padding: 2px 9px; border-radius: 6px; font-size: 10.5px; font-weight: 700; font-family: 'Outfit', sans-serif; white-space: nowrap; }
+    .badge-warn { background: #FBEFD6; color: var(--color-dorado); }
+    .badge-neutral { background: #EEEEEE; color: #666; }
+
+    .note-strip { background: var(--color-bg-light); border-radius: 10px; padding: 12px 18px; font-family: 'Outfit', sans-serif; font-size: 14px; color: #444; display: flex; gap: 26px; justify-content: center; flex-wrap: wrap; flex-shrink: 0; }
+    .note-strip span { display: inline-flex; align-items: center; gap: 8px; }
+    .note-strip b { color: var(--color-guinda); }
+
+    .hallazgo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 16px; flex-grow: 1; min-height: 0; }
+    .hallazgo-card { background: #fff; border: 1px solid var(--color-gris-claro); border-left: 5px solid var(--color-guinda); border-radius: 12px; padding: 15px 17px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 14px rgba(0, 0, 0, .06); }
+    .hallazgo-card .h-head { display: flex; align-items: center; gap: 10px; }
+    .hallazgo-card .h-icon { font-size: 22px; color: var(--color-dorado); flex: 0 0 auto; }
+    .hallazgo-card .h-title { font-weight: 700; font-size: 14px; color: var(--color-guinda); text-transform: uppercase; letter-spacing: .03em; line-height: 1.15; }
+    .hallazgo-card .h-text { font-family: 'Outfit', sans-serif; font-size: 13.5px; line-height: 1.4; color: #444; }
+    .hallazgo-card .h-text b { color: var(--color-text-dark); }
+
+    .porque-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; flex-grow: 1; min-height: 0; align-content: center; }
+    .porque-card { background: #fff; border: 1px solid var(--color-gris-claro); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 14px rgba(0, 0, 0, .06); }
+    .porque-card .p-num { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--color-guinda), #4D1222); color: #F2CB67; font-weight: 700; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+    .porque-card .p-body { font-family: 'Outfit', sans-serif; }
+    .porque-card .p-title { font-weight: 700; font-size: 15px; color: var(--color-guinda); }
+    .porque-card .p-text { font-size: 13.5px; line-height: 1.4; color: #444; }
+
+    .cierre-wrap { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 24px; padding: 6px 36px; }
+    .cierre-quote { font-family: 'Outfit', sans-serif; font-size: 21px; line-height: 1.55; color: #2b2b2b; border-left: 6px solid var(--color-dorado); padding: 8px 0 8px 26px; }
+    .cierre-quote strong { color: var(--color-guinda); }
+    .cierre-reco { background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%); color: #fff; border-radius: 14px; padding: 22px 28px; box-shadow: 0 8px 20px rgba(105, 27, 49, .25); }
+    .cierre-reco h4 { color: var(--color-dorado-light); text-transform: uppercase; font-size: 14px; letter-spacing: .08em; margin-bottom: 8px; }
+    .cierre-reco p { font-family: 'Outfit', sans-serif; font-size: 18px; line-height: 1.5; }
+
+    #pdfLoader { position: fixed; inset: 0; background: rgba(20, 20, 20, .82); display: none; flex-direction: column; justify-content: center; align-items: center; gap: 16px; z-index: 10000; color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; }
+    body.exporting #presentationControls { display: none; }
+    body.exporting .chart-fullscreen-modal { display: none !important; }
+
+    .panel-card .panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .panel-card .panel-head h3 { flex: 1 1 auto; }
+    .chart-fs-btn { flex: 0 0 auto; height: 26px; min-width: 26px; border: 0; border-radius: 999px; background: var(--color-guinda); color: #fff; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: filter .15s, transform .15s; }
+    .chart-fs-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .chart-fullscreen-modal { position: fixed; inset: 0; display: none; z-index: 13000; background: rgba(30, 30, 30, .92); }
+    .chart-fullscreen-modal.show { display: flex; align-items: center; justify-content: center; }
+    .chart-fullscreen-shell { width: min(100vw, calc(100vh * 1333 / 750)); height: min(100vh, calc(100vw * 750 / 1333)); background: #fff; box-shadow: 0 24px 90px rgba(0, 0, 0, .45); display: flex; flex-direction: column; overflow: hidden; border-bottom: 8px solid var(--color-guinda); }
+    .chart-fullscreen-head { height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 24px; border-bottom: 4px solid var(--color-dorado); background: linear-gradient(180deg, #fff, #f7f7f7); font-weight: 700; font-size: 20px; color: var(--color-guinda); text-transform: uppercase; letter-spacing: .04em; }
+    .chart-fullscreen-head button { height: 34px; min-width: 34px; border: 0; border-radius: 999px; background: var(--color-guinda); color: #fff; cursor: pointer; font-weight: 800; font-size: 15px; }
+    #fullscreenChart { flex: 1; min-height: 0; padding: 12px 18px 18px; }
+  </style>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="spinner"></div>
+    <p id="preloaderMsg">Preparando presentación…</p>
+  </div>
+
+  <div id="pdfLoader">
+    <div class="spinner"></div>
+    <p id="pdfLoaderMsg">Generando PDF…</p>
+  </div>
+
+  <div id="deck">
+
+    <!-- SLIDE 0: PORTADA -->
+    <section class="slide cover active" id="slide-0">
+      <div class="slide-container">
+        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt="" onerror="this.style.display='none'">
+        <div class="cover-overlay"></div>
+        <div class="top-band">
+          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México" onerror="this.style.display='none'">
+          <div class="divider"></div>
+          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'">
+          <div class="unit">DGMESNIE</div>
+        </div>
+        <div class="body">
+          <div class="eyebrow">Segunda Convocatoria · 2026</div>
+          <h1>Revisión de información<br>CFE y SENER</h1>
+          <div class="unidad">Subsecretaría de Planeación y Transición Energética</div>
+          <div class="unidad-sub">Unidad del Sistema Nacional de Información Energética</div>
+          <div class="unidad-sub unidad-sub-destacada">Dirección General de Metodologías y Estadísticas del Sistema
+            Nacional de Información Energética — <span class="acronym">DGMESNIE</span></div>
+          <div class="subtitle">Conciliación proyecto a proyecto</div>
+          <div class="meta">
+            <div class="meta-item"><span class="meta-label">Versión</span><span class="meta-value">2.0</span></div>
+            <div class="meta-item"><span class="meta-label">Fecha</span><span class="meta-value" id="coverFecha">—</span></div>
+            <div class="meta-item"><span class="meta-label">Amarre</span><span class="meta-value">Folio Proyecto</span></div>
+          </div>
+        </div>
+        <div class="bottom-band"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 1: RESULTADO DEL AMARRE -->
+    <section class="slide" id="slide-1">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">Resultado del amarre</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 300px 1fr 350px;">
+          <div class="col-stack">
+            <div class="kpi-card-main">
+              <span class="lbl">Proyectos que coinciden</span>
+              <span class="val-main" data-count="224">224</span>
+              <span class="val-sub">amarran en ambas fuentes</span>
+            </div>
+            <div class="kpi-box cfe">
+              <span class="s-lbl">Solo en CFE</span>
+              <span class="s-val" data-count="0">0</span>
+              <span class="s-sub">proyectos</span>
+            </div>
+            <div class="kpi-box dorado">
+              <span class="s-lbl">Solo en SENER</span>
+              <span class="s-val" data-count="3">3</span>
+              <span class="s-sub">proyectos adicionales</span>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Universo de registros (227)</h3>
+              <button class="chart-fs-btn" onclick="openChartFullscreen('chEstado','Universo de registros (227)')" title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chEstado"></div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Criterio de amarre</h3>
+            <div class="note-body">
+              <p>Cruce por <strong>Folio Proyecto</strong>; capacidades validadas por <strong>Folio</strong> y <strong>Gerencia Regional</strong>.</p>
+              <p>Los <strong>224 proyectos comunes</strong> amarran al 100% en gerencia y capacidad contratada: <span class="diff-pill pos">sin diferencias</span></p>
+              <p>El campo de gerencia CENACE viene <strong>«Sin información»</strong> en los 227 registros, por lo que el cruce se hizo por Gerencia Regional.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: TOTALES POR CAMPO -->
+    <section class="slide" id="slide-2">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">Totales por campo</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 280px 1.05fr 1fr;">
+          <div class="col-stack">
+            <div class="kpi-card-main">
+              <span class="lbl">Diferencia · Capacidad contratada</span>
+              <span class="val-main">+60</span>
+              <span class="val-sub">MW (SENER − CFE)</span>
+            </div>
+            <div class="kpi-box dorado">
+              <span class="s-lbl">Origen de la diferencia</span>
+              <span class="s-val" data-count="3">3</span>
+              <span class="s-sub">proyectos · 20 MW c/u</span>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Totales CFE vs SENER (MW)</h3>
+            <table class="report-table">
+              <thead>
+                <tr><th>Campo</th><th class="num">CFE</th><th class="num">SENER</th><th class="num">Dif.</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Capacidad contratada</td><td class="num">32,200.78</td><td class="num">32,260.78</td><td class="num pos">+60</td></tr>
+                <tr><td>Capacidad instalada neta</td><td class="num">32,856.61</td><td class="num">32,916.61</td><td class="num pos">+60</td></tr>
+                <tr><td>Capacidad instalada</td><td class="num">36,625.27</td><td class="num">36,697.27</td><td class="num pos">+72</td></tr>
+                <tr><td>Generación (MWh)</td><td class="num">98,096.77</td><td class="num">98,156.77</td><td class="num pos">+60</td></tr>
+                <tr><td>Potencia SAEE</td><td class="num">10,334.12</td><td class="num">10,394.12</td><td class="num pos">+60</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td>Proyectos</td><td class="num">224</td><td class="num">227</td><td class="num">+3</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Diferencia por campo (SENER − CFE)</h3>
+              <button class="chart-fs-btn" onclick="openChartFullscreen('chDiferencias','Diferencia por campo (SENER − CFE)')" title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chDiferencias"></div>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: DIFERENCIAS POR REGIÓN -->
+    <section class="slide" id="slide-3">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">Diferencias por región</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 360px;">
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Proyectos por gerencia regional — CFE vs SENER</h3>
+              <button class="chart-fs-btn" onclick="openChartFullscreen('chRegionProy','Proyectos por gerencia regional — CFE vs SENER')" title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chRegionProy"></div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Lectura</h3>
+            <div class="note-body">
+              <p><strong>Una sola región difiere:</strong> Peninsular pasa de <strong>42 a 45</strong> proyectos.</p>
+              <p><span class="diff-pill neg">Peninsular: +3 proyectos · +60 MW</span></p>
+              <p>Las otras seis gerencias —Baja California, Central, Noreste, Norte, Occidente y Oriental— <strong>coinciden al 100%</strong> en proyectos y capacidad.</p>
+              <p><span class="diff-pill pos">6 de 7 regiones sin diferencia</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: DETALLE A NIVEL REGISTRO -->
+    <section class="slide" id="slide-4">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">Detalle a nivel registro</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;flex-grow:1;min-height:0;">
+          <div class="content-grid" style="grid-template-columns: repeat(3, 1fr); flex:0 0 auto;">
+            <div class="kpi-box dorado"><span class="s-lbl">Registros solo en SENER</span><span class="s-val" data-count="3">3</span><span class="s-sub">almacenamiento no asociado</span></div>
+            <div class="kpi-box dorado"><span class="s-lbl">Potencia SAEE</span><span class="s-val">+60</span><span class="s-sub">MW · 20 MW c/u</span></div>
+            <div class="kpi-box dorado"><span class="s-lbl">Capacidad de almacenamiento</span><span class="s-val">+216</span><span class="s-sub">MWh · 72 MWh c/u</span></div>
+          </div>
+
+          <div class="panel-card" style="flex:1 1 auto;">
+            <h3>Proyectos presentes solo en SENER</h3>
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Folio Proyecto</th><th>Proyecto</th><th>RFC solicitante</th><th>Gerencia</th>
+                  <th>Tecnología</th><th class="num">MW</th><th class="num">MWh</th><th>Estatus MIA</th><th>Validación CENACE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>VUPE-C2-0158-2026</td><td>Almacenamiento no asociado «Chemuyil»</td><td>AQA221221RD2</td><td>Peninsular</td>
+                  <td>Almacenamiento</td><td class="num">20</td><td class="num">72</td>
+                  <td><span class="badge-status badge-warn">En trámite</span></td><td><span class="badge-status badge-neutral">Sin validar</span></td>
+                </tr>
+                <tr>
+                  <td>VUPE-C2-0192-2026</td><td>Almacenamiento no asociado «Riviera Maya»</td><td>AQA221221RD2</td><td>Peninsular</td>
+                  <td>Almacenamiento</td><td class="num">20</td><td class="num">72</td>
+                  <td><span class="badge-status badge-warn">En trámite</span></td><td><span class="badge-status badge-neutral">Sin validar</span></td>
+                </tr>
+                <tr>
+                  <td>VUPE-C2-0194-2026</td><td>Almacenamiento no asociado «Kantenah»</td><td>AQA221221RD2</td><td>Peninsular</td>
+                  <td>Almacenamiento</td><td class="num">20</td><td class="num">72</td>
+                  <td><span class="badge-status badge-warn">En trámite</span></td><td><span class="badge-status badge-neutral">Sin validar</span></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="5">Total — Atlántica y Quartux Almacenamiento de Energía, S.A.P.I. de C.V.</td><td class="num">60</td><td class="num">216</td><td colspan="2">3 registros adicionales</td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: ¿POR QUÉ HAY DIFERENCIAS? -->
+    <section class="slide" id="slide-5">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">¿Por qué hay diferencias?</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="porque-grid">
+          <div class="porque-card">
+            <div class="p-num">1</div>
+            <div class="p-body"><div class="p-title">Mismo solicitante</div><div class="p-text">Los 3 registros son de una sola empresa: Atlántica y Quartux Almacenamiento de Energía (RFC AQA221221RD2).</div></div>
+          </div>
+          <div class="porque-card">
+            <div class="p-num">2</div>
+            <div class="p-body"><div class="p-title">Almacenamiento no asociado</div><div class="p-text">Son SAEE no asociados a una central de generación; por eso no estaban en el conteo de generación de CFE.</div></div>
+          </div>
+          <div class="porque-card">
+            <div class="p-num">3</div>
+            <div class="p-body"><div class="p-title">Concentrados en Península</div><div class="p-text">Chemuyil, Riviera Maya y Kantenah; toda la diferencia regional se localiza en la Gerencia Peninsular.</div></div>
+          </div>
+          <div class="porque-card">
+            <div class="p-num">4</div>
+            <div class="p-body"><div class="p-title">En trámite y sin validar</div><div class="p-text">Estatus MIA «En trámite» y validación CENACE «Sin validar»: registros recientes aún no reflejados en la lámina CFE.</div></div>
+          </div>
+          <div class="porque-card">
+            <div class="p-num">5</div>
+            <div class="p-body"><div class="p-title">Efecto en totales</div><div class="p-text">+3 registros = +60 MW de potencia SAEE y +216 MWh de almacenamiento. No hay reclasificación de tecnología ni región.</div></div>
+          </div>
+          <div class="porque-card">
+            <div class="p-num">6</div>
+            <div class="p-body"><div class="p-title">El resto amarra</div><div class="p-text">Los 224 proyectos comunes coinciden exacto en gerencia, tecnología y capacidad contratada. Sin diferencias.</div></div>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: HALLAZGOS -->
+    <section class="slide" id="slide-6">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">Hallazgos principales</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="hallazgo-grid">
+          <div class="hallazgo-card">
+            <div class="h-head"><i class="bi bi-link-45deg h-icon"></i><span class="h-title">Amarre completo</span></div>
+            <div class="h-text"><b>224 de 224</b> proyectos comunes coinciden en gerencia y capacidad contratada.</div>
+          </div>
+          <div class="hallazgo-card">
+            <div class="h-head"><i class="bi bi-plus-circle h-icon"></i><span class="h-title">Solo en SENER</span></div>
+            <div class="h-text"><b>3 proyectos</b> adicionales; <b>0</b> proyectos solo en CFE.</div>
+          </div>
+          <div class="hallazgo-card">
+            <div class="h-head"><i class="bi bi-battery-charging h-icon"></i><span class="h-title">Tipo</span></div>
+            <div class="h-text">Almacenamiento <b>no asociado</b> (SAEE), no generación.</div>
+          </div>
+          <div class="hallazgo-card">
+            <div class="h-head"><i class="bi bi-geo-alt h-icon"></i><span class="h-title">Región</span></div>
+            <div class="h-text">Toda la diferencia en <b>Peninsular</b> (42 → 45).</div>
+          </div>
+          <div class="hallazgo-card">
+            <div class="h-head"><i class="bi bi-lightning-charge h-icon"></i><span class="h-title">Capacidad</span></div>
+            <div class="h-text"><b>+60 MW</b> de potencia SAEE y <b>+216 MWh</b> de almacenamiento.</div>
+          </div>
+          <div class="hallazgo-card">
+            <div class="h-head"><i class="bi bi-hourglass-split h-icon"></i><span class="h-title">Estatus</span></div>
+            <div class="h-text">Los 3 están <b>en trámite</b> y <b>sin validar</b> ante CENACE.</div>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: CIERRE -->
+    <section class="slide" id="slide-7">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>REVISIÓN CFE · SENER</span><span class="brand-line-2">Conciliación a nivel proyecto</span></div>
+          <div class="ef-title">Cierre</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER" onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="cierre-wrap">
+          <div class="cierre-quote">
+            La conciliación proyecto a proyecto confirma que <strong>CFE y SENER coinciden en los 224 proyectos comunes</strong>, sin diferencias en gerencia ni en capacidad contratada. La totalidad de la diferencia —<strong>3 registros y +60 MW</strong>— corresponde a proyectos de <strong>almacenamiento no asociado</strong> en la Gerencia Peninsular, de un mismo solicitante, aún en trámite y sin validación CENACE.
+          </div>
+          <div class="cierre-reco">
+            <h4>Recomendación</h4>
+            <p>Definir el tratamiento de los SAEE no asociados y el corte de información, para que ambas fuentes reflejen el mismo universo de registros en las próximas convocatorias.</p>
+          </div>
+        </div>
+
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL FULLSCREEN DE GRÁFICA -->
+  <div id="chartFullscreenModal" class="chart-fullscreen-modal" onclick="if(event.target === this) closeChartFullscreen();">
+    <div class="chart-fullscreen-shell">
+      <div class="chart-fullscreen-head">
+        <span id="fullscreenChartTitle"></span>
+        <button onclick="closeChartFullscreen()" title="Cerrar (Esc)"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div id="fullscreenChart"></div>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <div id="presentationControls">
+    <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+    <span id="slideCounter">1 / 1</span>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+    <button class="control-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)"><i class="bi bi-arrows-fullscreen"></i></button>
+    <button class="control-btn" onclick="exportPDF()" title="Exportar a PDF" style="background:var(--color-guinda);color:#fff;"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+  </div>
+
+  <!-- CDN -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <script>
+    const CONFIG = { titulo: 'Revisión CFE y SENER — Conciliación a nivel proyecto', archivoPdf: 'Revision-CFE-SENER-Proyectos.pdf' };
+
+    let currentSlideIndex = 0;
+    let slidesCount = 1;
+
+    const C = { cfe: '#1E5B4F', sener: '#9B2247', dorado: '#A57F2C' };
+
+    // ==========================================
+    // DATOS (reporte_diferencias_cfe_sener_proyectos.xlsx)
+    // ==========================================
+    const ESTADO = [
+      { name: 'Coinciden en ambas', y: 224, color: C.cfe },
+      { name: 'Solo en SENER', y: 3, color: C.dorado }
+    ];
+
+    const TOTALES = [
+      { campo: 'Capacidad contratada', dif: 60 },
+      { campo: 'Capacidad instalada neta', dif: 60 },
+      { campo: 'Capacidad instalada', dif: 72 },
+      { campo: 'Generación (MWh)', dif: 60 },
+      { campo: 'Potencia SAEE', dif: 60 }
+    ];
+
+    const REGIONES = [
+      { r: 'Baja California', cfe: 9,  sener: 9 },
+      { r: 'Central',         cfe: 18, sener: 18 },
+      { r: 'Noreste',         cfe: 42, sener: 42 },
+      { r: 'Norte',           cfe: 15, sener: 15 },
+      { r: 'Occidente',       cfe: 59, sener: 59 },
+      { r: 'Oriental',        cfe: 39, sener: 39 },
+      { r: 'Peninsular',      cfe: 42, sener: 45 }
+    ];
+
+    Highcharts.setOptions({
+      colors: ['#9B2247', '#A57F2C', '#1E5B4F', '#B24C6C', '#D6B46A', '#98989A', '#611232', '#2D3748'],
+      chart: { backgroundColor: 'transparent', style: { fontFamily: 'Montserrat, sans-serif' } },
+      title: { text: '' },
+      credits: { enabled: false },
+      legend: { itemStyle: { fontSize: '11px' } },
+      accessibility: { enabled: false }
+    });
+
+    function formatInt(n) { return Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 }); }
+
+    // ==========================================
+    // NAVEGACIÓN
+    // ==========================================
+    function showSlide(index) {
+      if (index < 0 || index >= slidesCount) return;
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      currentSlideIndex = index;
+      updateControls();
+      setTimeout(() => { renderChartsForSlide(index); animateSlide(index); }, 120);
+    }
+    function nextSlide() { showSlide(currentSlideIndex + 1); }
+    function prevSlide() { showSlide(currentSlideIndex - 1); }
+    function updateControls() {
+      document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${slidesCount}`;
+      document.getElementById('btnPrev').disabled = currentSlideIndex === 0;
+      document.getElementById('btnNext').disabled = currentSlideIndex === slidesCount - 1;
+    }
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+      else document.exitFullscreen();
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') { closeChartFullscreen(); return; }
+      if (document.getElementById('chartFullscreenModal').classList.contains('show')) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'Home') showSlide(0);
+      else if (e.key === 'End') showSlide(slidesCount - 1);
+      else if (e.key.toLowerCase() === 'f') toggleFullscreen();
+    });
+
+    // ==========================================
+    // ESCALADO 16:9
+    // ==========================================
+    function fitSlides() {
+      const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+      document.documentElement.style.setProperty('--scale', scale.toFixed(4));
+      document.querySelectorAll('.slide-container').forEach(c => { c.style.transform = `scale(${scale.toFixed(4)})`; });
+    }
+    window.addEventListener('resize', fitSlides);
+    function getCurrentScale() { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1; }
+
+    // ==========================================
+    // ANIMACIONES + contadores
+    // ==========================================
+    function runCounters(slide) {
+      slide.querySelectorAll('[data-count]').forEach(el => {
+        const target = parseFloat(el.getAttribute('data-count'));
+        if (isNaN(target)) return;
+        const obj = { v: 0 };
+        anime({ targets: obj, v: target, duration: 900, easing: 'easeOutCubic', update: () => { el.textContent = formatInt(obj.v); } });
+      });
+    }
+    function animateSlide(index) {
+      if (window.isExportingPdf) return;
+      const activeSlide = document.querySelectorAll('.slide')[index];
+      if (!activeSlide) return;
+      const container = activeSlide.querySelector('.slide-container');
+      if (container) {
+        const s = getCurrentScale();
+        anime({ targets: container, opacity: [0.4, 1], scale: [s * 0.985, s], duration: 350, easing: 'easeOutQuad' });
+      }
+      if (index === 0) {
+        anime({ targets: '#slide-0 h1, #slide-0 .eyebrow, #slide-0 .unidad, #slide-0 .unidad-sub, #slide-0 .subtitle', opacity: [0, 1], translateY: [25, 0], delay: anime.stagger(60), duration: 600, easing: 'easeOutQuad' });
+        anime({ targets: '#slide-0 .top-band, #slide-0 .bottom-band', scaleX: [0, 1], duration: 500, easing: 'easeOutQuad' });
+        return;
+      }
+      anime({ targets: activeSlide.querySelectorAll('.kpi-card-main, .panel-card, .kpi-box, .hallazgo-card, .porque-card, .cierre-quote, .cierre-reco, .note-strip'), opacity: [0, 1], translateY: [20, 0], delay: anime.stagger(45), duration: 500, easing: 'easeOutQuad' });
+      anime({ targets: activeSlide.querySelectorAll('.report-table tbody tr'), opacity: [0, 1], translateY: [8, 0], delay: anime.stagger(20), duration: 350, easing: 'easeOutQuad' });
+      runCounters(activeSlide);
+    }
+
+    // ==========================================
+    // FULLSCREEN POR GRÁFICA
+    // ==========================================
+    let fullscreenChart = null;
+    function openChartFullscreen(hostId, title) {
+      const source = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === hostId);
+      if (!source) return;
+      document.getElementById('fullscreenChartTitle').textContent = title || '';
+      document.getElementById('chartFullscreenModal').classList.add('show');
+      if (fullscreenChart) { fullscreenChart.destroy(); fullscreenChart = null; }
+      const options = Highcharts.merge(source.userOptions, { chart: { width: null, height: null }, plotOptions: { series: { animation: false } } });
+      fullscreenChart = Highcharts.chart('fullscreenChart', options);
+      setTimeout(() => fullscreenChart && fullscreenChart.reflow(), 80);
+    }
+    function closeChartFullscreen() {
+      document.getElementById('chartFullscreenModal').classList.remove('show');
+      if (fullscreenChart) { fullscreenChart.destroy(); fullscreenChart = null; }
+    }
+
+    // ==========================================
+    // GRÁFICAS
+    // ==========================================
+    const chartsRendered = new Set();
+    function renderChartsForSlide(index) {
+      if (chartsRendered.has(index)) {
+        Highcharts.charts.forEach(c => {
+          if (c && c.renderTo) {
+            const s = c.renderTo.closest('.slide');
+            if (s && s.id === 'slide-' + index) c.reflow();
+          }
+        });
+        return;
+      }
+      chartsRendered.add(index);
+      if (index === 1) renderEstado();
+      else if (index === 2) renderDiferencias();
+      else if (index === 3) renderRegionProy();
+    }
+
+    function renderEstado() {
+      Highcharts.chart('chEstado', {
+        chart: { type: 'pie' },
+        tooltip: { formatter() { return `<b>${this.point.name}</b><br>${formatInt(this.y)} proyectos (${Highcharts.numberFormat(this.percentage, 1)}%)`; } },
+        plotOptions: { pie: { innerSize: '62%', borderWidth: 2, dataLabels: { enabled: true, formatter() { return `${this.point.name}<br><b>${formatInt(this.y)}</b>`; }, style: { fontSize: '13px', fontWeight: '600', textOutline: 'none' }, distance: 16 } } },
+        series: [{ name: 'Registros', data: ESTADO }]
+      });
+    }
+
+    function renderDiferencias() {
+      Highcharts.chart('chDiferencias', {
+        chart: { type: 'bar' },
+        xAxis: { categories: TOTALES.map(t => t.campo), labels: { style: { fontSize: '11px', fontWeight: '600', color: '#333' } }, lineColor: '#CBD5E0' },
+        yAxis: { title: { text: 'Diferencia SENER − CFE', style: { fontSize: '10px' } }, gridLineColor: '#EDF2F7', allowDecimals: false },
+        legend: { enabled: false },
+        tooltip: { formatter() { return `<b>${this.x}</b><br>+${formatInt(this.y)}`; } },
+        plotOptions: { bar: { color: C.dorado, borderRadius: 3, dataLabels: { enabled: true, formatter() { return '+' + formatInt(this.y); }, style: { fontSize: '12px', fontWeight: 'bold', textOutline: 'none' } } } },
+        series: [{ data: TOTALES.map(t => t.dif) }]
+      });
+    }
+
+    function renderRegionProy() {
+      Highcharts.chart('chRegionProy', {
+        chart: { type: 'bar' },
+        xAxis: { categories: REGIONES.map(d => d.r), labels: { style: { fontSize: '11px', fontWeight: '600', color: '#333' } }, lineColor: '#CBD5E0' },
+        yAxis: { title: { text: 'Proyectos', style: { fontSize: '10px' } }, gridLineColor: '#EDF2F7', allowDecimals: false },
+        legend: { enabled: true, itemStyle: { fontSize: '12px', fontWeight: '600' } },
+        tooltip: { shared: true },
+        plotOptions: { bar: { borderRadius: 3, dataLabels: { enabled: true, style: { fontSize: '10px', fontWeight: 'bold', textOutline: 'none' } } } },
+        series: [
+          { name: 'CFE', color: C.cfe, data: REGIONES.map(d => d.cfe) },
+          { name: 'SENER', color: C.sener, data: REGIONES.map(d => d.sener) }
+        ]
+      });
+    }
+
+    // ==========================================
+    // EXPORTAR PDF (13.333 x 7.5 in panorámico)
+    // ==========================================
+    function showPdfLoader(msg) { document.getElementById('pdfLoaderMsg').innerText = msg; document.getElementById('pdfLoader').style.display = 'flex'; }
+    function hidePdfLoader() { document.getElementById('pdfLoader').style.display = 'none'; }
+
+    async function captureSlideForPdf(slide) {
+      const slideClone = slide.cloneNode(true);
+      const clone = slideClone.querySelector('.slide-container') || slideClone;
+      const stage = document.createElement('div');
+      stage.setAttribute('aria-hidden', 'true');
+      stage.style.cssText = 'position:fixed;left:-10000px;top:0;width:1333px;height:750px;overflow:hidden;background:#fff;z-index:14001;opacity:1;pointer-events:none;';
+      slideClone.classList.add('active');
+      slideClone.style.cssText = 'position:relative;inset:auto;display:flex;align-items:center;justify-content:center;width:1333px;height:750px;opacity:1;';
+      clone.style.cssText += ';position:relative;left:0;top:0;margin:0;transform:none;transition:none;width:1333px;height:750px;box-shadow:none;';
+      stage.appendChild(slideClone);
+      document.body.appendChild(stage);
+      try {
+        await new Promise(r => {
+          let settled = false;
+          const settle = () => { if (!settled) { settled = true; r(); } };
+          requestAnimationFrame(() => requestAnimationFrame(settle));
+          setTimeout(settle, 400);
+        });
+        return await html2canvas(clone, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff', logging: false, width: 1333, height: 750, windowWidth: 1333, windowHeight: 750, scrollX: 0, scrollY: 0 });
+      } finally { stage.remove(); }
+    }
+
+    async function exportPDF() {
+      const { jsPDF } = window.jspdf;
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const prevIndex = currentSlideIndex;
+      closeChartFullscreen();
+      document.body.classList.add('exporting');
+      showPdfLoader(`Preparando ${slides.length} diapositivas…`);
+      window.isExportingPdf = true;
+      try {
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        for (let i = 0; i < slides.length; i++) {
+          showPdfLoader(`Capturando slide ${i + 1}/${slides.length}…`);
+          slides.forEach(s => s.classList.remove('active'));
+          slides[i].classList.add('active');
+          renderChartsForSlide(i);
+          await new Promise(r => setTimeout(r, 650));
+          Highcharts.charts.forEach(c => c && c.reflow());
+          await new Promise(r => setTimeout(r, 180));
+          const canvas = await captureSlideForPdf(slides[i]);
+          if (i > 0) pdf.addPage([338.6582, 190.5], 'l');
+          pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageW, pageH);
+        }
+        showPdfLoader('Guardando archivo…');
+        pdf.save(CONFIG.archivoPdf);
+      } catch (err) {
+        console.error('Error PDF:', err);
+        alert('Error generando PDF: ' + err.message);
+      } finally {
+        window.isExportingPdf = false;
+        document.body.classList.remove('exporting');
+        slides.forEach(s => s.classList.remove('active'));
+        showSlide(prevIndex);
+        hidePdfLoader();
+      }
+    }
+
+    // ==========================================
+    // ARRANQUE
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      slidesCount = document.querySelectorAll('.slide').length;
+      document.getElementById('coverFecha').innerText = new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' });
+      fitSlides();
+      updateControls();
+      const pre = document.getElementById('preloader');
+      pre.style.opacity = 0;
+      setTimeout(() => { pre.style.display = 'none'; animateSlide(0); }, 400);
+    });
+  </script>
+</body>
+
+</html>
