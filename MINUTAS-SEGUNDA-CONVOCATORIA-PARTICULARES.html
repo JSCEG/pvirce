@@ -3690,7 +3690,7 @@
 
   <!-- CDN scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js" onerror="var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/highcharts/highcharts.js';f.onload=function(){try{if(typeof renderNumeralia==='function'&&typeof DATA!=='undefined'&&DATA&&DATA.length)renderNumeralia();}catch(e){}};document.head.appendChild(f);"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -5811,6 +5811,11 @@
     }
 
     function renderGroupChart() {
+      if (typeof Highcharts === 'undefined') {   // CDN no cargó: no truena el resto del dashboard
+        const el = document.getElementById('chartGrupo');
+        if (el) el.innerHTML = '<div style="padding:18px;text-align:center;color:#94a3b8;font-size:12px;">Gráfica no disponible: no cargó Highcharts (revisa la conexión y recarga).</div>';
+        return;
+      }
       const groups = {};
       DATA.filter(p => getTechGroup(p) !== 'Almacenamiento').forEach(p => {   // solo generación
         const gie = p.gie || 'NO IDENTIFICADO';
