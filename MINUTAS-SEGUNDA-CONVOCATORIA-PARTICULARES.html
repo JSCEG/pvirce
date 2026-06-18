@@ -1729,6 +1729,55 @@
       font-size: 17px;
     }
 
+    /* Retícula (graticule) de los minimapas */
+    .grid-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #2c6e72;
+      text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .leaflet-pane .grid-line { pointer-events: none; }
+
+    /* Botón exportar PNG del minimapa (visible en pantalla completa) */
+    .map-export-btn {
+      position: absolute;
+      top: 8px;
+      right: 46px;
+      z-index: 1200;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(0, 0, 0, .18);
+      color: var(--color-guinda);
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    }
+    .map-export-btn:hover { background: #fff; }
+    .leaflet-container.map-fs .map-export-btn {
+      display: flex;
+      top: 14px;
+      right: 60px;
+      width: 38px;
+      height: 38px;
+      font-size: 16px;
+    }
+    /* Control de capas de los minimapas: solo en pantalla completa, sin saturar el thumbnail */
+    .minimap-enhanced:not(.map-fs) .leaflet-control-layers { display: none; }
+    /* Durante la captura PNG ocultar los controles (queda mapa + retícula + leyenda) */
+    .map-exporting .map-fs-btn,
+    .map-exporting .map-export-btn,
+    .map-exporting .leaflet-control-zoom,
+    .map-exporting .leaflet-control-layers { display: none !important; }
+
     /* Card flotante de estadísticas en pantalla completa */
     .map-fs-legend-card {
       position: absolute;
@@ -4148,6 +4197,7 @@
         setTimeout(function () { try { map.invalidateSize(); } catch (e) { } }, 70);
       });
       c.appendChild(btn);
+      try { enhanceMinimapExtras(map); } catch (e) { console.warn('minimap extras', e); }
     }
     function closeAllMapFs() {
       const open = document.querySelectorAll('.leaflet-container.map-fs');
@@ -4410,6 +4460,87 @@
           try { updateFullscreenLegend(c.__leafletMap); } catch (e) { console.warn("Error updating legend:", e); }
         }
       });
+    }
+
+    // ====== Minimapas: basemaps conmutables + retícula + exportar PNG (estilo proyecto SNIEn) ======
+    function makeMinimapBasemaps() {
+      return {
+        'Mapa': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, crossOrigin: 'anonymous', attribution: 'OpenStreetMap' }),
+        'Satélite': L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'], crossOrigin: 'anonymous', attribution: 'Google' }),
+        'Relieve': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, crossOrigin: 'anonymous', attribution: 'OpenTopoMap' })
+      };
+    }
+    function makeGraticule(renderer) {
+      const g = L.layerGroup();
+      const lineStyle = { color: '#4B8A8F', weight: 1, opacity: 0.5, className: 'grid-line', interactive: false };
+      if (renderer) lineStyle.renderer = renderer;   // SVG explícito: visible aunque el mapa use preferCanvas
+      const lbl = (text, latlng) => L.marker(latlng, { icon: L.divIcon({ className: 'grid-label', html: text, iconSize: null, iconAnchor: [0, 0] }), interactive: false, keyboard: false }).addTo(g);
+      for (let lat = 16; lat <= 32; lat += 4) { L.polyline([[lat, -118], [lat, -86]], lineStyle).addTo(g); lbl(`${lat}°N`, [lat, -117.5]); }
+      for (let lng = -116; lng <= -88; lng += 4) { L.polyline([[14.5, lng], [33, lng]], lineStyle).addTo(g); lbl(`${Math.abs(lng)}°W`, [14.7, lng]); }
+      return g;
+    }
+    function enhanceMinimapExtras(map) {
+      let c; try { c = map.getContainer(); } catch (e) { return; }
+      if (!c || c.__mapExtras) return;
+      c.__mapExtras = true;
+      c.classList.add('minimap-enhanced');
+
+      // Basemaps conmutables (mismos que el modal de geoanálisis); reemplazan el tile base inicial
+      try { map.eachLayer(l => { if (l instanceof L.TileLayer) map.removeLayer(l); }); } catch (e) { }
+      const baseMaps = makeMinimapBasemaps();
+      baseMaps['Mapa'].addTo(map);
+
+      // Retícula en un pane bajo (bajo polígonos/marcadores), como SVG para que se vea con preferCanvas
+      let gratRenderer = null;
+      try {
+        if (!map.getPane('graticulePane')) {
+          map.createPane('graticulePane');
+          map.getPane('graticulePane').style.zIndex = 250;
+          map.getPane('graticulePane').style.pointerEvents = 'none';
+        }
+        gratRenderer = L.svg({ pane: 'graticulePane' });
+      } catch (e) { }
+      const grid = makeGraticule(gratRenderer);
+      grid.addTo(map);
+
+      // Guarda basemaps + retícula en el mapa; el control de capas del minimapa los fusiona (un solo control)
+      map.__minimapBaseLayers = baseMaps;
+      map.__minimapGraticule = grid;
+
+      // Botón exportar PNG (junto al de pantalla completa)
+      const exp = document.createElement('button');
+      exp.type = 'button';
+      exp.className = 'map-export-btn';
+      exp.title = 'Descargar PNG (mapa + leyenda)';
+      exp.innerHTML = '<i class="bi bi-image"></i>';
+      exp.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); exportMinimapPng(map, exp); });
+      c.appendChild(exp);
+    }
+    async function exportMinimapPng(map, btn) {
+      const c = map.getContainer();
+      if (typeof html2canvas === 'undefined') { alert('No se pudo cargar html2canvas para exportar.'); return; }
+      const prev = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split"></i>'; }
+      c.classList.add('map-exporting');
+      try { map.invalidateSize(); } catch (e) { }
+      await new Promise(r => setTimeout(r, 450));
+      try {
+        const canvas = await html2canvas(c, {
+          useCORS: true, allowTaint: false, backgroundColor: '#ffffff', scale: 2, logging: false,
+          ignoreElements: (el) => !!(el.classList && (el.classList.contains('map-fs-btn') || el.classList.contains('map-export-btn') || el.classList.contains('leaflet-control-zoom') || el.classList.contains('leaflet-control-layers')))
+        });
+        const a = document.createElement('a');
+        a.download = 'mapa-minuta-' + new Date().toISOString().slice(0, 10) + '.png';
+        a.href = canvas.toDataURL('image/png');
+        document.body.appendChild(a); a.click(); a.remove();
+      } catch (err) {
+        console.error('export png minimapa', err);
+        alert('No fue posible exportar el PNG. Si estás en el mapa "Satélite", cambia a "Mapa" (OSM) para evitar restricciones CORS y reintenta.');
+      } finally {
+        c.classList.remove('map-exporting');
+        try { map.invalidateSize(); } catch (e) { }
+        if (btn) { btn.disabled = false; btn.innerHTML = prev; }
+      }
     }
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && document.querySelector('.leaflet-container.map-fs')) {
@@ -6545,12 +6676,13 @@
       }
 
       // Agregar control de capas al mapa
-      if (layerGerencias || layerEstados) {
+      if (mapInstance.__minimapBaseLayers || layerGerencias || layerEstados) {
         const overlayMaps = {};
+        if (mapInstance.__minimapGraticule) overlayMaps["Retícula"] = mapInstance.__minimapGraticule;
         if (layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = layerGerencias;
         if (layerEstados) overlayMaps["Límites Estatales"] = layerEstados;
 
-        L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(mapInstance);
+        L.control.layers(mapInstance.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomright' }).addTo(mapInstance);
       }
 
       // Dibujar marcadores de proyectos
@@ -7276,10 +7408,11 @@
       }
 
       const overlayMaps = {};
+      if (continuaSynthesisMap.__minimapGraticule) overlayMaps["Retícula"] = continuaSynthesisMap.__minimapGraticule;
       if (continuaSynthesisState.layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = continuaSynthesisState.layerGerencias;
       if (continuaSynthesisState.layerEstados) overlayMaps["Límites Estatales"] = continuaSynthesisState.layerEstados;
-      if (Object.keys(overlayMaps).length) {
-        L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(continuaSynthesisMap);
+      if (continuaSynthesisMap.__minimapBaseLayers || Object.keys(overlayMaps).length) {
+        L.control.layers(continuaSynthesisMap.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomright' }).addTo(continuaSynthesisMap);
       }
 
       continuaSynthesisState.markersGroup = L.layerGroup().addTo(continuaSynthesisMap);
@@ -8947,15 +9080,16 @@
         let layersControl = null;
 
         const updateLayersControl = () => {
-          if (!localLayerGerencias && !localLayerEstados) return;
+          if (!map.__minimapBaseLayers && !localLayerGerencias && !localLayerEstados) return;
           if (layersControl) {
             map.removeControl(layersControl);
           }
           const overlayMaps = {};
+          if (map.__minimapGraticule) overlayMaps["Retícula"] = map.__minimapGraticule;
           if (localLayerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = localLayerGerencias;
           if (localLayerEstados) overlayMaps["Límites Estatales"] = localLayerEstados;
 
-          layersControl = L.control.layers(null, overlayMaps, { collapsed: true, position: 'topright' }).addTo(map);
+          layersControl = L.control.layers(map.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomright' }).addTo(map);
         };
 
         const drawGerencias = () => {
