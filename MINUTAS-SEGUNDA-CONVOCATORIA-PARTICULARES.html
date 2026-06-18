@@ -7522,6 +7522,7 @@
             dashArray: '2, 3'
           }
         });
+        continuaSynthesisMap.__estadosLayer = continuaSynthesisState.layerEstados;
       } catch (e) {
         console.warn('No se pudo cargar el GeoJSON de estados en mapa de proyectos que continúan:', e);
       }
@@ -7568,6 +7569,7 @@
             <button onclick="openFichaModal('${p.id}')" style="margin-top:6px;background:var(--color-guinda);color:#fff;border:none;padding:4px 8px;font-size:10px;border-radius:4px;cursor:pointer;font-family:'Outfit',sans-serif;">Ver ficha</button>
           </div>
         `);
+        marker.projectData = p; // para la leyenda en pantalla completa del mapa de seleccionados
         continuaSynthesisState.markersGroup.addLayer(marker);
         markers.push(marker);
       });
@@ -7581,6 +7583,7 @@
       } else {
         continuaSynthesisMap.setView([23.5, -102.2], 4.5);
       }
+      applyEfFocusToMap(continuaSynthesisMap);
       setTimeout(() => continuaSynthesisMap?.invalidateSize({ pan: false, animate: false }), 80);
     }
 
