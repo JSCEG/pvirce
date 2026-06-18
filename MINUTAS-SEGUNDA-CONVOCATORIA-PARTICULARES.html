@@ -1777,6 +1777,14 @@
     .map-exporting .map-export-btn,
     .map-exporting .leaflet-control-zoom,
     .map-exporting .leaflet-control-layers { display: none !important; }
+    /* En pantalla completa del mapa los controles viven en el menú lateral: ocultar los del propio mapa */
+    .leaflet-container.map-fs .leaflet-control-layers,
+    .leaflet-container.map-fs .map-export-btn,
+    .leaflet-container.map-fs .map-fs-btn { display: none !important; }
+    /* Subir el menú lateral por encima del mapa a pantalla completa y mostrar su grupo de mapa */
+    body.map-fs-open #presentationControls { z-index: 100001; }
+    #mapFsControls { display: none; }
+    body.map-fs-open #mapFsControls { display: flex; }
 
     /* Card flotante de estadísticas en pantalla completa */
     .map-fs-legend-card {
@@ -4210,6 +4218,9 @@
         document.body.classList.toggle('map-fs-open', fs);
         if (fs) {
           updateFullscreenLegend(map);
+          showMapFsControls(map);
+        } else {
+          hideMapFsControls();
         }
         setTimeout(function () { try { map.invalidateSize(); } catch (e) { } }, 70);
       });
@@ -4225,8 +4236,70 @@
         if (b) { b.innerHTML = '<i class="bi bi-arrows-fullscreen"></i>'; b.title = 'Pantalla completa'; }
       });
       document.body.classList.remove('map-fs-open');
+      hideMapFsControls();
       setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 70); // Leaflet trackResize -> invalidateSize
       return true;
+    }
+
+    // ===== Controles del mapa dentro del menú lateral (solo en pantalla completa del minimapa) =====
+    let __activeFsMap = null;
+    function ensureMapFsControls() {
+      if (document.getElementById('mapFsControls')) return;
+      const host = document.getElementById('presentationControls');
+      if (!host) return;
+      const grp = document.createElement('div');
+      grp.id = 'mapFsControls';
+      grp.style.cssText = 'display:none; flex-direction:column; align-items:center; gap:5px; border-top:1px solid rgba(255,255,255,0.2); padding-top:6px; margin-top:3px; width:100%;';
+      grp.innerHTML =
+        '<button class="control-btn" id="mapFsBaseBtn" title="Cambiar mapa base"><i class="bi bi-globe-americas"></i></button>' +
+        '<div style="position:relative;">' +
+        '<button class="control-btn" id="mapFsLayersBtn" title="Capas (retícula, gerencias)"><i class="bi bi-stack"></i></button>' +
+        '<div id="mapFsLayersPop" style="display:none; position:absolute; top:0; right:calc(100% + 10px); background:#1f1f1f; border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:8px 10px; min-width:150px; z-index:100002; box-shadow:0 10px 25px rgba(0,0,0,.5); color:#fff; font-size:12px; font-family:Outfit,sans-serif;"></div>' +
+        '</div>' +
+        '<button class="control-btn" id="mapFsPngBtn" title="Descargar PNG (mapa + leyenda)" style="background:var(--color-verde);color:#fff;"><i class="bi bi-image"></i></button>' +
+        '<button class="control-btn" id="mapFsExitBtn" title="Salir de pantalla completa" style="background:var(--color-guinda);color:#fff;"><i class="bi bi-fullscreen-exit"></i></button>';
+      host.appendChild(grp);
+      grp.querySelector('#mapFsBaseBtn').addEventListener('click', function (e) { e.stopPropagation(); if (__activeFsMap) cycleMapBasemap(__activeFsMap); });
+      grp.querySelector('#mapFsLayersBtn').addEventListener('click', function (e) { e.stopPropagation(); toggleMapFsLayersPop(); });
+      grp.querySelector('#mapFsPngBtn').addEventListener('click', function (e) { e.stopPropagation(); if (__activeFsMap) exportMinimapPng(__activeFsMap, e.currentTarget); });
+      grp.querySelector('#mapFsExitBtn').addEventListener('click', function (e) { e.stopPropagation(); closeAllMapFs(); });
+    }
+    function showMapFsControls(map) {
+      ensureMapFsControls();
+      __activeFsMap = map;
+      const g = document.getElementById('mapFsControls'); if (g) g.style.display = 'flex';
+    }
+    function hideMapFsControls() {
+      __activeFsMap = null;
+      const g = document.getElementById('mapFsControls'); if (g) g.style.display = 'none';
+      const p = document.getElementById('mapFsLayersPop'); if (p) p.style.display = 'none';
+    }
+    function cycleMapBasemap(map) {
+      const bm = map.__minimapBaseLayers; if (!bm) return;
+      const keys = Object.keys(bm);
+      let idx = (map.__baseIdx == null ? 0 : map.__baseIdx);
+      try { map.eachLayer(function (l) { if (l instanceof L.TileLayer) map.removeLayer(l); }); } catch (e) { }
+      idx = (idx + 1) % keys.length;
+      try { bm[keys[idx]].addTo(map); } catch (e) { }
+      map.__baseIdx = idx;
+      const btn = document.getElementById('mapFsBaseBtn'); if (btn) btn.title = 'Mapa base: ' + keys[idx];
+    }
+    function toggleMapFsLayersPop() {
+      const pop = document.getElementById('mapFsLayersPop'); if (!pop || !__activeFsMap) return;
+      if (pop.style.display === 'block') { pop.style.display = 'none'; return; }
+      const map = __activeFsMap;
+      const items = [['Retícula', map.__minimapGraticule], ['Gerencias', map.__gerenciaLayer], ['Estados', map.__estadosLayer]].filter(function (it) { return it[1]; });
+      pop.innerHTML = items.map(function (it) {
+        const on = map.hasLayer(it[1]);
+        return '<label style="display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;white-space:nowrap;"><input type="checkbox" ' + (on ? 'checked' : '') + ' style="accent-color:var(--color-dorado-light);cursor:pointer;margin:0;">' + it[0] + '</label>';
+      }).join('');
+      pop.querySelectorAll('input').forEach(function (inp, i) {
+        inp.addEventListener('change', function () {
+          const lyr = items[i][1];
+          try { if (inp.checked) lyr.addTo(map); else map.removeLayer(lyr); } catch (e) { }
+        });
+      });
+      pop.style.display = 'block';
     }
 
     function updateFullscreenLegend(map) {
@@ -4513,6 +4586,7 @@
       try { map.eachLayer(l => { if (l instanceof L.TileLayer) map.removeLayer(l); }); } catch (e) { }
       const baseMaps = makeMinimapBasemaps();
       baseMaps['Mapa'].addTo(map);
+      map.__baseIdx = 0;
 
       // Retícula en un pane bajo (bajo polígonos/marcadores), como SVG para que se vea con preferCanvas
       let gratRenderer = null;
