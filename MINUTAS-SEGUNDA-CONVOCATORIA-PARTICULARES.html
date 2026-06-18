@@ -4358,7 +4358,7 @@
         const pct = totalGenMw > 0 ? (gcrData[gcr].mw / totalGenMw) * 100 : 0;
         const gcrClass = toGcrClassName(gcr);
         gcrTableHtml += `
-          <tr>
+          <tr class="gcr-legend-row" data-gcr="${escapeHtml(gcr)}" style="cursor:pointer;">
             <td><span class="gcr-chip ${gcrClass}">GCR ${gcr}</span></td>
             <td class="col-right">${gcrData[gcr].count}</td>
             <td class="col-right" style="font-weight: 600;">${mw2(gcrData[gcr].mw)}</td>
@@ -4400,6 +4400,13 @@
       `;
 
       legend.querySelector('#map-fs-tab-gcr').innerHTML = gcrTableHtml;
+
+      // Hover sobre filas de gerencia → resalta el polígono en el mapa (también en pantalla completa)
+      legend.querySelectorAll('#map-fs-tab-gcr .gcr-legend-row').forEach(row => {
+        const g = row.getAttribute('data-gcr');
+        row.addEventListener('mouseenter', () => { try { highlightGcrOnAnyMap(map, g); } catch (e) { } });
+        row.addEventListener('mouseleave', () => { try { highlightGcrOnAnyMap(map, null); } catch (e) { } });
+      });
 
       // 2. Generate Technology Table
       const techCounts = {};
@@ -6660,12 +6667,13 @@
             });
             return {
               fillColor: fill,
-              fillOpacity: 0.5,
-              color: '#8B93A3',
-              weight: 1.1
+              fillOpacity: 0.66,
+              color: gcrStrokeFor(name),
+              weight: 2
             };
           }
         }).addTo(mapInstance);
+        mapInstance.__gerenciaLayer = layerGerencias;
       } catch (e) {
         console.warn('No se pudo cargar el GeoJSON de gerencias en el mapa:', e);
       }
@@ -6755,56 +6763,36 @@
       updateAllFullscreenLegends();
     }
 
-    function highlightGcrOnMap(gcrName) {
-      if (!layerGerencias || !mapInstance) return;
+    // Paletas de gerencias: relleno pastel (igual que los chips) + borde saturado para que destaquen
+    const GCR_POLY_FILL = { 'NORESTE': '#D7F1EA', 'OCCIDENTE': '#FBE7CF', 'NORTE': '#EFE7FD', 'ORIENTAL': '#FDE5EE', 'PENINSULAR': '#E2EBFB', 'CENTRAL': '#E8ECF2', 'BAJA CALIFORNIA SUR': '#FFF1D9', 'BAJA CALIFORNIA': '#E0F0FF' };
+    const GCR_STROKE = { 'NORESTE': '#138D75', 'OCCIDENTE': '#CA6F1E', 'NORTE': '#7D3C98', 'ORIENTAL': '#C2185B', 'PENINSULAR': '#1F66C9', 'CENTRAL': '#566573', 'BAJA CALIFORNIA SUR': '#B9770E', 'BAJA CALIFORNIA': '#2471A3' };
+    function gcrPolyFill(name) { const n = String(name || '').toUpperCase(); let f = '#E3E8EF'; Object.keys(GCR_POLY_FILL).forEach(k => { if (n.includes(k)) f = GCR_POLY_FILL[k]; }); return f; }
+    function gcrStrokeFor(name) { const n = String(name || '').toUpperCase(); let s = '#5b6472'; Object.keys(GCR_STROKE).forEach(k => { if (n.includes(k)) s = GCR_STROKE[k]; }); return s; }
 
-      const gcrColors = {
-        'NORESTE': '#D7F1EA',
-        'OCCIDENTE': '#FBE7CF',
-        'NORTE': '#EFE7FD',
-        'ORIENTAL': '#FDE5EE',
-        'PENINSULAR': '#E2EBFB',
-        'CENTRAL': '#E8ECF2',
-        'BAJA CALIFORNIA SUR': '#FFF1D9',
-        'BAJA CALIFORNIA': '#E0F0FF'
-      };
-
+    // Resalta una gerencia en CUALQUIER minimapa (usa map.__gerenciaLayer); sirve también en pantalla completa.
+    function highlightGcrOnAnyMap(map, gcrName) {
+      const layer = map && map.__gerenciaLayer;
+      if (!layer) return;
       const normGcr = normalizeGcrName(gcrName);
-
-      layerGerencias.eachLayer(layer => {
-        const featName = normalizeGcrName(getGerenciaNameFromMapFeature(layer.feature));
-        const isMatch = normGcr ? isMatchingGcr(normGcr, featName) : false;
-
-        let fill = '#EDF2F7';
-        Object.keys(gcrColors).forEach(k => {
-          if (featName.includes(k)) fill = gcrColors[k];
-        });
-
+      layer.eachLayer(l => {
+        let fname = '';
+        try { fname = normalizeGcrName(getGerenciaNameFromMapFeature(l.feature)); } catch (e) { return; }
+        const isMatch = normGcr ? isMatchingGcr(normGcr, fname) : false;
         if (normGcr) {
           if (isMatch) {
-            layer.setStyle({
-              fillColor: '#b71e4f',
-              fillOpacity: 0.48,
-              color: '#b71e4f',
-              weight: 2.6
-            });
+            l.setStyle({ fillColor: '#b71e4f', fillOpacity: 0.55, color: '#b71e4f', weight: 3 });
+            if (l.bringToFront) l.bringToFront();
           } else {
-            layer.setStyle({
-              fillColor: fill,
-              fillOpacity: 0.18,
-              color: '#c7ccd6',
-              weight: 0.8
-            });
+            l.setStyle({ fillColor: gcrPolyFill(fname), fillOpacity: 0.2, color: '#c7ccd6', weight: 0.8 });
           }
         } else {
-          layer.setStyle({
-            fillColor: fill,
-            fillOpacity: 0.3,
-            color: '#8B93A3',
-            weight: 1.1
-          });
+          l.setStyle({ fillColor: gcrPolyFill(fname), fillOpacity: 0.66, color: gcrStrokeFor(fname), weight: 2 });
         }
       });
+    }
+
+    function highlightGcrOnMap(gcrName) {
+      highlightGcrOnAnyMap(mapInstance, gcrName);
     }
 
     // ==========================================
@@ -7394,12 +7382,13 @@
             });
             return {
               fillColor: fill,
-              fillOpacity: 0.5,
-              color: '#8B93A3',
-              weight: 1.1
+              fillOpacity: 0.66,
+              color: gcrStrokeFor(name),
+              weight: 2
             };
           }
         }).addTo(continuaSynthesisMap);
+        continuaSynthesisMap.__gerenciaLayer = continuaSynthesisState.layerGerencias;
       } catch (e) {
         console.warn('No se pudo cargar capa GCR para mapa de proyectos que continúan:', e);
       }
