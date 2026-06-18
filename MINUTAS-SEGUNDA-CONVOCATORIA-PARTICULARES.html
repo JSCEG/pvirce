@@ -12,6 +12,8 @@
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
 
@@ -1775,6 +1777,23 @@
       border-radius: 3px;
       padding: 0 1px;
       box-shadow: 0 0 0 1px rgba(0, 0, 0, .3);
+    }
+    /* Cluster de proyectos */
+    .proj-cluster-wrap { background: transparent; }
+    .proj-cluster {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(155, 34, 71, .92);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
+      font-family: 'Outfit', sans-serif;
     }
 
     /* Botón exportar PNG del minimapa (visible en pantalla completa) */
@@ -4080,6 +4099,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="https://code.highcharts.com/highcharts.js" onerror="var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/highcharts/highcharts.js';f.onload=function(){try{if(typeof renderNumeralia==='function'&&typeof DATA!=='undefined'&&DATA&&DATA.length)renderNumeralia();}catch(e){}};document.head.appendChild(f);"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
@@ -4399,15 +4419,16 @@
         L.DomEvent.disableScrollPropagation(legend);
       }
 
-      // Determine active project list from map markers
-      const projects = [];
-      map.eachLayer(layer => {
-        if (layer && layer.projectData) {   // sirve para marcadores de icono (L.marker) y círculos
-          projects.push(layer.projectData);
+      // Lista de proyectos del mapa: preferir la guardada (robusta con cluster); si no, escanear marcadores / cluster; si no, DATA
+      let projects = [];
+      if (map.__shownProjects && map.__shownProjects.length) {
+        projects = map.__shownProjects;
+      } else {
+        map.eachLayer(layer => { if (layer && layer.projectData) projects.push(layer.projectData); });
+        if (!projects.length && map.__markerCluster && map.__markerCluster.getLayers) {
+          map.__markerCluster.getLayers().forEach(l => { if (l.projectData) projects.push(l.projectData); });
         }
-      });
-
-      // Fallback to global DATA if no project markers are found
+      }
       const activeProjects = projects.length > 0 ? projects : (typeof DATA !== 'undefined' ? DATA : []);
 
       // Update filter info
@@ -4901,6 +4922,23 @@
       return L.marker(latlng, {
         icon: L.divIcon({ className: 'tech-marker', html: html, iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2], popupAnchor: [0, -sz / 2] }),
         pane: 'markerPane'
+      });
+    }
+    // Agrupa marcadores cercanos en clusters; se desarma al acercar (zoom >= 10). Si el plugin no cargó, layerGroup normal.
+    function makeProjectCluster() {
+      if (typeof L.markerClusterGroup !== 'function') return L.layerGroup();
+      return L.markerClusterGroup({
+        maxClusterRadius: 30,
+        disableClusteringAtZoom: 10,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        chunkedLoading: true,
+        removeOutsideVisibleBounds: true,
+        iconCreateFunction: function (cluster) {
+          const n = cluster.getChildCount();
+          const sz = n < 10 ? 30 : (n < 50 ? 38 : 46);
+          return L.divIcon({ html: '<div class="proj-cluster"><span>' + n + '</span></div>', className: 'proj-cluster-wrap', iconSize: [sz, sz] });
+        }
       });
     }
 
@@ -6852,7 +6890,8 @@
 
       // Dibujar marcadores de proyectos
       if (!projectMarkersGroup) {
-        projectMarkersGroup = L.layerGroup().addTo(mapInstance);
+        projectMarkersGroup = makeProjectCluster().addTo(mapInstance);
+        mapInstance.__markerCluster = projectMarkersGroup;
       }
       drawProjectMarkersOnMap();
     }
@@ -6860,7 +6899,8 @@
     function drawProjectMarkersOnMap() {
       if (!mapInstance) return;
       if (!projectMarkersGroup) {
-        projectMarkersGroup = L.layerGroup().addTo(mapInstance);
+        projectMarkersGroup = makeProjectCluster().addTo(mapInstance);
+        mapInstance.__markerCluster = projectMarkersGroup;
       }
       projectMarkersGroup.clearLayers();
 
@@ -6893,6 +6933,7 @@
           projectMarkersGroup.addLayer(marker);
         }
       });
+      mapInstance.__shownProjects = DATA;
       updateAllFullscreenLegends();
     }
 
@@ -7593,7 +7634,9 @@
         L.control.layers(continuaSynthesisMap.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomleft' }).addTo(continuaSynthesisMap);
       }
 
-      continuaSynthesisState.markersGroup = L.layerGroup().addTo(continuaSynthesisMap);
+      continuaSynthesisState.markersGroup = makeProjectCluster().addTo(continuaSynthesisMap);
+      continuaSynthesisMap.__markerCluster = continuaSynthesisState.markersGroup;
+      continuaSynthesisMap.__shownProjects = projects;
       const markers = [];
       const isValidLatLng = coords => Array.isArray(coords)
         && coords.length >= 2
@@ -9354,7 +9397,7 @@
             const tGroup = getTechGroup(p);
             const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
             const finalMw = getProjectCapacity(p);
-            const marker = makeTechMarker(p.coords, p, finalMw).addTo(map);
+            const marker = makeTechMarker(p.coords, p, finalMw);
             marker.projectData = p; // Attach data for the legend
 
             marker.bindPopup(`
@@ -9370,6 +9413,12 @@
             markers.push(marker);
           }
         });
+
+        const gcrCluster = makeProjectCluster();
+        markers.forEach(m => gcrCluster.addLayer(m));
+        gcrCluster.addTo(map);
+        map.__markerCluster = gcrCluster;
+        map.__shownProjects = gcrProjects;
 
         if (markers.length > 0) {
           const group = new L.featureGroup(markers);
