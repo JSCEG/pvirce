@@ -271,6 +271,22 @@
       max-width: 104px;
     }
 
+    /* Indicador del modo "seleccionados" activo (verde encendido + pulso). Usa borde+glow+icono:
+       el botón nativo ignora background-color de forma poco fiable, pero border/box-shadow/color sí aplican. */
+    #presentationControls .control-btn.selection-active,
+    .control-btn.selection-active {
+      border: 2px solid #22c55e !important;
+      color: #4ade80 !important;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, .45), 0 0 16px 3px rgba(34, 197, 94, .9) !important;
+      animation: selPulse 1.5s ease-in-out infinite;
+    }
+    #presentationControls .control-btn.selection-active i,
+    .control-btn.selection-active i { color: #4ade80 !important; }
+    @keyframes selPulse {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(34, 197, 94, .35), 0 0 10px 1px rgba(34, 197, 94, .6); }
+      50% { box-shadow: 0 0 0 2px rgba(34, 197, 94, .55), 0 0 18px 4px rgba(34, 197, 94, .95); }
+    }
+
     .control-btn {
       background: none;
       border: none;
@@ -9374,6 +9390,8 @@
     // ==========================================
     function showSlide(index) {
       if (index < 0 || index >= slidesCount) return;
+      // Al cambiar de slide, salir de pantalla completa del minimapa (no en rebuilds in-place, para no sacar al filtrar)
+      if (index !== currentSlideIndex) { try { if (typeof closeAllMapFs === 'function') closeAllMapFs(); } catch (e) { } }
 
       const slides = document.querySelectorAll('.slide');
       slides.forEach((slide, i) => {
@@ -9427,6 +9445,17 @@
       document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${slidesCount}`;
       document.getElementById('btnPrev').disabled = (currentSlideIndex === 0);
       document.getElementById('btnNext').disabled = (currentSlideIndex === slidesCount - 1);
+      updateSelectionScopeUI();
+    }
+    // Indicador del modo "seleccionados" (continúan/pendientes/excluyentes) en el botón del menú lateral
+    function updateSelectionScopeUI() {
+      const btn = document.getElementById('btnContinuaSlide');
+      if (!btn) return;
+      const on = (typeof ACTIVE_SELECTION_SCOPE !== 'undefined') && ACTIVE_SELECTION_SCOPE;
+      btn.classList.toggle('selection-active', !!on);
+      btn.title = on
+        ? 'Viendo SELECCIONADOS (continúan · pendientes · excluyentes) — clic: resumen de selección · Inicio: salir'
+        : 'Filtrar PPT por selección técnica: continúan, pendientes y excluyentes';
     }
 
     function toggleFullscreen() {
