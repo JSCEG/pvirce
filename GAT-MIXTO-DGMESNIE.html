@@ -1948,7 +1948,7 @@ async function loadKmzsForCurrentEf(silent=false) {
   }
   kmzLayer = L.geoJSON({ type: 'FeatureCollection', features }, {
     style: () => ({ color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.35 }),
-    pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.85, weight: 1.5 }),
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.85, weight: 1.5, pane: 'mixtosPane' }),
     onEachFeature: (f, lyr) => {
       const p = f.properties || {};
       lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
