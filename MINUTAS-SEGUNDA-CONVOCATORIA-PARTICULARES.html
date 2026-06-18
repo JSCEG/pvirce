@@ -6707,7 +6707,7 @@
         if (layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = layerGerencias;
         if (layerEstados) overlayMaps["Límites Estatales"] = layerEstados;
 
-        L.control.layers(mapInstance.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomright' }).addTo(mapInstance);
+        L.control.layers(mapInstance.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomleft' }).addTo(mapInstance);
       }
 
       // Dibujar marcadores de proyectos
@@ -7418,7 +7418,7 @@
       if (continuaSynthesisState.layerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = continuaSynthesisState.layerGerencias;
       if (continuaSynthesisState.layerEstados) overlayMaps["Límites Estatales"] = continuaSynthesisState.layerEstados;
       if (continuaSynthesisMap.__minimapBaseLayers || Object.keys(overlayMaps).length) {
-        L.control.layers(continuaSynthesisMap.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomright' }).addTo(continuaSynthesisMap);
+        L.control.layers(continuaSynthesisMap.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomleft' }).addTo(continuaSynthesisMap);
       }
 
       continuaSynthesisState.markersGroup = L.layerGroup().addTo(continuaSynthesisMap);
@@ -9095,7 +9095,7 @@
           if (localLayerGerencias) overlayMaps["Gerencias Regionales (GCR)"] = localLayerGerencias;
           if (localLayerEstados) overlayMaps["Límites Estatales"] = localLayerEstados;
 
-          layersControl = L.control.layers(map.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomright' }).addTo(map);
+          layersControl = L.control.layers(map.__minimapBaseLayers || null, overlayMaps, { collapsed: true, position: 'bottomleft' }).addTo(map);
         };
 
         const drawGerencias = () => {
