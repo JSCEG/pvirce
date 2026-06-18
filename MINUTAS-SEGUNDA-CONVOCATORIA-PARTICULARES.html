@@ -6770,6 +6770,7 @@
             dashArray: '2, 3'
           }
         });
+        mapInstance.__estadosLayer = layerEstados;
       } catch (e) {
         console.warn('No se pudo cargar el GeoJSON de estados en el mapa:', e);
       }
@@ -6867,6 +6868,44 @@
 
     function highlightGcrOnMap(gcrName) {
       highlightGcrOnAnyMap(mapInstance, gcrName);
+    }
+
+    // Al filtrar por Entidad Federativa: pinta el polígono del estado, oculta las gerencias y enfoca.
+    // Al limpiar el filtro: restaura las gerencias y la vista nacional. La leyenda ya reporta por estado (DATA filtrada).
+    function efEstadoName(f) {
+      const p = (f && f.properties) || {};
+      return normText(p.NOMGEO || p.nomgeo || p.NOM_ENT || p.nom_ent || p.ESTADO || p.estado || p.NOMBRE || p.nombre || p.name || '');
+    }
+    function applyEfFocusToMap(map) {
+      if (!map) return;
+      const ef = (typeof ACTIVE_EF_FILTER !== 'undefined') ? ACTIVE_EF_FILTER : null;
+      const gerLayer = map.__gerenciaLayer;
+      if (map.__efFocusLayer) { try { map.removeLayer(map.__efFocusLayer); } catch (e) { } map.__efFocusLayer = null; }
+      let focused = false;
+      if (ef && typeof cachedEstadosGeoJSON !== 'undefined' && cachedEstadosGeoJSON) {
+        const target = normText(ef);
+        const feats = (cachedEstadosGeoJSON.features || []).filter(f => {
+          const n = efEstadoName(f);
+          return n && (n === target || n.includes(target) || target.includes(n));
+        });
+        if (feats.length) {
+          try {
+            map.__efFocusLayer = L.geoJSON({ type: 'FeatureCollection', features: feats }, {
+              style: { fillColor: '#9B2247', fillOpacity: 0.16, color: '#9B2247', weight: 2.5 }
+            }).addTo(map);
+            focused = true;
+            map.fitBounds(map.__efFocusLayer.getBounds().pad(0.2));
+          } catch (e) { focused = false; }
+        }
+      }
+      if (focused) {
+        if (gerLayer && map.hasLayer(gerLayer)) { try { map.removeLayer(gerLayer); } catch (e) { } }
+        map.__efFocused = true;
+      } else if (map.__efFocused) {
+        if (gerLayer && !map.hasLayer(gerLayer)) { try { gerLayer.addTo(map); } catch (e) { } }
+        try { map.setView([23.5, -102.2], 4.6); } catch (e) { }
+        map.__efFocused = false;
+      }
     }
 
     // ==========================================
@@ -8102,7 +8141,9 @@
 
       if (mapInstance) {
         drawProjectMarkersOnMap();
+        applyEfFocusToMap(mapInstance);
       }
+      updateAllFullscreenLegends();
 
       showSlide(Math.min(targetSlideIndex, slidesCount - 1));
     }
