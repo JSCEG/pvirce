@@ -1755,6 +1755,14 @@
       pointer-events: none;
     }
     .leaflet-pane .grid-line { pointer-events: none; }
+    /* Marcador con icono por tecnología (sin el recuadro blanco por defecto del divIcon) */
+    .tech-marker {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      text-align: center;
+      cursor: pointer;
+    }
 
     /* Botón exportar PNG del minimapa (visible en pantalla completa) */
     .map-export-btn {
@@ -4855,6 +4863,32 @@
       'Otro': '#718096'
     };
 
+    // Marcadores con icono por tecnología (tamaño según MW del proyecto) en vez de círculos
+    const TECH_ICONS = {
+      'Fotovoltaica': 'bi-sun-fill',
+      'Eólica': 'bi-wind',
+      'Hidroeléctrica': 'bi-droplet-fill',
+      'Almacenamiento': 'bi-battery-charging',
+      'Otro': 'bi-geo-alt-fill'
+    };
+    function projectMarkerColor(p) {
+      const g = getTechGroup(p);
+      let col = TECH_COLORS[g] || TECH_COLORS['Otro'];
+      if (g !== 'Almacenamiento' && isAssociatedSaee(p)) col = TECH_COLORS['Almacenamiento'] || '#A57F2C';
+      return col;
+    }
+    function makeTechMarker(latlng, p, mw) {
+      const g = getTechGroup(p);
+      const sz = Math.max(14, Math.min(32, 12 + Math.sqrt(Math.max(0, Number(mw) || 0)) * 0.8)); // tamaño por proyecto
+      const col = projectMarkerColor(p);
+      const cls = TECH_ICONS[g] || TECH_ICONS['Otro'];
+      const html = '<i class="bi ' + cls + '" style="font-size:' + Math.round(sz) + 'px;color:' + col + ';line-height:1;text-shadow:0 0 2px #fff,0 0 3px #fff,0 1px 2px rgba(0,0,0,.45);"></i>';
+      return L.marker(latlng, {
+        icon: L.divIcon({ className: 'tech-marker', html: html, iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2], popupAnchor: [0, -sz / 2] }),
+        pane: 'markerPane'
+      });
+    }
+
     // ==========================================
     // CARGA DE DATOS Y FALLBACK DE PROXIES
     // ==========================================
@@ -6827,14 +6861,7 @@
             displayTech = `${tGroup} + SAEE`;
           }
 
-          const marker = L.circleMarker(p.coords, {
-            radius: Math.max(3, Math.min(8, Math.sqrt(getContractedMw(p)) * 0.5)),
-            fillColor: col,
-            fillOpacity: 0.85,
-            color: '#ffffff',
-            weight: 1,
-            pane: 'markerPane'
-          });
+          const marker = makeTechMarker(p.coords, p, getContractedMw(p));
           marker.projectData = p; // Attach data for the legend
 
           marker.bindPopup(`
@@ -7567,14 +7594,7 @@
           col = TECH_COLORS['Almacenamiento'] || '#A57F2C';
           displayTech = `${tGroup} + SAEE`;
         }
-        const marker = L.circleMarker(latlng, {
-          radius: Math.max(3, Math.min(8, Math.sqrt(getContractedMw(p)) * 0.5)),
-          fillColor: col,
-          fillOpacity: 0.85,
-          color: '#ffffff',
-          weight: 1,
-          pane: 'markerPane'
-        });
+        const marker = makeTechMarker(latlng, p, getContractedMw(p));
         marker.bindPopup(`
           <div style="font-family:Montserrat,sans-serif; font-size:11px; line-height:1.4;">
             <strong style="color:var(--color-guinda);">${escapeHtml(p.nombre || '—')}</strong><br>
@@ -9319,14 +9339,7 @@
             const tGroup = getTechGroup(p);
             const col = TECH_COLORS[tGroup] || TECH_COLORS['Otro'];
             const finalMw = getProjectCapacity(p);
-            const marker = L.circleMarker(p.coords, {
-              radius: Math.max(3, Math.min(8, Math.sqrt(finalMw) * 0.5)),
-              fillColor: col,
-              fillOpacity: 0.85,
-              color: '#ffffff',
-              weight: 1,
-              pane: 'markerPane'
-            }).addTo(map);
+            const marker = makeTechMarker(p.coords, p, finalMw).addTo(map);
             marker.projectData = p; // Attach data for the legend
 
             marker.bindPopup(`
