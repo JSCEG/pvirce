@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tanda Mundialista</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-block">
+      <img src="../Estilos%20Institucionales/img/logo_sener.png" alt="SENER">
+      <span>DGMESNIE</span>
+    </div>
+    <div class="header-title">
+      <p class="eyebrow">Oficina · Mundial 2026</p>
+      <h1>Tanda Mundialista</h1>
+    </div>
+    <img class="gob-logo" src="../Estilos%20Institucionales/img/logo_gob.png" alt="Gobierno de México">
+    <button class="icon-button" id="notifyButton" type="button" aria-label="Activar notificaciones">🔔</button>
+  </header>
+
+  <main class="app-shell">
+    <section class="summary-panel" aria-label="Resumen de la tanda">
+      <div class="summary-copy">
+        <span class="status-pill">Sistema interno · Mobile first</span>
+        <h2 id="poolName">Tanda de la oficina</h2>
+        <p>Registra participantes, fija el monto, captura resultados y revisa cómo va cada quien.</p>
+        <p class="data-note">Datos demo para piloto. Antes de operar la tanda real, carga calendario/equipos oficiales desde FIFA o CSV interno.</p>
+      </div>
+      <div class="summary-grid">
+        <article>
+          <span id="participantCount">0</span>
+          <small>Participantes</small>
+        </article>
+        <article>
+          <span id="totalPot">$0</span>
+          <small>Bolsa</small>
+        </article>
+        <article>
+          <span id="pendingPredictions">0</span>
+          <small>Pronósticos pendientes</small>
+        </article>
+      </div>
+    </section>
+
+    <nav class="tab-bar" aria-label="Secciones">
+      <button class="tab active" data-view="dashboard" type="button">Inicio</button>
+      <button class="tab" data-view="predictions" type="button">Pronósticos</button>
+      <button class="tab" data-view="matches" type="button">Partidos</button>
+      <button class="tab" data-view="admin" type="button">Admin</button>
+    </nav>
+
+    <section class="view active" id="dashboard">
+      <div class="section-header">
+        <h2>Tabla general</h2>
+        <button class="secondary-button" id="seedButton" type="button">Cargar demo</button>
+      </div>
+      <div class="leaderboard" id="leaderboard"></div>
+
+      <div class="section-header compact">
+        <h2>Equipos y banderas</h2>
+      </div>
+      <div class="team-grid" id="teamGrid"></div>
+    </section>
+
+    <section class="view" id="predictions">
+      <form class="form-card" id="participantForm">
+        <h2>Registrar usuario</h2>
+        <label>
+          Nombre
+          <input id="participantName" name="participantName" type="text" autocomplete="name" placeholder="Ej. Ana" required>
+        </label>
+        <label>
+          Correo
+          <input id="participantEmail" name="participantEmail" type="email" autocomplete="email" placeholder="ana@oficina.gob.mx" required>
+        </label>
+        <button class="primary-button" type="submit">Agregar participante</button>
+      </form>
+
+      <form class="form-card" id="predictionForm">
+        <h2>Capturar pronóstico</h2>
+        <label>
+          Participante
+          <select id="predictionUser" required></select>
+        </label>
+        <label>
+          Partido
+          <select id="predictionMatch" required></select>
+        </label>
+        <div class="score-row">
+          <label>
+            Local
+            <input id="predictionHome" type="number" min="0" max="30" value="1" required>
+          </label>
+          <label>
+            Visitante
+            <input id="predictionAway" type="number" min="0" max="30" value="0" required>
+          </label>
+        </div>
+        <button class="primary-button" type="submit">Guardar pronóstico</button>
+      </form>
+    </section>
+
+    <section class="view" id="matches">
+      <div class="section-header">
+        <h2>Calendario</h2>
+        <select id="stageFilter" aria-label="Filtrar fase">
+          <option value="all">Todas</option>
+          <option value="Grupos">Grupos</option>
+          <option value="Dieciseisavos">Dieciseisavos</option>
+          <option value="Final">Final</option>
+        </select>
+      </div>
+      <div class="match-list" id="matchList"></div>
+    </section>
+
+    <section class="view" id="admin">
+      <form class="form-card" id="settingsForm">
+        <h2>Configuración</h2>
+        <label>
+          Nombre de la tanda
+          <input id="settingsName" type="text" value="Tanda de la oficina" required>
+        </label>
+        <label>
+          Monto de entrada
+          <input id="entryFee" type="number" min="0" step="50" value="200" required>
+        </label>
+        <button class="primary-button" type="submit">Guardar configuración</button>
+      </form>
+
+      <form class="form-card" id="resultForm">
+        <h2>Capturar resultado</h2>
+        <label>
+          Partido
+          <select id="resultMatch" required></select>
+        </label>
+        <div class="score-row">
+          <label>
+            Local
+            <input id="resultHome" type="number" min="0" max="30" value="0" required>
+          </label>
+          <label>
+            Visitante
+            <input id="resultAway" type="number" min="0" max="30" value="0" required>
+          </label>
+        </div>
+        <button class="primary-button" type="submit">Actualizar resultado</button>
+      </form>
+
+      <article class="rules-card">
+        <h2>Reglas sugeridas</h2>
+        <p>Marcador exacto: 5 puntos · Ganador o empate correcto: 3 puntos · Diferencia correcta: 1 punto. Cierre de pronósticos: 15 minutos antes de cada partido.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="institutional-band" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

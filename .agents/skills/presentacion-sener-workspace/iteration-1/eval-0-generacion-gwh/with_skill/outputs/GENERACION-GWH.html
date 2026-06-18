@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generación de Energía Eléctrica</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
+      font-weight: 700;
+    }
+
+    @font-face {
+      font-family: 'Patria';
+      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
+      font-weight: 300;
+    }
+
+    /* IDENTIDAD SENER: Guinda / Verde / Dorado */
+    :root {
+      --color-guinda: #9B2247;
+      --color-guinda-light: #B24C6C;
+      --color-verde: #1E5B4F;
+      --color-dorado: #A57F2C;
+      --color-dorado-light: #D6B46A;
+      --color-gris: #98989A;
+      --color-gris-claro: #E5E5E5;
+      --color-bg-dark: #1E1E1E;
+      --color-text-dark: #2b2b2b;
+      --color-text-light: #666666;
+      --color-bg-light: #F4F6F8;
+      --scale: 1.0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Patria', 'Outfit', sans-serif;
+      background-color: var(--color-bg-dark);
+      color: var(--color-text-dark);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Highcharts 12 renderiza labels useHTML dentro de <foreignObject><body>;
+       ese body hereda el display:flex/100vw global y desplaza el contenido
+       fuera del área visible del label. NO QUITAR esta regla. */
+    foreignObject body {
+      display: block;
+      width: auto;
+      height: auto;
+      background: transparent;
+    }
+
+    /* PRELOADER */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--color-bg-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      transition: opacity 0.5s ease;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--color-dorado);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* DECK */
+    #deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--color-bg-dark);
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+      z-index: 1;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      z-index: 2;
+    }
+
+    /* Lienzo virtual 16:9 fijo; fitSlides() lo escala al viewport */
+    .slide-container {
+      width: 1333px;
+      height: 750px;
+      background-color: #ffffff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 35px 45px;
+      transform-origin: center center;
+    }
+
+    /* HEADER DE SLIDE */
+    .slide-header {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      padding: 14px 28px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      border-bottom: 2px solid var(--color-guinda);
+      margin: -35px -45px 15px;
+      width: calc(100% + 90px);
+    }
+
+    .slide-header .brand-left {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      letter-spacing: .02em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.15;
+    }
+
+    .slide-header .brand-left .brand-line-2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-dorado);
+    }
+
+    .slide-header .ef-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+
+    .slide-header .ef-title::before,
+    .slide-header .ef-title::after {
+      content: '·';
+      color: var(--color-dorado);
+      margin: 0 14px;
+      font-size: 24px;
+    }
+
+    .slide-header .logo-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .slide-header .logo-sener {
+      height: 38px;
+    }
+
+    /* FOOTER TRICOLOR */
+    .slide-footer {
+      margin-top: auto;
+      height: 8px;
+      width: calc(100% + 90px);
+      margin-left: -45px;
+      margin-bottom: -35px;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 60%, var(--color-dorado) 60%, var(--color-dorado) 100%);
+      flex-shrink: 0;
+    }
+
+    /* CONTROLES */
+    #presentationControls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 8px 18px;
+      border-radius: 30px;
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      gap: 15px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .control-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .control-btn:disabled { color: #666; cursor: not-allowed; }
+
+    /* PORTADA */
+    .slide.cover .slide-container {
+      background: #6a172f;
+      color: white;
+      padding: 0;
+      justify-content: flex-start;
+    }
+
+    .slide.cover .cover-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .slide.cover .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155, 34, 71, .35) 0%, rgba(30, 91, 79, .25) 60%, rgba(0, 0, 0, .45) 100%);
+      z-index: 1;
+    }
+
+    .slide.cover .top-band,
+    .slide.cover .body,
+    .slide.cover .bottom-band {
+      position: relative;
+      z-index: 2;
+    }
+
+    .slide.cover .top-band {
+      background: rgba(255, 255, 255, .96);
+      padding: 18px 56px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      border-bottom: 4px solid var(--color-dorado);
+      width: 100%;
+    }
+
+    .slide.cover .top-band img.gob { height: 56px; width: auto; }
+    .slide.cover .top-band img.sener { height: 48px; width: auto; }
+
+    .slide.cover .top-band .divider {
+      width: 1px;
+      height: 48px;
+      background: var(--color-gris);
+    }
+
+    .slide.cover .top-band .unit {
+      font-size: 11px;
+      color: var(--color-text-dark);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-left: auto;
+    }
+
+    .slide.cover .body {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 40px 60px 64px 28%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 15px;
+      text-align: left;
+    }
+
+    .slide.cover .eyebrow {
+      font-size: 14px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--color-dorado);
+      font-weight: 700;
+    }
+
+    .slide.cover h1 {
+      font-weight: 700;
+      font-size: 64px;
+      line-height: 1.0;
+      max-width: 900px;
+      color: white;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
+    }
+
+    .slide.cover .unidad {
+      font-weight: 300;
+      font-size: 28px;
+      line-height: 1.3;
+      color: white;
+      max-width: 720px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+      margin-top: 10px;
+    }
+
+    .slide.cover .unidad-sub {
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, .92);
+      max-width: 720px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+      margin-top: 8px;
+    }
+
+    .slide.cover .unidad-sub-destacada {
+      margin-top: 10px;
+      padding: 8px 14px 10px;
+      max-width: 860px;
+      font-size: 19px;
+      line-height: 1.45;
+      background: rgba(0, 0, 0, 0.28);
+      border-left: 4px solid var(--color-dorado);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .slide.cover .unidad-sub-destacada .acronym {
+      color: var(--color-dorado);
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .slide.cover .subtitle {
+      font-weight: 600;
+      font-size: 28px;
+      color: #fff;
+      margin-top: 24px;
+      text-align: right;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .32);
+    }
+
+    .slide.cover .meta {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 24px;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .slide.cover .meta-item { min-width: 110px; text-align: right; }
+
+    .slide.cover .meta-item .meta-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: rgba(165, 127, 44, .92);
+      margin-bottom: 2px;
+    }
+
+    .slide.cover .meta-item .meta-value {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .95);
+      white-space: nowrap;
+    }
+
+    .slide.cover .bottom-band {
+      margin-top: auto;
+      flex: 0 0 14px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 33%, var(--color-verde) 33%, var(--color-verde) 66%, var(--color-dorado) 66%);
+    }
+
+    /* COMPONENTES DE CONTENIDO */
+    .content-grid {
+      display: grid;
+      gap: 20px;
+      flex-grow: 1;
+      min-height: 0;
+    }
+
+    .kpi-card-main {
+      background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 8px 20px rgba(105, 27, 49, .25);
+    }
+
+    .kpi-card-main .lbl {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-dorado-light);
+    }
+
+    .kpi-card-main .val-main {
+      font-size: 58px;
+      font-weight: 700;
+      line-height: 1.05;
+      color: #F2CB67;
+    }
+
+    .kpi-card-main .val-sub {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .panel-card {
+      background: #fff;
+      border: 1px solid var(--color-gris-claro);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .06);
+    }
+
+    .panel-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--color-guinda);
+      border-bottom: 2px solid var(--color-dorado);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .panel-card .chart-host { flex: 1 1 auto; min-height: 0; }
+
+    .kpi-box {
+      background: var(--color-bg-light);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-box .s-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--color-text-light);
+    }
+
+    .kpi-box .s-val {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--color-guinda);
+      line-height: 1.1;
+    }
+
+    .kpi-box .s-sub {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-dark);
+    }
+
+    /* TABLAS */
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+    }
+
+    .report-table thead th {
+      background: var(--color-guinda);
+      color: #fff;
+      padding: 9px 12px;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-align: left;
+    }
+
+    .report-table thead th.num { text-align: right; }
+
+    .report-table tbody td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--color-gris-claro);
+      vertical-align: top;
+    }
+
+    .report-table tbody tr:nth-child(even) { background: #FAFBFC; }
+
+    .report-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .report-table tfoot td {
+      padding: 9px 12px;
+      font-weight: 700;
+      border-top: 2px solid var(--color-guinda);
+      color: var(--color-guinda);
+    }
+
+    .notas {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--color-text-light);
+      line-height: 1.5;
+    }
+
+    /* LOADER PDF */
+    #pdfLoader {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 20, .82);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      z-index: 10000;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+    }
+
+    body.exporting #presentationControls { display: none; }
+    body.exporting .chart-fullscreen-modal { display: none !important; }
+
+    /* FULLSCREEN POR GRÁFICA: shell 16:9 al tamaño máximo del viewport,
+       mismas proporciones que el lienzo de la presentación */
+    .panel-card .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel-card .panel-head h3 { flex: 1 1 auto; }
+
+    .chart-fs-btn {
+      flex: 0 0 auto;
+      height: 26px;
+      min-width: 26px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--color-guinda);
+      color: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter .15s, transform .15s;
+    }
+
+    .chart-fs-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+    .chart-fullscreen-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 13000;
+      background: rgba(30, 30, 30, .92);
+    }
+
+    .chart-fullscreen-modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-fullscreen-shell {
+      width: min(100vw, calc(100vh * 1333 / 750));
+      height: min(100vh, calc(100vw * 750 / 1333));
+      background: #fff;
+      box-shadow: 0 24px 90px rgba(0, 0, 0, .45);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-bottom: 8px solid var(--color-guinda);
+    }
+
+    .chart-fullscreen-head {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 24px;
+      border-bottom: 4px solid var(--color-dorado);
+      background: linear-gradient(180deg, #fff, #f7f7f7);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--color-guinda);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .chart-fullscreen-head button {
+      height: 34px;
+      min-width: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--color-guinda);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    #fullscreenChart {
+      flex: 1;
+      min-height: 0;
+      padding: 12px 18px 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="spinner"></div>
+    <p id="preloaderMsg">Cargando datos…</p>
+  </div>
+
+  <div id="pdfLoader">
+    <div class="spinner"></div>
+    <p id="pdfLoaderMsg">Generando PDF…</p>
+  </div>
+
+  <div id="deck">
+
+    <!-- SLIDE 0: PORTADA -->
+    <section class="slide cover active" id="slide-0">
+      <div class="slide-container">
+        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt=""
+          onerror="this.style.display='none'">
+        <div class="cover-overlay"></div>
+
+        <div class="top-band">
+          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México"
+            onerror="this.style.display='none'">
+          <div class="divider"></div>
+          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"
+            onerror="this.style.display='none'">
+          <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
+        </div>
+
+        <div class="body">
+          <div class="eyebrow">Pronóstico por Permisionario</div>
+          <h1>Generación de Energía Eléctrica</h1>
+          <div class="unidad">Subsecretaría de Planeación y Transición Energética</div>
+          <div class="unidad-sub">Unidad del Sistema Nacional de Información Energética</div>
+          <div class="unidad-sub unidad-sub-destacada">Dirección General de Metodologías y Estadísticas del Sistema
+            Nacional de Información Energética - <span class="acronym">DGMESNIE</span></div>
+          <div class="subtitle">Periodo: 2024 – 2030</div>
+          <div class="meta">
+            <div class="meta-item">
+              <span class="meta-label">Versión</span>
+              <span class="meta-value">1.0</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fecha</span>
+              <span class="meta-value" id="coverFecha">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fuente</span>
+              <span class="meta-value">SNIE — DGMESNIE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-band"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 1: NUMERALIA -->
+    <section class="slide" id="slide-1">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>Generación en GWh</span><span class="brand-line-2">Pronóstico
+              2024-2030</span></div>
+          <div class="ef-title">Numeralia de Generación</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 300px 1fr;">
+          <div style="display:flex;flex-direction:column;gap:16px;min-height:0;">
+            <div class="kpi-card-main">
+              <span class="lbl">Generación Total 2030</span>
+              <span class="val-main" id="kpiTotal2030">—</span>
+              <span class="val-sub">GWh estimados</span>
+            </div>
+            <div class="kpi-box">
+              <span class="s-lbl">Crecimiento 2024 → 2030</span>
+              <span class="s-val" id="kpiCrecimiento">—</span>
+              <span class="s-sub" id="kpiCrecimientoSub">—</span>
+            </div>
+            <div class="kpi-box">
+              <span class="s-lbl">Estado 2030</span>
+              <span class="s-val" id="kpiEstado">—</span>
+              <span class="s-sub" id="kpiEstadoSub">GWh</span>
+            </div>
+            <div class="kpi-box">
+              <span class="s-lbl">Particulares 2030</span>
+              <span class="s-val" id="kpiParticulares">—</span>
+              <span class="s-sub" id="kpiParticularesSub">GWh</span>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Generación estimada 2030 por permisionario (GWh)</h3>
+              <button class="chart-fs-btn"
+                onclick="openChartFullscreen('chartPermisionarios','Generación estimada 2030 por permisionario (GWh)')"
+                title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chartPermisionarios"></div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: EVOLUCIÓN -->
+    <section class="slide" id="slide-2">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>Generación en GWh</span><span class="brand-line-2">Pronóstico
+              2024-2030</span></div>
+          <div class="ef-title">Evolución por Permisionario</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr;">
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Generación anual por permisionario, 2024-2030 (GWh)</h3>
+              <button class="chart-fs-btn"
+                onclick="openChartFullscreen('chartEvolucion','Generación anual por permisionario, 2024-2030 (GWh)')"
+                title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chartEvolucion"></div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: PREVALENCIA ESTADO VS PARTICULARES -->
+    <section class="slide" id="slide-3">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>Generación en GWh</span><span class="brand-line-2">Pronóstico
+              2024-2030</span></div>
+          <div class="ef-title">Prevalencia Estado vs Particulares</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div class="content-grid" style="grid-template-columns: 1fr 420px;">
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Evolución de la prevalencia (GWh)</h3>
+              <button class="chart-fs-btn"
+                onclick="openChartFullscreen('chartPrevalencia','Evolución de la prevalencia (GWh)')"
+                title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chartPrevalencia"></div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-head">
+              <h3>Participación 2030 (%)</h3>
+              <button class="chart-fs-btn" onclick="openChartFullscreen('chartDona2030','Participación 2030 (%)')"
+                title="Ver gráfica en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </div>
+            <div class="chart-host" id="chartDona2030"></div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: TABLA DETALLE -->
+    <section class="slide" id="slide-4">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left"><span>Generación en GWh</span><span class="brand-line-2">Pronóstico
+              2024-2030</span></div>
+          <div class="ef-title">Detalle por Permisionario</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"
+              onerror="this.style.display='none'"></div>
+        </div>
+
+        <div style="flex-grow:1;min-height:0;overflow:hidden;">
+          <table class="report-table" id="tablaDetalle">
+            <thead></thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+          </table>
+          <div class="notas" id="tablaNotas"></div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL FULLSCREEN DE GRÁFICA -->
+  <div id="chartFullscreenModal" class="chart-fullscreen-modal"
+    onclick="if(event.target === this) closeChartFullscreen();">
+    <div class="chart-fullscreen-shell">
+      <div class="chart-fullscreen-head">
+        <span id="fullscreenChartTitle"></span>
+        <button onclick="closeChartFullscreen()" title="Cerrar (Esc)"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div id="fullscreenChart"></div>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <div id="presentationControls">
+    <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+    <span id="slideCounter">1 / 5</span>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+    <button class="control-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)"><i
+        class="bi bi-arrows-fullscreen"></i></button>
+    <button class="control-btn" onclick="exportPDF()" title="Exportar a PDF"
+      style="background:var(--color-guinda);color:#fff;"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+  </div>
+
+  <!-- CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <script>
+    // ==========================================
+    // CONFIGURACIÓN
+    // ==========================================
+    const CONFIG = {
+      dataUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1nKC-3O9-GqftkzwiSwSFO08zU8Opb0M4ZOvr3sj6_Ya-Dk-6BInWjWRLtpzlBA/pub?output=tsv',
+      titulo: 'Generación de Energía Eléctrica',
+      archivoPdf: 'Generacion_GWh_2024_2030.pdf'
+    };
+
+    let ROWS = [];   // matriz cruda [fila][columna], celdas como string
+    let currentSlideIndex = 0;
+    let slidesCount = 1;
+
+    // ==========================================
+    // TEMA HIGHCHARTS INSTITUCIONAL
+    // ==========================================
+    Highcharts.setOptions({
+      colors: ['#9B2247', '#A57F2C', '#1E5B4F', '#B24C6C', '#D6B46A', '#98989A', '#611232', '#2D3748'],
+      chart: { backgroundColor: 'transparent', style: { fontFamily: 'Montserrat, sans-serif' } },
+      title: { text: '' },
+      credits: { enabled: false },
+      legend: { itemStyle: { fontSize: '11px' } },
+      accessibility: { enabled: false }
+    });
+
+    // ==========================================
+    // CARGA DE DATOS (Google Sheets publicado)
+    // ==========================================
+    async function tryFetch(url) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return await response.text();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function loadData() {
+      const fresh = CONFIG.dataUrl + (CONFIG.dataUrl.includes('?') ? '&' : '?') + 'cb=' + Date.now();
+      const candidates = [
+        fresh,
+        CONFIG.dataUrl,
+        'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(CONFIG.dataUrl),
+        'https://corsproxy.io/?' + encodeURIComponent(CONFIG.dataUrl),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(CONFIG.dataUrl)
+      ];
+
+      let text = null;
+      for (const url of candidates) {
+        try {
+          text = await tryFetch(url);
+          if (text && text.length > 10) break;
+        } catch (e) { /* siguiente candidato */ }
+      }
+      if (!text) throw new Error('No se pudieron descargar los datos.');
+
+      const parsed = Papa.parse(text.replace(/^﻿/, ''), {
+        header: false,
+        skipEmptyLines: 'greedy',
+        delimiter: ''
+      });
+      ROWS = parsed.data.map(r => r.map(c => String(c ?? '').trim()));
+    }
+
+    function toNum(v) {
+      if (v === null || v === undefined) return null;
+      const s = String(v).replace(/[$,%\s]/g, '');
+      if (s === '' || isNaN(Number(s))) return null;
+      return Number(s);
+    }
+
+    function formatInt(n) {
+      return Number(n || 0).toLocaleString('es-MX', { maximumFractionDigits: 0 });
+    }
+
+    // ==========================================
+    // NAVEGACIÓN
+    // ==========================================
+    function showSlide(index) {
+      if (index < 0 || index >= slidesCount) return;
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      currentSlideIndex = index;
+      updateControls();
+      setTimeout(() => {
+        renderChartsForSlide(index);
+        animateSlide(index);
+      }, 120);
+    }
+
+    function nextSlide() { showSlide(currentSlideIndex + 1); }
+    function prevSlide() { showSlide(currentSlideIndex - 1); }
+
+    function updateControls() {
+      document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${slidesCount}`;
+      document.getElementById('btnPrev').disabled = currentSlideIndex === 0;
+      document.getElementById('btnNext').disabled = currentSlideIndex === slidesCount - 1;
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') { closeChartFullscreen(); return; }
+      if (document.getElementById('chartFullscreenModal').classList.contains('show')) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'Home') showSlide(0);
+      else if (e.key === 'End') showSlide(slidesCount - 1);
+      else if (e.key.toLowerCase() === 'f') toggleFullscreen();
+    });
+
+    // ==========================================
+    // ESCALADO 16:9
+    // ==========================================
+    function fitSlides() {
+      const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+      document.documentElement.style.setProperty('--scale', scale.toFixed(4));
+      document.querySelectorAll('.slide-container').forEach(c => {
+        c.style.transform = `scale(${scale.toFixed(4)})`;
+      });
+    }
+    window.addEventListener('resize', fitSlides);
+
+    function getCurrentScale() {
+      return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
+    }
+
+    // ==========================================
+    // ANIMACIONES (anime.js)
+    // ==========================================
+    function animateSlide(index) {
+      if (window.isExportingPdf) return;
+      const activeSlide = document.querySelectorAll('.slide')[index];
+      if (!activeSlide) return;
+
+      const container = activeSlide.querySelector('.slide-container');
+      if (container) {
+        const s = getCurrentScale();
+        anime({ targets: container, opacity: [0.4, 1], scale: [s * 0.985, s], duration: 350, easing: 'easeOutQuad' });
+      }
+
+      if (index === 0) {
+        anime({
+          targets: '#slide-0 h1, #slide-0 .eyebrow, #slide-0 .unidad, #slide-0 .unidad-sub, #slide-0 .subtitle',
+          opacity: [0, 1], translateY: [25, 0], delay: anime.stagger(60), duration: 600, easing: 'easeOutQuad'
+        });
+        anime({ targets: '#slide-0 .top-band, #slide-0 .bottom-band', scaleX: [0, 1], duration: 500, easing: 'easeOutQuad' });
+        return;
+      }
+
+      anime({
+        targets: activeSlide.querySelectorAll('.kpi-card-main, .panel-card, .kpi-box'),
+        opacity: [0, 1], translateY: [20, 0], delay: anime.stagger(50), duration: 500, easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.report-table tbody tr'),
+        opacity: [0, 1], translateY: [8, 0], delay: anime.stagger(15), duration: 350, easing: 'easeOutQuad'
+      });
+    }
+
+    // ==========================================
+    // FULLSCREEN POR GRÁFICA
+    // Reusa la configuración del chart ya renderizado (userOptions).
+    // ==========================================
+    let fullscreenChart = null;
+
+    function openChartFullscreen(hostId, title) {
+      const source = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === hostId);
+      if (!source) return;
+      document.getElementById('fullscreenChartTitle').textContent = title || '';
+      document.getElementById('chartFullscreenModal').classList.add('show');
+      if (fullscreenChart) { fullscreenChart.destroy(); fullscreenChart = null; }
+      const options = Highcharts.merge(source.userOptions, {
+        chart: { width: null, height: null },
+        plotOptions: { series: { animation: false } }
+      });
+      fullscreenChart = Highcharts.chart('fullscreenChart', options);
+      setTimeout(() => fullscreenChart && fullscreenChart.reflow(), 80);
+    }
+
+    function closeChartFullscreen() {
+      document.getElementById('chartFullscreenModal').classList.remove('show');
+      if (fullscreenChart) { fullscreenChart.destroy(); fullscreenChart = null; }
+    }
+
+    // ==========================================
+    // EXPORTAR PDF (13.333 x 7.5 in panorámico)
+    // La captura clona el slide a un escenario fijo de 1333x750 SIN el
+    // transform de escala — capturar el contenedor escalado recorta el PDF.
+    // ==========================================
+    function showPdfLoader(msg) {
+      document.getElementById('pdfLoaderMsg').innerText = msg;
+      document.getElementById('pdfLoader').style.display = 'flex';
+    }
+    function hidePdfLoader() {
+      document.getElementById('pdfLoader').style.display = 'none';
+    }
+
+    async function captureSlideForPdf(slide) {
+      const slideClone = slide.cloneNode(true);
+      const clone = slideClone.querySelector('.slide-container') || slideClone;
+      const stage = document.createElement('div');
+      stage.setAttribute('aria-hidden', 'true');
+      stage.style.cssText =
+        'position:fixed;left:-10000px;top:0;width:1333px;height:750px;overflow:hidden;' +
+        'background:#fff;z-index:14001;opacity:1;pointer-events:none;';
+      slideClone.classList.add('active');
+      slideClone.style.cssText =
+        'position:relative;inset:auto;display:flex;align-items:center;justify-content:center;' +
+        'width:1333px;height:750px;opacity:1;';
+      clone.style.cssText +=
+        ';position:relative;left:0;top:0;margin:0;transform:none;transition:none;' +
+        'width:1333px;height:750px;box-shadow:none;';
+      stage.appendChild(slideClone);
+      document.body.appendChild(stage);
+      try {
+        // Doble rAF para esperar layout; con fallback porque rAF se congela
+        // si la pestaña está oculta (exportar con la ventana en background).
+        await new Promise(r => {
+          let settled = false;
+          const settle = () => { if (!settled) { settled = true; r(); } };
+          requestAnimationFrame(() => requestAnimationFrame(settle));
+          setTimeout(settle, 400);
+        });
+        return await html2canvas(clone, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 1333,
+          height: 750,
+          windowWidth: 1333,
+          windowHeight: 750,
+          scrollX: 0,
+          scrollY: 0
+        });
+      } finally {
+        stage.remove();
+      }
+    }
+
+    async function exportPDF() {
+      const { jsPDF } = window.jspdf;
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const prevIndex = currentSlideIndex;
+
+      closeChartFullscreen();
+      document.body.classList.add('exporting');
+      showPdfLoader(`Preparando ${slides.length} diapositivas…`);
+      window.isExportingPdf = true;
+
+      try {
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < slides.length; i++) {
+          showPdfLoader(`Capturando slide ${i + 1}/${slides.length}…`);
+          slides.forEach(s => s.classList.remove('active'));
+          slides[i].classList.add('active');
+          renderChartsForSlide(i);
+          await new Promise(r => setTimeout(r, 650));
+          Highcharts.charts.forEach(c => c && c.reflow());
+          await new Promise(r => setTimeout(r, 180));
+
+          const canvas = await captureSlideForPdf(slides[i]);
+          if (i > 0) pdf.addPage([338.6582, 190.5], 'l');
+          pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageW, pageH);
+        }
+
+        showPdfLoader('Guardando archivo…');
+        pdf.save(CONFIG.archivoPdf);
+      } catch (err) {
+        console.error('Error PDF:', err);
+        alert('Error generando PDF: ' + err.message);
+      } finally {
+        window.isExportingPdf = false;
+        document.body.classList.remove('exporting');
+        slides.forEach(s => s.classList.remove('active'));
+        showSlide(prevIndex);
+        hidePdfLoader();
+      }
+    }
+
+    // ==========================================
+    // RENDER ESPECÍFICO: Generación en GWh 2024-2030
+    // ==========================================
+    // Estructura de la hoja:
+    //  - Bloque 1 (encabezado 'Permisionario'): generación por permisionario,
+    //    años 2024-2030, fila TOTAL y notas al pie (NOTA:, 1/, 2/, 3/).
+    //  - Bloque 2 ('Evolución de la prevalencia en GWh'): Estado vs
+    //    Particulares en GWh (se usa el bloque izquierdo, cols 1-8).
+    //  - Bloque 3 ('Evolución de la prevalencia en %'): participación
+    //    porcentual Estado vs Particulares.
+    const D = { years: [], permisionarios: [], total: null, prevalencia: [], prevalenciaPct: [], notas: [] };
+    const chartsRendered = new Set();
+
+    function buildSlides(rows) {
+      const headerIdx = rows.findIndex(r => r[1] === 'Permisionario');
+      D.years = rows[headerIdx].slice(2, 9).map(y => y.trim());
+
+      for (let i = headerIdx + 1; i < rows.length; i++) {
+        const name = rows[i][1];
+        if (!name) continue;
+        if (/^NOTA:|^\d\//.test(name)) { D.notas.push(name); continue; }
+        const vals = rows[i].slice(2, 9).map(toNum);
+        if (name === 'TOTAL') { D.total = vals; break; }
+        D.permisionarios.push({ name, vals });
+      }
+      // Notas vienen después del TOTAL
+      for (let i = headerIdx + 1; i < rows.length; i++) {
+        const name = rows[i][1];
+        if (name && /^NOTA:|^\d\//.test(name) && !D.notas.includes(name)) D.notas.push(name);
+      }
+
+      // Bloque de prevalencia en GWh (bloque izquierdo)
+      const prevIdx = rows.findIndex(r => r.some(c => c === 'Evolución de la prevalencia en GWh'));
+      if (prevIdx >= 0) {
+        for (let i = prevIdx + 1; i < rows.length; i++) {
+          if (rows[i][1] === 'Estado' || rows[i][1] === 'Particulares') {
+            D.prevalencia.push({ name: rows[i][1], vals: rows[i].slice(2, 9).map(toNum) });
+          }
+          if (D.prevalencia.length === 2) break;
+        }
+      }
+
+      // Bloque de prevalencia en % (bloque izquierdo)
+      const pctIdx = rows.findIndex(r => r.some(c => c === 'Evolución de la prevalencia en %'));
+      if (pctIdx >= 0) {
+        for (let i = pctIdx + 1; i < rows.length; i++) {
+          if (rows[i][1] === 'Estado' || rows[i][1] === 'Particulares') {
+            D.prevalenciaPct.push({ name: rows[i][1], vals: rows[i].slice(2, 9).map(toNum) });
+          }
+          if (D.prevalenciaPct.length === 2) break;
+        }
+      }
+
+      fillNumeralia();
+      fillTabla();
+    }
+
+    function fillNumeralia() {
+      const last = D.years.length - 1;
+      const total2030 = D.total ? D.total[last] : null;
+      const total2024 = D.total ? D.total[0] : null;
+      document.getElementById('kpiTotal2030').innerText = formatInt(total2030);
+      if (total2024 && total2030) {
+        const pct = ((total2030 - total2024) / total2024) * 100;
+        document.getElementById('kpiCrecimiento').innerText = `+${pct.toFixed(1)}%`;
+        document.getElementById('kpiCrecimientoSub').innerText =
+          `${formatInt(total2024)} → ${formatInt(total2030)} GWh`;
+      }
+      const estado = D.prevalencia.find(p => p.name === 'Estado');
+      const part = D.prevalencia.find(p => p.name === 'Particulares');
+      const estadoPct = D.prevalenciaPct.find(p => p.name === 'Estado');
+      const partPct = D.prevalenciaPct.find(p => p.name === 'Particulares');
+      if (estado) {
+        document.getElementById('kpiEstado').innerText = formatInt(estado.vals[last]);
+        if (estadoPct) document.getElementById('kpiEstadoSub').innerText = `GWh · ${estadoPct.vals[last]}% del total`;
+      }
+      if (part) {
+        document.getElementById('kpiParticulares').innerText = formatInt(part.vals[last]);
+        if (partPct) document.getElementById('kpiParticularesSub').innerText = `GWh · ${partPct.vals[last]}% del total`;
+      }
+    }
+
+    function fillTabla() {
+      const thead = document.querySelector('#tablaDetalle thead');
+      const tbody = document.querySelector('#tablaDetalle tbody');
+      const tfoot = document.querySelector('#tablaDetalle tfoot');
+
+      thead.innerHTML = '<tr><th>Permisionario</th>' +
+        D.years.map(y => `<th class="num">${y}</th>`).join('') + '</tr>';
+
+      tbody.innerHTML = D.permisionarios.map(p =>
+        `<tr><td>${p.name}</td>` +
+        p.vals.map(v => `<td class="num">${v === null ? '—' : formatInt(v)}</td>`).join('') + '</tr>'
+      ).join('');
+
+      if (D.total) {
+        tfoot.innerHTML = '<tr><td>TOTAL</td>' +
+          D.total.map(v => `<td class="num">${v === null ? '—' : formatInt(v)}</td>`).join('') + '</tr>';
+      }
+
+      document.getElementById('tablaNotas').innerHTML = D.notas.map(n => `<div>${n}</div>`).join('');
+    }
+
+    function renderChartsForSlide(index) {
+      if (chartsRendered.has(index)) return;
+      chartsRendered.add(index);
+
+      if (index === 1) {
+        const last = D.years.length - 1;
+        const sorted = D.permisionarios
+          .map(p => ({ name: p.name, y: p.vals[last] || 0 }))
+          .sort((a, b) => b.y - a.y);
+        Highcharts.chart('chartPermisionarios', {
+          chart: { type: 'bar', marginRight: 90 },
+          xAxis: {
+            categories: sorted.map(p => p.name),
+            labels: { style: { fontSize: '11px', color: '#333', fontWeight: '500' } },
+            lineColor: '#CBD5E0'
+          },
+          yAxis: {
+            title: { text: 'GWh', style: { fontSize: '10px' } },
+            labels: { formatter() { return formatInt(this.value); }, style: { fontSize: '10px' } },
+            gridLineColor: '#EDF2F7'
+          },
+          legend: { enabled: false },
+          plotOptions: {
+            series: {
+              color: '#9B2247', borderRadius: 3,
+              dataLabels: {
+                enabled: true,
+                formatter() { return formatInt(this.y) + ' GWh'; },
+                crop: false, overflow: 'allow',
+                style: { fontSize: '10px', fontWeight: 'bold' }
+              }
+            }
+          },
+          tooltip: { pointFormat: '<b>{point.y:,.0f} GWh</b> en 2030' },
+          series: [{ data: sorted }]
+        });
+      }
+
+      if (index === 2) {
+        Highcharts.chart('chartEvolucion', {
+          chart: { type: 'column' },
+          xAxis: { categories: D.years, labels: { style: { fontSize: '12px' } } },
+          yAxis: {
+            title: { text: 'GWh', style: { fontSize: '11px' } },
+            labels: { formatter() { return formatInt(this.value); } },
+            gridLineColor: '#EDF2F7',
+            stackLabels: {
+              enabled: true,
+              formatter() { return formatInt(this.total); },
+              style: { fontSize: '11px', fontWeight: '700', color: '#2b2b2b', textOutline: 'none' }
+            }
+          },
+          plotOptions: { column: { stacking: 'normal', borderRadius: 2 } },
+          tooltip: { shared: true, pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y:,.0f}</b><br/>' },
+          series: D.permisionarios.map(p => ({ name: p.name, data: p.vals.map(v => v || 0) }))
+        });
+      }
+
+      if (index === 3) {
+        Highcharts.chart('chartPrevalencia', {
+          chart: { type: 'line' },
+          xAxis: { categories: D.years, labels: { style: { fontSize: '12px' } } },
+          yAxis: {
+            title: { text: 'GWh', style: { fontSize: '11px' } },
+            labels: { formatter() { return formatInt(this.value); } },
+            gridLineColor: '#EDF2F7'
+          },
+          plotOptions: {
+            line: {
+              lineWidth: 3,
+              marker: { enabled: true, radius: 4 },
+              dataLabels: {
+                enabled: true,
+                formatter() { return formatInt(this.y); },
+                style: { fontSize: '10px', fontWeight: '600' }
+              }
+            }
+          },
+          tooltip: { shared: true },
+          series: [
+            { name: 'Estado', color: '#9B2247', data: (D.prevalencia.find(p => p.name === 'Estado') || {}).vals || [] },
+            { name: 'Particulares', color: '#A57F2C', data: (D.prevalencia.find(p => p.name === 'Particulares') || {}).vals || [] }
+          ]
+        });
+
+        const last = D.years.length - 1;
+        const estadoPct = D.prevalenciaPct.find(p => p.name === 'Estado');
+        const partPct = D.prevalenciaPct.find(p => p.name === 'Particulares');
+        Highcharts.chart('chartDona2030', {
+          chart: { type: 'pie' },
+          plotOptions: {
+            pie: {
+              innerSize: '62%',
+              dataLabels: {
+                enabled: true,
+                format: '{point.name}: {point.y}%',
+                style: { fontSize: '12px', fontWeight: '600', textOutline: 'none' }
+              }
+            }
+          },
+          tooltip: { pointFormat: '<b>{point.y}%</b> del total 2030' },
+          series: [{
+            data: [
+              { name: 'Estado', y: estadoPct ? estadoPct.vals[last] : 0, color: '#9B2247' },
+              { name: 'Particulares', y: partPct ? partPct.vals[last] : 0, color: '#A57F2C' }
+            ]
+          }]
+        });
+      }
+    }
+
+    // ==========================================
+    // ARRANQUE
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await loadData();
+        buildSlides(ROWS);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('preloaderMsg').innerText = 'Error cargando datos: ' + err.message;
+        return;
+      }
+
+      slidesCount = document.querySelectorAll('.slide').length;
+      document.getElementById('coverFecha').innerText =
+        new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' });
+
+      fitSlides();
+      updateControls();
+
+      const pre = document.getElementById('preloader');
+      pre.style.opacity = 0;
+      setTimeout(() => { pre.style.display = 'none'; animateSlide(0); }, 500);
+    });
+  </script>
+</body>
+
+</html>

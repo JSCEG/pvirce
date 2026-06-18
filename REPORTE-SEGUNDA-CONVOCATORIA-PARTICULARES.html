@@ -190,7 +190,7 @@
 
     .slide-header .brand-left {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--color-guinda);
       letter-spacing: .02em;
@@ -201,15 +201,15 @@
 
     .slide-header .brand-left::before {
       content: '';
-      width: 4px;
-      height: 24px;
+      width: 3px;
+      height: 18px;
       background: var(--color-guinda);
       border-radius: 2px;
     }
 
     .slide-header .ef-title {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-size: 24px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--color-text-dark);
       text-align: center;
@@ -221,8 +221,8 @@
     .slide-header .ef-title::after {
       content: '·';
       color: var(--color-dorado);
-      margin: 0 14px;
-      font-size: 24px;
+      margin: 0 10px;
+      font-size: 17px;
     }
 
     .slide-header .logo-right {
@@ -883,26 +883,27 @@
     #slide-1 .slide-header .brand-left::before,
     .tabular-slide .slide-header .brand-left::before {
       width: 3px;
-      height: 42px;
+      height: 26px;
       position: absolute;
       left: 0;
-      top: 2px;
+      top: 1px;
       background: #b71e4f;
     }
 
     #slide-1 .brand-line-1,
     .tabular-slide .brand-line-1 {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-size: 16px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: .02em;
       text-transform: none;
+      white-space: nowrap;
     }
 
     #slide-1 .brand-line-2,
     .tabular-slide .brand-line-2 {
       font-family: 'Patria', 'Outfit', sans-serif;
-      font-size: 15px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: .02em;
       text-transform: none;
@@ -910,7 +911,7 @@
 
     #slide-1 .slide-header .ef-title,
     .tabular-slide .slide-header .ef-title {
-      font-size: 26px;
+      font-size: 18px;
       letter-spacing: .02em;
       line-height: 1.1;
       color: #202733;
@@ -1572,6 +1573,55 @@
       flex-grow: 1;
       min-height: 0;
       overflow: visible;
+    }
+
+    /* Fullscreen + interactividad de minimapas */
+    .leaflet-container.map-fs {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 100000 !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+    }
+    .map-fs-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 1200;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(0, 0, 0, .18);
+      color: var(--color-guinda);
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    }
+    .map-fs-btn:hover {
+      background: #fff;
+    }
+    .leaflet-container.map-fs .map-fs-btn {
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      font-size: 17px;
+    }
+    body.map-fs-open {
+      overflow: hidden;
+    }
+    body.map-fs-open .slide-container,
+    body.map-fs-open .map-card {
+      transform: none !important;
+      opacity: unset !important;
     }
 
     /* Estilos Premium para el Control de Capas Leaflet */
@@ -3322,6 +3372,12 @@
         <option value="SAEE No Asociado">SAEE No Asociado</option>
         <option value="Hidroeléctrica">Hidroeléctrica</option>
       </select>
+      <div id="gcrFilterWrap" style="position: relative; display: inline-block;">
+        <button type="button" id="gcrFilterBtn" onclick="toggleGcrPanel(event)" title="Filtrar por GCR — una o varias" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 190px; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden;">
+          <span id="gcrFilterLabel" style="overflow: hidden; text-overflow: ellipsis;">Todas</span><i class="bi bi-caret-down-fill" style="font-size: 9px;"></i>
+        </button>
+        <div id="gcrFilterPanel" onclick="event.stopPropagation()" style="display: none; position: absolute; top: 0; right: calc(100% + 10px); background: #1f1f1f; border: 1px solid rgba(255,255,255,0.18); border-radius: 8px; padding: 6px; min-width: 175px; max-height: 260px; overflow: auto; z-index: 1100; box-shadow: 0 10px 25px rgba(0,0,0,.5);"></div>
+      </div>
       <select id="gieFilterSelect" onchange="filterGieAndRebuild(this.value)" style="background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; outline: none; max-width: 260px;">
         <option value="ALL">Todos los GIE</option>
       </select>
@@ -3552,7 +3608,7 @@
 
   <!-- CDN scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js" onerror="var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/highcharts/highcharts.js';f.onload=function(){try{if(typeof renderNumeralia==='function'&&typeof DATA!=='undefined'&&DATA&&DATA.length)renderNumeralia();}catch(e){}};document.head.appendChild(f);"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -3700,10 +3756,51 @@
     let ALL_DATA = [];
     let ACTIVE_TECH_FILTER = null;
     let ACTIVE_GIE_FILTER = null;
+    let ACTIVE_GCR_FILTER = null;   // null = todas; array = una o varias GCR seleccionadas
     let DATA = [];
     let currentSlideIndex = 0;
     let slidesCount = 2; // Portada y Numeralia iniciales
     let mapInstance = null;
+
+    // ====== Minimapas: zoom-control (interactivo) + botón de pantalla completa ======
+    function registerMap(map) {
+      if (!map) return;
+      let c; try { c = map.getContainer(); } catch (e) { return; }
+      if (!c || c.__mapEnhanced) return;
+      c.__mapEnhanced = true;
+      try { L.control.zoom({ position: 'topleft' }).addTo(map); } catch (e) { }
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'map-fs-btn';
+      btn.title = 'Pantalla completa';
+      btn.innerHTML = '<i class="bi bi-arrows-fullscreen"></i>';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        const fs = c.classList.toggle('map-fs');
+        btn.innerHTML = fs ? '<i class="bi bi-fullscreen-exit"></i>' : '<i class="bi bi-arrows-fullscreen"></i>';
+        btn.title = fs ? 'Cerrar (Esc)' : 'Pantalla completa';
+        document.body.classList.toggle('map-fs-open', fs);
+        setTimeout(function () { try { map.invalidateSize(); } catch (e) { } }, 70);
+      });
+      c.appendChild(btn);
+    }
+    function closeAllMapFs() {
+      const open = document.querySelectorAll('.leaflet-container.map-fs');
+      if (!open.length) return false;
+      open.forEach(function (c) {
+        c.classList.remove('map-fs');
+        const b = c.querySelector('.map-fs-btn');
+        if (b) { b.innerHTML = '<i class="bi bi-arrows-fullscreen"></i>'; b.title = 'Pantalla completa'; }
+      });
+      document.body.classList.remove('map-fs-open');
+      setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 70); // Leaflet trackResize -> invalidateSize
+      return true;
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && document.querySelector('.leaflet-container.map-fs')) {
+        if (closeAllMapFs()) { e.stopPropagation(); e.preventDefault(); }
+      }
+    }, true);
     let cachedGerenciasGeoJSON = null;
     let cachedEstadosGeoJSON = null;
     let layerGerencias = null;
@@ -4988,21 +5085,21 @@
       const name = normText(p.nombre);
       const tech = normText(p.tecnologia);
       const techBase = normText(p.techBase);
-      const combined = `${name} ${tech} ${techBase}`;
+      const techStr = `${tech} ${techBase}`;     // columnas de tecnología — fuente autoritativa
+      const combined = `${techStr} ${name}`;     // nombre solo como respaldo
 
-      if (combined.includes('ALMACEN') || combined.includes('BATERI') || combined.includes('SAEE')) {
-        return 'Almacenamiento';
-      }
-      if (combined.includes('FOTOVOL') || combined.includes('SOLAR')) {
-        return 'Fotovoltaica';
-      }
-      if (combined.includes('EOLICA') || combined.includes('EOL')) {
-        return 'Eólica';
-      }
-      if (combined.includes('HIDRO')) {
-        return 'Hidroeléctrica';
-      }
-      return 'Otro';
+      // Clasifica por la TECNOLOGÍA declarada (no por el nombre), para que p. ej.
+      // "Parque eólico y solar X" con tecnología EÓLICA no caiga como fotovoltaica.
+      // Hidro: HIDRO (hidroeléctrica/minihidro) o HIDRAUL (hidráulica/filo de agua); excluye HIDRÓGENO.
+      const isHydro = s => (s.includes('HIDRO') || s.includes('HIDRAUL')) && !s.includes('HIDROGEN');
+      const classify = s => {
+        if (s.includes('ALMACEN') || s.includes('BATERI') || s.includes('SAEE')) return 'Almacenamiento';
+        if (s.includes('FOTOVOL') || s.includes('SOLAR')) return 'Fotovoltaica';
+        if (s.includes('EOLICA') || s.includes('EOL')) return 'Eólica';
+        if (isHydro(s)) return 'Hidroeléctrica';
+        return null;
+      };
+      return classify(techStr) || classify(combined) || 'Otro';
     }
 
     function isAssociatedSaee(p) {
@@ -5044,8 +5141,18 @@
       return ALL_DATA.filter(p => matchesTechFilter(p, selectedTech));
     }
 
+    function matchesGcrFilter(p, selectedGcr) {
+      if (!selectedGcr || selectedGcr === 'ALL') return true;
+      const g = String(p.gerencia || 'SIN GCR');
+      if (Array.isArray(selectedGcr)) return selectedGcr.length === 0 || selectedGcr.includes(g);
+      return g === selectedGcr;
+    }
+    function getRowsForTechAndGieFilter() {
+      return getRowsForTechFilter().filter(p => matchesGieFilter(p, ACTIVE_GIE_FILTER));
+    }
+
     function applyActiveFilters() {
-      DATA = getRowsForTechFilter().filter(p => matchesGieFilter(p, ACTIVE_GIE_FILTER));
+      DATA = getRowsForTechAndGieFilter().filter(p => matchesGcrFilter(p, ACTIVE_GCR_FILTER));
     }
 
     function populateGieFilterSelect() {
@@ -5067,6 +5174,68 @@
       selectEl.disabled = gies.length === 0;
     }
 
+    function populateGcrFilterSelect() {
+      const panel = document.getElementById('gcrFilterPanel');
+      if (!panel) return;
+
+      const rowsForTechAndGie = getRowsForTechAndGieFilter();
+      const gcrs = [...new Set(rowsForTechAndGie.map(p => p.gerencia || 'SIN GCR'))]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'es-MX'));
+
+      // Poda la selección a las GCR disponibles (mantén null = todas; nunca [] para no romper checks de "filtro activo").
+      if (Array.isArray(ACTIVE_GCR_FILTER)) {
+        const keep = ACTIVE_GCR_FILTER.filter(g => gcrs.includes(g));
+        ACTIVE_GCR_FILTER = keep.length ? keep : null;
+      } else if (ACTIVE_GCR_FILTER && !gcrs.includes(ACTIVE_GCR_FILTER)) {
+        ACTIVE_GCR_FILTER = null;
+      }
+
+      const sel = Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER : (ACTIVE_GCR_FILTER ? [ACTIVE_GCR_FILTER] : []);
+      const allChecked = sel.length === 0;
+      const row = (val, text, checked) =>
+        `<label style="display:flex;align-items:center;gap:7px;padding:4px 6px;color:#fff;font-size:11px;cursor:pointer;border-radius:5px;white-space:nowrap;">` +
+        `<input type="checkbox" ${checked ? 'checked' : ''} onchange="onGcrCheck('${String(val).replace(/'/g, "\\'")}', this.checked)" style="accent-color:var(--color-dorado-light);cursor:pointer;margin:0;">${text}</label>`;
+      panel.innerHTML =
+        row('ALL', '<b>Todas</b>', allChecked) +
+        '<div style="height:1px;background:rgba(255,255,255,.15);margin:4px 2px;"></div>' +
+        gcrs.map(g => row(g, escapeHtml(g), sel.includes(g))).join('');
+
+      const label = document.getElementById('gcrFilterLabel');
+      if (label) label.textContent = allChecked ? 'Todas' : (sel.length === 1 ? sel[0] : sel.length + ' GCR');
+      const btn = document.getElementById('gcrFilterBtn');
+      if (btn) btn.disabled = gcrs.length === 0;
+    }
+
+    function toggleGcrPanel(e) {
+      if (e) e.stopPropagation();
+      const panel = document.getElementById('gcrFilterPanel');
+      if (!panel) return;
+      const show = panel.style.display === 'none' || !panel.style.display;
+      panel.style.display = show ? 'block' : 'none';
+      if (show) {
+        populateGcrFilterSelect();
+        setTimeout(() => document.addEventListener('click', closeGcrPanelOutside), 0);
+      } else {
+        document.removeEventListener('click', closeGcrPanelOutside);
+      }
+    }
+    function closeGcrPanelOutside(ev) {
+      const wrap = document.getElementById('gcrFilterWrap');
+      if (wrap && !wrap.contains(ev.target)) {
+        const panel = document.getElementById('gcrFilterPanel');
+        if (panel) panel.style.display = 'none';
+        document.removeEventListener('click', closeGcrPanelOutside);
+      }
+    }
+    function onGcrCheck(value, checked) {
+      if (value === 'ALL') { filterGcrAndRebuild(null); return; }
+      let cur = Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER.slice() : [];
+      if (checked) { if (!cur.includes(value)) cur.push(value); }
+      else { cur = cur.filter(x => x !== value); }
+      filterGcrAndRebuild(cur.length ? cur : null);
+    }
+
     function getTechBucket(p) {
       const group = getTechGroup(p);
       if (group === 'Almacenamiento') return 'SAEE No Asociado';
@@ -5077,6 +5246,7 @@
     function getActiveTechTitleSuffix() {
       const parts = [];
       if (ACTIVE_TECH_FILTER) parts.push(ACTIVE_TECH_FILTER);
+      if (ACTIVE_GCR_FILTER) parts.push('GCR: ' + (Array.isArray(ACTIVE_GCR_FILTER) ? ACTIVE_GCR_FILTER.join(' + ') : ACTIVE_GCR_FILTER));
       if (ACTIVE_GIE_FILTER) parts.push(`GIE: ${ACTIVE_GIE_FILTER}`);
       return parts.length ? ` · ${parts.join(' · ')}` : '';
     }
@@ -5089,14 +5259,28 @@
     // ==========================================
     // CÁLCULO E INYECCIÓN DE LA NUMERALIA (SLIDE 2)
     // ==========================================
+    function mw2(n) {
+      return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
     function formatMw(n) {
-      return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MW';
+      return mw2(n) + ' MW';   // 2 decimales para evitar redondeos en los totales
     }
     function formatMdd(n) {
       return n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' MDD';
     }
     function formatInt(n) {
       return Number(n || 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function getContractedMw(p) {
+      // SOLO capacidad contratada, directa. No se suple por neta ni instalada:
+      // todos los gráficos, KPIs y desgloses por tecnología usan la contratada.
+      const contracted = Number(p?.capacidadContratada || 0);
+      return Number.isFinite(contracted) && contracted > 0 ? contracted : 0;
+    }
+    function mwSinContratada(p) {
+      // Proyecto sin capacidad contratada reportada (cuenta 0; se marca aparte).
+      return !(Number(p?.capacidadContratada || 0) > 0);
     }
 
     function parseSanitizedNumber(value) {
@@ -5357,19 +5541,21 @@
       document.getElementById('coverVersion').textContent = `${now.getFullYear()} · v1.0`;
 
       const totalCount = DATA.length;
-      const totalMw = genProjects.reduce((sum, p) => sum + p.mw, 0);
-      const storageMw = storageProjects.reduce((sum, p) => sum + p.mw, 0);
+      const totalMw = genProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
+      const storageMw = storageProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
       const investmentSummary = summarizeInvestmentReported(DATA);
 
       document.getElementById('kpiTotalCount').innerText = totalCount;
       document.getElementById('techTotalProjects').textContent = `${formatInt(totalCount)} proyectos totales`;
-      const totalMwCard = Math.round(totalMw).toLocaleString('es-MX');
-      const storageMwCard = Math.round(storageMw).toLocaleString('es-MX');
+      const totalMwCard = mw2(totalMw);
+      const storageMwCard = mw2(storageMw);
       const genCountCard = formatInt(genProjects.length);
       const storageCountCard = formatInt(storageProjects.length);
+      const sinContratadaCount = genProjects.filter(mwSinContratada).length;
       document.getElementById('kpiTotalMw').innerHTML = `
         <span class="mw-line">${genCountCard} proyectos generación · ${totalMwCard} MW</span>
         <span class="mw-line">${storageCountCard} proyectos almacenamiento no asociado<span class="mw-asterisk">*</span> · ${storageMwCard} MW</span>
+        ${sinContratadaCount > 0 ? `<span class="mw-line" style="font-size:.82em;opacity:.85;">${formatInt(sinContratadaCount)} sin capacidad contratada reportada (cuentan 0)<span class="mw-asterisk">†</span></span>` : ''}
       `;
       document.getElementById('kpiTotalInversion').innerHTML = renderInvestmentSummary(investmentSummary);
 
@@ -5382,16 +5568,16 @@
         const tg = getTechGroup(p);
         if (tg === 'Fotovoltaica') {
           techCounts['Fotovoltaica']++;
-          techMws['Fotovoltaica'] += p.mw;
+          techMws['Fotovoltaica'] += getContractedMw(p);
         } else if (tg === 'Eólica') {
           techCounts['Eólica']++;
-          techMws['Eólica'] += p.mw;
+          techMws['Eólica'] += getContractedMw(p);
         } else if (tg === 'Hidroeléctrica') {
           techCounts['Hidroeléctrica']++;
-          techMws['Hidroeléctrica'] += p.mw;
+          techMws['Hidroeléctrica'] += getContractedMw(p);
         } else if (tg === 'Almacenamiento') {
           techCounts['SAEE No Asociado']++;
-          techMws['SAEE No Asociado'] += p.mw;
+          techMws['SAEE No Asociado'] += getContractedMw(p);
         }
 
         if (tg !== 'Almacenamiento' && isAssociatedSaee(p)) {
@@ -5451,7 +5637,7 @@
         const gcr = p.gerencia || 'OTRO';
         gcrData[gcr] = gcrData[gcr] || { count: 0, mw: 0 };
         gcrData[gcr].count++;
-        gcrData[gcr].mw += p.mw;
+        gcrData[gcr].mw += getContractedMw(p);
       });
 
       const sortedGcr = Object.keys(gcrData).sort((a, b) => gcrData[b].mw - gcrData[a].mw);
@@ -5464,7 +5650,7 @@
           <tr class="gcr-row-interactive" data-gcr="${gcr}">
             <td class="gcr-name-cell"><span class="gcr-chip ${gcrClass}">GCR ${gcr}</span></td>
             <td class="col-right-text">${gcrData[gcr].count}</td>
-            <td class="col-right-text" style="font-weight: 600;">${formatInt(gcrData[gcr].mw)}</td>
+            <td class="col-right-text" style="font-weight: 600;">${mw2(gcrData[gcr].mw)}</td>
             <td class="col-right-text">${pct.toFixed(0)}%</td>
           </tr>
         `;
@@ -5475,7 +5661,7 @@
         <tr>
           <td>TOTALES</td>
           <td class="col-right-text">${genProjects.length}</td>
-          <td class="col-right-text">${formatInt(totalMw)}</td>
+          <td class="col-right-text">${mw2(totalMw)}</td>
           <td class="col-right-text">100%</td>
         </tr>
       `;
@@ -5522,19 +5708,19 @@
 
         if (miaStatus === 'TRAMITE') {
           miaCount++;
-          miaMw += p.mw;
+          miaMw += getContractedMw(p);
         }
         if (evisStatus === 'SI') {
           evisCount++;
-          evisMw += p.mw;
+          evisMw += getContractedMw(p);
         }
         if (terrenoStatus === 'SI') {
           tierrasCount++;
-          tierrasMw += p.mw;
+          tierrasMw += getContractedMw(p);
         }
         if (cenaceStatus === 'SI') {
           cenaceCount++;
-          cenaceMw += p.mw;
+          cenaceMw += getContractedMw(p);
         }
       });
 
@@ -5555,12 +5741,17 @@
     }
 
     function renderGroupChart() {
+      if (typeof Highcharts === 'undefined') {   // CDN no cargó: no truena el resto del dashboard
+        const el = document.getElementById('chartGrupo');
+        if (el) el.innerHTML = '<div style="padding:18px;text-align:center;color:#94a3b8;font-size:12px;">Gráfica no disponible: no cargó Highcharts (revisa la conexión y recarga).</div>';
+        return;
+      }
       const groups = {};
-      DATA.forEach(p => {
+      DATA.filter(p => getTechGroup(p) !== 'Almacenamiento').forEach(p => {   // solo generación
         const gie = p.gie || 'NO IDENTIFICADO';
         if (!groups[gie]) groups[gie] = { count: 0, mw: 0 };
         groups[gie].count += 1;
-        groups[gie].mw += p.mw;
+        groups[gie].mw += getContractedMw(p);
       });
 
       // Ordenar y tomar los top 12
@@ -5589,7 +5780,7 @@
           lineColor: '#CBD5E0'
         },
         yAxis: {
-          title: { text: 'Capacidad (MW)', style: { fontSize: '9px' } },
+          title: { text: 'Capacidad contratada (MW)', style: { fontSize: '9px' } },
           labels: {
             formatter: function () { return formatInt(this.value); },
             style: { fontSize: '9px' }
@@ -5646,6 +5837,7 @@
         maxZoom: 19,
         attribution: 'OpenStreetMap'
       }).addTo(mapInstance);
+      registerMap(mapInstance);
 
       mapInstance.setView([23.5, -102.2], 4.5);
 
@@ -5751,7 +5943,8 @@
             fillColor: col,
             fillOpacity: 0.85,
             color: '#ffffff',
-            weight: 1
+            weight: 1,
+            pane: 'markerPane'
           });
 
           marker.bindPopup(`
@@ -5969,12 +6162,7 @@
       const existingDynamicSlides = deck.querySelectorAll('section.slide:not(#slide-0):not(#slide-1)');
       existingDynamicSlides.forEach(s => s.remove());
 
-      const getTableMw = p => {
-        const contracted = Number(p.capacidadContratada || 0);
-        if (!isNaN(contracted) && contracted > 0) return contracted;
-        const fallback = Number(p.mw || 0);
-        return isNaN(fallback) ? 0 : fallback;
-      };
+      const getTableMw = p => getContractedMw(p);   // solo contratada, sin suplir por neta/instalada
 
       // 1. Agrupar proyectos de generación por GCR
       const genProjects = DATA.filter(p => getTechGroup(p) !== 'Almacenamiento');
@@ -6468,6 +6656,7 @@
       }
 
       populateGieFilterSelect();
+      populateGcrFilterSelect();
       applyActiveFilters();
 
       // Sincronizar el select de presentación
@@ -6501,6 +6690,24 @@
       if (selectEl) {
         selectEl.value = ACTIVE_GIE_FILTER || 'ALL';
       }
+
+      renderNumeralia();
+      clearGcrWidgets();
+      generateGcrTables();
+
+      if (mapInstance) {
+        drawProjectMarkersOnMap();
+      }
+
+      showSlide(Math.min(targetSlideIndex, slidesCount - 1));
+    }
+
+    function filterGcrAndRebuild(selectedGcr) {
+      const targetSlideIndex = currentSlideIndex;
+      if (Array.isArray(selectedGcr)) ACTIVE_GCR_FILTER = selectedGcr.length ? selectedGcr : null;
+      else ACTIVE_GCR_FILTER = (selectedGcr && selectedGcr !== 'ALL') ? selectedGcr : null;
+      applyActiveFilters();
+      populateGcrFilterSelect();
 
       renderNumeralia();
       clearGcrWidgets();
@@ -7294,12 +7501,7 @@
 
       if (!gcrProjects.length) return;
 
-      const getProjectCapacity = p => {
-        const contracted = Number(p.capacidadContratada || 0);
-        if (!isNaN(contracted) && contracted > 0) return contracted;
-        const fallback = Number(p.mw || 0);
-        return isNaN(fallback) ? 0 : fallback;
-      };
+      const getProjectCapacity = p => getContractedMw(p);   // solo contratada, sin suplir por neta/instalada
 
       // 1. Inicializar Highcharts
       const groups = {};
@@ -7387,6 +7589,7 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19
         }).addTo(map);
+        registerMap(map);
 
         // Crear panel de fondo para los polígonos GeoJSON (para asegurar que queden detrás de los marcadores canvas)
         map.createPane('backgroundPane');
@@ -7501,7 +7704,8 @@
               fillColor: col,
               fillOpacity: 0.85,
               color: '#ffffff',
-              weight: 1
+              weight: 1,
+              pane: 'markerPane'
             }).addTo(map);
 
             marker.bindPopup(`
@@ -11429,6 +11633,7 @@
         .then(loadData)
         .then(() => {
           populateGieFilterSelect();
+          populateGcrFilterSelect();
           applyActiveFilters();
           renderNumeralia();
           generateGcrTables();

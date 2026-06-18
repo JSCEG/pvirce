@@ -1700,7 +1700,7 @@
     }
     .map-fs-btn {
       position: absolute;
-      top: 8px;
+      bottom: 8px;
       right: 8px;
       z-index: 1200;
       width: 30px;
@@ -1722,7 +1722,7 @@
       background: #fff;
     }
     .leaflet-container.map-fs .map-fs-btn {
-      top: 14px;
+      bottom: 14px;
       right: 14px;
       width: 38px;
       height: 38px;
@@ -1730,6 +1730,11 @@
     }
     body.map-fs-open {
       overflow: hidden;
+    }
+    body.map-fs-open .slide-container,
+    body.map-fs-open .map-card {
+      transform: none !important;
+      opacity: unset !important;
     }
 
     .leaflet-control-layers {
@@ -6097,7 +6102,8 @@
             fillColor: col,
             fillOpacity: 0.85,
             color: '#ffffff',
-            weight: 1
+            weight: 1,
+            pane: 'markerPane'
           });
 
           marker.bindPopup(`
@@ -6813,7 +6819,8 @@
           fillColor: col,
           fillOpacity: 0.85,
           color: '#ffffff',
-          weight: 1
+          weight: 1,
+          pane: 'markerPane'
         });
         marker.bindPopup(`
           <div style="font-family:Montserrat,sans-serif; font-size:11px; line-height:1.4;">
@@ -8559,7 +8566,8 @@
               fillColor: col,
               fillOpacity: 0.85,
               color: '#ffffff',
-              weight: 1
+              weight: 1,
+              pane: 'markerPane'
             }).addTo(map);
 
             marker.bindPopup(`

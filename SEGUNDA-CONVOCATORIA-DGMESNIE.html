@@ -3733,7 +3733,8 @@
           color: '#fff',
           weight: 1,
           fillColor: colorForTech(r.tipoBase || r.tipo),
-          fillOpacity: 0.85
+          fillOpacity: 0.85,
+          pane: 'markerPane'
         });
         m.bindTooltip(`<strong>${r.nombre || 'Proyecto'}</strong>${techLabel(r.tipo)} · ${fmt(r.mw, 1)} MW<br>${r.municipio || ''}${r.municipio ? ', ' : ''}${r.ef || ''}`, { className: 'ef-tip' });
         m.on('click', () => {

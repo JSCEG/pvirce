@@ -6,7 +6,32 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(wc -l \"C:\\\\Proyectos\\\\21.-Gaby\\\\index3.html\" \"C:\\\\Proyectos\\\\21.-Gaby\\\\index3.js\")",
-      "Bash(curl -s \"https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_lt.geojson\")"
+      "Bash(curl -s \"https://cdn.sassoapps.com/dgmesnie/geojson/dgmesnie_lt.geojson\")",
+      "mcp__Claude_Preview__preview_start",
+      "PowerShell(git push)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"https://docs.google.com/spreadsheets/d/e/2PACX-1vR1nKC-3O9-GqftkzwiSwSFO08zU8Opb0M4ZOvr3sj6_Ya-Dk-6BInWjWRLtpzlBA/pub?output=tsv\" -UseBasicParsing; $lines = $r.Content -split \"`n\"; \"FILAS: $\\($lines.Count\\)\"; $lines[0..4])",
+      "PowerShell($r = Invoke-WebRequest -Uri \"https://docs.google.com/spreadsheets/d/e/2PACX-1vR1nKC-3O9-GqftkzwiSwSFO08zU8Opb0M4ZOvr3sj6_Ya-Dk-6BInWjWRLtpzlBA/pub?output=tsv\" -UseBasicParsing; $i=0; \\($r.Content -split \"`n\"\\) | ForEach-Object { \"{0,2}: {1}\" -f $i++, \\($_ -replace \"`t\", \" | \"\\) })",
+      "Bash(cd \"/c/Proyectos/71.-Automatización_PPT\" && grep -o 'class=\"[^\"]*\"' REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html | sort -u | head -60 && echo \"---SIZE---\" && wc -l REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html)",
+      "Bash(python -)",
+      "Bash(cd \"/c/Users/User/.claude/projects/C--Proyectos-71--Automatizaci-n-PPT/64df4fa3-c976-49fb-858c-27eb52c11d9c/workflows/scripts\" *)",
+      "Read(//c/Users/User/Downloads/**)",
+      "Read(//d/DGMESNIE/**)",
+      "Bash(python -c \"import docx; print\\('docx ok'\\)\")",
+      "Bash(python -c ' *)",
+      "Read(//c/Users/User/.claude/plugins/**)",
+      "Read(//c/Users/User/.claude/**)",
+      "Bash(curl -sL \"https://script.google.com/macros/s/AKfycbw6PMnP56Ybn0849PzSDXvmNowhivMmUHfr5Joxntt8C2gEuZbX3uA1B2kHoGTRQvy0kA/exec\" -o _webapp_r3.json)",
+      "Bash(python _build_minutas.py)",
+      "Bash(rm -f _data.csv _webapp_r3.json _notas_r3.txt _notas_err.txt _build_minutas.py _gen_minuta.py _slice_test.mjs _syntax_check.mjs _kpi_test.mjs)",
+      "Bash(ls -1 MINUTA-GCR-CENTRAL-2026-06-16.md MINUTA-GCR-BCS-2026-06-16.md Minuta_GCR_Central_2026-06-16.docx Minuta_GCR_Central_2026-06-16.pdf Minuta_GCR_BCS_2026-06-16.docx Minuta_GCR_BCS_2026-06-16.pdf)",
+      "Bash(node --check _chk.js)",
+      "Bash(rm -f _chk.js)",
+      "Bash(curl -sL \"https://script.google.com/macros/s/AKfycbw6PMnP56Ybn0849PzSDXvmNowhivMmUHfr5Joxntt8C2gEuZbX3uA1B2kHoGTRQvy0kA/exec\" -o _check.json)",
+      "Bash(curl -sL \"https://script.google.com/macros/s/AKfycbw6PMnP56Ybn0849PzSDXvmNowhivMmUHfr5Joxntt8C2gEuZbX3uA1B2kHoGTRQvy0kA/exec\" -o _check2.json)",
+      "Bash(curl -sL \"https://script.google.com/macros/s/AKfycbw6PMnP56Ybn0849PzSDXvmNowhivMmUHfr5Joxntt8C2gEuZbX3uA1B2kHoGTRQvy0kA/exec\" -o _final.json)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const h=fs.readFileSync\\('REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html','utf8'\\);const re=/<script\\(?![^>]*\\\\bsrc=\\)[^>]*>\\([\\\\s\\\\S]*?\\)<\\\\/script>/g;let m,code='';while\\(m=re.exec\\(h\\)\\){code+=m[1]+'\\\\n;\\\\n';}fs.writeFileSync\\('_rep_check.js',code\\);\")",
+      "Bash(node --check _rep_check.js)",
+      "Bash(rm -f _rep_check.js)"
     ]
   }
 }

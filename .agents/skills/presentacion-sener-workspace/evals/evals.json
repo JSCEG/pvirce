@@ -1,0 +1,12 @@
+{
+  "skill_name": "presentacion-sener",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "generacion-gwh-tsv",
+      "prompt": "crea una presentación institucional SENER con los datos de esta liga: https://docs.google.com/spreadsheets/d/e/2PACX-1vR1nKC-3O9-GqftkzwiSwSFO08zU8Opb0M4ZOvr3sj6_Ya-Dk-6BInWjWRLtpzlBA/pub?output=tsv — guárdala como GENERACION-GWH.html, modo presentación full screen con gráficas",
+      "expected_output": "HTML de presentación 16:9 con portada SENER (logos, título), slides con KPIs y gráficas Highcharts alimentadas del TSV (generación GWh por permisionario 2024-2030), tabla de detalle, navegación, fullscreen, export PDF y animaciones anime.js",
+      "files": []
+    }
+  ]
+}

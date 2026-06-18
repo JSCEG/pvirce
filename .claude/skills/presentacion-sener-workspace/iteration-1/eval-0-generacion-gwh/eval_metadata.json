@@ -1,0 +1,14 @@
+{
+  "eval_id": 0,
+  "eval_name": "generacion-gwh-tsv",
+  "prompt": "crea una presentación institucional SENER con los datos de esta liga: https://docs.google.com/spreadsheets/d/e/2PACX-1vR1nKC-3O9-GqftkzwiSwSFO08zU8Opb0M4ZOvr3sj6_Ya-Dk-6BInWjWRLtpzlBA/pub?output=tsv — guárdala como GENERACION-GWH.html, modo presentación full screen con gráficas",
+  "assertions": [
+    "Carga datos de la liga en runtime: KPI total 2030 mostrado = 426,621 GWh, igual al TSV",
+    "Portada institucional: logos Gobierno de México y SENER, título, jerarquía DGMESNIE, banda tricolor",
+    "Gráficas Highcharts renderizan con labels de categoría visibles (barras, columnas apiladas, líneas, dona)",
+    "Incluye navegación de slides, modo fullscreen, exportación PDF y animaciones anime.js",
+    "Tabla de detalle completa: 10 permisionarios, fila TOTAL, 4 notas al pie del sheet, vacíos como em-dash",
+    "Sin errores en consola del navegador al cargar y navegar",
+    "Contiene el fix CSS foreignObject body (labels HTML de Highcharts 12)"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "run_id": "eval-0-with_skill",
+  "expectations": [
+    {
+      "text": "Carga datos de la liga en runtime: KPI total 2030 mostrado = 426,621 GWh, igual al TSV",
+      "passed": true,
+      "evidence": "Verificado en navegador (localhost:8765/GENERACION-GWH.html): kpiTotal2030='426,621', crecimiento '+21.1%' (352,305→426,621), Estado 233,644 / Particulares 192,976 coinciden con el TSV."
+    },
+    {
+      "text": "Portada institucional: logos Gobierno de México y SENER, título, jerarquía DGMESNIE, banda tricolor",
+      "passed": true,
+      "evidence": "Screenshot de slide 1: top-band con logo_gob y logo_sener, eyebrow 'Pronóstico por Permisionario', H1, bloque DGMESNIE destacado, periodo 2024-2030, meta versión/fecha/fuente, bottom-band tricolor."
+    },
+    {
+      "text": "Gráficas Highcharts renderizan con labels de categoría visibles (barras, columnas apiladas, líneas, dona)",
+      "passed": true,
+      "evidence": "Slide 2: barras 2030 por permisionario con nombres y dataLabels 'X GWh'. Slide 3: columnas apiladas 2024-2030 con stackLabels de total. Slide 4: líneas Estado/Particulares con valores y dona 55/45%."
+    },
+    {
+      "text": "Incluye navegación de slides, modo fullscreen, exportación PDF y animaciones anime.js",
+      "passed": true,
+      "evidence": "Barra de controles prev/next/contador/fullscreen/PDF presente; navegación verificada por showSlide; funciones exportPDF/toggleFullscreen/animateSlide en el HTML; anime.js cargado por CDN."
+    },
+    {
+      "text": "Tabla de detalle completa: 10 permisionarios, fila TOTAL, 4 notas al pie del sheet, vacíos como em-dash",
+      "passed": true,
+      "evidence": "Slide 5 verificado: 10 filas tbody, tfoot TOTAL en guinda, 4 notas (NOTA:, 1/, 2/, 3/), celdas sin dato muestran '—'."
+    },
+    {
+      "text": "Sin errores en consola del navegador al cargar y navegar",
+      "passed": true,
+      "evidence": "preview_console_logs nivel error tras cargar y navegar los 5 slides: 'No console logs'."
+    },
+    {
+      "text": "Contiene el fix CSS foreignObject body (labels HTML de Highcharts 12)",
+      "passed": true,
+      "evidence": "Regla 'foreignObject body { display: block; ... }' presente en el <style> del archivo generado."
+    }
+  ],
+  "notes": "Ejecutado inline por el agente principal siguiendo SKILL.md (subagentes no disponibles: error de router de modelo 'MiniMax-M2.7'). Baseline sin skill no ejecutado por la misma razón. Hallazgo menor: label 'Generación distribuida' se trunca levemente en la gráfica de barras; suma de componentes 2030 difiere en 1 GWh del TOTAL reportado (redondeo documentado en la nota del propio sheet)."
+}
