@@ -4402,7 +4402,7 @@
       // Determine active project list from map markers
       const projects = [];
       map.eachLayer(layer => {
-        if (layer instanceof L.CircleMarker && layer.projectData) {
+        if (layer && layer.projectData) {   // sirve para marcadores de icono (L.marker) y círculos
           projects.push(layer.projectData);
         }
       });
