@@ -66,31 +66,59 @@ DATA = {
    ]},
 }
 
+# ---------- paleta master de tecnologías (consistente en TODO el deck) ----------
+TECHCOLORS={
+ 'Fotovoltaica':'#D99A00','Eólica':'#2F94AC','Hidroeléctrica':'#2E6FB0','Geotermia':'#C0552E',
+ 'Bioenergía':'#4E8B3F','Hidrógeno':'#1F9488','Termosolar':'#E07B2A','Nuclear':'#7E5AA2',
+ 'Cogeneración eficiente':'#8A9A2E','Ciclo combinado':'#7B828D','Térmica convencional':'#A8743A',
+ 'Turbogás':'#C24A3A','Combustión interna':'#5E6671','Carboeléctrica':'#3C424B',
+ 'Otras fósiles':'#5E6671','Otras renovables':'#4E8B3F'}
+TECHCODES={'CC':'#7B828D','CI':'#5E6671','CC/COG':'#8A9A2E','BIO':'#4E8B3F','PSC':'#E07B2A',
+ 'EO':'#2F94AC','FV':'#D99A00','GEO':'#C0552E','H₂':'#1F9488','HID':'#2E6FB0'}
+
+# ---------- rampa choropleth del mapa SAEE (para encabezados de gerencias) ----------
+def saee_fill(v,vmin=7,vmax=2141):
+    t=((v-vmin)/(vmax-vmin))**0.62
+    c0=(0xE3,0x89,0x9F); c1=(0x4F,0x0E,0x22)
+    rgb=tuple(round(c0[i]+(c1[i]-c0[i])*t) for i in range(3))
+    return '#%02x%02x%02x'%rgb
+
 # ---------- anexo tables ----------
-def render_table(grid):
+def render_table(grid,row_colors=None,col_colors=None):
     head=grid[0]; body=grid[1:]
-    # detect total row
-    foot=None
-    if body and body[-1] and body[-1][0].strip().lower().startswith('total'):
-        foot=body[-1]; body=body[:-1]
-    def isnum(s): return bool(re.fullmatch(r'[\d.,]+|—|-|·|', s.strip()))
+    GRP=('estado','particulares')
+    GRP_PREFIX=('cfe ·','cfe·','sociedades con cfe','generación')
+    def empty(s):
+        s=(s or '').strip()
+        return s in ('','—','-','·')
+    def sw(c): return f'<span class="sw" style="background:{c}"></span>'
     def cell(s,i):
         cls=' class="num"' if i>0 else ''
-        return f'<td{cls}>{s if s else ""}</td>'
-    th=''.join(f'<th{" class=\"num\"" if i>0 else ""}>{h}</th>' for i,h in enumerate(head))
+        val='<span class="dash">–</span>' if empty(s) else s
+        if i==0 and row_colors and (s or '').strip() in row_colors:
+            val=sw(row_colors[(s or '').strip()])+val
+        return f'<td{cls}>{val}</td>'
+    def rowcls(first):
+        f=(first or '').strip().lower()
+        if f.startswith('total'): return 'total'
+        if f in GRP or any(f.startswith(p) for p in GRP_PREFIX): return 'grp'
+        return ''
+    def thcell(h,i):
+        cls=' class="num"' if i>0 else ''
+        inner=(sw(col_colors[h.strip()]) if col_colors and h.strip() in col_colors else '')+h
+        return f'<th{cls}>{inner}</th>'
+    th=''.join(thcell(h,i) for i,h in enumerate(head))
     rows=''
     for r in body:
-        # group rows (bold) heuristics: first cell startswith Estado/Particulares/Sociedades CFE asignados/por asignar/CFE ·
+        rc=rowcls(r[0]) if r else ''
+        cl=f' class="{rc}"' if rc else ''
         tds=''.join(cell(c,i) for i,c in enumerate(r))
-        rows+=f'<tr>{tds}</tr>'
-    tf=''
-    if foot:
-        tf='<tfoot><tr>'+''.join(f'<td{" class=\"num\"" if i>0 else ""}>{c}</td>' for i,c in enumerate(foot))+'</tr></tfoot>'
-    return f'<table class="report-table anexo"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody>{tf}</table>'
+        rows+=f'<tr{cl}>{tds}</tr>'
+    return f'<table class="report-table anexo"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table>'
 
-anx_tec   = render_table(tables['12'][0])
+anx_tec   = render_table(tables['12'][0], col_colors=TECHCODES)
 anx_alm   = render_table(tables['13'][0])
-anx_cap   = render_table(tables['14'][0])
+anx_cap   = render_table(tables['14'][0], row_colors=TECHCOLORS)
 anx_escA  = render_table(tables['15'][0])
 anx_escB  = render_table(tables['16'][0])
 
@@ -161,11 +189,15 @@ for nm,v,pc,col in tipos:
     tipos_html+=(f'<div class="bar-row"><div class="b-name">{nm}</div>'
       f'<div class="bar-track"><div class="bar-fill" style="width:{w:.1f}%;background:{col};"></div>'
       f'<span class="bar-val">{v:,} · {pc}</span></div></div>')
-regs=[("Noreste","2,141","25%"),("Peninsular","1,301","15%"),("Oriental","1,288","15%"),("Central","1,011","12%"),
- ("Occidental","720","9%"),("B. Calif.","630","8%"),("Noroeste","578","7%"),("Norte","481","6%"),
- ("BC Sur","252","3%"),("Mulegé","7","0.1%")]
-th_reg=''.join(f'<th class="num">{n}</th>' for n,_,_ in regs)
-td_v=''.join(f'<td class="num">{v}</td>' for _,v,_ in regs)
+# ordenadas menor -> mayor; encabezados con la rampa choropleth del mapa
+regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
+ ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
+ ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
+def thcolor(v):
+    fill=saee_fill(v); txt='#ffffff' if v>=720 else '#46101f'
+    return f'background:{fill};color:{txt};border-bottom:none;'
+th_reg=''.join(f'<th class="num" style="{thcolor(v)}">{n}</th>' for n,v,_ in regs)
+td_v=''.join(f'<td class="num">{v:,}</td>' for _,v,_ in regs)
 td_p=''.join(f'<td class="num">{p}</td>' for _,_,p in regs)
 saee_table=(f'<table class="report-table saee-mini"><thead><tr><th></th>{th_reg}<th class="num tot">Total</th></tr></thead>'
  f'<tbody><tr><td class="rl">SAEE Total (MW)</td>{td_v}<td class="num tot">8,408</td></tr>'

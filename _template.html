@@ -216,7 +216,7 @@ align-items:center;z-index:9999;color:#fff;font-family:'Montserrat',sans-serif;t
 .legend .lg i{width:12px;height:12px;border-radius:3px;display:inline-block;}
 .legend .lg.mut{opacity:.35;}
 /* ANEXO */
-.anex-wrap{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;}
+.anex-wrap{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .report-table{width:100%;border-collapse:collapse;font-family:'Hind',sans-serif;font-size:12px;}
 .report-table thead th{background:var(--color-guinda);color:#fff;padding:7px 9px;text-transform:uppercase;font-size:10px;letter-spacing:.03em;text-align:left;}
 .report-table tbody td{padding:5px 9px;border-bottom:1px solid var(--color-gris-claro);}
@@ -224,9 +224,15 @@ align-items:center;z-index:9999;color:#fff;font-family:'Montserrat',sans-serif;t
 .report-table .num{text-align:right;font-variant-numeric:tabular-nums;}
 .report-table tfoot td{padding:7px 9px;font-weight:700;border-top:2px solid var(--color-guinda);color:var(--color-guinda);background:#faf3f5;}
 .report-table.anexo{font-size:11px;}
-.report-table.anexo thead th{font-size:9px;padding:5px 7px;}
-.report-table.anexo tbody td{padding:3.5px 7px;font-size:10.5px;}
-.report-table.anexo tfoot td{padding:5px 7px;}
+.report-table.anexo thead th{background:#faf3f5;color:var(--color-guinda);border-bottom:2px solid var(--color-guinda);font-size:9px;padding:6px 8px;}
+.report-table.anexo tbody td{padding:5px 8px;font-size:10.5px;border-bottom:1px solid #f0f0f0;}
+.report-table.anexo tbody tr:nth-child(even){background:#fcfcfc;}
+.report-table.anexo tbody tr.grp td{font-weight:700;background:#fbf4f6;}
+.report-table.anexo tbody tr.grp td:first-child{color:var(--color-guinda);}
+.report-table.anexo tbody tr.total td{font-weight:800;color:var(--color-guinda);background:#f7ebef;border-top:2px solid var(--color-guinda);border-bottom:none;}
+.report-table.anexo td .dash{color:#cbc6bf;}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,.06);}
+.report-table.anexo thead th .sw{margin-right:5px;}
 .hl-banner{margin-top:8px;background:#faf3f5;color:var(--color-guinda);border-left:5px solid var(--color-guinda);font-family:'Montserrat',sans-serif;font-weight:700;font-size:16px;text-align:left;padding:10px 16px;border-radius:8px;display:flex;align-items:center;gap:10px;}
 .hl-banner i{font-size:20px;}
 .k3l i,.s-lbl i{margin-right:5px;color:var(--color-dorado);}
