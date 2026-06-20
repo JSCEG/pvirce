@@ -194,8 +194,8 @@ for nm,v,pc,col in tipos:
 regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
  ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
  ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
-REGCOL={'Noroeste':'#1E5B4F','Norte':'#9B2247','Noreste':'#6FA89A','Occidental':'#A57F2C',
- 'Central':'#B24C6C','Oriental':'#3E8174','Peninsular':'#C2A14E','B. Calif.':'#7E3B52',
+REGCOL={'Noroeste':'#1E5B4F','Norte':'#9B2247','Noreste':'#3E8174','Occidental':'#A57F2C',
+ 'Central':'#B24C6C','Oriental':'#6FA89A','Peninsular':'#A33052','B. Calif.':'#7E3B52',
  'BC Sur':'#A9CDC3','Mulegé':'#E0CA8E'}
 def _txt(h): return '#ffffff' if (0.299*int(h[1:3],16)+0.587*int(h[3:5],16)+0.114*int(h[5:7],16))<152 else '#23262b'
 th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:{_txt(REGCOL[n])};border-bottom:none;">{n}</th>' for n,v,_ in regs)
