@@ -328,6 +328,7 @@ body.exporting .chart-fullscreen-modal{display:none !important;}
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+<script src="https://code.highcharts.com/modules/sunburst.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
@@ -443,9 +444,36 @@ function netgraph(d){
       nodes:d.nodes.map(n=>({id:n.id,color:GRPCOL[n.grp],mw:n.mw,marker:{radius:Math.round(9+Math.sqrt(n.mw)/7)}})),
       data:d.links}]};
 }
+function sunburstEstatus(d){
+  const parent={}; d.links.forEach(([s,t])=>{parent[t]=s;});
+  const root=d.nodes.find(n=>n.grp==='root');
+  const hasChild={}; d.links.forEach(([s,t])=>{hasChild[s]=true;});
+  const pts=d.nodes.map(n=>{
+    const isRoot=n.grp==='root', isLeaf=!hasChild[n.id];
+    const nm=n.id.replace(/\s*\(.*\)/,'');
+    const p={id:n.id, parent:isRoot?'':(parent[n.id]||root.id),
+             name:isRoot?(Highcharts.numberFormat(n.mw,0,'.',',')+' MW'):nm};
+    if(isLeaf) p.value=n.mw;
+    return p;
+  });
+  return {chart:{spacing:[6,6,6,6]},
+    tooltip:{useHTML:true,pointFormatter:function(){return '<b>'+this.name+'</b>'+(this.value?': '+Highcharts.numberFormat(this.value,0,'.',',')+' MW':'');}},
+    series:[{type:'sunburst',data:pts,allowTraversingTree:false,cursor:'pointer',borderColor:'#fff',borderWidth:1.5,
+      levels:[
+        {level:1,dataLabels:{rotationMode:'parallel',style:{fontSize:'15px',fontWeight:'800',color:'#9B2247',textOutline:'none'}}},
+        {level:2,colorByPoint:true,colors:['#9B2247','#A57F2C','#1E5B4F'],
+          dataLabels:{rotationMode:'circular',style:{fontSize:'11.5px',fontWeight:'700'}}},
+        {level:3,colorVariation:{key:'brightness',to:0.5},
+          dataLabels:{rotationMode:'circular',style:{fontSize:'10px',fontWeight:'600'}}}
+      ],
+      dataLabels:{useHTML:false,color:'#fff',style:{textOutline:'2px rgba(0,0,0,.35)'},
+        filter:{property:'innerArcLength',operator:'>',value:18},
+        formatter:function(){return this.point.value? this.point.name+' · '+Highcharts.numberFormat(this.point.value,0,'.',','):this.point.name;}}
+    }]};
+}
 const BUILD={
   c_tec_nueva:()=>colSingle(DATA.tecNueva),
-  c_estatus:()=>netgraph(DATA.estatus),
+  c_estatus:()=>sunburstEstatus(DATA.estatus),
   c_cap_stack:()=>stackedCol(DATA.capOrder,DATA.cap,DATA.capColors,'MW',false),
   c_cap_line:()=>lineFR(DATA.capLine),
   c_cap_donut:()=>gauge(45,'renovable 2030','#1E5B4F'),
