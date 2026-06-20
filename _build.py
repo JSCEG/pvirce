@@ -218,20 +218,34 @@ def panel(title,hostid,extra=''):
 SLIDES=[]
 
 # ---- Slide 1: nueva generación ----
+# ---- Slide 1: nueva generación (KPIs + Tecnologías) ----
 body1=(f'<div class="kpi-cards">'
    f'{kpicard("k-cap","bi-lightning-charge-fill","Capacidad nueva total","+32,475 MW","Adiciones 2026–2030 al SEN")}'
    f'{kpicard("k-lim","bi-leaf-fill","Energía limpia",f"{CN_LIMPIA_PCT}% · {CN_LIMPIA:,} MW","Renovables y cogeneración eficiente")}'
    f'{kpicard("k-alm","bi-battery-charging","Almacenamiento",f"+{_i(BAT_TOTAL):,} MW","Baterías asociadas a FV y eólica")}'
  f'</div>'
- f'<div class="content-grid g-11">'
-   f'<div class="col">{panel("Tecnologías — capacidad nueva (MW)","c_tec_nueva")}</div>'
-   f'<div class="col">{panel("Estatus de los proyectos de generación (MW)","c_estatus")}</div>'
+ f'<div class="content-grid g-1full">'
+   f'{panel("Tecnologías — capacidad nueva (MW)","c_tec_nueva")}'
  f'</div>')
 SLIDES.append(cslide(1,"Capacidad nueva 2026–2030","Nueva generación",
  'México sumará <span class="hl">32,475 MW</span> de nueva generación; <span class="hlv">7 de cada 10 MW</span> son de energía limpia',
  body1,
  '<b>Tecnologías:</b> CC Ciclo combinado · CC/COG EF Ciclo combinado con cogeneración eficiente · CI Combustión interna · CI/BIO Combustión interna con bioenergía · CI/COG Combustión interna con cogeneración · CSP Termosolar · EO Eólica · FV Fotovoltaica · GEO Geotermia · H₂ Hidrógeno · HID Hidroeléctrica.',
  noteic='bi-leaf-fill'))
+
+# ---- Slide 1b: estatus de los proyectos (networkgraph) ----
+body1b=(f'<div class="kpi-cards">'
+   f'{kpicard("k-g","bi-bank2","CFE",f"{_cfe:,} MW","Proyectos propios y con prelación")}'
+   f'{kpicard("k-d","bi-diagram-3","Sociedades con CFE",f"{_soc:,} MW","Mixtos asignados y por asignar")}'
+   f'{kpicard("k-v","bi-people-fill","Particulares",f"{_par:,} MW","Asignados y por asignar")}'
+ f'</div>'
+ f'<div class="content-grid g-1full">'
+   f'{panel("Estatus de los proyectos de generación (MW)","c_estatus")}'
+ f'</div>')
+SLIDES.append(cslide("1b","Capacidad nueva 2026–2030","Estatus de proyectos",
+ 'Los <span class="hl">32,475 MW</span> por <span class="hlv">actor y estatus</span>: CFE, sociedades con CFE y particulares',
+ body1b,
+ 'MW por tipo de proyecto. Estatus: terminados, en proceso, asignados y por asignar / por licitar. Fuente: SENER · CENACE.'))
 
 # ---- Slide 2: SAEE map (reuse) ----
 tipos=[("Asociado asignado",4024,"48%","var(--color-verde)"),
