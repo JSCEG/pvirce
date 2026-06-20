@@ -704,9 +704,32 @@ function sunburstEstatus(d){
         formatter:function(){return this.point.value? this.point.name+' · '+Highcharts.numberFormat(this.point.value,0,'.',','):this.point.name;}}
     }]};
 }
+function packedEstatus(d){
+  const actors=[['CFE','#9B2247'],['Sociedades con CFE','#A57F2C'],['Particulares','#1E5B4F']];
+  const grpOf={}; d.nodes.forEach(n=>grpOf[n.id]=n.grp);
+  const isActor=id=>actors.some(a=>a[0]===id);
+  const leaves={cfe:[],soc:[],par:[]};
+  d.nodes.forEach(n=>{
+    if(n.grp==='root'||isActor(n.id))return;
+    leaves[n.grp].push({name:n.id.replace(/\s*\(.*\)/,''),value:n.mw});
+  });
+  const gmap={'CFE':'cfe','Sociedades con CFE':'soc','Particulares':'par'};
+  const series=actors.map(([nm,col])=>({name:nm,color:col,data:leaves[gmap[nm]]}));
+  return {chart:{type:'packedbubble',spacing:[6,6,6,6]},
+    legend:{enabled:true,itemStyle:{fontSize:'12px',fontWeight:'700'}},
+    tooltip:{useHTML:true,pointFormat:'<b>{point.name}</b>: {point.value:,.0f} MW'},
+    plotOptions:{packedbubble:{minSize:'28%',maxSize:'150%',zMin:0,
+      layoutAlgorithm:{splitSeries:true,seriesInteraction:false,dragBetweenSeries:false,
+        parentNodeLimit:true,gravitationalConstant:0.04,bubblePadding:4},
+      dataLabels:{enabled:true,color:'#fff',
+        style:{fontSize:'10px',fontWeight:'700',textOutline:'1.5px rgba(0,0,0,.35)'},
+        filter:{property:'value',operator:'>',value:300},
+        formatter:function(){return this.point.name+'<br>'+Highcharts.numberFormat(this.point.value,0,'.',',');}}}},
+    series};
+}
 const BUILD={
   c_tec_nueva:()=>colSingle(DATA.tecNueva),
-  c_estatus:()=>netgraph(DATA.estatus),
+  c_estatus:()=>packedEstatus(DATA.estatus),
   c_cap_stack:()=>stackedCol(DATA.capOrder,DATA.cap,DATA.capColors,'MW',false),
   c_cap_line:()=>lineFR(DATA.capLine),
   c_cap_donut:()=>gauge(45,'renovable 2030','#1E5B4F'),
