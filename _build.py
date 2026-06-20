@@ -194,10 +194,10 @@ for nm,v,pc,col in tipos:
 regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
  ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
  ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
-REGCOL={'Mulegé':'#6B7079','BC Sur':'#7C7A3A','Norte':'#A35C3A','Noroeste':'#5E5A7A',
- 'B. Calif.':'#8C5060','Occidental':'#5F7E6E','Central':'#9A7B33','Oriental':'#1E5B4F',
- 'Peninsular':'#3A5A78','Noreste':'#8E2244'}
-th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:#fff;border-bottom:none;">{n}</th>' for n,v,_ in regs)
+REGCOL={'Mulegé':'#C4C9D0','BC Sur':'#D2D2A2','Norte':'#E6BBA2','Noroeste':'#C0B9D6',
+ 'B. Calif.':'#D9B4BC','Occidental':'#BBD0C6','Central':'#E3D2A1','Oriental':'#A6CABB',
+ 'Peninsular':'#A9C3DA','Noreste':'#E1A6B4'}
+th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:#2b2b2b;border-bottom:none;">{n}</th>' for n,v,_ in regs)
 td_v=''.join(f'<td class="num">{v:,}</td>' for _,v,_ in regs)
 td_p=''.join(f'<td class="num">{p}</td>' for _,_,p in regs)
 saee_table=(f'<table class="report-table saee-mini"><thead><tr><th></th>{th_reg}<th class="num tot">Total</th></tr></thead>'
