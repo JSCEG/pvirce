@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quién genera la electricidad — Sankey 2024-2030</title>
+  <link rel="icon" href="data:,">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    @font-face { font-family:'Patria'; src:url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype'); font-weight:400; }
+    @font-face { font-family:'Patria'; src:url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype'); font-weight:700; }
+    @font-face { font-family:'Patria'; src:url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype'); font-weight:300; }
+
+    :root {
+      --color-guinda:#9B2247; --color-guinda-light:#B24C6C;
+      --color-verde:#1E5B4F; --color-dorado:#A57F2C; --color-dorado-light:#D6B46A;
+      --color-gris:#98989A; --color-gris-claro:#E5E5E5;
+      --color-bg-dark:#1E1E1E; --color-text-dark:#2b2b2b; --color-text-light:#666666;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:'Patria','Outfit',sans-serif; background:var(--color-bg-dark);
+      color:var(--color-text-dark); overflow:hidden; width:100vw; height:100vh;
+      display:flex; justify-content:center; align-items:center;
+    }
+    #deck { width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; }
+
+    .slide-container {
+      width:1333px; height:750px; background:#fff; box-shadow:0 20px 50px rgba(0,0,0,.3);
+      position:relative; flex-shrink:0; overflow:hidden; display:flex; flex-direction:column;
+      padding:26px 40px 0 40px;
+    }
+
+    /* HEADER */
+    .hero { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:18px;
+      padding-bottom:12px; border-bottom:2px solid var(--color-guinda); }
+    .hero .icon-box { width:46px; height:46px; background:var(--color-guinda); border-radius:12px;
+      display:flex; align-items:center; justify-content:center; color:#fff; font-size:23px;
+      box-shadow:0 4px 12px rgba(155,34,71,.30); }
+    .hero .eyebrow { font-family:'Outfit',sans-serif; font-size:11px; font-weight:700;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--color-dorado); }
+    .hero h1 { font-family:'Patria','Outfit',sans-serif; font-weight:700; font-size:26px;
+      line-height:1.1; color:var(--color-text-dark); margin-top:2px; }
+    .hero h1 b { color:var(--color-guinda); }
+    .hero .logo-right img { height:42px; }
+
+    /* CHART */
+    .chart-wrap { flex:1 1 auto; min-height:0; position:relative; display:flex; align-items:center; justify-content:center; }
+    .sankey { width:100%; height:100%; }
+    .sankey .rib { transition:fill-opacity .15s ease; cursor:pointer; }
+    .sankey .rib:hover { fill-opacity:.82; }
+    .sankey.focus .rib { fill-opacity:.10; }
+    .sankey.focus .nd { opacity:.18; }
+    .sankey.focus .rib.hot { fill-opacity:.85; }
+    .sankey.focus .nd.hot { opacity:1; }
+    .nd { cursor:pointer; transition:opacity .15s ease; }
+
+    .sk-tip {
+      position:absolute; pointer-events:none; z-index:30; background:#fff;
+      border:1px solid var(--color-gris-claro); border-left:4px solid var(--color-guinda);
+      border-radius:8px; box-shadow:0 8px 22px rgba(0,0,0,.18); padding:7px 11px 8px;
+      font-family:'Outfit',sans-serif; opacity:0; transform:translate(-50%,-118%);
+      transition:opacity .12s ease; white-space:nowrap; }
+    .sk-tip.on { opacity:1; }
+    .sk-tip .t-name { font-size:12px; font-weight:700; color:var(--color-guinda); }
+    .sk-tip .t-row { font-size:12.5px; color:var(--color-text-dark); margin-top:2px; }
+    .sk-tip .t-row b { font-weight:700; }
+    .sk-tip .t-sub { font-size:10.5px; color:var(--color-text-light); margin-top:1px; }
+
+    /* LEGEND */
+    .legend { display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center;
+      padding:8px 0 6px; font-family:'Outfit',sans-serif; font-size:11px; color:var(--color-text-dark); }
+    .legend .lg { display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+    .legend .lg i { width:13px; height:13px; border-radius:3px; display:inline-block; }
+    .legend .lg.mut { opacity:.35; }
+
+    .footnote { font-family:'Outfit',sans-serif; font-size:9.5px; color:var(--color-gris);
+      text-align:center; margin-bottom:4px; }
+
+    .slide-footer { margin-top:auto; height:8px; width:calc(100% + 80px); margin-left:-40px;
+      background:linear-gradient(90deg,var(--color-guinda) 0%,var(--color-guinda) 60%,var(--color-dorado) 60%,var(--color-dorado) 100%);
+      flex-shrink:0; }
+  </style>
+</head>
+
+<body>
+  <div id="deck">
+    <section class="slide-container">
+
+      <div class="hero">
+        <div class="icon-box"><i class="bi bi-bar-chart-steps"></i></div>
+        <div>
+          <div class="eyebrow">Escenario A · 54% de contratos mixtos</div>
+          <h1>Quién genera la electricidad — el Estado llega a <b>56%</b></h1>
+        </div>
+        <div class="logo-right"><img src="Estilos Institucionales/img/logo_sener.png" alt="Secretaría de Energía"></div>
+      </div>
+
+      <div class="chart-wrap">
+        <svg viewBox="0 0 1240 560" class="sankey" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<text x="150.0" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2024</text>
+<text x="301.7" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2025</text>
+<text x="453.3" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2026</text>
+<text x="605.0" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2027</text>
+<text x="756.7" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2028</text>
+<text x="908.3" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2029</text>
+<text x="1060.0" y="64.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2b2b" font-family="Outfit,sans-serif">2030</text>
+<path class="rib r-CFE" d="M157.5,112.2 C225.8,112.2 225.8,111.5 294.2,111.5 L294.2,249.3 C225.8,249.3 225.8,248.1 157.5,248.1 Z" fill="#2E6FB0" fill-opacity="0.5" stroke="none" data-c="CFE" data-n="CFE" data-y0="2024" data-y1="2025" data-v0="148,860" data-v1="150,972"/>
+<path class="rib r-CFE" d="M309.2,111.5 C377.5,111.5 377.5,104.8 445.8,104.8 L445.8,249.8 C377.5,249.8 377.5,249.3 309.2,249.3 Z" fill="#2E6FB0" fill-opacity="0.5" stroke="none" data-c="CFE" data-n="CFE" data-y0="2025" data-y1="2026" data-v0="150,972" data-v1="158,805"/>
+<path class="rib r-CFE" d="M460.8,104.8 C529.2,104.8 529.2,99.5 597.5,99.5 L597.5,253.3 C529.2,253.3 529.2,249.8 460.8,249.8 Z" fill="#2E6FB0" fill-opacity="0.5" stroke="none" data-c="CFE" data-n="CFE" data-y0="2026" data-y1="2027" data-v0="158,805" data-v1="168,445"/>
+<path class="rib r-CFE" d="M612.5,99.5 C680.8,99.5 680.8,94.8 749.2,94.8 L749.2,253.2 C680.8,253.2 680.8,253.3 612.5,253.3 Z" fill="#2E6FB0" fill-opacity="0.5" stroke="none" data-c="CFE" data-n="CFE" data-y0="2027" data-y1="2028" data-v0="168,445" data-v1="173,517"/>
+<path class="rib r-CFE" d="M764.2,94.8 C832.5,94.8 832.5,90.2 900.8,90.2 L900.8,249.5 C832.5,249.5 832.5,253.2 764.2,253.2 Z" fill="#2E6FB0" fill-opacity="0.5" stroke="none" data-c="CFE" data-n="CFE" data-y0="2028" data-y1="2029" data-v0="173,517" data-v1="174,517"/>
+<path class="rib r-CFE" d="M915.8,90.2 C984.2,90.2 984.2,86.0 1052.5,86.0 L1052.5,245.7 C984.2,245.7 984.2,249.5 915.8,249.5 Z" fill="#2E6FB0" fill-opacity="0.5" stroke="none" data-c="CFE" data-n="CFE" data-y0="2029" data-y1="2030" data-v0="174,517" data-v1="174,903"/>
+<path class="rib r-FONADIN" d="M157.5,248.1 C225.8,248.1 225.8,249.3 294.2,249.3 L294.2,296.4 C225.8,296.4 225.8,288.2 157.5,288.2 Z" fill="#1F9488" fill-opacity="0.5" stroke="none" data-c="FONADIN" data-n="FONADIN" data-y0="2024" data-y1="2025" data-v0="43,939" data-v1="51,536"/>
+<path class="rib r-FONADIN" d="M309.2,249.3 C377.5,249.3 377.5,249.8 445.8,249.8 L445.8,288.2 C377.5,288.2 377.5,296.4 309.2,296.4 Z" fill="#1F9488" fill-opacity="0.5" stroke="none" data-c="FONADIN" data-n="FONADIN" data-y0="2025" data-y1="2026" data-v0="51,536" data-v1="42,109"/>
+<path class="rib r-FONADIN" d="M460.8,249.8 C529.2,249.8 529.2,253.3 597.5,253.3 L597.5,290.3 C529.2,290.3 529.2,288.2 460.8,288.2 Z" fill="#1F9488" fill-opacity="0.5" stroke="none" data-c="FONADIN" data-n="FONADIN" data-y0="2026" data-y1="2027" data-v0="42,109" data-v1="40,525"/>
+<path class="rib r-FONADIN" d="M612.5,253.3 C680.8,253.3 680.8,253.2 749.2,253.2 L749.2,288.8 C680.8,288.8 680.8,290.3 612.5,290.3 Z" fill="#1F9488" fill-opacity="0.5" stroke="none" data-c="FONADIN" data-n="FONADIN" data-y0="2027" data-y1="2028" data-v0="40,525" data-v1="38,926"/>
+<path class="rib r-FONADIN" d="M764.2,253.2 C832.5,253.2 832.5,249.5 900.8,249.5 L900.8,278.1 C832.5,278.1 832.5,288.8 764.2,288.8 Z" fill="#1F9488" fill-opacity="0.5" stroke="none" data-c="FONADIN" data-n="FONADIN" data-y0="2028" data-y1="2029" data-v0="38,926" data-v1="31,298"/>
+<path class="rib r-FONADIN" d="M915.8,249.5 C984.2,249.5 984.2,245.7 1052.5,245.7 L1052.5,271.1 C984.2,271.1 984.2,278.1 915.8,278.1 Z" fill="#1F9488" fill-opacity="0.5" stroke="none" data-c="FONADIN" data-n="FONADIN" data-y0="2029" data-y1="2030" data-v0="31,298" data-v1="27,909"/>
+<path class="rib r-PEMEX" d="M157.5,288.2 C225.8,288.2 225.8,296.4 294.2,296.4 L294.2,298.3 C225.8,298.3 225.8,290.4 157.5,290.4 Z" fill="#5E6671" fill-opacity="0.5" stroke="none" data-c="PEMEX" data-n="PEMEX" data-y0="2024" data-y1="2025" data-v0="2,385" data-v1="2,087"/>
+<path class="rib r-PEMEX" d="M309.2,296.4 C377.5,296.4 377.5,288.2 445.8,288.2 L445.8,290.6 C377.5,290.6 377.5,298.3 309.2,298.3 Z" fill="#5E6671" fill-opacity="0.5" stroke="none" data-c="PEMEX" data-n="PEMEX" data-y0="2025" data-y1="2026" data-v0="2,087" data-v1="2,573"/>
+<path class="rib r-PEMEX" d="M460.8,288.2 C529.2,288.2 529.2,290.3 597.5,290.3 L597.5,292.6 C529.2,292.6 529.2,290.6 460.8,290.6 Z" fill="#5E6671" fill-opacity="0.5" stroke="none" data-c="PEMEX" data-n="PEMEX" data-y0="2026" data-y1="2027" data-v0="2,573" data-v1="2,573"/>
+<path class="rib r-PEMEX" d="M612.5,290.3 C680.8,290.3 680.8,288.8 749.2,288.8 L749.2,291.1 C680.8,291.1 680.8,292.6 612.5,292.6 Z" fill="#5E6671" fill-opacity="0.5" stroke="none" data-c="PEMEX" data-n="PEMEX" data-y0="2027" data-y1="2028" data-v0="2,573" data-v1="2,581"/>
+<path class="rib r-PEMEX" d="M764.2,288.8 C832.5,288.8 832.5,278.1 900.8,278.1 L900.8,280.4 C832.5,280.4 832.5,291.1 764.2,291.1 Z" fill="#5E6671" fill-opacity="0.5" stroke="none" data-c="PEMEX" data-n="PEMEX" data-y0="2028" data-y1="2029" data-v0="2,581" data-v1="2,573"/>
+<path class="rib r-PEMEX" d="M915.8,278.1 C984.2,278.1 984.2,271.1 1052.5,271.1 L1052.5,273.5 C984.2,273.5 984.2,280.4 915.8,280.4 Z" fill="#5E6671" fill-opacity="0.5" stroke="none" data-c="PEMEX" data-n="PEMEX" data-y0="2029" data-y1="2030" data-v0="2,573" data-v1="2,565"/>
+<path class="rib r-SOC54" d="M612.5,292.6 C680.8,292.6 680.8,291.1 749.2,291.1 L749.2,292.3 C680.8,292.3 680.8,292.6 612.5,292.6 Z" fill="#2F94AC" fill-opacity="0.5" stroke="none" data-c="SOC54" data-n="Sociedades con CFE (54%)" data-y0="2027" data-y1="2028" data-v0="0" data-v1="1,315"/>
+<path class="rib r-SOC54" d="M764.2,291.1 C832.5,291.1 832.5,280.4 900.8,280.4 L900.8,291.1 C832.5,291.1 832.5,292.3 764.2,292.3 Z" fill="#2F94AC" fill-opacity="0.5" stroke="none" data-c="SOC54" data-n="Sociedades con CFE (54%)" data-y0="2028" data-y1="2029" data-v0="1,315" data-v1="11,736"/>
+<path class="rib r-SOC54" d="M915.8,280.4 C984.2,280.4 984.2,273.5 1052.5,273.5 L1052.5,293.7 C984.2,293.7 984.2,291.1 915.8,291.1 Z" fill="#2F94AC" fill-opacity="0.5" stroke="none" data-c="SOC54" data-n="Sociedades con CFE (54%)" data-y0="2029" data-y1="2030" data-v0="11,736" data-v1="22,175"/>
+<path class="rib r-PIE" d="M157.5,314.4 C225.8,314.4 225.8,322.3 294.2,322.3 L294.2,378.1 C225.8,378.1 225.8,375.8 157.5,375.8 Z" fill="#E07B2A" fill-opacity="0.5" stroke="none" data-c="PIE" data-n="Productores indep. (PIE)" data-y0="2024" data-y1="2025" data-v0="67,278" data-v1="61,156"/>
+<path class="rib r-PIE" d="M309.2,322.3 C377.5,322.3 377.5,314.6 445.8,314.6 L445.8,361.3 C377.5,361.3 377.5,378.1 309.2,378.1 Z" fill="#E07B2A" fill-opacity="0.5" stroke="none" data-c="PIE" data-n="Productores indep. (PIE)" data-y0="2025" data-y1="2026" data-v0="61,156" data-v1="51,173"/>
+<path class="rib r-PIE" d="M460.8,314.6 C529.2,314.6 529.2,316.6 597.5,316.6 L597.5,365.4 C529.2,365.4 529.2,361.3 460.8,361.3 Z" fill="#E07B2A" fill-opacity="0.5" stroke="none" data-c="PIE" data-n="Productores indep. (PIE)" data-y0="2026" data-y1="2027" data-v0="51,173" data-v1="53,366"/>
+<path class="rib r-PIE" d="M612.5,316.6 C680.8,316.6 680.8,316.3 749.2,316.3 L749.2,364.7 C680.8,364.7 680.8,365.4 612.5,365.4 Z" fill="#E07B2A" fill-opacity="0.5" stroke="none" data-c="PIE" data-n="Productores indep. (PIE)" data-y0="2027" data-y1="2028" data-v0="53,366" data-v1="52,983"/>
+<path class="rib r-PIE" d="M764.2,316.3 C832.5,316.3 832.5,315.1 900.8,315.1 L900.8,361.5 C832.5,361.5 832.5,364.7 764.2,364.7 Z" fill="#E07B2A" fill-opacity="0.5" stroke="none" data-c="PIE" data-n="Productores indep. (PIE)" data-y0="2028" data-y1="2029" data-v0="52,983" data-v1="50,753"/>
+<path class="rib r-PIE" d="M915.8,315.1 C984.2,315.1 984.2,317.7 1052.5,317.7 L1052.5,354.4 C984.2,354.4 984.2,361.5 915.8,361.5 Z" fill="#E07B2A" fill-opacity="0.5" stroke="none" data-c="PIE" data-n="Productores indep. (PIE)" data-y0="2029" data-y1="2030" data-v0="50,753" data-v1="40,217"/>
+<path class="rib r-LIE" d="M157.5,375.8 C225.8,375.8 225.8,378.1 294.2,378.1 L294.2,412.0 C225.8,412.0 225.8,412.0 157.5,412.0 Z" fill="#D99A00" fill-opacity="0.5" stroke="none" data-c="LIE" data-n="Privados en el mercado (LIE)" data-y0="2024" data-y1="2025" data-v0="39,678" data-v1="37,104"/>
+<path class="rib r-LIE" d="M309.2,378.1 C377.5,378.1 377.5,361.3 445.8,361.3 L445.8,415.4 C377.5,415.4 377.5,412.0 309.2,412.0 Z" fill="#D99A00" fill-opacity="0.5" stroke="none" data-c="LIE" data-n="Privados en el mercado (LIE)" data-y0="2025" data-y1="2026" data-v0="37,104" data-v1="59,328"/>
+<path class="rib r-LIE" d="M460.8,361.3 C529.2,361.3 529.2,365.4 597.5,365.4 L597.5,419.6 C529.2,419.6 529.2,415.4 460.8,415.4 Z" fill="#D99A00" fill-opacity="0.5" stroke="none" data-c="LIE" data-n="Privados en el mercado (LIE)" data-y0="2026" data-y1="2027" data-v0="59,328" data-v1="59,395"/>
+<path class="rib r-LIE" d="M612.5,365.4 C680.8,365.4 680.8,364.7 749.2,364.7 L749.2,421.0 C680.8,421.0 680.8,419.6 612.5,419.6 Z" fill="#D99A00" fill-opacity="0.5" stroke="none" data-c="LIE" data-n="Privados en el mercado (LIE)" data-y0="2027" data-y1="2028" data-v0="59,395" data-v1="61,715"/>
+<path class="rib r-LIE" d="M764.2,364.7 C832.5,364.7 832.5,361.5 900.8,361.5 L900.8,415.3 C832.5,415.3 832.5,421.0 764.2,421.0 Z" fill="#D99A00" fill-opacity="0.5" stroke="none" data-c="LIE" data-n="Privados en el mercado (LIE)" data-y0="2028" data-y1="2029" data-v0="61,715" data-v1="58,972"/>
+<path class="rib r-LIE" d="M915.8,361.5 C984.2,361.5 984.2,354.4 1052.5,354.4 L1052.5,412.0 C984.2,412.0 984.2,415.3 915.8,415.3 Z" fill="#D99A00" fill-opacity="0.5" stroke="none" data-c="LIE" data-n="Privados en el mercado (LIE)" data-y0="2029" data-y1="2030" data-v0="58,972" data-v1="63,067"/>
+<path class="rib r-CIL" d="M157.5,412.0 C225.8,412.0 225.8,412.0 294.2,412.0 L294.2,443.4 C225.8,443.4 225.8,443.7 157.5,443.7 Z" fill="#C0552E" fill-opacity="0.5" stroke="none" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-y0="2024" data-y1="2025" data-v0="34,737" data-v1="34,478"/>
+<path class="rib r-CIL" d="M309.2,412.0 C377.5,412.0 377.5,415.4 445.8,415.4 L445.8,446.8 C377.5,446.8 377.5,443.4 309.2,443.4 Z" fill="#C0552E" fill-opacity="0.5" stroke="none" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-y0="2025" data-y1="2026" data-v0="34,478" data-v1="34,356"/>
+<path class="rib r-CIL" d="M460.8,415.4 C529.2,415.4 529.2,419.6 597.5,419.6 L597.5,451.2 C529.2,451.2 529.2,446.8 460.8,446.8 Z" fill="#C0552E" fill-opacity="0.5" stroke="none" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-y0="2026" data-y1="2027" data-v0="34,356" data-v1="34,690"/>
+<path class="rib r-CIL" d="M612.5,419.6 C680.8,419.6 680.8,421.0 749.2,421.0 L749.2,452.8 C680.8,452.8 680.8,451.2 612.5,451.2 Z" fill="#C0552E" fill-opacity="0.5" stroke="none" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-y0="2027" data-y1="2028" data-v0="34,690" data-v1="34,842"/>
+<path class="rib r-CIL" d="M764.2,421.0 C832.5,421.0 832.5,415.3 900.8,415.3 L900.8,446.9 C832.5,446.9 832.5,452.8 764.2,452.8 Z" fill="#C0552E" fill-opacity="0.5" stroke="none" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-y0="2028" data-y1="2029" data-v0="34,842" data-v1="34,575"/>
+<path class="rib r-CIL" d="M915.8,415.3 C984.2,415.3 984.2,412.0 1052.5,412.0 L1052.5,443.4 C984.2,443.4 984.2,446.9 915.8,446.9 Z" fill="#C0552E" fill-opacity="0.5" stroke="none" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-y0="2029" data-y1="2030" data-v0="34,575" data-v1="34,409"/>
+<path class="rib r-SLP" d="M157.5,443.7 C225.8,443.7 225.8,443.4 294.2,443.4 L294.2,458.5 C225.8,458.5 225.8,457.8 157.5,457.8 Z" fill="#8A9A2E" fill-opacity="0.5" stroke="none" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-y0="2024" data-y1="2025" data-v0="15,428" data-v1="16,485"/>
+<path class="rib r-SLP" d="M309.2,443.4 C377.5,443.4 377.5,446.8 445.8,446.8 L445.8,465.2 C377.5,465.2 377.5,458.5 309.2,458.5 Z" fill="#8A9A2E" fill-opacity="0.5" stroke="none" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-y0="2025" data-y1="2026" data-v0="16,485" data-v1="20,177"/>
+<path class="rib r-SLP" d="M460.8,446.8 C529.2,446.8 529.2,451.2 597.5,451.2 L597.5,470.4 C529.2,470.4 529.2,465.2 460.8,465.2 Z" fill="#8A9A2E" fill-opacity="0.5" stroke="none" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-y0="2026" data-y1="2027" data-v0="20,177" data-v1="21,026"/>
+<path class="rib r-SLP" d="M612.5,451.2 C680.8,451.2 680.8,452.8 749.2,452.8 L749.2,471.6 C680.8,471.6 680.8,470.4 612.5,470.4 Z" fill="#8A9A2E" fill-opacity="0.5" stroke="none" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-y0="2027" data-y1="2028" data-v0="21,026" data-v1="20,619"/>
+<path class="rib r-SLP" d="M764.2,452.8 C832.5,452.8 832.5,446.9 900.8,446.9 L900.8,464.6 C832.5,464.6 832.5,471.6 764.2,471.6 Z" fill="#8A9A2E" fill-opacity="0.5" stroke="none" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-y0="2028" data-y1="2029" data-v0="20,619" data-v1="19,456"/>
+<path class="rib r-SLP" d="M915.8,446.9 C984.2,446.9 984.2,443.4 1052.5,443.4 L1052.5,460.6 C984.2,460.6 984.2,464.6 915.8,464.6 Z" fill="#8A9A2E" fill-opacity="0.5" stroke="none" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-y0="2029" data-y1="2030" data-v0="19,456" data-v1="18,849"/>
+<path class="rib r-SOC46" d="M612.5,470.4 C680.8,470.4 680.8,471.6 749.2,471.6 L749.2,472.7 C680.8,472.7 680.8,470.4 612.5,470.4 Z" fill="#4E8B3F" fill-opacity="0.5" stroke="none" data-c="SOC46" data-n="Sociedades con CFE (46%)" data-y0="2027" data-y1="2028" data-v0="0" data-v1="1,120"/>
+<path class="rib r-SOC46" d="M764.2,471.6 C832.5,471.6 832.5,464.6 900.8,464.6 L900.8,473.8 C832.5,473.8 832.5,472.7 764.2,472.7 Z" fill="#4E8B3F" fill-opacity="0.5" stroke="none" data-c="SOC46" data-n="Sociedades con CFE (46%)" data-y0="2028" data-y1="2029" data-v0="1,120" data-v1="9,997"/>
+<path class="rib r-SOC46" d="M915.8,464.6 C984.2,464.6 984.2,460.6 1052.5,460.6 L1052.5,477.9 C984.2,477.9 984.2,473.8 915.8,473.8 Z" fill="#4E8B3F" fill-opacity="0.5" stroke="none" data-c="SOC46" data-n="Sociedades con CFE (46%)" data-y0="2029" data-y1="2030" data-v0="9,997" data-v1="18,890"/>
+<path class="rib r-CONV1" d="M460.8,465.2 C529.2,465.2 529.2,470.4 597.5,470.4 L597.5,470.5 C529.2,470.5 529.2,465.2 460.8,465.2 Z" fill="#7B828D" fill-opacity="0.5" stroke="none" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-y0="2026" data-y1="2027" data-v0="0" data-v1="44"/>
+<path class="rib r-CONV1" d="M612.5,470.4 C680.8,470.4 680.8,472.7 749.2,472.7 L749.2,475.2 C680.8,475.2 680.8,470.5 612.5,470.5 Z" fill="#7B828D" fill-opacity="0.5" stroke="none" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-y0="2027" data-y1="2028" data-v0="44" data-v1="2,738"/>
+<path class="rib r-CONV1" d="M764.2,472.7 C832.5,472.7 832.5,473.8 900.8,473.8 L900.8,479.8 C832.5,479.8 832.5,475.2 764.2,475.2 Z" fill="#7B828D" fill-opacity="0.5" stroke="none" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-y0="2028" data-y1="2029" data-v0="2,738" data-v1="6,619"/>
+<path class="rib r-CONV1" d="M915.8,473.8 C984.2,473.8 984.2,477.9 1052.5,477.9 L1052.5,484.0 C984.2,484.0 984.2,479.8 915.8,479.8 Z" fill="#7B828D" fill-opacity="0.5" stroke="none" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-y0="2029" data-y1="2030" data-v0="6,619" data-v1="6,720"/>
+<rect class="nd n-CFE" x="142.5" y="112.2" width="15" height="135.9" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2024" data-v="148,860" data-s="42.3%"/>
+<rect class="nd n-CFE" x="294.2" y="111.5" width="15" height="137.8" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2025" data-v="150,972" data-s="42.7%"/>
+<rect class="nd n-CFE" x="445.8" y="104.8" width="15" height="145.0" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2026" data-v="158,805" data-s="43.1%"/>
+<rect class="nd n-CFE" x="597.5" y="99.5" width="15" height="153.8" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2027" data-v="168,445" data-s="44.3%"/>
+<rect class="nd n-CFE" x="749.2" y="94.8" width="15" height="158.4" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2028" data-v="173,517" data-s="44.5%"/>
+<rect class="nd n-CFE" x="900.8" y="90.2" width="15" height="159.3" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2029" data-v="174,517" data-s="43.6%"/>
+<rect class="nd n-CFE" x="1052.5" y="86.0" width="15" height="159.7" fill="#2E6FB0" data-c="CFE" data-n="CFE" data-yr="2030" data-v="174,903" data-s="42.7%"/>
+<rect class="nd n-FONADIN" x="142.5" y="248.1" width="15" height="40.1" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2024" data-v="43,939" data-s="12.5%"/>
+<rect class="nd n-FONADIN" x="294.2" y="249.3" width="15" height="47.0" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2025" data-v="51,536" data-s="14.6%"/>
+<rect class="nd n-FONADIN" x="445.8" y="249.8" width="15" height="38.4" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2026" data-v="42,109" data-s="11.4%"/>
+<rect class="nd n-FONADIN" x="597.5" y="253.3" width="15" height="37.0" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2027" data-v="40,525" data-s="10.7%"/>
+<rect class="nd n-FONADIN" x="749.2" y="253.2" width="15" height="35.5" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2028" data-v="38,926" data-s="10.0%"/>
+<rect class="nd n-FONADIN" x="900.8" y="249.5" width="15" height="28.6" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2029" data-v="31,298" data-s="7.8%"/>
+<rect class="nd n-FONADIN" x="1052.5" y="245.7" width="15" height="25.5" fill="#1F9488" data-c="FONADIN" data-n="FONADIN" data-yr="2030" data-v="27,909" data-s="6.8%"/>
+<rect class="nd n-PEMEX" x="142.5" y="288.2" width="15" height="2.2" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2024" data-v="2,385" data-s="0.7%"/>
+<rect class="nd n-PEMEX" x="294.2" y="296.4" width="15" height="1.9" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2025" data-v="2,087" data-s="0.6%"/>
+<rect class="nd n-PEMEX" x="445.8" y="288.2" width="15" height="2.3" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2026" data-v="2,573" data-s="0.7%"/>
+<rect class="nd n-PEMEX" x="597.5" y="290.3" width="15" height="2.3" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2027" data-v="2,573" data-s="0.7%"/>
+<rect class="nd n-PEMEX" x="749.2" y="288.8" width="15" height="2.4" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2028" data-v="2,581" data-s="0.7%"/>
+<rect class="nd n-PEMEX" x="900.8" y="278.1" width="15" height="2.3" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2029" data-v="2,573" data-s="0.6%"/>
+<rect class="nd n-PEMEX" x="1052.5" y="271.1" width="15" height="2.3" fill="#5E6671" data-c="PEMEX" data-n="PEMEX" data-yr="2030" data-v="2,565" data-s="0.6%"/>
+<rect class="nd n-SOC54" x="749.2" y="291.1" width="15" height="1.2" fill="#2F94AC" data-c="SOC54" data-n="Sociedades con CFE (54%)" data-yr="2028" data-v="1,315" data-s="0.3%"/>
+<rect class="nd n-SOC54" x="900.8" y="280.4" width="15" height="10.7" fill="#2F94AC" data-c="SOC54" data-n="Sociedades con CFE (54%)" data-yr="2029" data-v="11,736" data-s="2.9%"/>
+<rect class="nd n-SOC54" x="1052.5" y="273.5" width="15" height="20.2" fill="#2F94AC" data-c="SOC54" data-n="Sociedades con CFE (54%)" data-yr="2030" data-v="22,175" data-s="5.4%"/>
+<rect class="nd n-PIE" x="142.5" y="314.4" width="15" height="61.4" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2024" data-v="67,278" data-s="19.1%"/>
+<rect class="nd n-PIE" x="294.2" y="322.3" width="15" height="55.8" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2025" data-v="61,156" data-s="17.3%"/>
+<rect class="nd n-PIE" x="445.8" y="314.6" width="15" height="46.7" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2026" data-v="51,173" data-s="13.9%"/>
+<rect class="nd n-PIE" x="597.5" y="316.6" width="15" height="48.7" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2027" data-v="53,366" data-s="14.0%"/>
+<rect class="nd n-PIE" x="749.2" y="316.3" width="15" height="48.4" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2028" data-v="52,983" data-s="13.6%"/>
+<rect class="nd n-PIE" x="900.8" y="315.1" width="15" height="46.3" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2029" data-v="50,753" data-s="12.7%"/>
+<rect class="nd n-PIE" x="1052.5" y="317.7" width="15" height="36.7" fill="#E07B2A" data-c="PIE" data-n="Productores indep. (PIE)" data-yr="2030" data-v="40,217" data-s="9.8%"/>
+<rect class="nd n-LIE" x="142.5" y="375.8" width="15" height="36.2" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2024" data-v="39,678" data-s="11.3%"/>
+<rect class="nd n-LIE" x="294.2" y="378.1" width="15" height="33.9" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2025" data-v="37,104" data-s="10.5%"/>
+<rect class="nd n-LIE" x="445.8" y="361.3" width="15" height="54.2" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2026" data-v="59,328" data-s="16.1%"/>
+<rect class="nd n-LIE" x="597.5" y="365.4" width="15" height="54.2" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2027" data-v="59,395" data-s="15.6%"/>
+<rect class="nd n-LIE" x="749.2" y="364.7" width="15" height="56.3" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2028" data-v="61,715" data-s="15.8%"/>
+<rect class="nd n-LIE" x="900.8" y="361.5" width="15" height="53.8" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2029" data-v="58,972" data-s="14.7%"/>
+<rect class="nd n-LIE" x="1052.5" y="354.4" width="15" height="57.6" fill="#D99A00" data-c="LIE" data-n="Privados en el mercado (LIE)" data-yr="2030" data-v="63,067" data-s="15.4%"/>
+<rect class="nd n-CIL" x="142.5" y="412.0" width="15" height="31.7" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2024" data-v="34,737" data-s="9.9%"/>
+<rect class="nd n-CIL" x="294.2" y="412.0" width="15" height="31.5" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2025" data-v="34,478" data-s="9.7%"/>
+<rect class="nd n-CIL" x="445.8" y="415.4" width="15" height="31.4" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2026" data-v="34,356" data-s="9.3%"/>
+<rect class="nd n-CIL" x="597.5" y="419.6" width="15" height="31.7" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2027" data-v="34,690" data-s="9.1%"/>
+<rect class="nd n-CIL" x="749.2" y="421.0" width="15" height="31.8" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2028" data-v="34,842" data-s="8.9%"/>
+<rect class="nd n-CIL" x="900.8" y="415.3" width="15" height="31.6" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2029" data-v="34,575" data-s="8.6%"/>
+<rect class="nd n-CIL" x="1052.5" y="412.0" width="15" height="31.4" fill="#C0552E" data-c="CIL" data-n="Autoabasto heredado (CIL)" data-yr="2030" data-v="34,409" data-s="8.4%"/>
+<rect class="nd n-SLP" x="142.5" y="443.7" width="15" height="14.1" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2024" data-v="15,428" data-s="4.4%"/>
+<rect class="nd n-SLP" x="294.2" y="443.4" width="15" height="15.0" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2025" data-v="16,485" data-s="4.7%"/>
+<rect class="nd n-SLP" x="445.8" y="446.8" width="15" height="18.4" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2026" data-v="20,177" data-s="5.5%"/>
+<rect class="nd n-SLP" x="597.5" y="451.2" width="15" height="19.2" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2027" data-v="21,026" data-s="5.5%"/>
+<rect class="nd n-SLP" x="749.2" y="452.8" width="15" height="18.8" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2028" data-v="20,619" data-s="5.3%"/>
+<rect class="nd n-SLP" x="900.8" y="446.9" width="15" height="17.8" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2029" data-v="19,456" data-s="4.9%"/>
+<rect class="nd n-SLP" x="1052.5" y="443.4" width="15" height="17.2" fill="#8A9A2E" data-c="SLP" data-n="Subastas largo plazo (SLP)" data-yr="2030" data-v="18,849" data-s="4.6%"/>
+<rect class="nd n-SOC46" x="749.2" y="471.6" width="15" height="1.0" fill="#4E8B3F" data-c="SOC46" data-n="Sociedades con CFE (46%)" data-yr="2028" data-v="1,120" data-s="0.3%"/>
+<rect class="nd n-SOC46" x="900.8" y="464.6" width="15" height="9.1" fill="#4E8B3F" data-c="SOC46" data-n="Sociedades con CFE (46%)" data-yr="2029" data-v="9,997" data-s="2.5%"/>
+<rect class="nd n-SOC46" x="1052.5" y="460.6" width="15" height="17.2" fill="#4E8B3F" data-c="SOC46" data-n="Sociedades con CFE (46%)" data-yr="2030" data-v="18,890" data-s="4.6%"/>
+<rect class="nd n-CONV1" x="597.5" y="470.4" width="15" height="0.0" fill="#7B828D" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-yr="2027" data-v="44" data-s="0.0%"/>
+<rect class="nd n-CONV1" x="749.2" y="472.7" width="15" height="2.5" fill="#7B828D" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-yr="2028" data-v="2,738" data-s="0.7%"/>
+<rect class="nd n-CONV1" x="900.8" y="473.8" width="15" height="6.0" fill="#7B828D" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-yr="2029" data-v="6,619" data-s="1.7%"/>
+<rect class="nd n-CONV1" x="1052.5" y="477.9" width="15" height="6.1" fill="#7B828D" data-c="CONV1" data-n="Privados · 1ª convocatoria" data-yr="2030" data-v="6,720" data-s="1.6%"/>
+<text x="150.0" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">352,305</text>
+<text x="150.0" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<text x="301.7" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">353,818</text>
+<text x="301.7" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<text x="453.3" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">368,521</text>
+<text x="453.3" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<text x="605.0" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">380,064</text>
+<text x="605.0" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<text x="756.7" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">390,356</text>
+<text x="756.7" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<text x="908.3" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">400,496</text>
+<text x="908.3" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<text x="1060.0" y="510.0" text-anchor="middle" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">409,704</text>
+<text x="1060.0" y="524.0" text-anchor="middle" font-size="9" fill="#98989A" font-family="Outfit,sans-serif">GWh</text>
+<line x1="1081.5" y1="86.0" x2="1081.5" y2="293.7" stroke="#9B2247" stroke-width="3"/>
+<text x="1089.5" y="185.9" font-size="13" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">Estado</text>
+<text x="1089.5" y="202.9" font-size="16" font-weight="700" fill="#9B2247" font-family="Outfit,sans-serif">56%</text>
+<line x1="1081.5" y1="317.7" x2="1081.5" y2="484.0" stroke="#A57F2C" stroke-width="3"/>
+<text x="1089.5" y="396.9" font-size="13" font-weight="700" fill="#A57F2C" font-family="Outfit,sans-serif">Particulares</text>
+<text x="1089.5" y="413.9" font-size="16" font-weight="700" fill="#A57F2C" font-family="Outfit,sans-serif">44%</text>
+<text transform="translate(124.5,201.3) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#9B2247" letter-spacing="1" font-family="Outfit,sans-serif">ESTADO</text>
+<text transform="translate(124.5,386.1) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#A57F2C" letter-spacing="1" font-family="Outfit,sans-serif">PARTICULARES</text>
+</svg>
+        <div class="sk-tip" id="skTip"></div>
+      </div>
+
+      <div class="legend" id="legend"><span class="lg" data-c="CFE"><i style="background:#2E6FB0"></i>CFE</span><span class="lg" data-c="FONADIN"><i style="background:#1F9488"></i>FONADIN</span><span class="lg" data-c="PEMEX"><i style="background:#5E6671"></i>PEMEX</span><span class="lg" data-c="SOC54"><i style="background:#2F94AC"></i>Sociedades con CFE (54%)</span><span class="lg" data-c="PIE"><i style="background:#E07B2A"></i>Productores indep. (PIE)</span><span class="lg" data-c="LIE"><i style="background:#D99A00"></i>Privados en el mercado (LIE)</span><span class="lg" data-c="CIL"><i style="background:#C0552E"></i>Autoabasto heredado (CIL)</span><span class="lg" data-c="SLP"><i style="background:#8A9A2E"></i>Subastas largo plazo (SLP)</span><span class="lg" data-c="SOC46"><i style="background:#4E8B3F"></i>Sociedades con CFE (46%)</span><span class="lg" data-c="CONV1"><i style="background:#7B828D"></i>Privados · 1ª convocatoria</span></div>
+
+      <div class="footnote">Generación bruta (GWh). LIE incluye permisionarios de LSE; CIL = Contrato de Interconexión Legado; SLP = Subastas de Largo Plazo. Cifras pueden no sumar por redondeo. Fuente: SENER.</div>
+
+      <div class="slide-footer"></div>
+    </section>
+  </div>
+
+  <script>
+    (function(){
+      const wrap=document.querySelector('.chart-wrap');
+      const svg=document.querySelector('.sankey');
+      const tip=document.getElementById('skTip');
+      const ribs=svg.querySelectorAll('.rib');
+      const nds=svg.querySelectorAll('.nd');
+      function focus(c){
+        svg.classList.add('focus');
+        ribs.forEach(r=>r.classList.toggle('hot', r.dataset.c===c));
+        nds.forEach(n=>n.classList.toggle('hot', n.dataset.c===c));
+        document.querySelectorAll('.legend .lg').forEach(l=>l.classList.toggle('mut', l.dataset.c!==c));
+      }
+      function clear(){ svg.classList.remove('focus'); tip.classList.remove('on');
+        document.querySelectorAll('.legend .lg').forEach(l=>l.classList.remove('mut')); }
+      function move(e){ const b=wrap.getBoundingClientRect();
+        tip.style.left=(e.clientX-b.left)+'px'; tip.style.top=(e.clientY-b.top)+'px'; }
+      ribs.forEach(r=>{
+        r.addEventListener('mouseenter',()=>{ focus(r.dataset.c);
+          tip.innerHTML='<div class="t-name">'+r.dataset.n+'</div>'+
+            '<div class="t-row">'+r.dataset.y0+': <b>'+r.dataset.v0+'</b> GWh</div>'+
+            '<div class="t-row">'+r.dataset.y1+': <b>'+r.dataset.v1+'</b> GWh</div>';
+          tip.classList.add('on'); });
+        r.addEventListener('mousemove',move);
+        r.addEventListener('mouseleave',clear);
+      });
+      nds.forEach(n=>{
+        n.addEventListener('mouseenter',()=>{ focus(n.dataset.c);
+          tip.innerHTML='<div class="t-name">'+n.dataset.n+'</div>'+
+            '<div class="t-row">'+n.dataset.yr+': <b>'+n.dataset.v+'</b> GWh</div>'+
+            '<div class="t-sub">'+n.dataset.s+' del total del año</div>';
+          tip.classList.add('on'); });
+        n.addEventListener('mousemove',move);
+        n.addEventListener('mouseleave',clear);
+      });
+      // legend hover
+      document.querySelectorAll('.legend .lg').forEach(l=>{
+        l.addEventListener('mouseenter',()=>focus(l.dataset.c));
+        l.addEventListener('mouseleave',clear);
+      });
+    })();
+  </script>
+</body>
+
+</html>

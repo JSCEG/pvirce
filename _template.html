@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expansión del Sistema Eléctrico Nacional 2024–2030</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+<style>
+:root{--color-guinda:#9B2247;--color-guinda-light:#B24C6C;--color-verde:#1E5B4F;--color-verde-light:#4F8A7C;
+--color-dorado:#A57F2C;--color-dorado-light:#D6B46A;--color-gris:#98989A;--color-gris-claro:#E5E5E5;
+--color-bg-dark:#1E1E1E;--color-text-dark:#2b2b2b;--color-text-light:#666666;--color-bg-light:#F4F6F8;--scale:1.0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hind','Montserrat',sans-serif;background:var(--color-bg-dark);color:var(--color-text-dark);
+overflow:hidden;width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;}
+foreignObject body{display:block;width:auto;height:auto;background:transparent;}
+h1,.ef-title,.brand-left,.lead,.kpi-card-main .val-main,.s-val,.panel-card h3,.k3v,.st-v{font-family:'Montserrat',sans-serif;}
+#preloader{position:fixed;inset:0;background:var(--color-bg-dark);display:flex;flex-direction:column;justify-content:center;
+align-items:center;z-index:9999;color:#fff;font-family:'Montserrat',sans-serif;transition:opacity .5s ease;}
+.spinner{width:50px;height:50px;border:5px solid rgba(255,255,255,.1);border-top-color:var(--color-dorado);border-radius:50%;animation:spin 1s infinite linear;margin-bottom:20px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
+.slide{width:100vw;height:100vh;position:absolute;inset:0;display:none;justify-content:center;align-items:center;background:var(--color-bg-dark);opacity:0;transition:opacity .4s ease-in-out;z-index:1;}
+.slide.active{display:flex;opacity:1;z-index:2;}
+.slide-container{width:1333px;height:750px;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.3);position:relative;flex-shrink:0;overflow:hidden;display:flex;flex-direction:column;padding:30px 40px;transform-origin:center center;}
+/* HEADER */
+.slide-header{background:#ffffff;padding:10px 24px;display:grid;grid-template-columns:1fr 2fr 1fr;align-items:center;border-bottom:3px solid var(--color-guinda);margin:-30px -40px 12px;width:calc(100% + 80px);}
+.slide-header .brand-left{font-size:17px;font-weight:700;color:var(--color-guinda);display:flex;flex-direction:column;line-height:1.12;}
+.slide-header .brand-left .brand-line-2{font-size:11px;font-weight:600;color:var(--color-dorado);}
+.slide-header .ef-title{font-size:18px;font-weight:700;color:var(--color-text-dark);text-align:center;text-transform:uppercase;letter-spacing:.02em;}
+.slide-header .ef-title::before,.slide-header .ef-title::after{content:'·';color:var(--color-dorado);margin:0 10px;}
+.slide-header .logo-right{display:flex;justify-content:flex-end;align-items:center;}
+.slide-header .logo-sener{height:34px;}
+.slide-footer{margin-top:auto;height:8px;width:calc(100% + 80px);margin-left:-40px;margin-bottom:-30px;background:linear-gradient(90deg,var(--color-guinda) 0%,var(--color-guinda) 60%,var(--color-dorado) 60%,var(--color-dorado) 100%);flex-shrink:0;}
+/* LEAD */
+.lead{font-size:21px;font-weight:700;line-height:1.18;color:var(--color-text-dark);margin-bottom:10px;}
+.lead.small{font-size:16px;margin-bottom:8px;}
+.lead .hl{color:var(--color-guinda);}
+.lead .hlv{color:var(--color-verde);}
+.snote{font-family:'Hind',sans-serif;font-size:9px;color:var(--color-gris);margin-top:6px;line-height:1.3;}
+/* CONTROLES */
+#presentationControls{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;background:rgba(30,30,30,.85);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);padding:7px 16px;border-radius:30px;z-index:1000;box-shadow:0 10px 25px rgba(0,0,0,.4);gap:13px;color:#fff;font-family:'Montserrat',sans-serif;font-size:13px;}
+.control-btn{background:none;border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;justify-content:center;align-items:center;width:30px;height:30px;border-radius:50%;transition:background .2s;}
+.control-btn:hover{background:rgba(255,255,255,.15);}
+.control-btn:disabled{color:#666;cursor:not-allowed;}
+/* PORTADA — foto diagonal derecha, texto izquierda */
+.slide.cover .slide-container{background:#f7f6f3;color:var(--color-text-dark);padding:0;display:block;position:relative;overflow:hidden;}
+.cv-photo{position:absolute;inset:0;z-index:0;}
+.cv-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;clip-path:polygon(58% 0,100% 0,100% 100%,45% 100%);}
+.cv-diag{position:absolute;inset:0;z-index:1;background:var(--color-dorado);clip-path:polygon(57.2% 0,58% 0,45% 100%,44.2% 100%);opacity:.85;}
+.cv-dots{position:absolute;top:150px;left:47%;width:150px;height:96px;z-index:1;background-image:radial-gradient(#bdb7ab 1.3px,transparent 1.6px);background-size:13px 13px;opacity:.6;}
+.cv-logos{position:absolute;top:40px;left:54px;z-index:4;display:flex;align-items:center;gap:18px;}
+.cv-logos img.gob{height:62px;} .cv-logos img.energia{height:54px;}
+.cv-logos .cdiv{width:1px;height:52px;background:#cfc9bd;}
+.cv-unit{position:absolute;top:58px;right:46px;z-index:4;text-align:right;font-size:12px;font-weight:700;letter-spacing:.08em;color:#5d5750;text-transform:uppercase;}
+.cv-unit::after{content:'';display:block;margin:7px 0 0 auto;width:60px;height:3px;background:var(--color-dorado);}
+.cv-body{position:absolute;left:54px;top:0;bottom:0;width:53%;z-index:3;display:flex;flex-direction:column;justify-content:center;gap:6px;text-align:left;}
+.slide.cover .cv-body .eyebrow{font-size:14px;letter-spacing:.13em;text-transform:uppercase;color:var(--color-guinda);font-weight:700;text-shadow:none;max-width:none;}
+.slide.cover .cv-body .eyebrow::after{content:'';display:block;width:54px;height:3px;background:var(--color-dorado);margin-top:11px;}
+.slide.cover .cv-body h1{font-family:'Montserrat',sans-serif;font-weight:800;font-size:58px;line-height:.98;color:#26282c;margin-top:14px;max-width:none;text-shadow:none;}
+.slide.cover .cover-year{font-family:'Montserrat',sans-serif;font-weight:800;font-size:50px;color:var(--color-dorado);letter-spacing:.05em;margin-top:10px;}
+.slide.cover .cover-rule{width:118px;height:4px;background:var(--color-dorado);border-radius:2px;margin:8px 0 8px;}
+.slide.cover .cv-body .unidad{font-family:'Hind',sans-serif;font-weight:700;font-size:23px;color:#2b2b2b;text-shadow:none;margin-top:0;max-width:none;}
+.slide.cover .cv-body .unidad-sub{font-family:'Hind',sans-serif;font-weight:500;font-size:15px;color:#5a5a5a;text-shadow:none;max-width:none;}
+.slide.cover .cv-body .unidad-sub .acronym{color:var(--color-guinda);font-weight:700;}
+.slide.cover .cv-body .meta{margin-top:24px;display:flex;gap:40px;}
+.slide.cover .cv-body .meta-item{display:flex;align-items:center;gap:12px;text-align:left;}
+.slide.cover .cv-body .meta-item .ic{width:46px;height:46px;border:2px solid var(--color-dorado);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--color-dorado);font-size:20px;flex:0 0 auto;}
+.slide.cover .cv-body .meta-item .meta-label{display:block;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--color-dorado);margin-bottom:2px;}
+.slide.cover .cv-body .meta-item .meta-value{display:block;font-size:15px;font-weight:700;color:#2b2b2b;}
+.slide.cover .bottom-band{position:absolute;bottom:0;left:0;width:100%;z-index:5;}
+.slide.cover .cv-body h1.anx-h1{font-size:92px;margin-top:14px;}
+/* DIVIDER */
+.slide.divider .slide-container{background:#6a172f;color:#fff;padding:0;justify-content:flex-start;}
+.slide.cover .cover-bg,.slide.divider .cover-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.slide.cover .cover-overlay,.slide.divider .cover-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(155,34,71,.45) 0%,rgba(30,91,79,.30) 60%,rgba(0,0,0,.55) 100%);z-index:1;}
+.slide.cover .top-band,.slide.cover .body,.slide.cover .bottom-band,.slide.divider .div-band,.slide.divider .div-body,.slide.divider .bottom-band{position:relative;z-index:2;}
+.slide.cover .top-band{background:rgba(255,255,255,.96);padding:16px 50px;display:flex;align-items:center;gap:22px;border-bottom:4px solid var(--color-dorado);width:100%;}
+.slide.cover .top-band img.gob{height:52px;}
+.slide.cover .top-band img.sener{height:46px;}
+.slide.cover .top-band .divider{width:1px;height:46px;background:var(--color-gris);}
+.slide.cover .top-band .unit{font-size:11px;color:var(--color-text-dark);letter-spacing:.04em;text-transform:uppercase;font-weight:600;margin-left:auto;}
+.slide.cover .body{flex:1 1 auto;min-height:0;padding:36px 60px 60px 26%;display:flex;flex-direction:column;justify-content:flex-start;gap:12px;text-align:left;}
+.slide.cover .eyebrow,.slide.divider .eyebrow{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--color-dorado-light);font-weight:700;}
+.slide.cover h1{font-size:58px;line-height:1.0;max-width:900px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.3);font-weight:800;}
+.slide.cover .unidad{font-weight:300;font-size:26px;line-height:1.3;color:#fff;max-width:740px;text-shadow:0 2px 8px rgba(0,0,0,.4);margin-top:8px;}
+.slide.cover .unidad-sub{font-weight:300;font-size:20px;line-height:1.7;color:rgba(255,255,255,.92);max-width:740px;text-shadow:0 1px 4px rgba(0,0,0,.3);margin-top:6px;}
+.slide.cover .unidad-sub-destacada{margin-top:8px;padding:8px 14px;max-width:880px;font-size:17px;line-height:1.4;background:rgba(0,0,0,.28);border-left:4px solid var(--color-dorado);border-radius:0 8px 8px 0;}
+.slide.cover .unidad-sub-destacada .acronym{color:var(--color-dorado-light);font-weight:700;}
+.slide.cover .subtitle{font-weight:700;font-size:30px;color:#fff;margin-top:18px;text-align:right;text-shadow:0 2px 8px rgba(0,0,0,.32);}
+.slide.cover .meta{margin-top:16px;display:grid;grid-template-columns:repeat(3,max-content);gap:22px;justify-content:flex-end;margin-left:auto;}
+.slide.cover .meta-item{min-width:110px;text-align:right;}
+.slide.cover .meta-item .meta-label{display:block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(214,180,106,.95);margin-bottom:2px;}
+.slide.cover .meta-item .meta-value{display:block;font-size:13px;font-weight:700;color:rgba(255,255,255,.95);white-space:nowrap;}
+.slide.cover .bottom-band,.slide.divider .bottom-band{margin-top:auto;flex:0 0 14px;height:14px;width:100%;background:linear-gradient(90deg,var(--color-guinda) 0%,var(--color-guinda) 33.3%,var(--color-dorado) 33.3%,var(--color-dorado) 66.6%,var(--color-verde) 66.6%);}
+.slide.divider .div-band{padding:18px 50px;display:flex;justify-content:flex-end;width:100%;}
+.slide.divider .div-band img{height:48px;}
+.slide.divider .div-body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:0 80px;gap:14px;}
+.slide.divider .div-body h1{font-size:86px;font-weight:800;color:#fff;letter-spacing:.04em;text-shadow:0 3px 16px rgba(0,0,0,.4);}
+.slide.divider .div-body p{font-size:22px;font-weight:300;color:rgba(255,255,255,.92);}
+/* GRIDS */
+.content-grid{display:grid;gap:16px;flex-grow:1;min-height:0;}
+.content-grid.g-11{grid-template-columns:1.15fr 1fr;}
+.content-grid.g-21{grid-template-columns:1.5fr 1fr;}
+.content-grid.g-1full{grid-template-columns:1fr;}
+.col{display:flex;flex-direction:column;min-height:0;gap:14px;}
+.col-side2{gap:14px;}
+.col-side2 .panel-card:last-child{flex:0 0 150px;}
+/* PANEL */
+.panel-card{background:#fff;border:1px solid var(--color-gris-claro);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;min-height:0;box-shadow:0 4px 14px rgba(0,0,0,.06);flex:1 1 auto;}
+.panel-card h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#2f3a37;padding-bottom:9px;margin-bottom:9px;position:relative;}
+.panel-card h3::after{content:'';position:absolute;left:0;bottom:0;width:46px;height:3px;background:var(--color-verde);border-radius:2px;}
+.panel-card .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.panel-card .panel-head h3{flex:1 1 auto;}
+.panel-card .chart-host{flex:1 1 auto;min-height:0;}
+.chart-fs-btn{flex:0 0 auto;height:24px;min-width:24px;border:0;border-radius:999px;background:var(--color-guinda);color:#fff;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:filter .15s,transform .15s;}
+.chart-fs-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+/* KPI BOX */
+.kpi-row3{display:flex;flex-direction:column;gap:10px;}
+.kpi-row-h{flex-direction:row;flex:0 0 auto;}
+.kpi-row-h .kpi-box{flex:1;}
+.kpi-row-h .kpi-box .s-val{font-size:20px;}
+.kpi-box{background:var(--color-bg-light);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:1px;border-left:4px solid var(--color-dorado);}
+.kpi-box .s-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-light);}
+.kpi-box .s-val{font-size:26px;font-weight:700;color:var(--color-guinda);line-height:1.1;}
+.kpi-box .s-sub{font-size:11px;font-weight:500;color:var(--color-text-dark);}
+/* KPI strip horizontal */
+.kpi-strip3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:12px;}
+.kpi-strip3.k4{grid-template-columns:repeat(4,1fr);}
+.kpi3{padding:0 18px;border-left:1px solid var(--color-gris-claro);}
+.kpi3:first-child{border-left:none;padding-left:2px;}
+.k3l{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-gris);}
+.k3v{font-size:30px;font-weight:700;color:var(--color-guinda);line-height:1.05;margin-top:1px;}
+.k3v span{font-size:13px;font-weight:600;color:var(--color-gris);margin-left:3px;}
+.k3s{font-size:10px;color:var(--color-text-light);margin-top:1px;}
+.kpi3.k-g .k3v{color:var(--color-guinda);} .kpi3.k-v .k3v{color:var(--color-verde);} .kpi3.k-d .k3v{color:var(--color-dorado);}
+/* ESTATUS */
+.st-panel{margin-top:12px;border:1px solid var(--color-gris-claro);border-radius:12px;padding:10px 14px;flex:1 1 auto;display:flex;flex-direction:column;}
+.st-panel h3{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--color-guinda);border-bottom:2px solid var(--color-dorado);padding-bottom:5px;margin-bottom:8px;}
+.st-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:1 1 auto;}
+.st-box{background:var(--color-bg-light);border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;justify-content:center;}
+.st-l{font-size:10px;color:var(--color-text-light);font-weight:600;line-height:1.1;}
+.st-v{font-size:18px;font-weight:700;color:var(--color-guinda);}
+/* MAP */
+.map-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;flex:1 1 auto;min-height:0;}
+.map-wrap{position:relative;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}
+.cenace-map{width:100%;height:100%;}
+.cenace-map .region{cursor:pointer;transition:filter .15s,stroke-width .15s;}
+.cenace-map .region:hover{stroke:var(--color-dorado);stroke-width:2.6;filter:brightness(1.06) drop-shadow(0 2px 4px rgba(0,0,0,.25));}
+.cenace-map .region.dim{filter:saturate(.45) opacity(.55);}
+.map-tip{position:absolute;pointer-events:none;z-index:30;background:#fff;border:1px solid var(--color-gris-claro);border-left:4px solid var(--color-guinda);border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.18);padding:7px 11px;font-family:'Hind',sans-serif;opacity:0;transform:translate(-50%,-118%);transition:opacity .12s;white-space:nowrap;}
+.map-tip.on{opacity:1;}
+.map-tip .t-name{font-size:11px;font-weight:700;color:var(--color-guinda);}
+.map-tip .t-val{font-size:18px;font-weight:700;color:var(--color-text-dark);}
+.map-tip .t-val .u{font-size:11px;color:var(--color-gris);margin-left:3px;}
+.map-tip .t-pct{font-size:10px;color:var(--color-text-light);}
+/* BARS */
+.bars{display:flex;flex-direction:column;justify-content:center;gap:12px;flex:1 1 auto;padding:4px 4px 4px 0;}
+.bar-row{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px;}
+.bar-row .b-name{font-size:12px;font-weight:700;text-align:right;line-height:1.1;}
+.bar-track{display:flex;align-items:center;gap:8px;}
+.bar-fill{height:22px;border-radius:0 5px 5px 0;box-shadow:inset 0 -2px 4px rgba(0,0,0,.12);min-width:2px;}
+.bar-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;white-space:nowrap;}
+/* SAEE table */
+.saee-mini{margin-top:10px;}
+.saee-mini th,.saee-mini td{padding:5px 6px;}
+.saee-mini .rl{text-align:left;font-weight:700;color:var(--color-guinda);background:#faf3f5;}
+.saee-mini .tot{background:#6a132e;color:#fff;}
+.saee-mini tbody td.tot{background:#f3e9d8;color:var(--color-text-dark);}
+.saee-mini tr.pct td{color:var(--color-text-light);font-weight:400;background:#fcfcfc;}
+/* SANKEY */
+.sankey-panel{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;border:1px solid var(--color-gris-claro);border-radius:12px;padding:10px 14px;box-shadow:0 4px 14px rgba(0,0,0,.06);}
+.sankey-panel h3{font-size:13px;font-weight:700;text-transform:uppercase;color:#2f3a37;padding-bottom:8px;margin-bottom:6px;position:relative;}
+.sankey-panel h3::after{content:'';position:absolute;left:0;bottom:0;width:46px;height:3px;background:var(--color-verde);border-radius:2px;}
+/* TARJETAS KPI (slide 2) */
+.kpi-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:14px;flex:0 0 auto;}
+.kpi-card{background:#fff;border:1px solid #ececec;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 14px rgba(0,0,0,.05);}
+.kpi-card .ic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:23px;flex:0 0 auto;}
+.kpi-card .tx{display:flex;flex-direction:column;gap:1px;min-width:0;}
+.kpi-card .tx .l{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a8a8a;}
+.kpi-card .tx .v{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:800;line-height:1.05;}
+.kpi-card .tx .s{font-size:11.5px;color:#666;font-weight:500;}
+.kpi-card .v .u{font-size:14px;font-weight:600;color:#9a9a9a;margin-left:3px;}
+.kpi-card.k-cap .ic,.kpi-card.k-g .ic{background:rgba(155,34,71,.12);color:var(--color-guinda);} .kpi-card.k-cap .v,.kpi-card.k-g .v{color:var(--color-guinda);}
+.kpi-card.k-lim .ic,.kpi-card.k-v .ic{background:rgba(30,91,79,.13);color:var(--color-verde);} .kpi-card.k-lim .v,.kpi-card.k-v .v{color:var(--color-verde);}
+.kpi-card.k-alm .ic,.kpi-card.k-d .ic{background:rgba(165,127,44,.15);color:var(--color-dorado);} .kpi-card.k-alm .v,.kpi-card.k-d .v{color:var(--color-dorado);}
+.kpi-card.k-n .ic{background:rgba(120,120,120,.12);color:#5a5a5a;} .kpi-card.k-n .v{color:#2b2b2b;}
+.kpi-cards.k4{grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi-cards.k4 .kpi-card{padding:12px 14px;gap:11px;}
+.kpi-cards.k4 .kpi-card .ic{width:46px;height:46px;font-size:20px;}
+.kpi-cards.k4 .kpi-card .v{font-size:24px;}
+/* STAT panel (icono + número grande) */
+.stat-panel .stat-row{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:18px;}
+.stat-ic{width:62px;height:62px;border-radius:50%;background:rgba(30,91,79,.13);color:var(--color-verde);display:flex;align-items:center;justify-content:center;font-size:30px;flex:0 0 auto;}
+.stat-tx{display:flex;flex-direction:column;}
+.stat-v{font-family:'Montserrat',sans-serif;font-size:46px;font-weight:800;color:var(--color-verde);line-height:1;}
+.stat-l{font-size:12px;color:#666;margin-top:3px;}
+/* footnote con ícono */
+.snote.ic-note{display:flex;align-items:flex-start;gap:8px;}
+.snote.ic-note .ni{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:rgba(30,91,79,.13);color:var(--color-verde);display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px;}
+.chart-wrap{position:relative;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}
+.sankey{width:100%;height:100%;}
+.sankey .rib{transition:fill-opacity .15s;cursor:pointer;}
+.sankey .rib:hover{fill-opacity:.82;}
+.sankey.focus .rib{fill-opacity:.10;}
+.sankey.focus .nd{opacity:.18;}
+.sankey.focus .rib.hot{fill-opacity:.85;}
+.sankey.focus .nd.hot{opacity:1;}
+.nd{cursor:pointer;transition:opacity .15s;}
+.sk-tip{position:absolute;pointer-events:none;z-index:30;background:#fff;border:1px solid var(--color-gris-claro);border-left:4px solid var(--color-verde);border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.18);padding:7px 11px;font-family:'Hind',sans-serif;opacity:0;transform:translate(-50%,-118%);transition:opacity .12s;white-space:nowrap;}
+.sk-tip.on{opacity:1;}
+.sk-tip .t-name{font-size:11px;font-weight:700;color:var(--color-verde);}
+.sk-tip .t-row{font-size:12px;}.sk-tip .t-row b{font-weight:700;}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;padding:6px 0 2px;font-family:'Hind',sans-serif;font-size:10px;}
+.legend .lg{display:inline-flex;align-items:center;gap:5px;cursor:pointer;}
+.legend .lg i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+.legend .lg.mut{opacity:.35;}
+/* ANEXO */
+.anex-wrap{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;}
+.report-table{width:100%;border-collapse:collapse;font-family:'Hind',sans-serif;font-size:12px;}
+.report-table thead th{background:var(--color-guinda);color:#fff;padding:7px 9px;text-transform:uppercase;font-size:10px;letter-spacing:.03em;text-align:left;}
+.report-table tbody td{padding:5px 9px;border-bottom:1px solid var(--color-gris-claro);}
+.report-table tbody tr:nth-child(even){background:#FAFBFC;}
+.report-table .num{text-align:right;font-variant-numeric:tabular-nums;}
+.report-table tfoot td{padding:7px 9px;font-weight:700;border-top:2px solid var(--color-guinda);color:var(--color-guinda);background:#faf3f5;}
+.report-table.anexo{font-size:11px;}
+.report-table.anexo thead th{font-size:9px;padding:5px 7px;}
+.report-table.anexo tbody td{padding:3.5px 7px;font-size:10.5px;}
+.report-table.anexo tfoot td{padding:5px 7px;}
+.hl-banner{margin-top:8px;background:#faf3f5;color:var(--color-guinda);border-left:5px solid var(--color-guinda);font-family:'Montserrat',sans-serif;font-weight:700;font-size:16px;text-align:left;padding:10px 16px;border-radius:8px;display:flex;align-items:center;gap:10px;}
+.hl-banner i{font-size:20px;}
+.k3l i,.s-lbl i{margin-right:5px;color:var(--color-dorado);}
+.panel-card h3 i{margin-right:6px;}
+/* DIVIDER claro */
+.slide.divider.light .slide-container{background:#fff;color:var(--color-text-dark);padding:0;flex-direction:column;}
+.slide.divider.light .cover-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.12;z-index:0;}
+.slide.divider.light .dl-top,.slide.divider.light .dl-body,.slide.divider.light .bottom-band{position:relative;z-index:2;}
+.slide.divider.light .dl-top{background:rgba(255,255,255,.92);padding:16px 54px;display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--color-dorado);}
+.slide.divider.light .dl-top img{height:46px;}
+.slide.divider.light .dl-top .unit{font-size:11px;color:var(--color-text-light);text-transform:uppercase;font-weight:600;margin-left:auto;}
+.slide.divider.light .dl-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 80px;gap:14px;}
+.slide.divider.light .dl-body .eyebrow{font-size:13px;letter-spacing:.20em;text-transform:uppercase;color:var(--color-dorado);font-weight:700;}
+.slide.divider.light .dl-body h1{font-family:'Montserrat',sans-serif;font-size:78px;font-weight:800;color:var(--color-guinda);letter-spacing:.02em;}
+.slide.divider.light .dl-rule{width:90px;height:5px;background:var(--color-dorado);border-radius:3px;}
+.slide.divider.light .dl-body p{font-size:20px;font-weight:400;color:var(--color-text-light);font-family:'Hind',sans-serif;}
+/* PDF loader */
+#pdfLoader{position:fixed;inset:0;background:rgba(20,20,20,.82);display:none;flex-direction:column;justify-content:center;align-items:center;gap:16px;z-index:10000;color:#fff;font-family:'Montserrat',sans-serif;font-size:16px;}
+body.exporting #presentationControls{display:none;}
+body.exporting .chart-fullscreen-modal{display:none !important;}
+.chart-fullscreen-modal{position:fixed;inset:0;display:none;z-index:13000;background:rgba(30,30,30,.92);}
+.chart-fullscreen-modal.show{display:flex;align-items:center;justify-content:center;}
+.chart-fullscreen-shell{width:min(100vw,calc(100vh*1333/750));height:min(100vh,calc(100vw*750/1333));background:#fff;box-shadow:0 24px 90px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden;border-bottom:8px solid var(--color-guinda);}
+.chart-fullscreen-head{height:60px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 24px;border-bottom:4px solid var(--color-dorado);background:#fff;font-weight:700;font-size:18px;color:var(--color-guinda);text-transform:uppercase;font-family:'Montserrat',sans-serif;}
+.chart-fullscreen-head button{height:32px;min-width:32px;border:0;border-radius:999px;background:var(--color-guinda);color:#fff;cursor:pointer;font-weight:800;}
+#fullscreenChart{flex:1;min-height:0;padding:12px 18px 18px;}
+/* PNG button */
+.dl-btn{position:fixed;bottom:16px;right:18px;z-index:1001;display:flex;align-items:center;gap:8px;padding:9px 16px;background:var(--color-verde);color:#fff;border:none;border-radius:30px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(30,91,79,.4);}
+.dl-btn:hover{filter:brightness(1.1);}
+.dl-btn[disabled]{opacity:.6;cursor:wait;}
+</style>
+</head>
+<body>
+<div id="preloader"><div class="spinner"></div><p id="preloaderMsg">Preparando presentación…</p></div>
+<div id="pdfLoader"><div class="spinner"></div><p id="pdfLoaderMsg">Generando PDF…</p></div>
+
+<div id="deck">
+  <section class="slide cover active" id="slide-0">
+    <div class="slide-container">
+      <div class="cv-photo"><img src="reno_portada.png" alt="" onerror="this.parentNode.style.display='none'"></div>
+      <div class="cv-diag"></div>
+      <div class="cv-dots"></div>
+      <div class="cv-logos">
+        <img class="gob" src="Estilos Institucionales/img/logo_gob.png" onerror="this.style.display='none'">
+        <div class="cdiv"></div>
+        <img class="energia" src="Estilos Institucionales/img/logo_sener.png" onerror="this.style.display='none'">
+      </div>
+      <div class="cv-unit">DGMESNIE · Subsecretaría de Planeación</div>
+      <div class="cv-body">
+        <div class="eyebrow">Secretaría de Energía · Presidencia de la República</div>
+        <h1>Expansión del Sistema Eléctrico Nacional</h1>
+        <div class="cover-year">2024 — 2030</div>
+        <div class="cover-rule"></div>
+        <div class="unidad">Subsecretaría de Planeación y Transición Energética</div>
+        <div class="unidad-sub">Unidad del Sistema Nacional de Información Energética — <span class="acronym">DGMESNIE</span></div>
+        <div class="meta">
+          <div class="meta-item"><span class="ic"><i class="bi bi-file-earmark-text"></i></span><div><span class="meta-label">Versión</span><span class="meta-value">1.0</span></div></div>
+          <div class="meta-item"><span class="ic"><i class="bi bi-calendar3"></i></span><div><span class="meta-label">Fecha</span><span class="meta-value" id="coverFecha">—</span></div></div>
+          <div class="meta-item"><span class="ic"><i class="bi bi-graph-up"></i></span><div><span class="meta-label">Fuente</span><span class="meta-value">SENER · CFE · CENACE</span></div></div>
+        </div>
+      </div>
+      <div class="bottom-band"></div>
+    </div>
+  </section>
+
+@@SLIDES@@
+
+</div>
+
+<div id="chartFullscreenModal" class="chart-fullscreen-modal" onclick="if(event.target===this)closeChartFullscreen();">
+  <div class="chart-fullscreen-shell">
+    <div class="chart-fullscreen-head"><span id="fullscreenChartTitle"></span>
+      <button onclick="closeChartFullscreen()" title="Cerrar (Esc)"><i class="bi bi-x-lg"></i></button></div>
+    <div id="fullscreenChart"></div>
+  </div>
+</div>
+
+<div id="presentationControls">
+  <button class="control-btn" onclick="showSlide(0)" title="Inicio"><i class="bi bi-house-fill"></i></button>
+  <button class="control-btn" id="btnPrev" disabled onclick="prevSlide()"><i class="bi bi-chevron-left"></i></button>
+  <span id="slideCounter">1 / 1</span>
+  <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
+  <button class="control-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)"><i class="bi bi-arrows-fullscreen"></i></button>
+  <button class="control-btn" onclick="exportPDF()" title="Exportar a PDF" style="background:var(--color-guinda);"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+</div>
+<button class="dl-btn" id="dlPng" title="Descargar diapositiva actual en PNG alta resolución"><i class="bi bi-file-earmark-image"></i>PNG slide</button>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+<script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+const DATA = @@DATA@@;
+let currentSlideIndex=0, slidesCount=1;
+const builtCharts=new Set();
+
+Highcharts.setOptions({
+  colors:['#9B2247','#A57F2C','#1E5B4F','#B24C6C','#D6B46A','#98989A','#611232','#2D3748'],
+  chart:{backgroundColor:'transparent',style:{fontFamily:'Montserrat, sans-serif'}},
+  title:{text:''},credits:{enabled:false},legend:{itemStyle:{fontSize:'10px'}},accessibility:{enabled:false}
+});
+
+// ---------- chart builders ----------
+function stackedCol(order,obj,colors,unit,percent){
+  return {chart:{type:'column'},xAxis:{categories:DATA.years,labels:{style:{fontSize:'11px',color:'#2b2b2b'}}},
+    yAxis:{min:0,max:percent?100:null,title:{text:unit,style:{fontSize:'10px'}},
+      labels:{formatter:function(){return percent?this.value+'%':Highcharts.numberFormat(this.value,0,'.',',');}},
+      reversedStacks:false,gridLineColor:'#eee',
+      stackLabels:{enabled:!percent,style:{fontSize:'11px',fontWeight:'700',color:'#2b2b2b',textOutline:'none'},
+        formatter:function(){return Highcharts.numberFormat(this.total,0,'.',',');}}},
+    legend:{enabled:true,itemStyle:{fontSize:'9px'}},
+    plotOptions:{column:{stacking:'normal',borderWidth:0,groupPadding:.08,pointPadding:.02,
+      dataLabels:{enabled:true,allowOverlap:false,color:'#fff',
+        style:{fontSize:'9px',fontWeight:'700',textOutline:'1.5px rgba(0,0,0,.35)'},
+        formatter:function(){var v=this.y;
+          if(percent){return v>=4?Highcharts.numberFormat(v,1)+'%':null;}
+          var th=(this.point.stackTotal||0)*0.055; return v>=th?Highcharts.numberFormat(v,0,'.',','):null;}}}},
+    tooltip:{shared:true,valueDecimals:percent?2:0,valueSuffix:percent?'%':' '+unit},
+    series:order.map((n,i)=>({name:n,data:obj[n],color:colors[i]}))};
+}
+function lineFR(obj){
+  return {chart:{type:'line'},xAxis:{categories:DATA.years},
+    yAxis:{min:0,max:100,title:{text:'%'},labels:{format:'{value}%'}},
+    plotOptions:{line:{marker:{enabled:true,radius:3},lineWidth:3,dataLabels:{enabled:true,format:'{y}%',style:{fontSize:'9px',textOutline:'none'}}}},
+    tooltip:{shared:true,valueSuffix:'%'},
+    series:[{name:'Renovable',data:obj.Renovable,color:'#1E5B4F'},{name:'Fósil',data:obj['Fósil'],color:'#7B828D'}]};
+}
+function lineSingle(arr,name,color){
+  return {chart:{type:'spline'},xAxis:{categories:DATA.years},
+    yAxis:{min:0,max:100,title:{text:'%'},labels:{format:'{value}%'}},
+    legend:{enabled:false},
+    plotOptions:{spline:{marker:{enabled:true,radius:4},lineWidth:3,color:color,
+      dataLabels:{enabled:true,format:'{y}%',style:{fontSize:'10px',color:color,textOutline:'none'}}}},
+    tooltip:{valueSuffix:'%'},series:[{name:name,data:arr}]};
+}
+function colSingle(d){
+  return {chart:{type:'column'},xAxis:{categories:d.cats,labels:{style:{fontSize:'11px'}}},
+    yAxis:{min:0,title:{text:'MW'},labels:{formatter:function(){return Highcharts.numberFormat(this.value,0,'.',',');}}},
+    legend:{enabled:false},
+    plotOptions:{column:{colorByPoint:true,colors:d.colors,borderWidth:0,
+      dataLabels:{enabled:true,formatter:function(){return Highcharts.numberFormat(this.y,0,'.',',');},style:{fontSize:'10px',textOutline:'none'},rotation:0}}},
+    tooltip:{pointFormat:'<b>{point.y:,.0f} MW</b>'},series:[{name:'MW',data:d.vals}]};
+}
+function genGWh(obj){
+  return {chart:{type:'column'},xAxis:{categories:DATA.years,labels:{style:{color:'#2b2b2b'}}},
+    yAxis:{min:0,title:{text:'GWh'},gridLineColor:'#eee',labels:{formatter:function(){return Highcharts.numberFormat(this.value/1000,0)+'k';}},
+      stackLabels:{enabled:true,style:{fontSize:'11px',fontWeight:'700',color:'#2b2b2b',textOutline:'none'},formatter:function(){return Highcharts.numberFormat(this.total,0,'.',',');}}},
+    legend:{enabled:true,itemStyle:{fontSize:'10px'}},
+    plotOptions:{column:{stacking:'normal',borderWidth:0,
+      dataLabels:{enabled:true,color:'#fff',style:{fontSize:'10px',fontWeight:'700',textOutline:'1.5px rgba(0,0,0,.35)'},
+        formatter:function(){return Highcharts.numberFormat(this.y,0,'.',',');}}}},
+    tooltip:{shared:true,valueDecimals:0,valueSuffix:' GWh'},
+    series:[{name:'Generación limpia',data:obj['Generación limpia'],color:'#1E5B4F'},
+            {name:'Generación fósil',data:obj['Generación fósil'],color:'#7B828D'}]};
+}
+function genPct(obj){
+  return {chart:{type:'column'},xAxis:{categories:DATA.years,labels:{style:{color:'#2b2b2b'}}},
+    yAxis:{min:0,max:100,title:{text:'%'},gridLineColor:'#eee',labels:{format:'{value}%'}},
+    legend:{enabled:true,itemStyle:{fontSize:'10px'}},
+    plotOptions:{column:{stacking:'normal',borderWidth:0,
+      dataLabels:{enabled:true,color:'#fff',style:{fontSize:'10px',fontWeight:'700',textOutline:'1.5px rgba(0,0,0,.35)'},
+        formatter:function(){return Highcharts.numberFormat(this.y,1)+'%';}}}},
+    tooltip:{shared:true,valueDecimals:1,valueSuffix:'%'},
+    series:[{name:'Generación limpia',data:obj['Generación limpia'],color:'#1E5B4F'},
+            {name:'Generación fósil',data:obj['Generación fósil'],color:'#7B828D'}]};
+}
+function escLine(obj){
+  return {chart:{type:'spline'},xAxis:{categories:DATA.escYears,labels:{style:{color:'#2b2b2b'}},
+      plotLines:[{color:'#9B2247',width:1.5,dashStyle:'Dash',value:6,label:{text:'2024',style:{fontSize:'9px',color:'#9B2247'}}}]},
+    yAxis:{min:0,max:80,title:{text:'%'},gridLineColor:'#eee',labels:{format:'{value}%'},
+      plotLines:[{color:'#ccc',width:1,value:50,dashStyle:'Dot'}]},
+    legend:{enabled:true,itemStyle:{fontSize:'10px'}},
+    plotOptions:{spline:{marker:{enabled:true,radius:3},lineWidth:3,
+      dataLabels:{enabled:true,format:'{y}%',style:{fontSize:'9px',fontWeight:'700',textOutline:'2px #fff'}}}},
+    tooltip:{shared:true,valueSuffix:'%'},
+    series:[{name:'Estado (CFE y socios)',data:obj.Estado,color:'#9B2247'},
+            {name:'Particulares (privados)',data:obj.Particulares,color:'#A57F2C'}]};
+}
+function gauge(val,label,color){
+  return {chart:{type:'solidgauge',marginTop:6},
+    pane:{startAngle:-120,endAngle:120,background:[{outerRadius:'100%',innerRadius:'68%',backgroundColor:'#ececec',borderWidth:0,shape:'arc'}]},
+    yAxis:{min:0,max:100,lineWidth:0,tickPositions:[],minorTickInterval:null},
+    tooltip:{enabled:false},
+    plotOptions:{solidgauge:{rounded:true,innerRadius:'68%',radius:'100%',
+      dataLabels:{useHTML:true,borderWidth:0,y:-14,
+        format:'<div style="text-align:center"><span style="font-size:30px;font-weight:800;color:'+color+';font-family:Montserrat">{y}%</span><br><span style="font-size:10px;color:#666;font-family:Hind">'+label+'</span></div>'}}},
+    series:[{data:[{y:val,color:color}]}]};
+}
+
+const GRPCOL={root:'#611232',cfe:'#9B2247',soc:'#A57F2C',par:'#1E5B4F'};
+function netgraph(d){
+  return {chart:{type:'networkgraph',marginTop:6},
+    plotOptions:{networkgraph:{keys:['from','to'],
+      layoutAlgorithm:{enableSimulation:false,maxIterations:320,integration:'verlet',linkLength:60,initialPositionRadius:80,gravitationalConstant:0.5},
+      link:{color:'rgba(120,120,120,.4)',width:1.5}}},
+    tooltip:{useHTML:true,formatter:function(){return '<b>'+this.point.id+'</b>'+(this.point.options.mw?': '+Highcharts.numberFormat(this.point.options.mw,0,'.',',')+' MW':'');}},
+    series:[{
+      dataLabels:{enabled:true,useHTML:true,linkFormat:'',
+        nodeFormatter:function(){var mw=this.options.mw;
+          return '<div style="text-align:center;font-family:Montserrat;font-size:9px;font-weight:700;color:#2b2b2b;line-height:1.1">'+this.id.replace(/ \(.*\)/,'')+(mw?'<br><span style="color:'+(this.color||'#9B2247')+';font-size:10px">'+Highcharts.numberFormat(mw,0,'.',',')+'</span>':'')+'</div>';}},
+      nodes:d.nodes.map(n=>({id:n.id,color:GRPCOL[n.grp],mw:n.mw,marker:{radius:Math.round(9+Math.sqrt(n.mw)/7)}})),
+      data:d.links}]};
+}
+const BUILD={
+  c_tec_nueva:()=>colSingle(DATA.tecNueva),
+  c_estatus:()=>netgraph(DATA.estatus),
+  c_cap_stack:()=>stackedCol(DATA.capOrder,DATA.cap,DATA.capColors,'MW',false),
+  c_cap_line:()=>lineFR(DATA.capLine),
+  c_cap_donut:()=>gauge(45,'renovable 2030','#1E5B4F'),
+  c_comp_stack:()=>stackedCol(DATA.capOrder,DATA.comp,DATA.capColors,'%',true),
+  c_comp_line:()=>lineFR(DATA.capLine),
+  c_comp_donut:()=>gauge(45,'renovable 2030','#1E5B4F'),
+  c_gen_stack:()=>genGWh(DATA.gen),
+  c_gen_line:()=>lineSingle(DATA.genLine,'Energía limpia','#1E5B4F'),
+  c_gen_donut:()=>gauge(38,'limpia 2030','#1E5B4F'),
+  c_genc_stack:()=>genPct(DATA.genc),
+  c_genc_line:()=>lineSingle(DATA.genLine,'Energía limpia','#1E5B4F'),
+  c_genc_donut:()=>gauge(38,'limpia 2030','#1E5B4F'),
+  c_escA:()=>escLine(DATA.escA),
+  c_escB:()=>escLine(DATA.escB),
+};
+
+function renderChartsForSlide(index){
+  const slide=document.querySelectorAll('.slide')[index];
+  if(!slide)return;
+  if(slide.querySelector('#mapWrap')) initMap();
+  if(slide.querySelector('#skWrap')) initSankey();
+  slide.querySelectorAll('.chart-host').forEach(h=>{
+    const id=h.id;
+    if(builtCharts.has(id)||!BUILD[id])return;
+    try{ Highcharts.chart(id,BUILD[id]()); builtCharts.add(id); }catch(e){console.error('chart',id,e);}
+  });
+}
+
+// ---------- map / sankey hover ----------
+function localXY(wrap,e){const r=wrap.getBoundingClientRect();const sx=wrap.offsetWidth/r.width;
+  return [(e.clientX-r.left)*sx,(e.clientY-r.top)*sx];}
+function initMap(){
+  if(window._mapInit)return; const wrap=document.getElementById('mapWrap'); if(!wrap)return;
+  const tip=document.getElementById('mapTip'); const regs=wrap.querySelectorAll('.region'); const svg=wrap.querySelector('.cenace-map');
+  function focus(c){regs.forEach(r=>r.classList.toggle('dim',r.dataset.c!==c));}
+  function clear(){regs.forEach(r=>r.classList.remove('dim'));tip.classList.remove('on');}
+  regs.forEach(el=>{
+    el.addEventListener('mouseenter',()=>{focus(el.dataset.c);
+      tip.innerHTML='<div class="t-name">'+el.dataset.r+'</div><div class="t-val">'+el.dataset.v+'<span class="u">MW</span></div><div class="t-pct">'+el.dataset.p+' del total nacional</div>';
+      tip.classList.add('on');});
+    el.addEventListener('mousemove',e=>{const xy=localXY(wrap,e);tip.style.left=xy[0]+'px';tip.style.top=xy[1]+'px';});
+    el.addEventListener('mouseleave',clear);
+  });
+  window._mapInit=true;
+}
+function initSankey(){
+  if(window._skInit)return; const wrap=document.getElementById('skWrap'); if(!wrap)return;
+  const tip=document.getElementById('skTip'); const svg=wrap.querySelector('.sankey');
+  const ribs=svg.querySelectorAll('.rib'); const nds=svg.querySelectorAll('.nd');
+  const legs=document.querySelectorAll('#skLegend .lg');
+  function focus(c){svg.classList.add('focus');ribs.forEach(r=>r.classList.toggle('hot',r.dataset.c===c));
+    nds.forEach(n=>n.classList.toggle('hot',n.dataset.c===c));legs.forEach(l=>l.classList.toggle('mut',l.dataset.c!==c));}
+  function clear(){svg.classList.remove('focus');tip.classList.remove('on');legs.forEach(l=>l.classList.remove('mut'));}
+  function mv(e){const xy=localXY(wrap,e);tip.style.left=xy[0]+'px';tip.style.top=xy[1]+'px';}
+  ribs.forEach(r=>{r.addEventListener('mouseenter',()=>{focus(r.dataset.c);
+    tip.innerHTML='<div class="t-name">'+r.dataset.n+'</div><div class="t-row">'+r.dataset.y0+': <b>'+r.dataset.v0+'</b> MW</div><div class="t-row">'+r.dataset.y1+': <b>'+r.dataset.v1+'</b> MW</div>';
+    tip.classList.add('on');});r.addEventListener('mousemove',mv);r.addEventListener('mouseleave',clear);});
+  nds.forEach(n=>{n.addEventListener('mouseenter',()=>{focus(n.dataset.c);
+    tip.innerHTML='<div class="t-name">'+n.dataset.n+'</div><div class="t-row">'+n.dataset.yr+': <b>'+n.dataset.v+'</b> MW</div><div class="t-row">'+n.dataset.s+' del total del año</div>';
+    tip.classList.add('on');});n.addEventListener('mousemove',mv);n.addEventListener('mouseleave',clear);});
+  legs.forEach(l=>{l.addEventListener('mouseenter',()=>focus(l.dataset.c));l.addEventListener('mouseleave',clear);});
+  window._skInit=true;
+}
+
+// ---------- navegación ----------
+function showSlide(index){
+  if(index<0||index>=slidesCount)return;
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===index));
+  currentSlideIndex=index; updateControls();
+  setTimeout(()=>{renderChartsForSlide(index);animateSlide(index);
+    Highcharts.charts.forEach(c=>c&&c.reflow());},120);
+}
+function nextSlide(){showSlide(currentSlideIndex+1);}
+function prevSlide(){showSlide(currentSlideIndex-1);}
+function updateControls(){
+  document.getElementById('slideCounter').innerText=`${currentSlideIndex+1} / ${slidesCount}`;
+  document.getElementById('btnPrev').disabled=currentSlideIndex===0;
+  document.getElementById('btnNext').disabled=currentSlideIndex===slidesCount-1;
+}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen();}
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='Escape'){closeChartFullscreen();return;}
+  if(document.getElementById('chartFullscreenModal').classList.contains('show'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();nextSlide();}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevSlide();}
+  else if(e.key==='Home')showSlide(0); else if(e.key==='End')showSlide(slidesCount-1);
+  else if(e.key.toLowerCase()==='f')toggleFullscreen();
+});
+function fitSlides(){const scale=Math.min(window.innerWidth/1333,window.innerHeight/750);
+  document.documentElement.style.setProperty('--scale',scale.toFixed(4));
+  document.querySelectorAll('.slide-container').forEach(c=>c.style.transform=`scale(${scale.toFixed(4)})`);}
+window.addEventListener('resize',fitSlides);
+function getCurrentScale(){return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale'))||1;}
+function animateSlide(index){
+  if(window.isExportingPdf)return;
+  const s=document.querySelectorAll('.slide')[index]; if(!s)return;
+  const c=s.querySelector('.slide-container');
+  if(c){const sc=getCurrentScale();anime({targets:c,opacity:[0.5,1],duration:300,easing:'easeOutQuad'});}
+  if(s.classList.contains('cover')||s.classList.contains('divider')){
+    anime({targets:s.querySelectorAll('.eyebrow,h1,.cover-year,.cover-rule,.unidad,.unidad-sub,.meta,.div-body p'),opacity:[0,1],translateY:[22,0],delay:anime.stagger(55),duration:550,easing:'easeOutQuad'});
+    const mj=s.querySelector('.mujer'); if(mj)anime({targets:mj,opacity:[0,1],translateX:[40,0],duration:800,easing:'easeOutQuad'});
+    return;}
+  anime({targets:s.querySelectorAll('.kpi3,.kpi-box,.panel-card,.st-box,.sankey-panel,.hl-banner'),opacity:[0,1],translateY:[16,0],delay:anime.stagger(40),duration:450,easing:'easeOutQuad'});
+  anime({targets:s.querySelectorAll('.report-table tbody tr'),opacity:[0,1],translateY:[6,0],delay:anime.stagger(12),duration:300,easing:'easeOutQuad'});
+}
+// fullscreen por gráfica
+let fullscreenChart=null;
+function openChartFullscreen(hostId,title){
+  const src=Highcharts.charts.find(c=>c&&c.renderTo&&c.renderTo.id===hostId); if(!src)return;
+  document.getElementById('fullscreenChartTitle').textContent=title||'';
+  document.getElementById('chartFullscreenModal').classList.add('show');
+  if(fullscreenChart){fullscreenChart.destroy();fullscreenChart=null;}
+  const opt=Highcharts.merge(src.userOptions,{chart:{width:null,height:null},plotOptions:{series:{animation:false}}});
+  fullscreenChart=Highcharts.chart('fullscreenChart',opt);
+  setTimeout(()=>fullscreenChart&&fullscreenChart.reflow(),80);
+}
+function closeChartFullscreen(){document.getElementById('chartFullscreenModal').classList.remove('show');
+  if(fullscreenChart){fullscreenChart.destroy();fullscreenChart=null;}}
+// PDF
+function showPdfLoader(m){document.getElementById('pdfLoaderMsg').innerText=m;document.getElementById('pdfLoader').style.display='flex';}
+function hidePdfLoader(){document.getElementById('pdfLoader').style.display='none';}
+async function captureSlide(slide){
+  const clone=slide.cloneNode(true);const cont=clone.querySelector('.slide-container')||clone;
+  const stage=document.createElement('div');stage.style.cssText='position:fixed;left:-10000px;top:0;width:1333px;height:750px;overflow:hidden;background:#fff;z-index:14001;';
+  clone.classList.add('active');clone.style.cssText='position:relative;inset:auto;display:flex;align-items:center;justify-content:center;width:1333px;height:750px;opacity:1;';
+  cont.style.cssText+=';position:relative;left:0;top:0;margin:0;transform:none;transition:none;width:1333px;height:750px;box-shadow:none;';
+  stage.appendChild(clone);document.body.appendChild(stage);
+  try{await new Promise(r=>{requestAnimationFrame(()=>requestAnimationFrame(r));setTimeout(r,400);});
+    return await html2canvas(cont,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#fff',logging:false,width:1333,height:750,windowWidth:1333,windowHeight:750});}
+  finally{stage.remove();}
+}
+async function exportPDF(){
+  const {jsPDF}=window.jspdf;const slides=Array.from(document.querySelectorAll('.slide'));const prev=currentSlideIndex;
+  closeChartFullscreen();document.body.classList.add('exporting');window.isExportingPdf=true;
+  showPdfLoader(`Preparando ${slides.length} diapositivas…`);
+  try{
+    const pdf=new jsPDF({orientation:'l',unit:'mm',format:[338.6582,190.5]});
+    const W=pdf.internal.pageSize.getWidth(),H=pdf.internal.pageSize.getHeight();
+    for(let i=0;i<slides.length;i++){
+      showPdfLoader(`Capturando slide ${i+1}/${slides.length}…`);
+      slides.forEach(s=>s.classList.remove('active'));slides[i].classList.add('active');
+      renderChartsForSlide(i);await new Promise(r=>setTimeout(r,600));
+      Highcharts.charts.forEach(c=>c&&c.reflow());await new Promise(r=>setTimeout(r,160));
+      const cv=await captureSlide(slides[i]);
+      if(i>0)pdf.addPage([338.6582,190.5],'l');
+      pdf.addImage(cv.toDataURL('image/jpeg',0.92),'JPEG',0,0,W,H);
+    }
+    showPdfLoader('Guardando…');pdf.save('Expansion-Renovables-SEN-2024-2030.pdf');
+  }catch(e){console.error(e);alert('Error PDF: '+e.message);}
+  finally{window.isExportingPdf=false;document.body.classList.remove('exporting');slides.forEach(s=>s.classList.remove('active'));showSlide(prev);hidePdfLoader();}
+}
+// PNG slide actual
+document.getElementById('dlPng').addEventListener('click',async function(){
+  const btn=this;const old=btn.innerHTML;btn.disabled=true;btn.innerHTML='<i class="bi bi-hourglass-split"></i>Generando…';
+  try{ if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const slide=document.querySelectorAll('.slide')[currentSlideIndex];
+    const clone=slide.cloneNode(true);const cont=clone.querySelector('.slide-container');
+    const stage=document.createElement('div');stage.style.cssText='position:fixed;left:-10000px;top:0;width:1333px;height:750px;overflow:hidden;background:#fff;z-index:14001;';
+    clone.classList.add('active');clone.style.cssText='position:relative;inset:auto;display:flex;align-items:center;justify-content:center;width:1333px;height:750px;opacity:1;';
+    cont.style.cssText+=';position:relative;left:0;top:0;margin:0;transform:none;transition:none;width:1333px;height:750px;box-shadow:none;';
+    stage.appendChild(clone);document.body.appendChild(stage);
+    await new Promise(r=>{requestAnimationFrame(()=>requestAnimationFrame(r));setTimeout(r,350);});
+    const cv=await html2canvas(cont,{scale:4,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false,width:1333,height:750,windowWidth:1333,windowHeight:750});
+    stage.remove();
+    cv.toBlob(b=>{const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='Expansion-Renovables-slide-'+(currentSlideIndex+1)+'.png';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);btn.disabled=false;btn.innerHTML=old;},'image/png');
+  }catch(e){console.error(e);alert('Error PNG: '+e.message);btn.disabled=false;btn.innerHTML=old;}
+});
+
+window.addEventListener('DOMContentLoaded',()=>{
+  slidesCount=document.querySelectorAll('.slide').length;
+  document.getElementById('coverFecha').innerText=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  fitSlides();updateControls();
+  const pre=document.getElementById('preloader');pre.style.opacity=0;
+  setTimeout(()=>{pre.style.display='none';animateSlide(0);},400);
+});
+</script>
+</body>
+</html>
