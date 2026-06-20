@@ -194,9 +194,9 @@ for nm,v,pc,col in tipos:
 regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
  ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
  ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
-REGCOL={'Mulegé':'#5E6671','BC Sur':'#8A9A2E','Norte':'#C0552E','Noroeste':'#7E5AA2',
- 'B. Calif.':'#E07B2A','Occidental':'#2F94AC','Central':'#A57F2C','Oriental':'#1E5B4F',
- 'Peninsular':'#2E6FB0','Noreste':'#9B2247'}
+REGCOL={'Mulegé':'#6B7079','BC Sur':'#7C7A3A','Norte':'#A35C3A','Noroeste':'#5E5A7A',
+ 'B. Calif.':'#8C5060','Occidental':'#5F7E6E','Central':'#9A7B33','Oriental':'#1E5B4F',
+ 'Peninsular':'#3A5A78','Noreste':'#8E2244'}
 th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:#fff;border-bottom:none;">{n}</th>' for n,v,_ in regs)
 td_v=''.join(f'<td class="num">{v:,}</td>' for _,v,_ in regs)
 td_p=''.join(f'<td class="num">{p}</td>' for _,_,p in regs)
