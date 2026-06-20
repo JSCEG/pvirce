@@ -6,6 +6,27 @@ sankeysvg= open('_sankey.svg',encoding='utf-8').read()
 skleg    = open('_sklegend.html',encoding='utf-8').read()
 tables   = json.load(open('_tables.json',encoding='utf-8'))
 
+# ===== Capacidad nueva 2026-2030 desde "Tabla PVIRCE.xlsx" (_pvirce.xlsx) =====
+import openpyxl
+_wb=openpyxl.load_workbook('_pvirce.xlsx',data_only=True); _ws=_wb.active
+def _v(r,c):
+    x=_ws.cell(r,c).value
+    return 0.0 if x is None else float(x)
+def _i(x): return int(round(x))
+CN_TECHS=['CC','CC/COG_EF','CI','CI/BIO','CI/COG','CSP','EO','FV','GEO','H2','HID']
+HDR_DISP={'CC':'CC','CC/COG_EF':'CC/COG EF','CI':'CI','CI/BIO':'CI/BIO','CI/COG':'CI/COG',
+ 'CSP':'CSP','EO':'EO','FV':'FV','GEO':'GEO','H2':'H₂','HID':'HID'}
+_rowmap=[(44,'CFE en proceso'),(45,'CFE por licitar'),(46,'CFE terminados inaugurados'),
+ (47,'CFE terminados por inaugurar'),(48,'Mixtos de CFE asignados'),(49,'Mixtos de CFE por asignar'),
+ (50,'Particulares asignados'),(51,'Particulares por asignar')]
+CN_ROWS=[(nm,{t:_v(r,4+i) for i,t in enumerate(CN_TECHS)},_v(r,15)) for r,nm in _rowmap]
+CN_TOT={t:_v(52,4+i) for i,t in enumerate(CN_TECHS)}
+CN_TOTAL=_v(52,15)
+BAT_TOTAL=_v(68,4)
+FOSIL_T={'CC','CI','CI/COG'}
+CN_LIMPIA=_i(sum(v for t,v in CN_TOT.items() if t not in FOSIL_T))
+CN_LIMPIA_PCT=round(CN_LIMPIA/CN_TOTAL*100)
+
 YEARS=['2024','2025','2026','2027','2028','2029','2030']
 
 DATA = {
@@ -66,6 +87,35 @@ DATA = {
    ]},
 }
 
+# ===== overrides desde Tabla PVIRCE.xlsx =====
+_TC={'CC':'#7B828D','CC/COG EF':'#8A9A2E','CI':'#5E6671','CI/BIO':'#4E8B3F','CI/COG':'#9AA0A6',
+ 'CSP':'#E07B2A','EO':'#2F94AC','FV':'#D99A00','GEO':'#C0552E','H₂':'#1F9488','HID':'#2E6FB0'}
+_ordn=[t for t in sorted(CN_TECHS,key=lambda t:-CN_TOT[t]) if CN_TOT[t]>=1]
+DATA["tecNueva"]={"cats":[HDR_DISP[t] for t in _ordn],
+ "vals":[_i(CN_TOT[t]) for t in _ordn],
+ "colors":[_TC[HDR_DISP[t]] for t in _ordn]}
+_cfe=_i(sum(CN_ROWS[i][2] for i in range(4)))
+_soc=_i(CN_ROWS[4][2]+CN_ROWS[5][2])
+_par=_i(CN_ROWS[6][2]+CN_ROWS[7][2])
+DATA["estatus"]={"nodes":[
+   {"id":"Capacidad nueva","mw":_i(CN_TOTAL),"grp":"root"},
+   {"id":"CFE","mw":_cfe,"grp":"cfe"},{"id":"Sociedades con CFE","mw":_soc,"grp":"soc"},
+   {"id":"Particulares","mw":_par,"grp":"par"},
+   {"id":"En proceso","mw":_i(CN_ROWS[0][2]),"grp":"cfe"},
+   {"id":"Por licitar","mw":_i(CN_ROWS[1][2]),"grp":"cfe"},
+   {"id":"Terminados inaugurados","mw":_i(CN_ROWS[2][2]),"grp":"cfe"},
+   {"id":"Terminados por inaugurar","mw":_i(CN_ROWS[3][2]),"grp":"cfe"},
+   {"id":"Asignados (soc)","mw":_i(CN_ROWS[4][2]),"grp":"soc"},
+   {"id":"Por asignar (soc)","mw":_i(CN_ROWS[5][2]),"grp":"soc"},
+   {"id":"Asignados (part)","mw":_i(CN_ROWS[6][2]),"grp":"par"},
+   {"id":"Por asignar (part)","mw":_i(CN_ROWS[7][2]),"grp":"par"},
+ ],"links":[
+   ["Capacidad nueva","CFE"],["Capacidad nueva","Sociedades con CFE"],["Capacidad nueva","Particulares"],
+   ["CFE","En proceso"],["CFE","Por licitar"],["CFE","Terminados inaugurados"],["CFE","Terminados por inaugurar"],
+   ["Sociedades con CFE","Asignados (soc)"],["Sociedades con CFE","Por asignar (soc)"],
+   ["Particulares","Asignados (part)"],["Particulares","Por asignar (part)"],
+ ]}
+
 # ---------- paleta master de tecnologías (consistente en TODO el deck) ----------
 TECHCOLORS={
  'Fotovoltaica':'#D99A00','Eólica':'#2F94AC','Hidroeléctrica':'#2E6FB0','Geotermia':'#C0552E',
@@ -73,8 +123,8 @@ TECHCOLORS={
  'Cogeneración eficiente':'#8A9A2E','Ciclo combinado':'#7B828D','Térmica convencional':'#A8743A',
  'Turbogás':'#C24A3A','Combustión interna':'#5E6671','Carboeléctrica':'#3C424B',
  'Otras fósiles':'#5E6671','Otras renovables':'#4E8B3F'}
-TECHCODES={'CC':'#7B828D','CI':'#5E6671','CC/COG':'#8A9A2E','BIO':'#4E8B3F','PSC':'#E07B2A',
- 'EO':'#2F94AC','FV':'#D99A00','GEO':'#C0552E','H₂':'#1F9488','HID':'#2E6FB0'}
+TECHCODES={'CC':'#7B828D','CC/COG EF':'#8A9A2E','CI':'#5E6671','CI/BIO':'#4E8B3F','CI/COG':'#9AA0A6',
+ 'CSP':'#E07B2A','EO':'#2F94AC','FV':'#D99A00','GEO':'#C0552E','H₂':'#1F9488','HID':'#2E6FB0'}
 
 # ---------- rampa choropleth del mapa SAEE (para encabezados de gerencias) ----------
 def saee_fill(v,vmin=7,vmax=2141):
@@ -117,7 +167,12 @@ def render_table(grid,row_colors=None,col_colors=None,colzebra=False):
     cz=' cz' if colzebra else ''
     return f'<table class="report-table anexo{cz}"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table>'
 
-anx_tec   = render_table(tables['12'][0], col_colors=TECHCODES, colzebra=True)
+def _fmt(v): return f"{v:,}"
+_cn_grid=[['Tipo de proyecto']+[HDR_DISP[t] for t in CN_TECHS]+['Total']]
+for _nm,_vals,_tot in CN_ROWS:
+    _cn_grid.append([_nm]+[(_fmt(_i(_vals[t])) if _vals[t] else '') for t in CN_TECHS]+[_fmt(_i(_tot))])
+_cn_grid.append(['Total general']+[_fmt(_i(CN_TOT[t])) for t in CN_TECHS]+[_fmt(_i(CN_TOTAL))])
+anx_tec   = render_table(_cn_grid, col_colors=TECHCODES, colzebra=True)
 anx_alm   = render_table(tables['13'][0])
 anx_cap   = render_table(tables['14'][0], row_colors=TECHCOLORS)
 anx_escA  = render_table(tables['15'][0])
@@ -165,8 +220,8 @@ SLIDES=[]
 # ---- Slide 1: nueva generación ----
 body1=(f'<div class="kpi-cards">'
    f'{kpicard("k-cap","bi-lightning-charge-fill","Capacidad nueva total","+32,475 MW","Adiciones 2026–2030 al SEN")}'
-   f'{kpicard("k-lim","bi-leaf-fill","Energía limpia","70% · 22,376 MW","Renovables y cogeneración eficiente")}'
-   f'{kpicard("k-alm","bi-battery-charging","Almacenamiento","+6,900 MW","Baterías asociadas a FV y eólica")}'
+   f'{kpicard("k-lim","bi-leaf-fill","Energía limpia",f"{CN_LIMPIA_PCT}% · {CN_LIMPIA:,} MW","Renovables y cogeneración eficiente")}'
+   f'{kpicard("k-alm","bi-battery-charging","Almacenamiento",f"+{_i(BAT_TOTAL):,} MW","Baterías asociadas a FV y eólica")}'
  f'</div>'
  f'<div class="content-grid g-11">'
    f'<div class="col">{panel("Tecnologías — capacidad nueva (MW)","c_tec_nueva")}</div>'
@@ -175,7 +230,7 @@ body1=(f'<div class="kpi-cards">'
 SLIDES.append(cslide(1,"Capacidad nueva 2026–2030","Nueva generación",
  'México sumará <span class="hl">32,475 MW</span> de nueva generación; <span class="hlv">7 de cada 10 MW</span> son de energía limpia',
  body1,
- '<b>Tecnologías:</b> CC Ciclo combinado · CI Combustión interna · CC/COG EF Ciclo combinado con cogeneración eficiente · BIO Bioenergía · PSC Termosolar · EO Eólica · FV Fotovoltaica · GEO Geotermia · H₂ Hidrógeno · HID Hidroeléctrica.',
+ '<b>Tecnologías:</b> CC Ciclo combinado · CC/COG EF Ciclo combinado con cogeneración eficiente · CI Combustión interna · CI/BIO Combustión interna con bioenergía · CI/COG Combustión interna con cogeneración · CSP Termosolar · EO Eólica · FV Fotovoltaica · GEO Geotermia · H₂ Hidrógeno · HID Hidroeléctrica.',
  noteic='bi-leaf-fill'))
 
 # ---- Slide 2: SAEE map (reuse) ----
@@ -319,7 +374,7 @@ def anexslide(idx,line2,title,lead,tbl,foot):
             f'<div class="snote">{foot}</div><div class="slide-footer"></div></div></section>')
 SLIDES.append(anexslide(11,"Anexo · Capacidad nueva","Anexo capacidad nueva",
  'Capacidad nueva por tipo de proyecto y tecnología (MW) · 2026–2030',anx_tec,
- 'CC Ciclo combinado · CI Combustión interna · CC/COG Ciclo combinado con cogeneración · BIO Bioenergía · PSC Termosolar · EO Eólica · FV Fotovoltaica · GEO Geotermia · H₂ Hidrógeno · HID Hidroeléctrica.'))
+ 'CC Ciclo combinado · CC/COG EF Ciclo combinado con cogeneración eficiente · CI Combustión interna · CI/BIO Combustión interna con bioenergía · CI/COG Combustión interna con cogeneración · CSP Termosolar · EO Eólica · FV Fotovoltaica · GEO Geotermia · H₂ Hidrógeno · HID Hidroeléctrica.'))
 SLIDES.append(anexslide(12,"Anexo · Almacenamiento","Anexo almacenamiento",
  'Almacenamiento por Gerencia de Control Regional y tipo (MW)',anx_alm,
  'SAEE: Sistema de Almacenamiento de Energía Eléctrica. Cifras en MW; pueden no sumar por redondeo.'))
