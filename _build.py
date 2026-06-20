@@ -194,10 +194,11 @@ for nm,v,pc,col in tipos:
 regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
  ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
  ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
-REGCOL={'Mulegé':'#C4C9D0','BC Sur':'#D2D2A2','Norte':'#E6BBA2','Noroeste':'#C0B9D6',
- 'B. Calif.':'#D9B4BC','Occidental':'#BBD0C6','Central':'#E3D2A1','Oriental':'#A6CABB',
- 'Peninsular':'#A9C3DA','Noreste':'#E1A6B4'}
-th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:#2b2b2b;border-bottom:none;">{n}</th>' for n,v,_ in regs)
+REGCOL={'Mulegé':'#001219','BC Sur':'#005f73','Norte':'#0a9396','Noroeste':'#94d2bd',
+ 'B. Calif.':'#e9d8a6','Occidental':'#ee9b00','Central':'#ca6702','Oriental':'#bb3e03',
+ 'Peninsular':'#ae2012','Noreste':'#9b2226'}
+def _txt(h): return '#ffffff' if (0.299*int(h[1:3],16)+0.587*int(h[3:5],16)+0.114*int(h[5:7],16))<150 else '#23262b'
+th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:{_txt(REGCOL[n])};border-bottom:none;">{n}</th>' for n,v,_ in regs)
 td_v=''.join(f'<td class="num">{v:,}</td>' for _,v,_ in regs)
 td_p=''.join(f'<td class="num">{p}</td>' for _,_,p in regs)
 saee_table=(f'<table class="report-table saee-mini"><thead><tr><th></th>{th_reg}<th class="num tot">Total</th></tr></thead>'
