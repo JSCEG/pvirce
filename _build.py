@@ -84,7 +84,7 @@ def saee_fill(v,vmin=7,vmax=2141):
     return '#%02x%02x%02x'%rgb
 
 # ---------- anexo tables ----------
-def render_table(grid,row_colors=None,col_colors=None):
+def render_table(grid,row_colors=None,col_colors=None,colzebra=False):
     head=grid[0]; body=grid[1:]
     GRP=('estado','particulares')
     GRP_PREFIX=('cfe ·','cfe·','sociedades con cfe','generación')
@@ -114,9 +114,10 @@ def render_table(grid,row_colors=None,col_colors=None):
         cl=f' class="{rc}"' if rc else ''
         tds=''.join(cell(c,i) for i,c in enumerate(r))
         rows+=f'<tr{cl}>{tds}</tr>'
-    return f'<table class="report-table anexo"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table>'
+    cz=' cz' if colzebra else ''
+    return f'<table class="report-table anexo{cz}"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table>'
 
-anx_tec   = render_table(tables['12'][0], col_colors=TECHCODES)
+anx_tec   = render_table(tables['12'][0], col_colors=TECHCODES, colzebra=True)
 anx_alm   = render_table(tables['13'][0])
 anx_cap   = render_table(tables['14'][0], row_colors=TECHCOLORS)
 anx_escA  = render_table(tables['15'][0])

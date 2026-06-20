@@ -231,6 +231,10 @@ align-items:center;z-index:9999;color:#fff;font-family:'Montserrat',sans-serif;t
 .report-table.anexo tbody tr.grp td:first-child{color:var(--color-guinda);}
 .report-table.anexo tbody tr.total td{font-weight:800;color:var(--color-guinda);background:#f7ebef;border-top:2px solid var(--color-guinda);border-bottom:none;}
 .report-table.anexo td .dash{color:#cbc6bf;}
+/* zebra por columna (tabla con tecnologías en columnas) */
+.report-table.anexo.cz tbody tr:nth-child(even){background:#fff;}
+.report-table.anexo.cz tbody tr:not(.grp):not(.total) td:nth-child(even){background:#f1f3f5;}
+.report-table.anexo.cz thead th:nth-child(even){background:#eef0f3;}
 .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,.06);}
 .report-table.anexo thead th .sw{margin-right:5px;}
 .hl-banner{margin-top:8px;background:#faf3f5;color:var(--color-guinda);border-left:5px solid var(--color-guinda);font-family:'Montserrat',sans-serif;font-weight:700;font-size:16px;text-align:left;padding:10px 16px;border-radius:8px;display:flex;align-items:center;gap:10px;}
