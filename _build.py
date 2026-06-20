@@ -194,9 +194,9 @@ for nm,v,pc,col in tipos:
 regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
  ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
  ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
-REGCOL={'Noroeste':'#0a9396','Norte':'#9b2226','Noreste':'#94d2bd','Occidental':'#ee9b00',
- 'Central':'#ae2012','Oriental':'#001219','Peninsular':'#ca6702','B. Calif.':'#e9d8a6',
- 'BC Sur':'#bb3e03','Mulegé':'#005f73'}
+REGCOL={'Noroeste':'#1E5B4F','Norte':'#9B2247','Noreste':'#4F8A7C','Occidental':'#A57F2C',
+ 'Central':'#6E8C3A','Oriental':'#C0552E','Peninsular':'#B24C6C','B. Calif.':'#D64545',
+ 'BC Sur':'#7E3B52','Mulegé':'#D6B46A'}
 def _txt(h): return '#ffffff' if (0.299*int(h[1:3],16)+0.587*int(h[3:5],16)+0.114*int(h[5:7],16))<150 else '#23262b'
 th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:{_txt(REGCOL[n])};border-bottom:none;">{n}</th>' for n,v,_ in regs)
 td_v=''.join(f'<td class="num">{v:,}</td>' for _,v,_ in regs)
