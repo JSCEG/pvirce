@@ -189,6 +189,11 @@ align-items:center;z-index:9999;color:#fff;font-family:'Montserrat',sans-serif;t
 .kpi-cards.k4 .kpi-card{padding:12px 14px;gap:11px;}
 .kpi-cards.k4 .kpi-card .ic{width:46px;height:46px;font-size:20px;}
 .kpi-cards.k4 .kpi-card .v{font-size:24px;}
+/* burbujas radiales estatus */
+.ebub-wrap{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}
+.ebub-svg{width:100%;height:100%;}
+.ebub-svg .eb{transition:filter .15s ease;}
+.ebub-svg .eb:hover{filter:brightness(1.08) drop-shadow(0 2px 5px rgba(0,0,0,.3));}
 /* STAT panel (icono + número grande) */
 .stat-panel .stat-row{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:18px;}
 .stat-ic{width:62px;height:62px;border-radius:50%;background:rgba(30,91,79,.13);color:var(--color-verde);display:flex;align-items:center;justify-content:center;font-size:30px;flex:0 0 auto;}

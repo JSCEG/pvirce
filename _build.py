@@ -233,15 +233,60 @@ SLIDES.append(cslide(1,"Capacidad nueva 2026–2030","Nueva generación",
  '<b>Tecnologías:</b> CC Ciclo combinado · CC/COG EF Ciclo combinado con cogeneración eficiente · CI Combustión interna · CI/BIO Combustión interna con bioenergía · CI/COG Combustión interna con cogeneración · CSP Termosolar · EO Eólica · FV Fotovoltaica · GEO Geotermia · H₂ Hidrógeno · HID Hidroeléctrica.',
  noteic='bi-leaf-fill'))
 
-# ---- Slide 1b: estatus de los proyectos (networkgraph) ----
+# ---- Slide 1b: estatus de los proyectos (burbujas radiales) ----
+import math as _m
+def _rnd(x): return int(_m.floor(x+0.5))
+ESTCOL={'Terminado':'#1E5B4F','En proceso':'#2E6FB0','Asignado':'#9B2247','Por asignar':'#A57F2C'}
+# (valor, descriptor, categoría, ángulo°)  valores desde CN_ROWS
+_eb=[
+ (_rnd(CN_ROWS[4][2]),'Mixtos CFE asignados','Asignado',90),
+ (_rnd(CN_ROWS[2][2]),'Terminados inaugurados','Terminado',45),
+ (_rnd(CN_ROWS[5][2]),'Mixtos CFE por asignar','Por asignar',0),
+ (_rnd(CN_ROWS[6][2]),'Particulares asignados','Asignado',-45),
+ (_rnd(CN_ROWS[3][2]),'Terminados por inaugurar','Terminado',-90),
+ (_rnd(CN_ROWS[0][2]),'CFE en proceso','En proceso',-135),
+ (_rnd(CN_ROWS[7][2]),'Particulares por asignar','Por asignar',180),
+ (_rnd(CN_ROWS[1][2]),'CFE por licitar','Por asignar',135),
+]
+_W,_Hh=1180,560; _cx,_cy=470,285
+def _rof(mw): return 0.62*_m.sqrt(mw)
+_rc=_rof(CN_TOTAL)
+_circ=[];_lab=[]
+# central
+_circ.append(f'<circle cx="{_cx}" cy="{_cy}" r="{_rc:.0f}" fill="#3f4145"/>')
+_lab.append(f'<text x="{_cx}" y="{_cy-12}" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="36" font-weight="800" fill="#fff">{_rnd(CN_TOTAL):,}</text>'
+ f'<text x="{_cx}" y="{_cy+10}" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" fill="#D6B46A">MW</text>'
+ f'<text x="{_cx}" y="{_cy+30}" text-anchor="middle" font-family="Hind,sans-serif" font-size="13" fill="#e7e7e7">Capacidad nueva</text>'
+ f'<text x="{_cx}" y="{_cy+46}" text-anchor="middle" font-family="Hind,sans-serif" font-size="13" font-weight="700" fill="#fff">TOTAL</text>')
+for v,desc,cat,ang in _eb:
+    r=_rof(v); col=ESTCOL[cat]; a=_m.radians(ang)
+    d=_rc+r+30; x=_cx+d*_m.cos(a); y=_cy-d*_m.sin(a)
+    _circ.append(f'<circle class="eb" cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{col}"/>')
+    fsv=26 if r>=46 else (22 if r>=34 else 17)
+    if r>=40:
+        _lab.append(f'<text x="{x:.1f}" y="{y-2:.1f}" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="{fsv}" font-weight="800" fill="#fff">{v:,}</text>'
+          f'<text x="{x:.1f}" y="{y+16:.1f}" text-anchor="middle" font-family="Hind,sans-serif" font-size="11.5" font-weight="600" fill="#fff">{desc}</text>')
+    else:
+        _lab.append(f'<text x="{x:.1f}" y="{y+5:.1f}" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="{fsv}" font-weight="800" fill="#fff">{v:,}</text>')
+        lx=_cx+(d+r+14)*_m.cos(a); ly=_cy-(d+r+14)*_m.sin(a)
+        anc='middle'
+        _lab.append(f'<text x="{lx:.1f}" y="{ly+4:.1f}" text-anchor="{anc}" font-family="Hind,sans-serif" font-size="12" font-weight="600" fill="#555">{desc}</text>')
+# leyenda derecha
+_leg=[];_lx=_W-205;_ly=70
+for i,(cat,col) in enumerate(ESTCOL.items()):
+    yy=_ly+i*52
+    _leg.append(f'<circle cx="{_lx}" cy="{yy}" r="15" fill="{col}"/>'
+      f'<text x="{_lx+28}" y="{yy+6}" font-family="Montserrat,sans-serif" font-size="17" font-weight="700" fill="#2b2b2b">{cat}</text>')
+ebub_svg=(f'<svg viewBox="0 0 {_W} {_Hh}" class="ebub-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">\n'
+  +"\n".join(_circ)+"\n"+"\n".join(_lab)+"\n"+"\n".join(_leg)+"\n</svg>")
+ebub_panel=(f'<div class="panel-card"><div class="panel-head"><h3>Estatus de los proyectos de generación (MW)</h3></div>'
+  f'<div class="ebub-wrap">{ebub_svg}</div></div>')
 body1b=(f'<div class="kpi-cards">'
    f'{kpicard("k-g","bi-bank2","CFE",f"{_cfe:,} MW","Proyectos propios y con prelación")}'
    f'{kpicard("k-d","bi-diagram-3","Sociedades con CFE",f"{_soc:,} MW","Mixtos asignados y por asignar")}'
    f'{kpicard("k-v","bi-people-fill","Particulares",f"{_par:,} MW","Asignados y por asignar")}'
  f'</div>'
- f'<div class="content-grid g-1full">'
-   f'{panel("Estatus de los proyectos de generación (MW)","c_estatus")}'
- f'</div>')
+ f'<div class="content-grid g-1full">{ebub_panel}</div>')
 SLIDES.append(cslide("1b","Capacidad nueva 2026–2030","Estatus de proyectos",
  'Los <span class="hl">32,475 MW</span> por <span class="hlv">actor y estatus</span>: CFE, sociedades con CFE y particulares',
  body1b,
