@@ -302,25 +302,24 @@ saee_rows=[('Baja California','B. Calif.',190,440,630),('Baja California Sur','B
  ('Noroeste','Noroeste',280,298,578),('Oriental','Oriental',200,1088,1288),
  ('Occidental','Occidental',100,620,720),('Peninsular','Peninsular',200,1101,1301),
  ('Central','Central',None,None,1011)]
-def _cell(x): return f'{x:,}' if isinstance(x,int) else '<span class="dash">–</span>'
+_saee_sorted=sorted(saee_rows,key=lambda r:-r[4])
 _saee_tr=''.join(
  f'<tr><td class="rl"><span class="sw" style="background:{REGCOL[k]}"></span>{nm}</td>'
- f'<td class="num">{_cell(a)}</td><td class="num">{_cell(b)}</td><td class="num tot">{t:,}</td></tr>'
- for nm,k,a,b,t in saee_rows)
+ f'<td class="num">{t:,}</td><td class="num pctc">{t/8408*100:.0f}%</td></tr>'
+ for nm,k,a,b,t in _saee_sorted)
 saee_table=(f'<table class="report-table saee-fin"><thead><tr>'
- f'<th>Región</th><th class="num">Confiabilidad del SEN</th>'
- f'<th class="num">Integración eólica y FV</th><th class="num tot">Total</th></tr></thead>'
+ f'<th>Región</th><th class="num">SAEE Total (MW)</th><th class="num pctc">%</th></tr></thead>'
  f'<tbody>{_saee_tr}</tbody><tfoot><tr><td class="rl">Total</td>'
- f'<td class="num">1,545</td><td class="num">5,963</td><td class="num tot">8,408</td></tr></tfoot></table>')
+ f'<td class="num tot">8,408</td><td class="num pctc">100%</td></tr></tfoot></table>')
 body2=('<div class="kpi-cards">'
  +kpicard("k-g","bi-battery-charging","Almacenamiento total",'8,408<span class="u">MW</span>',"Requerido en el SEN")
- +kpicard("k-v","bi-wind","Integración eólica y FV",'5,963<span class="u">MW · 71%</span>',"Baterías junto a centrales renovables")
+ +kpicard("k-v","bi-wind","Integración eólica y FV",'5,963<span class="u">MW · 71%</span>',"Baterías junto a centrales eólicas y solares")
  +kpicard("k-d","bi-shield-check","Confiabilidad del SEN",'1,545<span class="u">MW</span>',"Respaldo y estabilidad del sistema")
  +'</div>'
  f'<div class="map-grid">'
    f'<div class="panel-card"><div class="panel-head"><h3>Distribución por Gerencia de Control Regional (MW)</h3></div>'
      f'<div class="map-wrap" id="mapWrap">{mapsvg}<div class="map-tip" id="mapTip"></div></div></div>'
-   f'<div class="panel-card"><div class="panel-head"><h3>Almacenamiento por región y finalidad (MW)</h3></div>'
+   f'<div class="panel-card"><div class="panel-head"><h3>Almacenamiento por región (MW)</h3></div>'
      f'<div class="saee-fin-wrap">{saee_table}</div></div>'
  f'</div>')
 SLIDES.append(cslide(2,"Almacenamiento (SAEE)","Almacenamiento",
