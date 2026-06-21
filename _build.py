@@ -292,42 +292,37 @@ SLIDES.append(cslide("1b","Capacidad nueva 2026–2030","Estatus de proyectos",
  body1b,
  'MW por tipo de proyecto. Estatus: terminados, en proceso, asignados y por asignar / por licitar. Fuente: SENER · CENACE.'))
 
-# ---- Slide 2: SAEE map (reuse) ----
-tipos=[("Asociado asignado",4024,"48%","var(--color-verde)"),
- ("Asociado no asignado",1939,"23%","#4F8A7C"),
- ("No asociado mixtos",935,"11%","var(--color-guinda)"),
- ("Sistémico",900,"11%","var(--color-dorado)"),
- ("No asociado CFE",610,"7%","var(--color-guinda-light)")]
-tipos_html=''
-for nm,v,pc,col in tipos:
-    w=v/4024*100
-    tipos_html+=(f'<div class="bar-row"><div class="b-name">{nm}</div>'
-      f'<div class="bar-track"><div class="bar-fill" style="width:{w:.1f}%;background:{col};"></div>'
-      f'<span class="bar-val">{v:,} · {pc}</span></div></div>')
-# ordenadas menor -> mayor; encabezados con la rampa choropleth del mapa
-regs=[("Mulegé",7,"0.1%"),("BC Sur",252,"3%"),("Norte",481,"6%"),("Noroeste",578,"7%"),
- ("B. Calif.",630,"8%"),("Occidental",720,"9%"),("Central",1011,"12%"),("Oriental",1288,"15%"),
- ("Peninsular",1301,"15%"),("Noreste",2141,"25%")]
+# ---- Slide 2: SAEE map + desglose por finalidad ----
 REGCOL={'Noroeste':'#1E5B4F','Norte':'#9B2247','Noreste':'#3E8174','Occidental':'#A57F2C',
  'Central':'#B24C6C','Oriental':'#6FA89A','Peninsular':'#A33052','B. Calif.':'#7E3B52',
  'BC Sur':'#A9CDC3','Mulegé':'#E0CA8E'}
-def _txt(h): return '#ffffff' if (0.299*int(h[1:3],16)+0.587*int(h[3:5],16)+0.114*int(h[5:7],16))<152 else '#23262b'
-th_reg=''.join(f'<th class="num" style="background:{REGCOL[n]};color:{_txt(REGCOL[n])};border-bottom:none;">{n}</th>' for n,v,_ in regs)
-td_v=''.join(f'<td class="num">{v:,}</td>' for _,v,_ in regs)
-td_p=''.join(f'<td class="num">{p}</td>' for _,_,p in regs)
-saee_table=(f'<table class="report-table saee-mini"><thead><tr><th></th>{th_reg}<th class="num tot">Total</th></tr></thead>'
- f'<tbody><tr><td class="rl">SAEE Total (MW)</td>{td_v}<td class="num tot">8,408</td></tr>'
- f'<tr class="pct"><td class="rl">% del total</td>{td_p}<td class="num tot">100%</td></tr></tbody></table>')
+# (nombre completo, clave REGCOL, confiabilidad, integración, total)  — Tabla PVIRCE
+saee_rows=[('Baja California','B. Calif.',190,440,630),('Baja California Sur','BC Sur',50,202,252),
+ ('Mulegé','Mulegé',5,2,7),('Norte','Norte',400,81,481),('Noreste','Noreste',120,2021,2141),
+ ('Noroeste','Noroeste',280,298,578),('Oriental','Oriental',200,1088,1288),
+ ('Occidental','Occidental',100,620,720),('Peninsular','Peninsular',200,1101,1301),
+ ('Central','Central',None,None,1011)]
+def _cell(x): return f'{x:,}' if isinstance(x,int) else '<span class="dash">–</span>'
+_saee_tr=''.join(
+ f'<tr><td class="rl"><span class="sw" style="background:{REGCOL[k]}"></span>{nm}</td>'
+ f'<td class="num">{_cell(a)}</td><td class="num">{_cell(b)}</td><td class="num tot">{t:,}</td></tr>'
+ for nm,k,a,b,t in saee_rows)
+saee_table=(f'<table class="report-table saee-fin"><thead><tr>'
+ f'<th>Región</th><th class="num">Confiabilidad del SEN</th>'
+ f'<th class="num">Integración eólica y FV</th><th class="num tot">Total</th></tr></thead>'
+ f'<tbody>{_saee_tr}</tbody><tfoot><tr><td class="rl">Total</td>'
+ f'<td class="num">1,545</td><td class="num">5,963</td><td class="num tot">8,408</td></tr></tfoot></table>')
 body2=('<div class="kpi-cards">'
  +kpicard("k-g","bi-battery-charging","Almacenamiento total",'8,408<span class="u">MW</span>',"Requerido en el SEN")
- +kpicard("k-v","bi-sun-fill","Asociado a eólica y FV",'6,863<span class="u">MW · 82%</span>',"Integrado a centrales renovables")
- +kpicard("k-d","bi-plug-fill","No asociado",'1,545<span class="u">MW</span>',"Operación 2028 · 610 CFE / 935 mixtos")
+ +kpicard("k-v","bi-wind","Integración eólica y FV",'5,963<span class="u">MW · 71%</span>',"Baterías junto a centrales renovables")
+ +kpicard("k-d","bi-shield-check","Confiabilidad del SEN",'1,545<span class="u">MW</span>',"Respaldo y estabilidad del sistema")
  +'</div>'
  f'<div class="map-grid">'
    f'<div class="panel-card"><div class="panel-head"><h3>Distribución por Gerencia de Control Regional (MW)</h3></div>'
      f'<div class="map-wrap" id="mapWrap">{mapsvg}<div class="map-tip" id="mapTip"></div></div></div>'
-   f'<div class="panel-card"><div class="panel-head"><h3>Tipos de almacenamiento (MW)</h3></div><div class="bars">{tipos_html}</div></div>'
- f'</div>{saee_table}')
+   f'<div class="panel-card"><div class="panel-head"><h3>Almacenamiento por región y finalidad (MW)</h3></div>'
+     f'<div class="saee-fin-wrap">{saee_table}</div></div>'
+ f'</div>')
 SLIDES.append(cslide(2,"Almacenamiento (SAEE)","Almacenamiento",
  'El país tendrá <span class="hl">8,408 MW</span> de almacenamiento de energía proveniente del sol y el viento',
  body2,
