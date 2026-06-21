@@ -269,6 +269,10 @@
     .map-tip .t-val { font-size: 21px; font-weight: 700; color: var(--color-text-dark); line-height: 1.05; margin-top: 1px; }
     .map-tip .t-val .u { font-size: 12px; font-weight: 600; color: var(--color-gris); margin-left: 3px; }
     .map-tip .t-pct { font-size: 11px; color: var(--color-text-light); margin-top: 1px; }
+    .map-tip .t-states { margin-top: 7px; padding-top: 6px; border-top: 1px solid var(--color-gris-claro); display: flex; flex-direction: column; gap: 2px; }
+    .map-tip .ts-row { display: flex; justify-content: space-between; gap: 14px; font-size: 11px; }
+    .map-tip .ts-n { color: var(--color-text-light); }
+    .map-tip .ts-v { color: var(--color-text-dark); font-weight: 700; font-variant-numeric: tabular-nums; }
 
     .dl-btn { position:fixed; bottom:18px; right:18px; z-index:200;
       display:flex; align-items:center; gap:8px; padding:11px 18px;
@@ -301,8 +305,8 @@
       <div class="hero">
         <div class="icon-box"><i class="bi bi-lightning-charge-fill"></i></div>
         <div class="title-block">
-          <h1>Adiciones de capacidad por <b>Gerencia de Control Regional</b></h1>
-          <p>Nueva generación incorporada al Sistema Eléctrico Nacional, distribuida por región de control del CENACE.</p>
+          <h1>Las adiciones de capacidad suman <b id="heroTotal">—</b> en 10 <b>Gerencias de Control Regional</b></h1>
+          <p>Capacidad instalada (MWac) de nueva generación incorporada al Sistema Eléctrico Nacional, por región de control del CENACE.</p>
         </div>
         <div class="logo-right">
           <img src="Estilos Institucionales/img/logo_sener.png" alt="Secretaría de Energía">
@@ -383,7 +387,7 @@
             <tr class="row-pct" id="tblPct"></tr>
           </tbody>
         </table>
-        <div class="footnote">Fuente: SENER · Regiones de control regional (GCR) — CENACE. Cifras en MW; pueden no sumar por redondeo.</div>
+        <div class="footnote">Fuente: SENER · Capacidad instalada (MWac) por región de control regional (GCR) — CENACE. El desglose por entidad federativa presenta capacidad sin estado asignado. Cifras en MW; pueden no sumar por redondeo.</div>
       </div>
 
       <div class="slide-footer"></div>
@@ -398,17 +402,32 @@
      null = pendiente (se pinta en gris). Todo el slide (mapa, KPIs, barras,
      tabla, leyenda) se calcula automáticamente a partir de este arreglo.
   ============================================================================ */
+  // mw = capacidad instalada (MWac) por GCR — completa.
+  // states = desglose por entidad federativa; '(Sin estado asignado)' = filas
+  //          "(en blanco)" del origen (huecos del desglose estatal).
   const REGIONS = [
-    { id:'noreste',     name:'Noreste',       mw:null },
-    { id:'peninsular',  name:'Peninsular',    mw:null },
-    { id:'oriental',    name:'Oriental',      mw:null },
-    { id:'central',     name:'Central',       mw:null },
-    { id:'occidental',  name:'Occidental',    mw:null },
-    { id:'bcalifornia', name:'B. California', mw:null },
-    { id:'noroeste',    name:'Noroeste',      mw:null },
-    { id:'norte',       name:'Norte',         mw:null },
-    { id:'bcsur',       name:'BC Sur',        mw:null },
-    { id:'mulege',      name:'Mulegé',        mw:null },
+    { id:'noreste',     name:'Noreste',       mw:7766, states:[
+        {n:'Tamaulipas',mw:4320},{n:'Coahuila de Zaragoza',mw:1787},{n:'Nuevo León',mw:1209},{n:'(Sin estado asignado)',mw:450} ] },
+    { id:'peninsular',  name:'Peninsular',    mw:4684, states:[
+        {n:'Yucatán',mw:2393},{n:'Campeche',mw:1831},{n:'Quintana Roo',mw:460} ] },
+    { id:'oriental',    name:'Oriental',      mw:6012, states:[
+        {n:'Veracruz de Ignacio de la Llave',mw:1533},{n:'(Sin estado asignado)',mw:1222},{n:'Veracruz',mw:1151},
+        {n:'Puebla',mw:793},{n:'Oaxaca',mw:656},{n:'Chiapas',mw:368},{n:'Tlaxcala',mw:175},{n:'Tabasco',mw:100},{n:'Guerrero',mw:15} ] },
+    { id:'central',     name:'Central',       mw:2870, states:[
+        {n:'Hidalgo',mw:1808},{n:'San Luis Potosí',mw:437},{n:'(Sin estado asignado)',mw:265},{n:'Querétaro',mw:246},{n:'Estado de México',mw:114} ] },
+    { id:'occidental',  name:'Occidental',    mw:4536, states:[
+        {n:'Guanajuato',mw:2151},{n:'Jalisco',mw:948},{n:'Zacatecas',mw:420},{n:'Colima',mw:346},{n:'Hidalgo',mw:292},
+        {n:'Querétaro',mw:218},{n:'(Sin estado asignado)',mw:156},{n:'Aguascalientes',mw:3},{n:'San Luis Potosí',mw:2} ] },
+    { id:'bcalifornia', name:'B. California', mw:3304, states:[
+        {n:'Baja California',mw:1954},{n:'Sonora',mw:1350} ] },
+    { id:'noroeste',    name:'Noroeste',      mw:1617, states:[
+        {n:'Sonora',mw:970},{n:'Sinaloa',mw:647} ] },
+    { id:'norte',       name:'Norte',         mw:722,  states:[
+        {n:'Durango',mw:620},{n:'San Luis Potosí',mw:100},{n:'Chihuahua',mw:2} ] },
+    { id:'bcsur',       name:'BC Sur',        mw:927,  states:[
+        {n:'Baja California Sur',mw:927} ] },
+    { id:'mulege',      name:'Mulegé',        mw:38,   states:[
+        {n:'Baja California Sur',mw:38} ] },
   ];
   // ---------------------------------------------------------------------------
 
@@ -420,7 +439,10 @@
     const fmt=n=>n==null?'—':n.toLocaleString('es-MX',{maximumFractionDigits:0});
 
     const vals = REGIONS.map(r=>r.mw).filter(v=>v!=null && v>0);
-    const total = vals.reduce((a,b)=>a+b,0);
+    // Total nacional oficial (suma reportada por la fuente). null = autosumar los GCR.
+    // La suma de los GCR redondeados da 32,476; la cifra oficial publicada es 32,475.
+    const TOTAL_OVERRIDE = 32475;
+    const total = vals.length ? (TOTAL_OVERRIDE ?? vals.reduce((a,b)=>a+b,0)) : 0;
     const max = vals.length?Math.max(...vals):0;
     const min = vals.length?Math.min(...vals):0;
     const color = v => {
@@ -456,6 +478,7 @@
 
     // ----- KPIs -----
     document.getElementById('kpiTotal').textContent = total?fmt(total):'—';
+    const heroT=document.getElementById('heroTotal'); if(heroT) heroT.textContent = total?fmt(total)+' MWac':'—';
     document.getElementById('kpiCount').textContent = vals.length?vals.length:'—';
     const lead = REGIONS.filter(r=>r.mw).sort((a,b)=>b.mw-a.mw)[0];
     if(lead){
@@ -496,10 +519,18 @@
     const wrap=document.querySelector('.map-wrap');
     const tip=document.getElementById('mapTip');
     const regs=wrap.querySelectorAll('.region');
+    const byName=Object.fromEntries(REGIONS.map(r=>[r.name,r]));
     function show(el){
+      const r=byName[el.dataset.r];
+      let st='';
+      if(r && r.states && r.states.length){
+        st='<div class="t-states">'+r.states.map(s=>
+          `<span class="ts-row"><span class="ts-n">${s.n}</span><span class="ts-v">${fmt(s.mw)}</span></span>`
+        ).join('')+'</div>';
+      }
       tip.innerHTML='<div class="t-name">'+el.dataset.r+'</div>'+
         '<div class="t-val">'+el.dataset.v+'<span class="u">MW</span></div>'+
-        '<div class="t-pct">'+el.dataset.p+' del total nacional</div>';
+        '<div class="t-pct">'+el.dataset.p+' del total nacional</div>'+st;
       tip.classList.add('on');
       regs.forEach(r=>{ if(r!==el) r.classList.add('dim'); });
     }
