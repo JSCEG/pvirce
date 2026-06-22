@@ -701,7 +701,7 @@
       if(lv){ lv.textContent=fmt(r.mw); lv.setAttribute('font-size','28'); }
       // chip (regiones chicas)
       const ct=document.getElementById('ct-'+r.id);
-      if(ct){ ct.textContent=r.name+' · '+fmt(r.mw)+' MW'; ct.setAttribute('font-size','19'); }
+      if(ct){ ct.textContent=r.name+' · '+fmt(r.mw)+' MW'; ct.setAttribute('font-size','23'); }
       ['bx-','sw-','dt-','ld-'].forEach(pre=>{
         const el=document.getElementById(pre+r.id);
         if(el){ const attr=(pre==='ld-')?'stroke':(pre==='bx-'?'stroke':'fill'); el.setAttribute(attr, colOf(r)); }
@@ -723,11 +723,11 @@
         const [px,py]=POS[id]; const color=colOf(r); const text=r.name+' · '+fmt(r.mw)+' MW';
         const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','all'); g.classList.add('pill-drag');
         const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
-        const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','7.5'); dot.setAttribute('fill',color);
-        const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','19'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
+        const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','9'); dot.setAttribute('fill',color);
+        const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','23'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
         g.appendChild(rect); g.appendChild(dot); g.appendChild(t); svg.appendChild(g);
-        const w=t.getBBox().width, W=w+52, h=40;
-        t.setAttribute('x',32); t.setAttribute('y',6.5); dot.setAttribute('cx',18); dot.setAttribute('cy',0);
+        const w=t.getBBox().width, W=w+62, h=48;
+        t.setAttribute('x',36); t.setAttribute('y',7.5); dot.setAttribute('cx',22); dot.setAttribute('cy',0);
         rect.setAttribute('x',0); rect.setAttribute('y',-h/2); rect.setAttribute('width',W); rect.setAttribute('height',h);
         g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
         makeDrag(g,svg);
@@ -903,7 +903,7 @@
         const p=document.getElementById('t-rg-'+id);
         if(p){ p.setAttribute('fill',c); p.setAttribute('stroke','#fff'); p.setAttribute('stroke-width','1.6'); p.dataset.id=id; p.dataset.r=NAMES[id]; }
         const lv=document.getElementById('t-lv-'+id); if(lv && dom){ lv.textContent=disp(dom.k)+' '+fmt(dom.v); lv.setAttribute('font-size','28'); }
-        const ct=document.getElementById('t-ct-'+id); if(ct && dom){ ct.textContent=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v); ct.setAttribute('font-size','19'); }
+        const ct=document.getElementById('t-ct-'+id); if(ct && dom){ ct.textContent=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v); ct.setAttribute('font-size','23'); }
         ['t-bx-','t-sw-','t-dt-','t-ld-'].forEach(pre=>{ const el=document.getElementById(pre+id); if(el){ const attr=(pre==='t-ld-'||pre==='t-bx-')?'stroke':'fill'; el.setAttribute(attr,c);} });
       });
 
@@ -922,11 +922,11 @@
           const [px,py]=POS[id]; const color=meta[dom.k]?meta[dom.k].color:'#888'; const text=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v)+' MW';
           const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','all'); g.classList.add('pill-drag');
           const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
-          const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','7.5'); dot.setAttribute('fill',color);
-          const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','18'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
+          const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','9'); dot.setAttribute('fill',color);
+          const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','23'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
           g.appendChild(rect); g.appendChild(dot); g.appendChild(t); svg.appendChild(g);
-          const w=t.getBBox().width, W=w+52, h=40;
-          t.setAttribute('x',32); t.setAttribute('y',6.5); dot.setAttribute('cx',18); dot.setAttribute('cy',0);
+          const w=t.getBBox().width, W=w+62, h=48;
+          t.setAttribute('x',36); t.setAttribute('y',7.5); dot.setAttribute('cx',22); dot.setAttribute('cy',0);
           rect.setAttribute('x',0); rect.setAttribute('y',-h/2); rect.setAttribute('width',W); rect.setAttribute('height',h);
           g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
           makeDrag(g,svg);
