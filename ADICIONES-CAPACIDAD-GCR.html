@@ -904,8 +904,8 @@
       Object.keys(NAMES).forEach(id=>{
         const rp=document.getElementById('s3-rg-'+id); if(rp){ rp.setAttribute('fill',GCRCOLORS[id]); rp.setAttribute('fill-opacity','0.92'); }
         const [cx,cy]=POS[id];
-        lbl(cx, cy-3, NAMES[id], 14, 700);
-        lbl(cx, cy+16, fmt(totals[id])+' MW', 16, 800);
+        lbl(cx, cy-4, NAMES[id], 18, 700);
+        lbl(cx, cy+19, fmt(totals[id])+' MW', 21, 800);
       });
 
       // Tarjetas de datos
