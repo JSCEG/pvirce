@@ -9,6 +9,11 @@ Genera un archivo HTML autocontenido (16:9, navegable, exportable a PNG) con map
 
 **Plantilla base (obligatoria):** `assets/plantilla-mapa-gcr.html` (en esta misma skill). Contiene la geometría del mapa, los estilos SENER, los íconos SVG por tecnología, la navegación y las 5 láminas ya armadas. **Nunca redibujes el mapa ni los íconos a mano:** copia la plantilla y sólo cambia los datos.
 
+## Alcance y portabilidad
+
+- **Esta skill es de proyecto** (vive en `.claude/skills/mapa-gcr/` del repo). Para usarla en **cualquier** proyecto, instálala como skill personal copiándola a tu carpeta global: `~/.claude/skills/mapa-gcr/` (en Windows: `%USERPROFILE%\.claude\skills\mapa-gcr\`). Una vez ahí, queda disponible en todos tus proyectos locales.
+- **El HTML que genera es autocontenido:** el logo va embebido (base64) y las fuentes usan Outfit por CDN con respaldo del sistema (la marca Patria carga sólo si el proyecto tiene `Estilos Institucionales/tipografias/`, si no, degrada sin romperse). Por eso el mapa generado funciona en cualquier carpeta sin depender de otros archivos.
+
 ## Qué produce (5 láminas)
 
 1. **Capacidad total por GCR** — coropleto + KPIs + barras ranking + tabla con %.
