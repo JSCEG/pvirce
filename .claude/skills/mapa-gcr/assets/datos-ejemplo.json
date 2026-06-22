@@ -1,0 +1,17 @@
+{
+  "_comentario": "Estructura de datos para la skill mapa-gcr. Las 10 GCR son fijas (ids abajo). Para cada región: 'mw' (capacidad total), 'tec' (desglose por tecnología) y 'estados' (opcional). 'totalOficial' es la cifra nacional publicada; usa null para autosumar. Claves de tecnología válidas: FV, CC, EO, CC/COG_EF, GEO, HID, CSP, CI, BIO, H2.",
+  "totalOficial": 32475,
+  "unidad": "MWac",
+  "regiones": {
+    "noreste":    { "nombre": "Noreste",       "mw": 7766, "tec": { "EO": 5663, "FV": 1477, "CC": 583, "BIO": 44 }, "estados": [{ "n": "Tamaulipas", "mw": 4320 }, { "n": "Coahuila de Zaragoza", "mw": 1787 }, { "n": "Nuevo León", "mw": 1209 }, { "n": "(Sin estado asignado)", "mw": 450 }] },
+    "peninsular": { "nombre": "Peninsular",    "mw": 4684, "tec": { "FV": 2315, "CC": 1697, "EO": 645, "BIO": 27 }, "estados": [{ "n": "Yucatán", "mw": 2393 }, { "n": "Campeche", "mw": 1831 }, { "n": "Quintana Roo", "mw": 460 }] },
+    "oriental":   { "nombre": "Oriental",      "mw": 6012, "tec": { "FV": 3242, "CC": 1151, "CC/COG_EF": 900, "HID": 489, "EO": 230 }, "estados": [] },
+    "central":    { "nombre": "Central",       "mw": 2870, "tec": { "CC": 1810, "CC/COG_EF": 795, "FV": 265 }, "estados": [] },
+    "occidental": { "nombre": "Occidental",    "mw": 4536, "tec": { "CC": 2269, "FV": 1731, "EO": 323, "GEO": 212, "CC/COG_EF": 2 }, "estados": [] },
+    "bcalifornia":{ "nombre": "B. California", "mw": 3304, "tec": { "CC": 1539, "FV": 1295, "GEO": 470 }, "estados": [] },
+    "noroeste":   { "nombre": "Noroeste",      "mw": 1617, "tec": { "FV": 989, "CC": 582, "HID": 46 }, "estados": [] },
+    "norte":      { "nombre": "Norte",         "mw": 722,  "tec": { "FV": 372, "CC": 350 }, "estados": [] },
+    "bcsur":      { "nombre": "BC Sur",        "mw": 927,  "tec": { "FV": 612, "CSP": 150, "CI": 120, "H2": 45 }, "estados": [] },
+    "mulege":     { "nombre": "Mulegé",        "mw": 38,   "tec": { "H2": 20, "GEO": 12, "FV": 6 }, "estados": [] }
+  }
+}
