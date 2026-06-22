@@ -892,21 +892,38 @@
       const SVGNS='http://www.w3.org/2000/svg';
       const totals={}; for(const id in TECH_BY_GCR) totals[id]=Object.values(TECH_BY_GCR[id]).reduce((a,b)=>a+b,0);
 
-      // Mapa: color por GCR + etiqueta (nombre + total) en el centroide
+      // Mapa: color por GCR + etiqueta (nombre + total) con pastilla blanca y texto negro
       const dots=document.getElementById('s3dots');
-      function lbl(cx,cy,txt,size,wt){
+      function mkText(cx,cy,txt,size,wt,fill){
         const t=document.createElementNS(SVGNS,'text');
         t.setAttribute('x',cx); t.setAttribute('y',cy); t.setAttribute('text-anchor','middle');
-        t.setAttribute('font-family','Outfit,sans-serif'); t.setAttribute('font-weight',wt); t.setAttribute('font-size',size);
-        t.setAttribute('paint-order','stroke'); t.setAttribute('stroke','rgba(0,0,0,.55)'); t.setAttribute('stroke-width','3'); t.setAttribute('fill','#fff');
-        t.textContent=txt; dots.appendChild(t);
+        t.setAttribute('font-family','Outfit,sans-serif'); t.setAttribute('font-weight',wt); t.setAttribute('font-size',size); t.setAttribute('fill',fill);
+        t.textContent=txt; return t;
       }
+      const _boxes=[];
       Object.keys(NAMES).forEach(id=>{
         const rp=document.getElementById('s3-rg-'+id); if(rp){ rp.setAttribute('fill',GCRCOLORS[id]); rp.setAttribute('fill-opacity','0.92'); }
         const [cx,cy]=POS[id];
-        lbl(cx, cy-4, NAMES[id], 18, 700);
-        lbl(cx, cy+19, fmt(totals[id])+' MW', 21, 800);
+        const grp=document.createElementNS(SVGNS,'g'); dots.appendChild(grp);
+        const rect=document.createElementNS(SVGNS,'rect'); rect.setAttribute('fill','#ffffff'); rect.setAttribute('rx','5'); rect.setAttribute('ry','5'); rect.setAttribute('stroke','rgba(0,0,0,.15)'); rect.setAttribute('stroke-width','0.8'); grp.appendChild(rect);
+        const nm=mkText(cx, cy-3, NAMES[id], 15, 700, '#1a1a1a'); grp.appendChild(nm);
+        const tv=mkText(cx, cy+15, fmt(totals[id])+' MW', 18, 800, '#1a1a1a'); grp.appendChild(tv);
+        _boxes.push({rect,nm,tv});
       });
+      function fitBoxes(){
+        _boxes.forEach(o=>{
+          let b1,b2; try{ b1=o.nm.getBBox(); b2=o.tv.getBBox(); }catch(e){ return; }
+          if(!b1.width && !b2.width) return;
+          const x=Math.min(b1.x,b2.x), y=Math.min(b1.y,b2.y);
+          const rr=Math.max(b1.x+b1.width,b2.x+b2.width), bb=Math.max(b1.y+b1.height,b2.y+b2.height);
+          const px=6, py=3;
+          o.rect.setAttribute('x',(x-px).toFixed(1)); o.rect.setAttribute('y',(y-py).toFixed(1));
+          o.rect.setAttribute('width',(rr-x+px*2).toFixed(1)); o.rect.setAttribute('height',(bb-y+py*2).toFixed(1));
+        });
+      }
+      fitBoxes();
+      if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitBoxes); }
+      window.addEventListener('resize', fitBoxes);
 
       // Tarjetas de datos
       function card(id){
