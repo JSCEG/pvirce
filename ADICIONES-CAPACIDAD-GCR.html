@@ -714,9 +714,14 @@
       const lvn=document.getElementById('lv-noreste'); const svg=lvn&&lvn.ownerSVGElement; if(!svg) return;
       svg.querySelectorAll('.lbl').forEach(g=>g.remove());
       const NS='http://www.w3.org/2000/svg'; const byId=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
+      function makeDrag(g,svg){ g.style.cursor='grab'; let d=null;
+        const pt=()=>{const m=/translate\(([-\d.]+),([-\d.]+)\)/.exec(g.getAttribute('transform')||'');return m?[+m[1],+m[2]]:[0,0];};
+        const mv=e=>{ if(!d)return; g.setAttribute('transform','translate('+(d.tx+(e.clientX-d.x)*d.sx).toFixed(1)+','+(d.ty+(e.clientY-d.y)*d.sy).toFixed(1)+')'); };
+        const up=()=>{ d=null; g.style.cursor='grab'; window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); };
+        g.addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); const [tx,ty]=pt(); const r=svg.getBoundingClientRect(); d={x:e.clientX,y:e.clientY,tx,ty,sx:svg.viewBox.baseVal.width/r.width,sy:svg.viewBox.baseVal.height/r.height}; g.style.cursor='grabbing'; g.parentNode.appendChild(g); window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up); }); }
       Object.keys(POS).forEach(id=>{ const r=byId[id]; if(!r) return;
         const [px,py]=POS[id]; const color=colOf(r); const text=r.name+' · '+fmt(r.mw)+' MW';
-        const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','none');
+        const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','all'); g.classList.add('pill-drag');
         const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
         const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','7.5'); dot.setAttribute('fill',color);
         const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','19'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
@@ -725,6 +730,7 @@
         t.setAttribute('x',32); t.setAttribute('y',6.5); dot.setAttribute('cx',18); dot.setAttribute('cy',0);
         rect.setAttribute('x',0); rect.setAttribute('y',-h/2); rect.setAttribute('width',W); rect.setAttribute('height',h);
         g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
+        makeDrag(g,svg);
       });
     })();
 
@@ -904,9 +910,14 @@
         const lvn=document.getElementById('t-lv-noreste'); const svg=lvn&&lvn.ownerSVGElement; if(!svg) return;
         svg.querySelectorAll('.lbl').forEach(g=>g.remove());
         const NS='http://www.w3.org/2000/svg';
+        function makeDrag(g,svg){ g.style.cursor='grab'; let d=null;
+          const pt=()=>{const m=/translate\(([-\d.]+),([-\d.]+)\)/.exec(g.getAttribute('transform')||'');return m?[+m[1],+m[2]]:[0,0];};
+          const mv=e=>{ if(!d)return; g.setAttribute('transform','translate('+(d.tx+(e.clientX-d.x)*d.sx).toFixed(1)+','+(d.ty+(e.clientY-d.y)*d.sy).toFixed(1)+')'); };
+          const up=()=>{ d=null; g.style.cursor='grab'; window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); };
+          g.addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); const [tx,ty]=pt(); const r=svg.getBoundingClientRect(); d={x:e.clientX,y:e.clientY,tx,ty,sx:svg.viewBox.baseVal.width/r.width,sy:svg.viewBox.baseVal.height/r.height}; g.style.cursor='grabbing'; g.parentNode.appendChild(g); window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up); }); }
         Object.keys(POS).forEach(id=>{ const dom=dominant[id]; if(!dom) return;
           const [px,py]=POS[id]; const color=meta[dom.k]?meta[dom.k].color:'#888'; const text=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v)+' MW';
-          const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','none');
+          const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','all'); g.classList.add('pill-drag');
           const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
           const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','7.5'); dot.setAttribute('fill',color);
           const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','18'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
@@ -915,6 +926,7 @@
           t.setAttribute('x',32); t.setAttribute('y',6.5); dot.setAttribute('cx',18); dot.setAttribute('cy',0);
           rect.setAttribute('x',0); rect.setAttribute('y',-h/2); rect.setAttribute('width',W); rect.setAttribute('height',h);
           g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
+          makeDrag(g,svg);
         });
       })();
 
