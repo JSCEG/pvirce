@@ -892,12 +892,20 @@
       const SVGNS='http://www.w3.org/2000/svg';
       const totals={}; for(const id in TECH_BY_GCR) totals[id]=Object.values(TECH_BY_GCR[id]).reduce((a,b)=>a+b,0);
 
-      // Mapa: color por GCR + punto en el centroide
+      // Mapa: color por GCR + etiqueta (nombre + total) en el centroide
       const dots=document.getElementById('s3dots');
+      function lbl(cx,cy,txt,size,wt){
+        const t=document.createElementNS(SVGNS,'text');
+        t.setAttribute('x',cx); t.setAttribute('y',cy); t.setAttribute('text-anchor','middle');
+        t.setAttribute('font-family','Outfit,sans-serif'); t.setAttribute('font-weight',wt); t.setAttribute('font-size',size);
+        t.setAttribute('paint-order','stroke'); t.setAttribute('stroke','rgba(0,0,0,.55)'); t.setAttribute('stroke-width','3'); t.setAttribute('fill','#fff');
+        t.textContent=txt; dots.appendChild(t);
+      }
       Object.keys(NAMES).forEach(id=>{
         const rp=document.getElementById('s3-rg-'+id); if(rp){ rp.setAttribute('fill',GCRCOLORS[id]); rp.setAttribute('fill-opacity','0.92'); }
         const [cx,cy]=POS[id];
-        const c=document.createElementNS(SVGNS,'circle'); c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',6); c.setAttribute('fill','#fff'); c.setAttribute('stroke',GCRCOLORS[id]); c.setAttribute('stroke-width',3); dots.appendChild(c);
+        lbl(cx, cy-3, NAMES[id], 14, 700);
+        lbl(cx, cy+16, fmt(totals[id])+' MW', 16, 800);
       });
 
       // Tarjetas de datos
