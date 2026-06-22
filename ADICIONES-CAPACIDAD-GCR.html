@@ -836,7 +836,7 @@
         const p=document.getElementById('t-rg-'+id);
         if(p){ p.setAttribute('fill',c); p.setAttribute('stroke','#fff'); p.setAttribute('stroke-width','1.6'); p.dataset.id=id; p.dataset.r=NAMES[id]; }
         const lv=document.getElementById('t-lv-'+id); if(lv && dom) lv.textContent=disp(dom.k)+' '+fmt(dom.v);
-        const ct=document.getElementById('t-ct-'+id); if(ct && dom) ct.textContent=NAMES[id]+' · '+disp(dom.k);
+        const ct=document.getElementById('t-ct-'+id); if(ct && dom) ct.textContent=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v);
         ['t-bx-','t-sw-','t-dt-','t-ld-'].forEach(pre=>{ const el=document.getElementById(pre+id); if(el){ const attr=(pre==='t-ld-'||pre==='t-bx-')?'stroke':'fill'; el.setAttribute(attr,c);} });
       });
 
