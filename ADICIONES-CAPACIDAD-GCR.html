@@ -332,6 +332,38 @@
 </head>
 
 <body>
+
+  <script>
+  /* ============================================================================
+     FUENTE ÚNICA DE DATOS — Mapa de adiciones por Gerencia de Control Regional
+     Para un mapa nuevo, sólo edita este objeto:
+       - mw:  capacidad total de la región (número)
+       - tec: { CLAVE_TECNOLOGIA: MW, ... }  (claves válidas abajo en TECHS)
+       - estados: desglose opcional por entidad (se muestra en tooltips/tarjetas)
+     totalOficial: cifra nacional publicada; null = autosumar las regiones.
+     Claves de tecnología: FV, CC, EO, CC/COG_EF, GEO, HID, CSP, CI, BIO, H2
+  ============================================================================ */
+  window.GCR_DATA = {
+    totalOficial: 32475,
+    unidad: 'MWac',
+    regiones: {
+      noreste:    { nombre:'Noreste',       mw:7766, tec:{EO:5663,FV:1477,CC:583,BIO:44}, estados:[{n:'Tamaulipas',mw:4320},{n:'Coahuila de Zaragoza',mw:1787},{n:'Nuevo León',mw:1209},{n:'(Sin estado asignado)',mw:450}] },
+      peninsular: { nombre:'Peninsular',    mw:4684, tec:{FV:2315,CC:1697,EO:645,BIO:27}, estados:[{n:'Yucatán',mw:2393},{n:'Campeche',mw:1831},{n:'Quintana Roo',mw:460}] },
+      oriental:   { nombre:'Oriental',      mw:6012, tec:{FV:3242,CC:1151,'CC/COG_EF':900,HID:489,EO:230}, estados:[{n:'Veracruz de Ignacio de la Llave',mw:1533},{n:'(Sin estado asignado)',mw:1222},{n:'Veracruz',mw:1151},{n:'Puebla',mw:793},{n:'Oaxaca',mw:656},{n:'Chiapas',mw:368},{n:'Tlaxcala',mw:175},{n:'Tabasco',mw:100},{n:'Guerrero',mw:15}] },
+      central:    { nombre:'Central',       mw:2870, tec:{CC:1810,'CC/COG_EF':795,FV:265}, estados:[{n:'Hidalgo',mw:1808},{n:'San Luis Potosí',mw:437},{n:'(Sin estado asignado)',mw:265},{n:'Querétaro',mw:246},{n:'Estado de México',mw:114}] },
+      occidental: { nombre:'Occidental',    mw:4536, tec:{CC:2269,FV:1731,EO:323,GEO:212,'CC/COG_EF':2}, estados:[{n:'Guanajuato',mw:2151},{n:'Jalisco',mw:948},{n:'Zacatecas',mw:420},{n:'Colima',mw:346},{n:'Hidalgo',mw:292},{n:'Querétaro',mw:218},{n:'(Sin estado asignado)',mw:156},{n:'Aguascalientes',mw:3},{n:'San Luis Potosí',mw:2}] },
+      bcalifornia:{ nombre:'B. California', mw:3304, tec:{CC:1539,FV:1295,GEO:470}, estados:[{n:'Baja California',mw:1954},{n:'Sonora',mw:1350}] },
+      noroeste:   { nombre:'Noroeste',      mw:1617, tec:{FV:989,CC:582,HID:46}, estados:[{n:'Sonora',mw:970},{n:'Sinaloa',mw:647}] },
+      norte:      { nombre:'Norte',         mw:722,  tec:{FV:372,CC:350}, estados:[{n:'Durango',mw:620},{n:'San Luis Potosí',mw:100},{n:'Chihuahua',mw:2}] },
+      bcsur:      { nombre:'BC Sur',        mw:927,  tec:{FV:612,CSP:150,CI:120,H2:45}, estados:[{n:'Baja California Sur',mw:927}] },
+      mulege:     { nombre:'Mulegé',        mw:38,   tec:{H2:20,GEO:12,FV:6}, estados:[{n:'Baja California Sur',mw:38}] }
+    }
+  };
+  // Derivados consumidos por las láminas (no editar)
+  window.GCRD = { total: window.GCR_DATA.totalOficial, names:{}, tech:{}, regions:[] };
+  (function(){ var R=window.GCR_DATA.regiones; for(var id in R){ GCRD.names[id]=R[id].nombre; GCRD.tech[id]=R[id].tec; GCRD.regions.push({id:id,name:R[id].nombre,mw:R[id].mw,states:R[id].estados||[]}); } })();
+  </script>
+
   <div id="deck">
     <section class="slide-container active" data-name="Adiciones-Capacidad-GCR">
 
@@ -632,30 +664,7 @@
   // mw = capacidad instalada (MWac) por GCR — completa.
   // states = desglose por entidad federativa; '(Sin estado asignado)' = filas
   //          "(en blanco)" del origen (huecos del desglose estatal).
-  const REGIONS = [
-    { id:'noreste',     name:'Noreste',       mw:7766, states:[
-        {n:'Tamaulipas',mw:4320},{n:'Coahuila de Zaragoza',mw:1787},{n:'Nuevo León',mw:1209},{n:'(Sin estado asignado)',mw:450} ] },
-    { id:'peninsular',  name:'Peninsular',    mw:4684, states:[
-        {n:'Yucatán',mw:2393},{n:'Campeche',mw:1831},{n:'Quintana Roo',mw:460} ] },
-    { id:'oriental',    name:'Oriental',      mw:6012, states:[
-        {n:'Veracruz de Ignacio de la Llave',mw:1533},{n:'(Sin estado asignado)',mw:1222},{n:'Veracruz',mw:1151},
-        {n:'Puebla',mw:793},{n:'Oaxaca',mw:656},{n:'Chiapas',mw:368},{n:'Tlaxcala',mw:175},{n:'Tabasco',mw:100},{n:'Guerrero',mw:15} ] },
-    { id:'central',     name:'Central',       mw:2870, states:[
-        {n:'Hidalgo',mw:1808},{n:'San Luis Potosí',mw:437},{n:'(Sin estado asignado)',mw:265},{n:'Querétaro',mw:246},{n:'Estado de México',mw:114} ] },
-    { id:'occidental',  name:'Occidental',    mw:4536, states:[
-        {n:'Guanajuato',mw:2151},{n:'Jalisco',mw:948},{n:'Zacatecas',mw:420},{n:'Colima',mw:346},{n:'Hidalgo',mw:292},
-        {n:'Querétaro',mw:218},{n:'(Sin estado asignado)',mw:156},{n:'Aguascalientes',mw:3},{n:'San Luis Potosí',mw:2} ] },
-    { id:'bcalifornia', name:'B. California', mw:3304, states:[
-        {n:'Baja California',mw:1954},{n:'Sonora',mw:1350} ] },
-    { id:'noroeste',    name:'Noroeste',      mw:1617, states:[
-        {n:'Sonora',mw:970},{n:'Sinaloa',mw:647} ] },
-    { id:'norte',       name:'Norte',         mw:722,  states:[
-        {n:'Durango',mw:620},{n:'San Luis Potosí',mw:100},{n:'Chihuahua',mw:2} ] },
-    { id:'bcsur',       name:'BC Sur',        mw:927,  states:[
-        {n:'Baja California Sur',mw:927} ] },
-    { id:'mulege',      name:'Mulegé',        mw:38,   states:[
-        {n:'Baja California Sur',mw:38} ] },
-  ];
+  const REGIONS = window.GCRD.regions;
   // ---------------------------------------------------------------------------
 
   (function(){
@@ -670,7 +679,7 @@
     const vals = REGIONS.map(r=>r.mw).filter(v=>v!=null && v>0);
     // Total nacional oficial (suma reportada por la fuente). null = autosumar los GCR.
     // La suma de los GCR redondeados da 32,476; la cifra oficial publicada es 32,475.
-    const TOTAL_OVERRIDE = 32475;
+    const TOTAL_OVERRIDE = window.GCRD.total;
     const total = vals.length ? (TOTAL_OVERRIDE ?? vals.reduce((a,b)=>a+b,0)) : 0;
     const max = vals.length?Math.max(...vals):0;
     const pct = v => (v==null||!total) ? '—' : (v/total*100).toFixed(v/total*100<1?1:0)+'%';
@@ -827,19 +836,8 @@
       ];
       const DISP={'CC/COG_EF':'COG','H2':'H₂'};
       const CLEAN=new Set(['FV','EO','GEO','HID','CSP','BIO','H2']);
-      const TECH_BY_GCR={
-        bcalifornia:{CC:1539,FV:1295,GEO:470},
-        bcsur:{FV:612,CSP:150,CI:120,H2:45},
-        central:{CC:1810,'CC/COG_EF':795,FV:265},
-        mulege:{H2:20,GEO:12,FV:6},
-        noreste:{EO:5663,FV:1477,CC:583,BIO:44},
-        noroeste:{FV:989,CC:582,HID:46},
-        norte:{FV:372,CC:350},
-        occidental:{CC:2269,FV:1731,EO:323,GEO:212,'CC/COG_EF':2},
-        oriental:{FV:3242,CC:1151,'CC/COG_EF':900,HID:489,EO:230},
-        peninsular:{FV:2315,CC:1697,EO:645,BIO:27},
-      };
-      const NAMES={noreste:'Noreste',peninsular:'Peninsular',oriental:'Oriental',central:'Central',occidental:'Occidental',bcalifornia:'B. California',noroeste:'Noroeste',norte:'Norte',bcsur:'BC Sur',mulege:'Mulegé'};
+      const TECH_BY_GCR=window.GCRD.tech;
+      const NAMES=window.GCRD.names;
       const TOTAL=32475, GRIS='#C9CCD1';
       const meta=Object.fromEntries(TECHS.map(t=>[t.k,t]));
       const fmt=n=>n==null?'—':Math.round(n).toLocaleString('es-MX');
@@ -909,19 +907,8 @@
         {k:'H2',  name:'Hidrógeno',             color:'#1F9488', icon:'bi-droplet-fill'},
       ];
       const DISP={'CC/COG_EF':'COG','H2':'H₂'};
-      const TECH_BY_GCR={
-        bcalifornia:{CC:1539,FV:1295,GEO:470},
-        bcsur:{FV:612,CSP:150,CI:120,H2:45},
-        central:{CC:1810,'CC/COG_EF':795,FV:265},
-        mulege:{H2:20,GEO:12,FV:6},
-        noreste:{EO:5663,FV:1477,CC:583,BIO:44},
-        noroeste:{FV:989,CC:582,HID:46},
-        norte:{FV:372,CC:350},
-        occidental:{CC:2269,FV:1731,EO:323,GEO:212,'CC/COG_EF':2},
-        oriental:{FV:3242,CC:1151,'CC/COG_EF':900,HID:489,EO:230},
-        peninsular:{FV:2315,CC:1697,EO:645,BIO:27},
-      };
-      const NAMES={noreste:'Noreste',peninsular:'Peninsular',oriental:'Oriental',central:'Central',occidental:'Occidental',bcalifornia:'B. California',noroeste:'Noroeste',norte:'Norte',bcsur:'BC Sur',mulege:'Mulegé'};
+      const TECH_BY_GCR=window.GCRD.tech;
+      const NAMES=window.GCRD.names;
       const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C', occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
       const POS={ noreste:[577.8,250], peninsular:[915,455], oriental:[690,505], central:[583,455], occidental:[505,388], noroeste:[300,178], norte:[423,205], bcalifornia:[150,120], mulege:[150,250], bcsur:[210,320] };
       const LEFT=['bcalifornia','noroeste','bcsur','mulege','occidental'];
@@ -1000,19 +987,8 @@
         {k:'H2',  name:'Hidrógeno',             color:'#1F9488', icon:'bi-droplet-fill'},
       ];
       const DISP={'CC/COG_EF':'COG','H2':'H₂'};
-      const TECH_BY_GCR={
-        bcalifornia:{CC:1539,FV:1295,GEO:470},
-        bcsur:{FV:612,CSP:150,CI:120,H2:45},
-        central:{CC:1810,'CC/COG_EF':795,FV:265},
-        mulege:{H2:20,GEO:12,FV:6},
-        noreste:{EO:5663,FV:1477,CC:583,BIO:44},
-        noroeste:{FV:989,CC:582,HID:46},
-        norte:{FV:372,CC:350},
-        occidental:{CC:2269,FV:1731,EO:323,GEO:212,'CC/COG_EF':2},
-        oriental:{FV:3242,CC:1151,'CC/COG_EF':900,HID:489,EO:230},
-        peninsular:{FV:2315,CC:1697,EO:645,BIO:27},
-      };
-      const NAMES={noreste:'Noreste',peninsular:'Peninsular',oriental:'Oriental',central:'Central',occidental:'Occidental',bcalifornia:'B. California',noroeste:'Noroeste',norte:'Norte',bcsur:'BC Sur',mulege:'Mulegé'};
+      const TECH_BY_GCR=window.GCRD.tech;
+      const NAMES=window.GCRD.names;
       // posición del glifo (centro de la dona) y, para las 3 chicas, líder hacia su punto en el mapa
       const POS={ noreste:[577.8,250], peninsular:[915,455], oriental:[690,505], central:[583,455],
         occidental:[505,388], noroeste:[300,178], norte:[423,205],
@@ -1103,19 +1079,8 @@
         {k:'H2',  name:'Hidrógeno',             color:'#1F9488', icon:'bi-droplet-fill'},
       ];
       const DISP={'CC/COG_EF':'COG','H2':'H₂'};
-      const TECH_BY_GCR={
-        bcalifornia:{CC:1539,FV:1295,GEO:470},
-        bcsur:{FV:612,CSP:150,CI:120,H2:45},
-        central:{CC:1810,'CC/COG_EF':795,FV:265},
-        mulege:{H2:20,GEO:12,FV:6},
-        noreste:{EO:5663,FV:1477,CC:583,BIO:44},
-        noroeste:{FV:989,CC:582,HID:46},
-        norte:{FV:372,CC:350},
-        occidental:{CC:2269,FV:1731,EO:323,GEO:212,'CC/COG_EF':2},
-        oriental:{FV:3242,CC:1151,'CC/COG_EF':900,HID:489,EO:230},
-        peninsular:{FV:2315,CC:1697,EO:645,BIO:27},
-      };
-      const NAMES={noreste:'Noreste',peninsular:'Peninsular',oriental:'Oriental',central:'Central',occidental:'Occidental',bcalifornia:'B. California',noroeste:'Noroeste',norte:'Norte',bcsur:'BC Sur',mulege:'Mulegé'};
+      const TECH_BY_GCR=window.GCRD.tech;
+      const NAMES=window.GCRD.names;
       const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C', occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
       const POS={ noreste:[600,250], peninsular:[915,450], oriental:[700,515], central:[583,452], occidental:[495,390], noroeste:[300,175], norte:[430,205], bcalifornia:[150,118], mulege:[150,250], bcsur:[210,320] };
       const meta=Object.fromEntries(TECHS.map(t=>[t.k,t]));
