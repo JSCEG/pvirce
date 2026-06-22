@@ -1118,8 +1118,8 @@
       const POS={ noreste:[600,250], peninsular:[915,450], oriental:[700,515], central:[583,452], occidental:[495,390], noroeste:[300,175], norte:[430,205], bcalifornia:[150,118], mulege:[150,250], bcsur:[210,320] };
       const meta=Object.fromEntries(TECHS.map(t=>[t.k,t]));
       const disp=k=>DISP[k]||k;
-
-      // regiones con tinte suave de su GCR
+      const fmt=n=>Math.round(n).toLocaleString('es-MX');
+      const totals={}; for(const id in TECH_BY_GCR) totals[id]=Object.values(TECH_BY_GCR[id]).reduce((a,b)=>a+b,0);
       Object.keys(NAMES).forEach(id=>{ const rp=document.getElementById('s5-rg-'+id); if(rp){ rp.setAttribute('fill',GCRCOLORS[id]); rp.setAttribute('fill-opacity','0.30'); } });
 
       // leyenda
@@ -1140,7 +1140,7 @@
           const px=ox+cx*sc, py=oy+cy*sc;
           const cl=document.createElement('div'); cl.className='s5cluster';
           cl.style.left=px.toFixed(1)+'px'; cl.style.top=py.toFixed(1)+'px';
-          cl.innerHTML='<span class="s5name">'+NAMES[id]+'</span><div class="s5icons">'
+          cl.innerHTML='<span class="s5name">'+NAMES[id]+' · '+fmt(totals[id])+' MW</span><div class="s5icons">'
             + parts.map(t=>`<span class="s5ic" style="background:${t.color}" title="${t.name}"><i class="bi ${t.icon}"></i></span>`).join('')
             + '</div>';
           wrap.appendChild(cl);
