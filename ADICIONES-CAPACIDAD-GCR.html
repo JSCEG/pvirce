@@ -853,15 +853,19 @@
       }
       const g=document.getElementById('s3glyphs');
 
+      const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C',
+        occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
+      Object.keys(NAMES).forEach(id=>{ const rp=document.getElementById('s3-rg-'+id); if(rp){ rp.setAttribute('fill',GCRCOLORS[id]); rp.setAttribute('fill-opacity','0.92'); } });
+
       Object.keys(NAMES).forEach(id=>{
         const o=TECH_BY_GCR[id]; const tot=totals[id]; if(!tot) return;
         const [cx,cy]=POS[id];
-        const rO=15 + 19*Math.sqrt(tot/maxTot);
+        const rO=17 + 18*Math.sqrt(tot/maxTot);
         const rI=rO*0.46;
         // leader para regiones chicas
         if(LEAD[id]){ const [lx,ly]=LEAD[id];
-          g.appendChild(el('line',{x1:cx,y1:cy,x2:lx,y2:ly,stroke:'#B9BCC2','stroke-width':1.4}));
-          g.appendChild(el('circle',{cx:lx,cy:ly,r:3,fill:'#B9BCC2'})); }
+          g.appendChild(el('line',{x1:cx,y1:cy,x2:lx,y2:ly,stroke:GCRCOLORS[id],'stroke-width':1.6}));
+          g.appendChild(el('circle',{cx:lx,cy:ly,r:3.4,fill:GCRCOLORS[id]})); }
         // halo
         g.appendChild(el('circle',{cx,cy,r:rO+2.5,fill:'#ffffff','fill-opacity':0.92}));
         // slices (orden por tamaño desc)
@@ -877,10 +881,11 @@
         });
         // agujero
         g.appendChild(el('circle',{cx,cy,r:rI,fill:'#ffffff'}));
-        // total al centro
-        const tt=el('text',{x:cx,y:cy+1,'text-anchor':'middle','font-family':'Outfit,sans-serif','font-weight':800,'font-size':Math.max(9,rI*0.62),fill:'#2b2b2b'}); tt.textContent=fmt(tot); g.appendChild(tt);
-        // nombre arriba
-        const nm=el('text',{x:cx,y:cy-rO-4,'text-anchor':'middle','font-family':'Outfit,sans-serif','font-weight':700,'font-size':12,fill:'#49222f','paint-order':'stroke',stroke:'#fff','stroke-width':3}); nm.textContent=NAMES[id]; g.appendChild(nm);
+        // tecnología líder al centro
+        const domk=parts[0].k;
+        const tt=el('text',{x:cx,y:cy+rI*0.36,'text-anchor':'middle','font-family':'Outfit,sans-serif','font-weight':800,'font-size':Math.max(8,rI*0.72),fill:'#2b2b2b'}); tt.textContent=disp(domk); g.appendChild(tt);
+        // nombre + MW arriba
+        const nm=el('text',{x:cx,y:cy-rO-5,'text-anchor':'middle','font-family':'Outfit,sans-serif','font-weight':700,'font-size':12,fill:'#49222f','paint-order':'stroke',stroke:'#fff','stroke-width':3.4}); nm.textContent=NAMES[id]+' · '+fmt(tot)+' MW'; g.appendChild(nm);
         // hotspot para tooltip
         const hot=el('circle',{cx,cy,r:rO+3,fill:'transparent','data-id':id}); hot.classList.add('s3hot'); g.appendChild(hot);
       });
