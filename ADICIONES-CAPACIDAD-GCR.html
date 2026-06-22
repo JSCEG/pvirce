@@ -732,6 +732,9 @@
         g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
         makeDrag(g,svg);
       });
+      // ajustar ancho de los callouts de península al texto (evita desborde)
+      ['bcalifornia','mulege','bcsur'].forEach(id=>{ const ct=document.getElementById('ct-'+id), bx=document.getElementById('bx-'+id), sw=document.getElementById('sw-'+id);
+        if(ct&&bx){ const w=ct.getBBox().width, x=parseFloat(bx.getAttribute('x')), tx=parseFloat(ct.getAttribute('x')); bx.setAttribute('width',(tx-x+w+16).toFixed(1)); } });
     })();
 
     // ----- KPIs -----
@@ -928,6 +931,8 @@
           g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
           makeDrag(g,svg);
         });
+        ['bcalifornia','mulege','bcsur'].forEach(id=>{ const ct=document.getElementById('t-ct-'+id), bx=document.getElementById('t-bx-'+id);
+          if(ct&&bx){ const w=ct.getBBox().width, x=parseFloat(bx.getAttribute('x')), tx=parseFloat(ct.getAttribute('x')); bx.setAttribute('width',(tx-x+w+16).toFixed(1)); } });
       })();
 
       const wraps=document.querySelectorAll('.map-wrap');
