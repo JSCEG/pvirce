@@ -708,6 +708,26 @@
       });
     });
 
+    // ----- pills uniformes (continentales como popup, igual que península) -----
+    (function(){
+      const POS={noreste:[600,235],peninsular:[930,470],oriental:[700,520],central:[560,470],occidental:[470,392],noroeste:[300,150],norte:[430,205]};
+      const lvn=document.getElementById('lv-noreste'); const svg=lvn&&lvn.ownerSVGElement; if(!svg) return;
+      svg.querySelectorAll('.lbl').forEach(g=>g.remove());
+      const NS='http://www.w3.org/2000/svg'; const byId=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
+      Object.keys(POS).forEach(id=>{ const r=byId[id]; if(!r) return;
+        const [px,py]=POS[id]; const color=colOf(r); const text=r.name+' · '+fmt(r.mw)+' MW';
+        const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','none');
+        const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
+        const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','6'); dot.setAttribute('fill',color);
+        const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','15'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
+        g.appendChild(rect); g.appendChild(dot); g.appendChild(t); svg.appendChild(g);
+        const w=t.getBBox().width, W=w+42, h=30;
+        t.setAttribute('x',26); t.setAttribute('y',5); dot.setAttribute('cx',15); dot.setAttribute('cy',0);
+        rect.setAttribute('x',0); rect.setAttribute('y',-h/2); rect.setAttribute('width',W); rect.setAttribute('height',h);
+        g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
+      });
+    })();
+
     // ----- KPIs -----
     document.getElementById('kpiTotal').textContent = total?fmt(total):'—';
     const heroT=document.getElementById('heroTotal'); if(heroT) heroT.textContent = total?fmt(total)+' MWac':'—';
@@ -877,6 +897,26 @@
         const ct=document.getElementById('t-ct-'+id); if(ct && dom) ct.textContent=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v);
         ['t-bx-','t-sw-','t-dt-','t-ld-'].forEach(pre=>{ const el=document.getElementById(pre+id); if(el){ const attr=(pre==='t-ld-'||pre==='t-bx-')?'stroke':'fill'; el.setAttribute(attr,c);} });
       });
+
+      // ----- pills uniformes (continentales como popup) -----
+      (function(){
+        const POS={noreste:[600,235],peninsular:[930,470],oriental:[700,520],central:[560,470],occidental:[470,392],noroeste:[300,150],norte:[430,205]};
+        const lvn=document.getElementById('t-lv-noreste'); const svg=lvn&&lvn.ownerSVGElement; if(!svg) return;
+        svg.querySelectorAll('.lbl').forEach(g=>g.remove());
+        const NS='http://www.w3.org/2000/svg';
+        Object.keys(POS).forEach(id=>{ const dom=dominant[id]; if(!dom) return;
+          const [px,py]=POS[id]; const color=meta[dom.k]?meta[dom.k].color:'#888'; const text=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v);
+          const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','none');
+          const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
+          const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','6'); dot.setAttribute('fill',color);
+          const t=document.createElementNS(NS,'text'); t.setAttribute('font-size','14'); t.setAttribute('font-weight','700'); t.setAttribute('fill','#33373c'); t.setAttribute('font-family','Outfit,sans-serif'); t.textContent=text;
+          g.appendChild(rect); g.appendChild(dot); g.appendChild(t); svg.appendChild(g);
+          const w=t.getBBox().width, W=w+42, h=28;
+          t.setAttribute('x',26); t.setAttribute('y',5); dot.setAttribute('cx',15); dot.setAttribute('cy',0);
+          rect.setAttribute('x',0); rect.setAttribute('y',-h/2); rect.setAttribute('width',W); rect.setAttribute('height',h);
+          g.setAttribute('transform','translate('+(px-W/2).toFixed(1)+','+py+')');
+        });
+      })();
 
       const wraps=document.querySelectorAll('.map-wrap');
       const wrap=wraps[wraps.length-1];
