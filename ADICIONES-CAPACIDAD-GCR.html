@@ -894,7 +894,7 @@
         const p=document.getElementById('t-rg-'+id);
         if(p){ p.setAttribute('fill',c); p.setAttribute('stroke','#fff'); p.setAttribute('stroke-width','1.6'); p.dataset.id=id; p.dataset.r=NAMES[id]; }
         const lv=document.getElementById('t-lv-'+id); if(lv && dom) lv.textContent=disp(dom.k)+' '+fmt(dom.v);
-        const ct=document.getElementById('t-ct-'+id); if(ct && dom) ct.textContent=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v);
+        const ct=document.getElementById('t-ct-'+id); if(ct && dom) ct.textContent=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v)+' MW';
         ['t-bx-','t-sw-','t-dt-','t-ld-'].forEach(pre=>{ const el=document.getElementById(pre+id); if(el){ const attr=(pre==='t-ld-'||pre==='t-bx-')?'stroke':'fill'; el.setAttribute(attr,c);} });
       });
 
@@ -905,7 +905,7 @@
         svg.querySelectorAll('.lbl').forEach(g=>g.remove());
         const NS='http://www.w3.org/2000/svg';
         Object.keys(POS).forEach(id=>{ const dom=dominant[id]; if(!dom) return;
-          const [px,py]=POS[id]; const color=meta[dom.k]?meta[dom.k].color:'#888'; const text=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v);
+          const [px,py]=POS[id]; const color=meta[dom.k]?meta[dom.k].color:'#888'; const text=NAMES[id]+' · '+disp(dom.k)+' '+fmt(dom.v)+' MW';
           const g=document.createElementNS(NS,'g'); g.setAttribute('pointer-events','none');
           const rect=document.createElementNS(NS,'rect'); rect.setAttribute('rx','15'); rect.setAttribute('fill','#fff'); rect.setAttribute('stroke',color); rect.setAttribute('stroke-width','2.4');
           const dot=document.createElementNS(NS,'circle'); dot.setAttribute('r','6'); dot.setAttribute('fill',color);
