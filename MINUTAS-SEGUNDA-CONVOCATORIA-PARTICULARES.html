@@ -9,7 +9,7 @@
 
   <!-- Hojas de estilo y Fuentes -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&family=Noto+Sans:wght@300;400;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
@@ -910,11 +910,11 @@
     }
 
     /* ESTILO ESPECIFICO PARA SLIDE 2 (NUMERALIA) */
-    #slide-1 .slide-container {
+    #slide-2 .slide-container {
       background: linear-gradient(180deg, #f8f9fb 0%, #f3f5f7 100%);
     }
 
-    #slide-1 .slide-header,
+    #slide-2 .slide-header,
     .tabular-slide .slide-header {
       background: #ffffff;
       border-bottom: 2px solid #b71e4f;
@@ -929,7 +929,7 @@
       margin-bottom: 12px;
     }
 
-    #slide-1 .slide-header .brand-left,
+    #slide-2 .slide-header .brand-left,
     .tabular-slide .slide-header .brand-left {
       align-items: flex-start;
       flex-direction: column;
@@ -941,7 +941,7 @@
       padding-left: 12px;
     }
 
-    #slide-1 .slide-header .brand-left::before,
+    #slide-2 .slide-header .brand-left::before,
     .tabular-slide .slide-header .brand-left::before {
       width: 3px;
       height: 26px;
@@ -951,7 +951,7 @@
       background: #b71e4f;
     }
 
-    #slide-1 .brand-line-1,
+    #slide-2 .brand-line-1,
     .tabular-slide .brand-line-1 {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 12px;
@@ -961,7 +961,7 @@
       white-space: nowrap;
     }
 
-    #slide-1 .brand-line-2,
+    #slide-2 .brand-line-2,
     .tabular-slide .brand-line-2 {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 12px;
@@ -970,7 +970,7 @@
       text-transform: none;
     }
 
-    #slide-1 .slide-header .ef-title,
+    #slide-2 .slide-header .ef-title,
     .tabular-slide .slide-header .ef-title {
       font-size: 18px;
       letter-spacing: .02em;
@@ -1009,33 +1009,33 @@
       line-height: 1.15;
     }
 
-    #slide-1 .slide-header .ef-title::before,
-    #slide-1 .slide-header .ef-title::after,
+    #slide-2 .slide-header .ef-title::before,
+    #slide-2 .slide-header .ef-title::after,
     .tabular-slide .slide-header .ef-title::before,
     .tabular-slide .slide-header .ef-title::after {
       margin: 0 10px;
       color: var(--color-dorado);
     }
 
-    #slide-1 .slide-header .logo-sener,
+    #slide-2 .slide-header .logo-sener,
     .tabular-slide .slide-header .logo-sener {
       height: 42px;
       opacity: 0.95;
     }
 
-    #slide-1 .numeralia-grid,
+    #slide-2 .numeralia-grid,
     .numeralia-dashboard-slide .numeralia-grid {
       grid-template-columns: 286px 1fr 418px;
       gap: 18px;
       height: calc(100% - 64px);
     }
 
-    #slide-1 .kpi-card-main,
-    #slide-1 .tech-card,
-    #slide-1 .gcr-table-card,
-    #slide-1 .group-chart-card,
-    #slide-1 .map-card,
-    #slide-1 .status-card,
+    #slide-2 .kpi-card-main,
+    #slide-2 .tech-card,
+    #slide-2 .gcr-table-card,
+    #slide-2 .group-chart-card,
+    #slide-2 .map-card,
+    #slide-2 .status-card,
     .numeralia-dashboard-slide .kpi-card-main,
     .numeralia-dashboard-slide .tech-card,
     .numeralia-dashboard-slide .gcr-table-card,
@@ -1047,7 +1047,7 @@
       box-shadow: 0 6px 14px rgba(16, 24, 40, 0.07);
     }
 
-    #slide-1 .kpi-card-main,
+    #slide-2 .kpi-card-main,
     .numeralia-dashboard-slide .kpi-card-main {
       background: linear-gradient(160deg, #a11f4d 0%, #6f1433 100%);
       min-height: 224px;
@@ -1056,7 +1056,7 @@
       gap: 4px;
     }
 
-    #slide-1 .kpi-card-main .lbl,
+    #slide-2 .kpi-card-main .lbl,
     .numeralia-dashboard-slide .kpi-card-main .lbl {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 13px;
@@ -1065,7 +1065,7 @@
       color: rgba(255, 255, 255, 0.95);
     }
 
-    #slide-1 .kpi-card-main .val-main,
+    #slide-2 .kpi-card-main .val-main,
     .numeralia-dashboard-slide .kpi-card-main .val-main {
       font-size: clamp(52px, 3.9vw, 62px);
       line-height: .95;
@@ -1074,7 +1074,7 @@
       margin-bottom: 2px;
     }
 
-    #slide-1 .kpi-card-main .val-sub,
+    #slide-2 .kpi-card-main .val-sub,
     .numeralia-dashboard-slide .kpi-card-main .val-sub {
       font-size: clamp(15px, 1.15vw, 18px);
       line-height: 1.12;
@@ -1086,21 +1086,21 @@
       margin-top: 2px;
     }
 
-    #slide-1 .kpi-card-main .val-sub .mw-line,
+    #slide-2 .kpi-card-main .val-sub .mw-line,
     .numeralia-dashboard-slide .kpi-card-main .val-sub .mw-line {
       display: block;
     }
 
-    #slide-1 .kpi-card-main .val-sub .mw-asterisk,
+    #slide-2 .kpi-card-main .val-sub .mw-asterisk,
     .numeralia-dashboard-slide .kpi-card-main .val-sub .mw-asterisk {
       font-size: .78em;
       vertical-align: super;
     }
 
-    #slide-1 .tech-card,
-    #slide-1 .gcr-table-card,
-    #slide-1 .group-chart-card,
-    #slide-1 .status-card,
+    #slide-2 .tech-card,
+    #slide-2 .gcr-table-card,
+    #slide-2 .group-chart-card,
+    #slide-2 .status-card,
     .numeralia-dashboard-slide .tech-card,
     .numeralia-dashboard-slide .gcr-table-card,
     .numeralia-dashboard-slide .group-chart-card,
@@ -1108,10 +1108,10 @@
       background: #fbfbfc;
     }
 
-    #slide-1 .tech-card h3,
-    #slide-1 .gcr-table-card h3,
-    #slide-1 .group-chart-card h3,
-    #slide-1 .status-card h3,
+    #slide-2 .tech-card h3,
+    #slide-2 .gcr-table-card h3,
+    #slide-2 .group-chart-card h3,
+    #slide-2 .status-card h3,
     .numeralia-dashboard-slide .tech-card h3,
     .numeralia-dashboard-slide .gcr-table-card h3,
     .numeralia-dashboard-slide .group-chart-card h3,
@@ -1125,41 +1125,41 @@
       padding-bottom: 8px;
     }
 
-    #slide-1 .gcr-minitable,
+    #slide-2 .gcr-minitable,
     .numeralia-dashboard-slide .gcr-minitable {
       font-size: 10px;
     }
 
-    #slide-1 .gcr-minitable th,
+    #slide-2 .gcr-minitable th,
     .numeralia-dashboard-slide .gcr-minitable th {
       font-size: 10px;
       background: #eef1f4;
     }
 
-    #slide-1 .gcr-row-interactive,
+    #slide-2 .gcr-row-interactive,
     .numeralia-dashboard-slide .gcr-row-interactive {
       cursor: pointer;
       transition: background-color 0.15s ease;
     }
 
-    #slide-1 .gcr-row-interactive:hover,
+    #slide-2 .gcr-row-interactive:hover,
     .numeralia-dashboard-slide .gcr-row-interactive:hover {
       background-color: rgba(183, 30, 79, 0.08) !important;
     }
 
-    #slide-1 .gcr-row-interactive.active,
+    #slide-2 .gcr-row-interactive.active,
     .numeralia-dashboard-slide .gcr-row-interactive.active {
       background-color: rgba(183, 30, 79, 0.15) !important;
       font-weight: bold;
     }
 
-    #slide-1 .gcr-table-card,
+    #slide-2 .gcr-table-card,
     .numeralia-dashboard-slide .gcr-table-card {
       height: 260px;
       padding: 12px 14px;
     }
 
-    #slide-1 .gcr-table-card h3,
+    #slide-2 .gcr-table-card h3,
     .numeralia-dashboard-slide .gcr-table-card h3 {
       font-size: 15px;
       line-height: 1.12;
@@ -1168,70 +1168,70 @@
       padding-bottom: 6px;
     }
 
-    #slide-1 .gcr-minitable,
+    #slide-2 .gcr-minitable,
     .numeralia-dashboard-slide .gcr-minitable {
       font-size: 9px;
       line-height: 1.15;
       table-layout: fixed;
     }
 
-    #slide-1 .gcr-minitable th,
-    #slide-1 .gcr-minitable td,
+    #slide-2 .gcr-minitable th,
+    #slide-2 .gcr-minitable td,
     .numeralia-dashboard-slide .gcr-minitable th,
     .numeralia-dashboard-slide .gcr-minitable td {
       padding: 3px 6px;
       vertical-align: middle;
     }
 
-    #slide-1 .gcr-minitable th:nth-child(1),
-    #slide-1 .gcr-minitable td:nth-child(1),
+    #slide-2 .gcr-minitable th:nth-child(1),
+    #slide-2 .gcr-minitable td:nth-child(1),
     .numeralia-dashboard-slide .gcr-minitable th:nth-child(1),
     .numeralia-dashboard-slide .gcr-minitable td:nth-child(1) {
       width: 54%;
     }
 
-    #slide-1 .gcr-minitable th:nth-child(2),
-    #slide-1 .gcr-minitable td:nth-child(2),
+    #slide-2 .gcr-minitable th:nth-child(2),
+    #slide-2 .gcr-minitable td:nth-child(2),
     .numeralia-dashboard-slide .gcr-minitable th:nth-child(2),
     .numeralia-dashboard-slide .gcr-minitable td:nth-child(2) {
       width: 15%;
     }
 
-    #slide-1 .gcr-minitable th:nth-child(3),
-    #slide-1 .gcr-minitable td:nth-child(3),
+    #slide-2 .gcr-minitable th:nth-child(3),
+    #slide-2 .gcr-minitable td:nth-child(3),
     .numeralia-dashboard-slide .gcr-minitable th:nth-child(3),
     .numeralia-dashboard-slide .gcr-minitable td:nth-child(3) {
       width: 18%;
     }
 
-    #slide-1 .gcr-minitable th:nth-child(4),
-    #slide-1 .gcr-minitable td:nth-child(4),
+    #slide-2 .gcr-minitable th:nth-child(4),
+    #slide-2 .gcr-minitable td:nth-child(4),
     .numeralia-dashboard-slide .gcr-minitable th:nth-child(4),
     .numeralia-dashboard-slide .gcr-minitable td:nth-child(4) {
       width: 13%;
     }
 
-    #slide-1 .gcr-minitable th:first-child,
-    #slide-1 .gcr-minitable td:first-child,
+    #slide-2 .gcr-minitable th:first-child,
+    #slide-2 .gcr-minitable td:first-child,
     .numeralia-dashboard-slide .gcr-minitable th:first-child,
     .numeralia-dashboard-slide .gcr-minitable td:first-child {
       text-align: left;
     }
 
-    #slide-1 .gcr-minitable th:not(:first-child),
-    #slide-1 .gcr-minitable td:not(:first-child),
+    #slide-2 .gcr-minitable th:not(:first-child),
+    #slide-2 .gcr-minitable td:not(:first-child),
     .numeralia-dashboard-slide .gcr-minitable th:not(:first-child),
     .numeralia-dashboard-slide .gcr-minitable td:not(:first-child) {
       text-align: right;
     }
 
-    #slide-1 .gcr-name-cell,
+    #slide-2 .gcr-name-cell,
     .numeralia-dashboard-slide .gcr-name-cell {
       font-weight: 700;
       letter-spacing: .01em;
     }
 
-    #slide-1 .gcr-chip,
+    #slide-2 .gcr-chip,
     .numeralia-dashboard-slide .gcr-chip {
       display: inline-block;
       max-width: 100%;
@@ -1247,83 +1247,83 @@
       text-overflow: ellipsis;
     }
 
-    #slide-1 .gcr-chip.gcr-noreste,
+    #slide-2 .gcr-chip.gcr-noreste,
     .numeralia-dashboard-slide .gcr-chip.gcr-noreste {
       background: #d7f1ea;
       border-color: #9dd5c5;
       color: #1f6f5e;
     }
 
-    #slide-1 .gcr-chip.gcr-occidente,
+    #slide-2 .gcr-chip.gcr-occidente,
     .numeralia-dashboard-slide .gcr-chip.gcr-occidente {
       background: #fbe7cf;
       border-color: #f0c690;
       color: #8a4b16;
     }
 
-    #slide-1 .gcr-chip.gcr-peninsular,
+    #slide-2 .gcr-chip.gcr-peninsular,
     .numeralia-dashboard-slide .gcr-chip.gcr-peninsular {
       background: #e2ebfb;
       border-color: #b8c9ee;
       color: #314f8f;
     }
 
-    #slide-1 .gcr-chip.gcr-norte,
+    #slide-2 .gcr-chip.gcr-norte,
     .numeralia-dashboard-slide .gcr-chip.gcr-norte {
       background: #efe7fd;
       border-color: #ccb9f4;
       color: #5f3d99;
     }
 
-    #slide-1 .gcr-chip.gcr-oriental,
+    #slide-2 .gcr-chip.gcr-oriental,
     .numeralia-dashboard-slide .gcr-chip.gcr-oriental {
       background: #fde5ee;
       border-color: #f3bfd4;
       color: #9c2f63;
     }
 
-    #slide-1 .gcr-chip.gcr-central,
+    #slide-2 .gcr-chip.gcr-central,
     .numeralia-dashboard-slide .gcr-chip.gcr-central {
       background: #e8ecf2;
       border-color: #c9d2dd;
       color: #34465e;
     }
 
-    #slide-1 .gcr-chip.gcr-baja-california,
+    #slide-2 .gcr-chip.gcr-baja-california,
     .numeralia-dashboard-slide .gcr-chip.gcr-baja-california {
       background: #e0f0ff;
       border-color: #b2d7fb;
       color: #1f5f99;
     }
 
-    #slide-1 .gcr-chip.gcr-baja-california-sur,
+    #slide-2 .gcr-chip.gcr-baja-california-sur,
     .numeralia-dashboard-slide .gcr-chip.gcr-baja-california-sur {
       background: #fff1d9;
       border-color: #f3d19a;
       color: #8c5c19;
     }
 
-    #slide-1 .gcr-chip.gcr-otro,
+    #slide-2 .gcr-chip.gcr-otro,
     .numeralia-dashboard-slide .gcr-chip.gcr-otro {
       background: #f0f2f5;
       border-color: #d8dde5;
       color: #4b5563;
     }
 
-    #slide-1 .map-card,
+    #slide-2 .map-card,
     .numeralia-dashboard-slide .map-card {
       padding: 9px;
       height: 320px;
       background: #f9fafb;
     }
 
-    #slide-1 .status-card,
+    #slide-2 .status-card,
     .numeralia-dashboard-slide .status-card {
       min-height: 322px;
       padding: 14px;
     }
 
-    #slide-1 .map-lbl,
+    #slide-2 .map-lbl,
     .numeralia-dashboard-slide .map-lbl {
       background: rgba(255, 255, 255, 0.94);
       border-radius: 8px;
@@ -1334,7 +1334,7 @@
       color: #2a2f37;
     }
 
-    #slide-1 .invest-lbl,
+    #slide-2 .invest-lbl,
     .numeralia-dashboard-slide .invest-lbl {
       position: static;
       background: #b71e4f;
@@ -1348,14 +1348,14 @@
       overflow: hidden;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-title,
+    #slide-2 .kpi-card-main .investment-summary-title,
     .numeralia-dashboard-slide .kpi-card-main .investment-summary-title {
       font-size: 10px;
       margin-bottom: 3px;
       letter-spacing: .02em;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row,
+    #slide-2 .kpi-card-main .investment-summary-row,
     .numeralia-dashboard-slide .kpi-card-main .investment-summary-row {
       gap: 6px;
       padding-top: 1px;
@@ -1365,19 +1365,19 @@
       align-items: flex-start;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row span,
-    #slide-1 .kpi-card-main .investment-summary-row strong,
+    #slide-2 .kpi-card-main .investment-summary-row span,
+    #slide-2 .kpi-card-main .investment-summary-row strong,
     .numeralia-dashboard-slide .kpi-card-main .investment-summary-row span,
     .numeralia-dashboard-slide .kpi-card-main .investment-summary-row strong {
       min-width: 0;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row span,
+    #slide-2 .kpi-card-main .investment-summary-row span,
     .numeralia-dashboard-slide .kpi-card-main .investment-summary-row span {
       flex: 1 1 auto;
     }
 
-    #slide-1 .kpi-card-main .investment-summary-row strong,
+    #slide-2 .kpi-card-main .investment-summary-row strong,
     .numeralia-dashboard-slide .kpi-card-main .investment-summary-row strong {
       flex: 0 1 auto;
       text-align: right;
@@ -1408,12 +1408,12 @@
       font-weight: 700;
     }
 
-    #slide-1 .status-grid,
+    #slide-2 .status-grid,
     .numeralia-dashboard-slide .status-grid {
       gap: 10px;
     }
 
-    #slide-1 .status-box,
+    #slide-2 .status-box,
     .numeralia-dashboard-slide .status-box {
       border: 1px solid #e3e6eb;
       background: #f1f3f6;
@@ -1421,7 +1421,7 @@
       padding: 11px 12px;
     }
 
-    #slide-1 .status-box .s-lbl,
+    #slide-2 .status-box .s-lbl,
     .numeralia-dashboard-slide .status-box .s-lbl {
       font-family: 'Patria', 'Outfit', sans-serif;
       font-size: 11px;
@@ -1429,14 +1429,14 @@
       color: #4a5565;
     }
 
-    #slide-1 .status-box .s-val,
+    #slide-2 .status-box .s-val,
     .numeralia-dashboard-slide .status-box .s-val {
       font-size: clamp(40px, 3.15vw, 52px);
       line-height: .95;
       color: #b71e4f;
     }
 
-    #slide-1 .status-box .s-mw,
+    #slide-2 .status-box .s-mw,
     .numeralia-dashboard-slide .status-box .s-mw {
       font-size: clamp(16px, 1.3vw, 21px);
       line-height: 1.1;
@@ -3656,6 +3656,7 @@
       transform: scale(0.9);
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -3670,51 +3671,89 @@
   <div id="deck">
 
     <!-- SLIDE 1: PORTADA -->
-    <section class="slide cover active" id="slide-0">
-      <div class="slide-container">
-        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt="">
-        <div class="cover-overlay"></div>
-
-        <div class="top-band">
-          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México">
-          <div class="divider"></div>
-          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
-          <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
+    <section class="slide cover active" id="slide-0" data-label="Portada">
+      <div class="slide-container" style="background:#FAF9F5; display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:0; box-sizing:border-box; font-family:'Noto Sans', sans-serif;">
+        <div style="display:flex; align-items:center; gap:30px; padding:45px 90px 0; font-family:'Noto Sans', sans-serif;">
+          <img src="Estilos Institucionales/img/logo_gob.png" style="height:54px; object-fit:contain;" alt="Gobierno de México">
+          <div style="width:1px; height:54px; background:#E0DCD4;"></div>
+          <img src="Estilos Institucionales/img/logo_sener.png" style="height:54px; object-fit:contain;" alt="SENER">
+          <div style="margin-left:auto; font-size:18px; font-weight:600; color:#9A958E; letter-spacing:.08em; text-transform:uppercase;">DGMESNIE · Subsecretaría de Planeación</div>
         </div>
-
-        <div class="body">
-          <div class="eyebrow">Seguimiento de la Segunda Convocatoria</div>
-          <h1>Proyectos Privados de Generación</h1>
-          <div class="unidad">Subsecretaría de Planeación y Transición Energética</div>
-          <div class="unidad-sub">Unidad del Sistema Nacional de Información Energética</div>
-          <div class="unidad-sub unidad-sub-dgmesnie">Dirección General de Metodologías y Estadísticas del Sistema
-            Nacional de Información
-            Energética - <span class="acronym">DGMESNIE</span></div>
-          <div class="subtitle" id="coverPeriod">
-            <span class="period-label">Periodo:</span><span class="period-value" id="coverPeriodValue">—</span>
-          </div>
-          <div class="meta">
-            <div class="meta-item">
-              <span class="meta-label">Versión</span>
-              <span class="meta-value" id="coverVersion">—</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Fecha</span>
-              <span class="meta-value" id="coverFecha">—</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Fuente</span>
-              <span class="meta-value">SNIE — DGMESNIE</span>
-            </div>
+        <div style="padding:20px 90px 0; flex-grow:1; display:flex; flex-direction:column; justify-content:center; font-family:'Noto Sans', sans-serif;">
+          <div style="font-size:22px; font-weight:600; letter-spacing:.20em; text-transform:uppercase; color:#9B2247; max-width:40ch;">Subsecretaría de Planeación y Transición Energética</div>
+          <h1 style="font-family:'Patria', serif; font-weight:700; font-size:68px; line-height:1.05; letter-spacing:-.015em; margin:14px 0 0; color:#1c1b1a;">Seguimiento de la Segunda Convocatoria</h1>
+          <div style="display:flex; align-items:center; gap:24px; margin-top:18px;">
+            <div style="font-family:'Patria', serif; font-weight:700; font-size:42px; color:#9B2247; letter-spacing:.01em;">Proyectos Privados</div>
+            <div style="width:100px; height:3px; background:#E0A12E;"></div>
+            <div style="font-size:22px; color:#6F6B66; max-width:45ch;">Minutas de votación regional, trazabilidad de decisiones y resolutivos.</div>
           </div>
         </div>
+        
+        <!-- Central illustration band -->
+        <div style="height:200px; position:relative; overflow:hidden; background:#9B2247; min-height:0; display:flex; align-items:center; justify-content:center;">
+          <img src="Estilos Institucionales/img/portada_ejemplo.png" style="width:100%; height:100%; object-fit:cover; object-position:center 42%;" alt="">
+          <div style="position:absolute; left:0; right:0; top:0; height:5px; background:#E0A12E;"></div>
+          <div style="position:absolute; inset:0; background:linear-gradient(180deg,rgba(28,27,26,.10) 0%,rgba(28,27,26,0) 22%);"></div>
+        </div>
 
-        <div class="bottom-band"></div>
+        <!-- Bottom Metadata bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:80px; padding:20px 90px 30px; background:#ffffff; border-top:1px solid #ECE8E2; font-family:'Noto Sans', sans-serif;">
+          <div style="display:flex; gap:60px;">
+            <div>
+              <div style="font-size:16px; font-weight:600; text-transform:uppercase; color:#9A958E; letter-spacing:.08em;">Versión</div>
+              <div style="font-size:20px; font-weight:700; color:#1c1b1a; margin-top:4px;" id="coverVersion">—</div>
+            </div>
+            <div>
+              <div style="font-size:16px; font-weight:600; text-transform:uppercase; color:#9A958E; letter-spacing:.08em;">Fecha</div>
+              <div style="font-size:20px; font-weight:700; color:#1c1b1a; margin-top:4px;" id="coverFecha">—</div>
+            </div>
+            <div>
+              <div style="font-size:16px; font-weight:600; text-transform:uppercase; color:#9A958E; letter-spacing:.08em;">Periodo</div>
+              <div style="font-size:20px; font-weight:700; color:#1c1b1a; margin-top:4px;" id="coverPeriodValue">—</div>
+            </div>
+            <div>
+              <div style="font-size:16px; font-weight:600; text-transform:uppercase; color:#9A958E; letter-spacing:.08em;">Fuente</div>
+              <div style="font-size:20px; font-weight:700; color:#1c1b1a; margin-top:4px;">SNIE — DGMESNIE</div>
+            </div>
+          </div>
+          <div style="font-size:18px; font-weight:500; color:#9B2247; letter-spacing:.04em; text-transform:uppercase;">Gobierno de México</div>
+        </div>
       </div>
     </section>
 
-    <!-- SLIDE 2: NUMERALIA DASHBOARD -->
-    <section class="slide" id="slide-1">
+    <!-- SLIDE 2: ÍNDICE NAVEGABLE -->
+    <section class="slide" id="slide-1" data-label="Índice">
+      <div class="slide-container" style="background:#FAF9F5; display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:60px 90px 45px; font-family:'Noto Sans', sans-serif; box-sizing:border-box;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #ECE8E2; padding-bottom:22px;">
+          <div style="display:flex; align-items:center; gap:12px; font-size:24px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#9B2247;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9B2247" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            Resumen del Índice
+          </div>
+          <div style="font-size:24px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:#9A958E;">Navegación del Documento</div>
+        </div>
+        
+        <h2 style="font-family:'Patria', serif; font-weight:700; font-size:44px; line-height:1; margin:12px 0 4px; color:#9B2247;">Índice de Contenido</h2>
+        
+        <div class="uf" id="deckIndex" style="flex-grow:1; min-height:0; column-count:3; column-gap:52px; padding-top:14px; overflow-y:auto; display:block;">
+          <!-- Se poblará vía JavaScript en buildIndex() -->
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #ECE8E2; padding-top:18px; font-size:20px; color:#9A958E;">
+          <span>Haz clic en cualquier sección o lámina para navegar directamente a ella.</span>
+          <span class="pg" id="slide-1-pg">02</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: NUMERALIA DASHBOARD -->
+    <section class="slide" id="slide-2" data-label="Resumen General">
       <div class="slide-container">
         <div class="slide-header">
           <div class="brand-left">
@@ -4251,7 +4290,7 @@
     let ACTIVE_SELECTION_SCOPE = false;
     let DATA = [];
     let currentSlideIndex = 0;
-    let slidesCount = 2; // Portada y Numeralia iniciales
+    let slidesCount = 3; // Portada, Índice y Numeralia iniciales
     let mapInstance = null;
 
     // ====== Minimapas: zoom-control (interactivo) + botón de pantalla completa ======
@@ -6489,7 +6528,7 @@
 
     function renderNumeralia() {
       document
-        .querySelectorAll('#slide-1 .val-main, #slide-1 .val-sub, #slide-1 .s-val, #slide-1 .s-mw, #slide-1 .t-val div, #slide-1 .invest-lbl strong, #slide-1 .tech-total')
+        .querySelectorAll('#slide-2 .val-main, #slide-2 .val-sub, #slide-2 .s-val, #slide-2 .s-mw, #slide-2 .t-val div, #slide-2 .invest-lbl strong, #slide-2 .tech-total')
         .forEach(el => {
           delete el.dataset.origHtml;
         });
@@ -6506,12 +6545,15 @@
       }
 
       // Actualizar portada con datos dinámicos
-      document.getElementById('coverPeriodValue').textContent = '2026-2030';
+      const elPeriod = document.getElementById('coverPeriodValue');
+      if (elPeriod) elPeriod.textContent = '2026-2030';
 
       const now = new Date();
       const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      document.getElementById('coverFecha').textContent = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
-      document.getElementById('coverVersion').textContent = `${now.getFullYear()} · v1.0`;
+      const elFecha = document.getElementById('coverFecha');
+      if (elFecha) elFecha.textContent = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+      const elVersion = document.getElementById('coverVersion');
+      if (elVersion) elVersion.textContent = `${now.getFullYear()} · v1.0`;
 
       const totalCount = DATA.length;
       const totalMw = genProjects.reduce((sum, p) => sum + getContractedMw(p), 0);
@@ -7714,7 +7756,7 @@
 
     function generateGcrTables() {
       const deck = document.getElementById('deck');
-      const existingDynamicSlides = deck.querySelectorAll('section.slide:not(#slide-0):not(#slide-1)');
+      const existingDynamicSlides = deck.querySelectorAll('section.slide:not(#slide-0):not(#slide-1):not(#slide-2)');
       existingDynamicSlides.forEach(s => s.remove());
 
       const getTableMw = getContractedMw;
@@ -7742,7 +7784,7 @@
         { key: 'BAJA CALIFORNIA', title: 'GCR Baja California' }
       ];
 
-      let slideIdx = 2; // Portada=0, Numeralia=1, las tablas empiezan en slideIndex=2
+      let slideIdx = 3; // Portada=0, Índice=1, Numeralia=2, las tablas empiezan en slideIndex=3
       if (ACTIVE_SELECTION_SCOPE) {
         slideIdx = buildContinuaSynthesisSlide(deck, slideIdx);
       }
@@ -7762,6 +7804,7 @@
         dashSlide.classList.add('gcr-dashboard-slide');
         dashSlide.id = `slide-${slideIdx}`;
         dashSlide.dataset.gcr = gcrKey;
+        dashSlide.setAttribute('data-label', 'Sección — ' + gcrInfo.title);
 
         // Calcular la tabla de estados para esta GCR
         const stateData = {};
@@ -7991,6 +8034,8 @@
           const slide = document.createElement('section');
           slide.className = 'slide tabular-slide';
           slide.id = `slide-${slideIdx}`;
+          slide.setAttribute('data-label', 'Detalle — ' + gcrInfo.title);
+          slide.dataset.gcr = gcrKey;
 
           const pageIndicator = totalPages > 1 ? ` (${pIdx + 1}/${totalPages})` : '';
 
@@ -8139,6 +8184,7 @@
           const slide = document.createElement('section');
           slide.className = 'slide tabular-slide';
           slide.id = `slide-${slideIdx}`;
+          slide.setAttribute('data-label', 'Sección — Almacenamiento');
 
           slide.innerHTML = `
             <div class="slide-container">
@@ -8193,8 +8239,13 @@
       const inconsistencies = detectVupeInconsistencies(reportProjects);
       slideIdx = buildInconsistencyReportSlides(deck, inconsistencies, slideIdx);
 
+      // Append Contraportada slide
+      slideIdx = buildContraportadaSlide(deck, slideIdx);
+
       slidesCount = slideIdx;
       updateControls();
+      buildIndex();
+      drawQR();
       if (window.Minuta) window.Minuta.repaintBadges();
     }
 
@@ -8734,6 +8785,7 @@
       const summarySlide = document.createElement('section');
       summarySlide.className = 'slide tabular-slide';
       summarySlide.id = `slide-${slideIdx}`;
+      summarySlide.setAttribute('data-label', 'Anexos — Resumen de Inconsistencias');
 
       const sortedTypes = Object.entries(byType).sort((a, b) => b[1].length - a[1].length);
       const typeChipsHtml = sortedTypes.map(([type, items]) => {
@@ -8925,6 +8977,7 @@
         const obsSlide = document.createElement('section');
         obsSlide.className = 'slide tabular-slide';
         obsSlide.id = `slide-${slideIdx}`;
+        obsSlide.setAttribute('data-label', 'Anexos — Inconsistencias (Detalle)');
 
         let slideHtml = '';
 
@@ -9108,6 +9161,7 @@
         const slide = document.createElement('section');
         slide.className = 'slide tabular-slide';
         slide.id = `slide-${slideIdx}`;
+        slide.setAttribute('data-label', 'Anexos — Listado de Inconsistencias');
 
         const rowsHtml = chunk.map((iss, i) => {
           const sevCfg = SEVERITY_COLORS[iss.severity] || SEVERITY_COLORS.baja;
@@ -9480,8 +9534,8 @@
 
       const activeSlide = slides[index];
 
-      // Forzar recálculo del mapa si es el Slide 2 (Dashboard)
-      if (index === 1) {
+      // Forzar recálculo del mapa si es el Slide 3 (Dashboard)
+      if (index === 2) {
         setTimeout(() => {
           if (!mapInstance) {
             initMiniMap();
@@ -9504,6 +9558,192 @@
       } else {
         animateSlide(index);
       }
+    }
+
+
+    // ==========================================
+    // ÍNDICE Y CONTRAPORTADA DINÁMICOS
+    // ==========================================
+    function buildIndex() {
+      const host = document.getElementById('deckIndex');
+      if (!host) return;
+      host.innerHTML = '';
+
+      const secs = [...document.querySelectorAll('.slide')];
+      const groups = [];
+
+      secs.forEach((sec, i) => {
+        let lbl = sec.getAttribute('data-label') || '';
+        if (!lbl) {
+          if (sec.id === 'slide-0') lbl = 'Portada';
+          else if (sec.id === 'slide-1') lbl = 'Índice';
+          else if (sec.id === 'slide-2') lbl = 'Numeralia General';
+          else if (sec.classList.contains('continua-synthesis-slide')) lbl = 'Síntesis de Selección';
+          else if (sec.classList.contains('gcr-dashboard-slide')) {
+            const gcrKey = sec.dataset.gcr || '';
+            lbl = `Sección — GCR ${gcrKey.charAt(0) + gcrKey.slice(1).toLowerCase()}`;
+          } else {
+            const gcrKey = sec.dataset.gcr || '';
+            if (gcrKey) {
+              lbl = `Detalle — GCR ${gcrKey.charAt(0) + gcrKey.slice(1).toLowerCase()}`;
+            }
+          }
+        }
+        
+        if (!lbl) return;
+
+        const mSec = lbl.match(/^Sección\s*—\s*(.+)$/i) || lbl.match(/^Sección\s+(\d+)\s*—\s*(.+)$/i);
+        if (mSec) {
+          const num = mSec[1] ? mSec[1].padStart(2, '0') : String(groups.length + 1).padStart(2, '0');
+          const title = mSec[2] || mSec[1];
+          groups.push({ num, title, items: [], index: i });
+          return;
+        }
+
+        if (/^Portada$/i.test(lbl) || /^Índice$/i.test(lbl)) return;
+        
+        if (/^Anexos$/i.test(lbl) || /Inconsistencias — Resumen/i.test(lbl) || /Anexos\s*—/i.test(lbl)) {
+          if (!groups.some(g => g.num === 'A')) {
+            groups.push({ num: 'A', title: 'Anexos', items: [], index: i });
+          } else {
+            const idx = groups.findIndex(g => g.num === 'A');
+            const cleanLbl = lbl.replace('Anexos — ', '');
+            if (!groups[idx].items.some(it => it.label === cleanLbl)) {
+              groups[idx].items.push({ label: cleanLbl, index: i });
+            }
+          }
+          return;
+        }
+        
+        if (/^Contraportada$/i.test(lbl)) return;
+
+        if (groups.length > 0) {
+          const lastGroup = groups[groups.length - 1];
+          if (!lastGroup.items.some(it => it.label === lbl)) {
+            lastGroup.items.push({ label: lbl, index: i });
+          }
+        } else {
+          groups.push({ num: '00', title: 'Resumen General', items: [{ label: lbl, index: i }], index: i });
+        }
+      });
+
+      groups.forEach(g => {
+        const col = document.createElement('div');
+        col.style.cssText = 'margin-bottom:24px; padding-right:15px; display:flex; flex-direction:column; gap:6px; break-inside:avoid;';
+        
+        const h = document.createElement('a');
+        h.href = '#';
+        h.style.cssText = 'display:flex; align-items:baseline; gap:8px; border-bottom:2px solid var(--sener-guinda, #9B2247); padding-bottom:4px; margin-bottom:6px; text-decoration:none; color:inherit; cursor:pointer;';
+        h.innerHTML = `
+          <span style="font-family:Patria,serif; font-size:26px; color:var(--sener-guinda, #9B2247); font-weight:700; line-height:1;">${g.num}</span>
+          <span class="ix-h" style="font-size:18px; font-weight:700; color:#1c1b1a; transition:color .12s;">${g.title}</span>
+        `;
+        const ht = h.querySelector('.ix-h');
+        h.addEventListener('mouseenter', () => { ht.style.color = 'var(--sener-guinda, #9B2247)'; });
+        h.addEventListener('mouseleave', () => { ht.style.color = '#1c1b1a'; });
+        h.addEventListener('click', (e) => { e.preventDefault(); showSlide(g.index); });
+        col.appendChild(h);
+
+        g.items.forEach(it => {
+          const row = document.createElement('a');
+          row.href = '#';
+          row.style.cssText = 'display:flex; align-items:baseline; gap:8px; padding:2px 0; cursor:pointer; text-decoration:none; color:inherit;';
+          row.innerHTML = `
+            <span style="width:26px; font-size:14px; color:#9A958E; font-variant-numeric:tabular-nums; flex:none;">${String(it.index + 1).padStart(2, '0')}</span>
+            <span class="ix-t" style="font-size:16px; color:#3a3a3a; transition:color .12s;">${it.label}</span>
+          `;
+          const t = row.querySelector('.ix-t');
+          row.addEventListener('mouseenter', () => { t.style.color = 'var(--sener-guinda, #9B2247)'; });
+          row.addEventListener('mouseleave', () => { t.style.color = '#3a3a3a'; });
+          row.addEventListener('click', (e) => { e.preventDefault(); showSlide(it.index); });
+          col.appendChild(row);
+        });
+        
+        host.appendChild(col);
+      });
+    }
+
+    function buildContraportadaSlide(deck, slideIdx) {
+      const slide = document.createElement('section');
+      slide.className = 'slide cover';
+      slide.id = `slide-${slideIdx}`;
+      slide.setAttribute('data-label', 'Contraportada');
+      
+      slide.innerHTML = `
+        <div class="slide-container" style="background:#ffffff; display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:60px 90px 40px; box-sizing:border-box;">
+          <div style="display:flex; justify-content:flex-end; align-items:center;">
+            <div style="display:flex; align-items:center; gap:22px;">
+              <img src="Estilos Institucionales/img/logo_gob.png" style="height:50px; object-fit:contain;" alt="Gobierno de México">
+              <div style="width:1px; height:50px; background:#E0DCD4;"></div>
+              <img src="Estilos Institucionales/img/logo_sener.png" style="height:50px; object-fit:contain;" alt="SENER">
+            </div>
+          </div>
+          
+          <div style="flex:1; position:relative; display:flex; align-items:center; min-height:0; margin-top:6px;">
+            <img src="Estilos Institucionales/img/mujer.png" style="height:90%; object-fit:contain; flex:none; margin-right:40px;" alt="">
+            
+            <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; min-width:0; width:100%;">
+              <div style="display:flex; align-items:center; height:120px; margin-left:-110px; padding-left:150px; background:linear-gradient(90deg,#8E1F40 0%,#9B2247 46%,rgba(155,34,71,0) 100%);">
+                <span style="font-family:'Patria',serif; font-weight:700; font-size:96px; line-height:1; color:#ffffff;">Gracias</span>
+              </div>
+              
+              <div style="display:flex; align-items:center; gap:16px; color:#C9A24B; margin:30px 0 0; padding-left:40px;">
+                <span style="height:1px; flex-grow:1; background:linear-gradient(90deg,rgba(201,162,75,0),#C9A24B); display:block; width:100%;"></span>
+                <span style="width:10px; height:10px; background:#C9A24B; transform:rotate(45deg); flex:none; display:block;"></span>
+                <span style="height:1px; flex-grow:1; background:linear-gradient(90deg,#C9A24B,rgba(201,162,75,0)); display:block; width:100%;"></span>
+              </div>
+              
+              <div style="font-family:'Patria',serif; font-size:30px; line-height:1.4; color:#2b2b2b; text-align:center; max-width:30ch; margin:24px auto 0;">
+                A todas y todos los que hacen posible la transición energética soberana y sustentable.
+              </div>
+            </div>
+          </div>
+          
+          <div style="height:2px; background:linear-gradient(90deg,#C9A24B,rgba(201,162,75,.18)); margin-top:14px;"></div>
+          
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-top:22px;">
+            <div>
+              <div style="font-size:20px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#9B2247;">Secretaría de Energía</div>
+              <div style="font-size:18px; color:#6F6B66; margin-top:5px;">Subsecretaría de Planeación y Transición Energética</div>
+              <div style="display:flex; align-items:center; gap:18px; margin-top:20px;">
+                <a href="https://www.facebook.com/SENERmx" target="_blank" aria-label="Facebook" style="display:inline-flex; text-decoration:none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="#9B2247"><path d="M13.5 9H16l.4-3H13.5V4.2c0-.8.2-1.2 1.1-1.2h1.4V0h-2.3c-2.7 0-4.3 1.5-4.3 4.4V6H7v3h2.7v7.5h3.8V9z"/></svg></a>
+                <a href="https://x.com/SENER_mx" target="_blank" aria-label="X" style="display:inline-flex; text-decoration:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="#9B2247"><path d="M18.24 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                <a href="https://www.instagram.com/sener_mx" target="_blank" aria-label="Instagram" style="display:inline-flex; text-decoration:none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9B2247" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <a href="https://www.youtube.com/SENERmx" target="_blank" aria-label="YouTube" style="display:inline-flex; text-decoration:none;"><svg width="26" height="22" viewBox="0 0 24 24" fill="#9B2247"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.108C19.524 3.545 12 3.545 12 3.545s-7.525 0-9.387.51A3.003 3.003 0 0 0 .502 6.163C0 8.046 0 12 0 12s0 3.954.502 5.837a3.003 3.003 0 0 0 2.11 2.108c1.862.51 9.387.51 9.387.51s7.524 0 9.387-.51a3.003 3.003 0 0 0 2.11-2.108c.502-1.883.502-5.837.502-5.837s0-3.954-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+                <span style="width:1px; height:24px; background:#E0DCD4; display:block;"></span>
+                <span style="font-size:20px; font-weight:600; color:#9B2247;">gob.mx/sener</span>
+              </div>
+            </div>
+            
+            <div id="deckQR" style="width:120px; height:120px; flex-shrink:0;"></div>
+          </div>
+        </div>
+      `;
+      deck.appendChild(slide);
+      return slideIdx + 1;
+    }
+
+    function drawQR() {
+      const host = document.getElementById('deckQR');
+      if (!host || host.dataset.done || !window.qrcode) return;
+      try {
+        const qr = window.qrcode(0, 'M');
+        qr.addData('https://www.gob.mx/sener');
+        qr.make();
+        host.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+        const svg = host.querySelector('svg');
+        if (svg) { 
+          svg.setAttribute('width','100%'); 
+          svg.setAttribute('height','100%'); 
+          svg.style.display='block'; 
+          svg.querySelectorAll('rect').forEach(r => {
+            if (r.getAttribute('fill') === '#000000' || !r.getAttribute('fill')) {
+              r.setAttribute('fill', '#9B2247');
+            }
+          });
+        }
+        host.dataset.done = '1';
+      } catch(e) { }
     }
 
     function nextSlide() {
