@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+  <link rel="stylesheet" href="_tokens.css">
 <title>GAT-Mixto · Proyectos en desarrollo · DGMESNIE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Merriweather:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/full-screen.js"></script>
@@ -19,92 +18,133 @@
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@v3.12.0/dist/pptxgen.bundle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mapbox/togeojson@0.16.2/togeojson.js"></script>
+<script src="GAT-MIXTO-DGMESNIE.data.js"></script>
 <style>
-@font-face {
-  font-family: 'Patria';
-  src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
-  font-weight: 400;
-}
-@font-face {
-  font-family: 'Patria';
-  src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
-  font-weight: 700;
-}
-@font-face {
-  font-family: 'Patria';
-  src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
-  font-weight: 300;
-}
 
 :root {
-  --guinda: #9B2247;
-  --verde: #1E5B4F;
-  --dorado: #A57F2C;
-  --gris: #98989A;
-  --gris-claro: #E5E5E5;
+  --sener-guinda: #9B2247;
+  --sener-esmeralda: #0E8A6E;
+  --sener-dorado: #E0A12E;
+  --sener-gris: #98989A;
+  --sener-linea: #E5E5E5;
   --text: #2b2b2b;
   --bg: #f3f4f6;
   --slide-w: 1280px;
   --slide-h: 720px;
-  --font-h: 'Patria', 'Merriweather', serif;
-  --font-b: 'Noto Sans', sans-serif;
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-text: 'Libre Franklin', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: var(--font-b);
-  background: var(--bg);
+  font-family: var(--font-text);
+  background: #1E1E1E;
   color: var(--text);
-  padding: 40px 20px;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .toolbar {
-  max-width: var(--slide-w);
-  margin: 0 auto 24px;
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  z-index: 9000;
+  transform: translateX(-50%);
+  max-width: min(1180px, calc(100vw - 24px));
+  margin: 0;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  background: rgba(255,255,255,.94);
+  border: 1px solid rgba(255,255,255,.34);
+  border-radius: 999px;
+  padding: 8px 10px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.28);
+  backdrop-filter: blur(8px);
 }
 
 .toolbar h1 {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-size: 22px;
-  color: var(--guinda);
+  color: var(--sener-guinda);
   margin-right: auto;
+  display: none;
 }
 
 .toolbar select, .toolbar button {
-  font-family: var(--font-b);
-  font-size: 14px;
-  padding: 8px 14px;
-  border-radius: 4px;
-  border: 1px solid var(--gris);
+  font-family: var(--font-text);
+  font-size: 12px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--sener-gris);
   background: white;
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px !important;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: .04em;
 }
 
 .toolbar button.primary {
-  background: var(--guinda);
+  background: var(--sener-guinda);
   color: white;
-  border-color: var(--guinda);
+  border-color: var(--sener-guinda);
   font-weight: 700;
 }
 
 .toolbar button.secondary {
-  background: var(--verde);
+  background: var(--sener-esmeralda);
   color: white;
-  border-color: var(--verde);
+  border-color: var(--sener-esmeralda);
   font-weight: 700;
 }
 
+.toolbar .nav-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: var(--sener-guinda);
+  border-color: var(--sener-guinda);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.toolbar .slide-counter {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--sener-guinda);
+  min-width: 54px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
 .deck {
-  max-width: var(--slide-w);
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+  width: var(--slide-w);
+  height: var(--slide-h);
+  max-width: none;
+  margin: 0;
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
 }
 
 .slide {
@@ -112,9 +152,15 @@ body {
   height: var(--slide-h);
   background: white;
   box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
+.slide.active.cover { display: grid; opacity: 1; pointer-events: auto; }
+.slide.active.content { display: grid; opacity: 1; pointer-events: auto; }
 .slide.skip-export { display: none !important; }
 
 /* ============ PORTADA ============ */
@@ -144,12 +190,12 @@ body {
   display: flex;
   align-items: center;
   gap: 24px;
-  border-bottom: 4px solid var(--dorado);
+  border-bottom: 4px solid var(--sener-dorado);
 }
 
 .cover .top-band img { height: 56px; width: auto; }
 .cover .top-band .divider {
-  width: 1px; height: 48px; background: var(--gris);
+  width: 1px; height: 48px; background: var(--sener-gris);
 }
 .cover .top-band .unit {
   font-size: 11px;
@@ -168,16 +214,16 @@ body {
 }
 
 .cover .eyebrow {
-  font-family: var(--font-b);
+  font-family: var(--font-text);
   font-size: 14px;
   letter-spacing: .25em;
   text-transform: uppercase;
-  color: var(--dorado);
+  color: var(--sener-dorado);
   font-weight: 700;
 }
 
 .cover h1 {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 56px;
   line-height: 1.05;
@@ -186,19 +232,19 @@ body {
 }
 
 .cover .unidad {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 20px;
   line-height: 1.3;
   color: white;
   max-width: 720px;
-  border-left: 3px solid var(--dorado);
+  border-left: 3px solid var(--sener-dorado);
   padding-left: 14px;
   text-shadow: 0 2px 8px rgba(0,0,0,.4);
 }
 
 .cover .subtitle {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-weight: 300;
   font-size: 26px;
   color: rgba(255,255,255,.92);
@@ -212,11 +258,11 @@ body {
   font-size: 14px;
   color: rgba(255,255,255,.85);
 }
-.cover .meta strong { color: var(--dorado); display: block; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 4px; }
+.cover .meta strong { color: var(--sener-dorado); display: block; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 4px; }
 
 .cover .bottom-band {
   height: 14px;
-  background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 33%, var(--verde) 33%, var(--verde) 66%, var(--dorado) 66%);
+  background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-guinda) 33%, var(--sener-esmeralda) 33%, var(--sener-esmeralda) 66%, var(--sener-dorado) 66%);
 }
 
 /* ============ CONTENIDO ============ */
@@ -232,21 +278,21 @@ body {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
-  border-bottom: 2px solid var(--guinda);
+  border-bottom: 2px solid var(--sener-guinda);
 }
 .content .header .brand-left {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
-  color: var(--guinda);
+  color: var(--sener-guinda);
   letter-spacing: .02em;
   display: flex; align-items: center; gap: 10px;
 }
 .content .header .brand-left::before {
-  content: ''; width: 4px; height: 24px; background: var(--guinda); border-radius: 2px;
+  content: ''; width: 4px; height: 24px; background: var(--sener-guinda); border-radius: 2px;
 }
 .content .header .ef-title {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
   color: var(--text);
@@ -255,7 +301,7 @@ body {
   letter-spacing: .02em;
 }
 .content .header .ef-title::before, .content .header .ef-title::after {
-  content: '·'; color: var(--dorado); margin: 0 14px; font-size: 24px;
+  content: '·'; color: var(--sener-dorado); margin: 0 14px; font-size: 24px;
 }
 .content .header .logo-right { display: flex; justify-content: flex-end; align-items: center; }
 .content .header .logo-right img { height: 38px; }
@@ -266,7 +312,7 @@ body {
   line-height: 1.5;
   color: var(--text);
 }
-.content .narrative strong { color: var(--guinda); font-weight: 700; }
+.content .narrative strong { color: var(--sener-guinda); font-weight: 700; }
 
 .kpi-row {
   padding: 6px 28px 8px;
@@ -278,7 +324,7 @@ body {
   padding: 8px 14px;
   border-radius: 6px;
   background: white;
-  border: 1px solid var(--gris-claro);
+  border: 1px solid var(--sener-linea);
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
   display: flex;
   align-items: center;
@@ -288,22 +334,22 @@ body {
 }
 .kpi::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-  background: var(--guinda);
+  background: var(--sener-guinda);
 }
-.kpi:nth-child(2)::before { background: var(--verde); }
-.kpi:nth-child(3)::before { background: var(--dorado); }
-.kpi:nth-child(4)::before { background: var(--gris); }
+.kpi:nth-child(2)::before { background: var(--sener-esmeralda); }
+.kpi:nth-child(3)::before { background: var(--sener-dorado); }
+.kpi:nth-child(4)::before { background: var(--sener-gris); }
 .kpi .value {
-  font-family: var(--font-h);
+  font-family: var(--font-display);
   font-size: 26px;
   font-weight: 700;
-  color: var(--guinda);
+  color: var(--sener-guinda);
   line-height: 1;
   letter-spacing: -.01em;
   white-space: nowrap;
 }
-.kpi:nth-child(2) .value { color: var(--verde); }
-.kpi:nth-child(3) .value { color: var(--dorado); }
+.kpi:nth-child(2) .value { color: var(--sener-esmeralda); }
+.kpi:nth-child(3) .value { color: var(--sener-dorado); }
 .kpi:nth-child(4) .value { color: var(--text); }
 .kpi .label {
   font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
@@ -311,7 +357,7 @@ body {
   line-height: 1.25;
   flex: 1;
 }
-.kpi .label small { display: block; font-weight: 400; color: var(--gris); letter-spacing: .08em; margin-top: 2px; font-size: 9px; text-transform: none; }
+.kpi .label small { display: block; font-weight: 400; color: var(--sener-gris); letter-spacing: .08em; margin-top: 2px; font-size: 9px; text-transform: none; }
 
 .content .body {
   padding: 4px 28px 12px;
@@ -327,32 +373,32 @@ body {
   min-height: 0;
   gap: 0;
   background: white;
-  border: 1px solid var(--gris-claro);
+  border: 1px solid var(--sener-linea);
   border-radius: 8px;
   overflow: hidden;
 }
 .panel h3 {
   background: linear-gradient(180deg, #fbfbfb 0%, #f3f3f3 100%);
-  color: var(--guinda);
-  font-family: var(--font-b);
+  color: var(--sener-guinda);
+  font-family: var(--font-text);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .14em;
   text-transform: uppercase;
   padding: 8px 12px;
-  border-bottom: 2px solid var(--guinda);
+  border-bottom: 2px solid var(--sener-guinda);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .panel h3::before {
   content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--guinda); display: inline-block;
+  background: var(--sener-guinda); display: inline-block;
 }
-.panel.accent-verde h3 { color: var(--verde); border-bottom-color: var(--verde); }
-.panel.accent-verde h3::before { background: var(--verde); }
-.panel.accent-dorado h3 { color: var(--dorado); border-bottom-color: var(--dorado); }
-.panel.accent-dorado h3::before { background: var(--dorado); }
+.panel.accent-verde h3 { color: var(--sener-esmeralda); border-bottom-color: var(--sener-esmeralda); }
+.panel.accent-verde h3::before { background: var(--sener-esmeralda); }
+.panel.accent-dorado h3 { color: var(--sener-dorado); border-bottom-color: var(--sener-dorado); }
+.panel.accent-dorado h3::before { background: var(--sener-dorado); }
 .panel .chart { flex: 1; min-height: 0; padding: 8px 6px 4px; }
 .panel > div:not(.chart) { flex: 1; min-height: 0; }
 
@@ -373,7 +419,7 @@ table.proyectos thead th, table.tech thead th {
   font-size: 9px;
   letter-spacing: .08em;
   text-transform: uppercase;
-  border-bottom: 1.5px solid var(--gris);
+  border-bottom: 1.5px solid var(--sener-gris);
 }
 table.proyectos td, table.tech td {
   padding: 4px 8px;
@@ -387,9 +433,9 @@ table.proyectos td.mw, table.tech td.mw,
 table.proyectos th.mw, table.tech th.mw {
   text-align: right; font-variant-numeric: tabular-nums;
 }
-table.proyectos td.mw, table.tech td.mw { font-weight: 700; color: var(--guinda); }
-table.tech tbody td:first-child { font-weight: 600; color: var(--verde); }
-table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; background: #faf3f5; font-weight: 700; }
+table.proyectos td.mw, table.tech td.mw { font-weight: 700; color: var(--sener-guinda); }
+table.tech tbody td:first-child { font-weight: 600; color: var(--sener-esmeralda); }
+table.tech tfoot td { border-top: 2px solid var(--sener-guinda); border-bottom: 0; background: #faf3f5; font-weight: 700; }
 
 .tech-ef-slide .analysis-body {
   display: grid;
@@ -404,14 +450,240 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .tech-ef-slide .analysis-note {
   font-size: 10px;
   line-height: 1.35;
-  color: var(--gris);
+  color: var(--sener-gris);
   padding: 0 28px 8px;
 }
 
+.gcr-slide .body {
+  grid-template-columns: 1.08fr .92fr;
+  grid-template-rows: 1fr 1fr;
+}
+.gcr-slide .panel:first-child { grid-row: span 2; }
+.gcr-slide .gcr-table-wrap { overflow: auto; }
+
+.numeralia-slide {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0;
+  background: #f8f7f4;
+}
+.numeralia-top {
+  height: 72px;
+  padding: 16px 26px 12px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  align-items: center;
+  background: #fff;
+  border-top: 3px solid var(--sener-dorado);
+  border-bottom: 2px solid var(--sener-guinda);
+}
+.numeralia-brand {
+  border-left: 4px solid var(--sener-guinda);
+  padding-left: 10px;
+  color: var(--sener-guinda);
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+.numeralia-brand small { display: block; color: var(--sener-gris); letter-spacing: .08em; font-weight: 800; }
+.numeralia-title {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 900;
+  color: #1f1f1f;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.numeralia-title::after {
+  content: '';
+  display: block;
+  width: 78px;
+  height: 3px;
+  background: var(--sener-dorado);
+  margin: 8px auto 0;
+}
+.numeralia-logo { display: flex; justify-content: flex-end; align-items: center; }
+.numeralia-logo img { height: 42px; }
+.numeralia-body {
+  padding: 18px 26px 14px;
+  display: grid;
+  grid-template-columns: 290px 1fr 420px;
+  grid-template-rows: 1fr 1.05fr;
+  gap: 18px;
+  min-height: 0;
+}
+.summary-hero {
+  grid-row: span 1;
+  background: linear-gradient(180deg, #a31f4d 0%, #8a183e 100%);
+  color: #fff;
+  border-top: 5px solid var(--sener-dorado);
+  border-radius: 7px;
+  padding: 20px 18px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.16);
+}
+.summary-hero .label {
+  font-size: 14px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.summary-hero .big {
+  font-family: var(--font-display);
+  font-size: 70px;
+  line-height: .95;
+  font-weight: 900;
+  margin: 4px 0 12px;
+}
+.summary-hero .copy {
+  color: #ffe79a;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.16;
+}
+.summary-tech {
+  grid-row: span 1;
+}
+.summary-panel {
+  background: #fff;
+  border: 1px solid #e8e1d8;
+  border-radius: 7px;
+  box-shadow: 0 5px 18px rgba(0,0,0,.07);
+  min-height: 0;
+  overflow: hidden;
+}
+.summary-panel h3 {
+  color: var(--sener-guinda);
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 14px 16px 8px;
+}
+.summary-panel h3::before {
+  content: '◆';
+  color: #e5a32b;
+  font-size: 13px;
+  margin-right: 8px;
+}
+.summary-panel h3::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: var(--sener-guinda);
+  margin-top: 8px;
+}
+.summary-panel-body { padding: 8px 16px 14px; height: calc(100% - 56px); min-height: 0; }
+.summary-chart { height: 100%; min-height: 0; }
+.chart-fallback {
+  height: 100%;
+  overflow: auto;
+  padding: 8px;
+  font-size: 10px;
+}
+.chart-fallback table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.chart-fallback th,
+.chart-fallback td {
+  padding: 5px 6px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+.chart-fallback th {
+  color: var(--sener-guinda);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: 9px;
+}
+.chart-fallback td.num {
+  text-align: right;
+  font-weight: 800;
+  color: var(--sener-guinda);
+  font-variant-numeric: tabular-nums;
+}
+.summary-map-proxy {
+  height: 100%;
+  background: linear-gradient(135deg, rgba(155,34,71,.08), rgba(30,91,79,.12));
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.summary-map-title {
+  margin: 12px 12px 0;
+  display: inline-block;
+  justify-self: start;
+  background: rgba(255,255,255,.92);
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 8px 12px;
+  font-weight: 900;
+  color: #333;
+}
+.summary-bubble-grid {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.summary-bubble {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--sener-guinda);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow: 0 3px 7px rgba(0,0,0,.28);
+  border: 2px solid #fff;
+}
+.summary-tramites {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px 16px 16px;
+}
+.summary-procedure {
+  min-height: 112px;
+  border-left: 4px solid var(--sener-guinda);
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #ece6de;
+  padding: 14px 16px;
+}
+.summary-procedure .lbl {
+  font-size: 12px;
+  color: #6f6f6f;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.summary-procedure .num {
+  font-family: var(--font-display);
+  color: var(--sener-guinda);
+  font-size: 54px;
+  line-height: .95;
+  font-weight: 900;
+  margin-top: 8px;
+}
+.summary-procedure .mw {
+  color: #e5a32b;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  margin-top: 4px;
+}
+
 .content .footer {
-  background: var(--guinda);
+  background: var(--sener-guinda);
   height: 8px;
-  background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 60%, var(--dorado) 60%, var(--dorado) 100%);
+  background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-guinda) 60%, var(--sener-dorado) 60%, var(--sener-dorado) 100%);
 }
 
 /* ============ SLIDE MAPA ============ */
@@ -424,10 +696,10 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   min-width: 0;
   overflow: hidden;
   background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
-  border-bottom: 1px solid var(--gris-claro);
+  border-bottom: 1px solid var(--sener-linea);
 }
 .map-slide .map-toolbar label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text); }
-.map-slide .map-toolbar select { padding: 6px 12px; border: 1px solid var(--gris); border-radius: 4px; font-family: var(--font-b); font-size: 13px; background: white; }
+.map-slide .map-toolbar select { padding: 6px 12px; border: 1px solid var(--sener-gris); border-radius: 4px; font-family: var(--font-text); font-size: 13px; background: white; }
 .map-slide .map-toolbar .legend { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text); }
 .map-slide .map-toolbar .legend .ramp { display: inline-block; width: 160px; height: 10px; border-radius: 2px; background: linear-gradient(90deg, #f7e3ea 0%, #d99cb1 25%, #c46d8a 50%, #a83a5d 75%, #6a172f 100%); border: 1px solid #ccc; }
 .map-slide.project-focused .map-toolbar .legend { display: none; }
@@ -465,16 +737,16 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .map-slide.project-focused .map-body { grid-template-columns: minmax(0, 1fr) 320px; }
 .map-slide .ef-detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
 .map-slide.project-focused .ef-detail-grid { grid-template-columns: repeat(2, 1fr); }
-.map-slide .ef-mini-card { background: white; border: 1px solid var(--gris-claro); border-radius: 4px; padding: 5px 7px; }
-.map-slide .ef-mini-card .lbl { font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gris); font-weight: 700; line-height: 1.1; }
-.map-slide .ef-mini-card .val { font-family: var(--font-h); font-size: 14px; font-weight: 700; color: var(--guinda); margin-top: 1px; line-height: 1; }
+.map-slide .ef-mini-card { background: white; border: 1px solid var(--sener-linea); border-radius: 4px; padding: 5px 7px; }
+.map-slide .ef-mini-card .lbl { font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--sener-gris); font-weight: 700; line-height: 1.1; }
+.map-slide .ef-mini-card .val { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--sener-guinda); margin-top: 1px; line-height: 1; }
 .map-slide .ef-mini-card .sub { font-size: 8.5px; color: var(--text); margin-top: 1px; line-height: 1.1; }
-.map-slide .ef-section-title { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--guinda); font-weight: 700; margin-top: 2px; padding-bottom: 2px; border-bottom: 1px solid var(--guinda); }
+.map-slide .ef-section-title { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--sener-guinda); font-weight: 700; margin-top: 2px; padding-bottom: 2px; border-bottom: 1px solid var(--sener-guinda); }
 .map-slide .ef-bar-row { display: flex; align-items: center; gap: 5px; font-size: 9.5px; padding: 1.5px 0; }
 .map-slide .ef-bar-row .name { width: 34px; font-weight: 700; color: var(--text); }
 .map-slide .ef-bar-row .bar { flex: 1; height: 7px; background: #f0f0f0; border-radius: 2px; overflow: hidden; }
-.map-slide .ef-bar-row .bar > span { display: block; height: 100%; background: var(--guinda); }
-.map-slide .ef-bar-row .num { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--guinda); width: 58px; text-align: right; font-size: 9px; }
+.map-slide .ef-bar-row .bar > span { display: block; height: 100%; background: var(--sener-guinda); }
+.map-slide .ef-bar-row .num { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--sener-guinda); width: 58px; text-align: right; font-size: 9px; }
 .map-slide #mapa {
   width: 100%;
   max-width: 100%;
@@ -490,27 +762,27 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   height: 18px;
   display: block;
   border-radius: 50%;
-  background: var(--dorado);
+  background: var(--sener-dorado);
   border: 3px solid #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,.35);
 }
 .mini-project-marker span {
   width: 16px;
   height: 16px;
-  background: var(--guinda);
+  background: var(--sener-guinda);
 }
 .selected-project-marker span {
   width: 28px;
   height: 28px;
   display: block;
   border-radius: 50%;
-  background: var(--guinda);
+  background: var(--sener-guinda);
   border: 4px solid #fff;
   box-shadow: 0 0 0 4px rgba(165,127,44,.45), 0 3px 12px rgba(0,0,0,.4);
 }
 .ficha-minimap {
   height: 130px;
-  border: 1px solid var(--gris-claro);
+  border: 1px solid var(--sener-linea);
   border-radius: 4px;
   margin-top: 6px;
   background: #f4f6f8;
@@ -519,7 +791,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .mini-spin {
   width: 12px; height: 12px;
   border: 2px solid rgba(155,34,71,.2);
-  border-top-color: var(--guinda);
+  border-top-color: var(--sener-guinda);
   border-radius: 50%;
   display: inline-block;
   animation: spin 0.7s linear infinite;
@@ -528,10 +800,10 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   content: 'Sin KMZ disponible';
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--gris); font-style: italic;
+  font-size: 10px; color: var(--sener-gris); font-style: italic;
 }
 .map-slide .side-panel {
-  background: #fafafa; border-left: 1px solid var(--gris-claro);
+  background: #fafafa; border-left: 1px solid var(--sener-linea);
   padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
   width: 320px;
   max-width: 320px;
@@ -540,11 +812,11 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 }
 .map-slide.focused .side-panel { width: 380px; max-width: 380px; }
 .map-slide.project-focused .side-panel { width: 320px; max-width: 320px; }
-.map-slide .side-panel h4 { font-family: var(--font-h); color: var(--guinda); font-size: 14px; font-weight: 700; }
-.map-slide .side-panel .stat { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--gris-claro); font-size: 11px; min-width: 0; }
+.map-slide .side-panel h4 { font-family: var(--font-display); color: var(--sener-guinda); font-size: 14px; font-weight: 700; }
+.map-slide .side-panel .stat { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--sener-linea); font-size: 11px; min-width: 0; }
 .map-slide .side-panel .stat span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.map-slide .side-panel .stat strong { font-family: var(--font-h); color: var(--guinda); font-size: 13px; font-variant-numeric: tabular-nums; min-width: 0; max-width: 58%; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.map-slide .side-panel .hint { font-size: 10px; color: var(--gris); font-style: italic; }
+.map-slide .side-panel .stat strong { font-family: var(--font-display); color: var(--sener-guinda); font-size: 13px; font-variant-numeric: tabular-nums; min-width: 0; max-width: 58%; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.map-slide .side-panel .hint { font-size: 10px; color: var(--sener-gris); font-style: italic; }
 .map-slide.project-focused .side-panel .hint { line-height: 1.35; }
 .map-slide.project-focused .side-panel .stat {
   display: grid;
@@ -557,12 +829,12 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   max-width: none;
   width: 100%;
   min-width: 0;
-  font-family: var(--font-b);
+  font-family: var(--font-text);
   font-size: 10.5px;
   line-height: 1.2;
   text-align: right;
 }
-.leaflet-tooltip.ef-tip { background: rgba(155,34,71,.95); color: white; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.2); font-family: 'Noto Sans', sans-serif; font-size: 11px; padding: 6px 10px; border-radius: 4px; }
+.leaflet-tooltip.ef-tip { background: rgba(155,34,71,.95); color: white; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.2); font-family: 'Libre Franklin', sans-serif; font-size: 11px; padding: 6px 10px; border-radius: 4px; }
 .leaflet-tooltip.ef-tip strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .leaflet-tooltip.ef-tip::before { display: none; }
 
@@ -572,11 +844,11 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
   padding: 8px 28px;
   display: flex; align-items: center; gap: 12px;
   background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
-  border-bottom: 1px solid var(--gris-claro);
+  border-bottom: 1px solid var(--sener-linea);
 }
 .ficha-slide .ficha-toolbar label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.ficha-slide .ficha-toolbar select { padding: 5px 10px; border: 1px solid var(--gris); border-radius: 4px; font-family: var(--font-b); font-size: 12px; min-width: 320px; max-width: 460px; background: white; }
-.ficha-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--guinda); color: white; letter-spacing: .04em; }
+.ficha-slide .ficha-toolbar select { padding: 5px 10px; border: 1px solid var(--sener-gris); border-radius: 4px; font-family: var(--font-text); font-size: 12px; min-width: 320px; max-width: 460px; background: white; }
+.ficha-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--sener-guinda); color: white; letter-spacing: .04em; }
 
 .ficha-body {
   display: grid;
@@ -590,7 +862,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 }
 .ficha-card {
   background: white;
-  border: 1px solid var(--gris-claro);
+  border: 1px solid var(--sener-linea);
   border-radius: 6px;
   padding: 8px 10px;
   display: flex; flex-direction: column; gap: 3px;
@@ -601,22 +873,22 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .ficha-card.span4 { grid-column: span 4; }
 .ficha-card h5 {
   font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--guinda); font-weight: 700;
-  border-bottom: 1.5px solid var(--guinda);
+  color: var(--sener-guinda); font-weight: 700;
+  border-bottom: 1.5px solid var(--sener-guinda);
   padding-bottom: 3px; margin-bottom: 3px;
   display: flex; align-items: center; gap: 6px;
 }
 .ficha-card h5::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--guinda);
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sener-guinda);
 }
-.ficha-card.accent-verde h5 { color: var(--verde); border-bottom-color: var(--verde); }
-.ficha-card.accent-verde h5::before { background: var(--verde); }
-.ficha-card.accent-dorado h5 { color: var(--dorado); border-bottom-color: var(--dorado); }
-.ficha-card.accent-dorado h5::before { background: var(--dorado); }
+.ficha-card.accent-verde h5 { color: var(--sener-esmeralda); border-bottom-color: var(--sener-esmeralda); }
+.ficha-card.accent-verde h5::before { background: var(--sener-esmeralda); }
+.ficha-card.accent-dorado h5 { color: var(--sener-dorado); border-bottom-color: var(--sener-dorado); }
+.ficha-card.accent-dorado h5::before { background: var(--sener-dorado); }
 
 .ficha-row { display: flex; justify-content: space-between; gap: 6px; padding: 1.5px 0; align-items: baseline; border-bottom: 1px dotted #eee; }
 .ficha-row:last-child { border-bottom: none; }
-.ficha-row .lbl { font-size: 9px; color: var(--gris); font-weight: 600; flex: 0 0 auto; max-width: 50%; line-height: 1.2; }
+.ficha-row .lbl { font-size: 9px; color: var(--sener-gris); font-weight: 600; flex: 0 0 auto; max-width: 50%; line-height: 1.2; }
 .ficha-row .val { font-size: 10.5px; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; line-height: 1.2; word-break: break-word; }
 
 .ficha-foco {
@@ -625,7 +897,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .ficha-foco .pill {
   font-size: 9px; padding: 2px 6px; border-radius: 8px;
   font-weight: 700; letter-spacing: .03em;
-  background: #eef0f2; color: var(--text); border: 1px solid var(--gris-claro);
+  background: #eef0f2; color: var(--text); border: 1px solid var(--sener-linea);
 }
 .ficha-foco .pill.alto { background: #f8d4dd; color: #6a172f; border-color: #d99cb1; }
 .ficha-foco .pill.medio { background: #fdebc8; color: #6b4d18; border-color: #e6cc8c; }
@@ -643,20 +915,92 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 .preloader .spin {
   width: 44px; height: 44px;
   border: 3px solid rgba(255,255,255,.2);
-  border-top-color: var(--dorado);
+  border-top-color: var(--sener-dorado);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.preloader h2 { font-family: var(--font-h); font-size: 20px; font-weight: 700; }
+.preloader h2 { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
 .preloader .msg { font-size: 12px; color: rgba(255,255,255,.85); letter-spacing: .04em; }
+
+.seg-toast {
+  position: fixed; right: 18px; bottom: 18px; z-index: 9999;
+  background: var(--sener-esmeralda); color: #fff; border-radius: 6px;
+  padding: 10px 13px; font-size: 12px; font-weight: 700;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22); opacity: 0;
+  transform: translateY(8px); pointer-events: none; transition: all .18s ease;
+}
+.seg-toast.show { opacity: 1; transform: translateY(0); }
+.seg-toast.err { background: var(--sener-guinda); }
+.seg-overlay {
+  position: fixed; inset: 0; z-index: 9998; display: none;
+  background: rgba(20,20,20,.52); align-items: center; justify-content: center;
+}
+.seg-overlay.show { display: flex; }
+.seg-panel {
+  width: min(1120px, 94vw); max-height: 90vh; overflow: auto;
+  background: #fff; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.32);
+  border-top: 8px solid var(--sener-guinda);
+}
+.seg-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 16px 18px; border-bottom: 1px solid #e8e8e8;
+}
+.seg-head h2 { margin: 0; font-family: var(--font-display); color: var(--sener-guinda); font-size: 20px; }
+.seg-sub { font-size: 12px; color: var(--sener-gris); margin-top: 2px; }
+.seg-body { padding: 16px 18px 18px; }
+.seg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.seg-field.span2 { grid-column: span 2; }
+.seg-field.span4 { grid-column: span 4; }
+.seg-field label {
+  display: block; font-size: 10px; font-weight: 800; color: var(--sener-gris);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px;
+}
+.seg-field input, .seg-field select, .seg-field textarea {
+  width: 100%; box-sizing: border-box; border: 1px solid #d8d8d8; border-radius: 5px;
+  padding: 8px 9px; font-family: var(--font-text); font-size: 13px; color: var(--text);
+}
+.seg-field textarea { min-height: 84px; resize: vertical; }
+.seg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.seg-btn {
+  border: 0; border-radius: 5px; padding: 8px 12px; cursor: pointer;
+  font-family: var(--font-text); font-size: 12px; font-weight: 800;
+}
+.seg-btn.ghost { background: #f3f3f3; color: var(--text); }
+.seg-btn.verde { background: var(--sener-esmeralda); color: #fff; }
+.seg-btn.guinda { background: var(--sener-guinda); color: #fff; }
+.seg-btn.dorado { background: var(--sener-dorado); color: #fff; }
+.seg-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+.seg-kpi { background: #f8f8f8; border-left: 4px solid var(--sener-guinda); padding: 10px; border-radius: 6px; }
+.seg-kpi .v { font-family: var(--font-display); font-size: 24px; color: var(--sener-guinda); font-weight: 900; }
+.seg-kpi .l { font-size: 10px; color: var(--sener-gris); text-transform: uppercase; letter-spacing: .06em; font-weight: 800; }
+.seg-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.seg-table th { background: var(--sener-guinda); color: #fff; text-align: left; padding: 7px; font-size: 10px; text-transform: uppercase; }
+.seg-table td { border-bottom: 1px solid #e6e6e6; padding: 7px; vertical-align: top; }
+.seg-table tr:nth-child(even) td { background: #fafafa; }
+.seg-chip {
+  display: inline-block; border-radius: 999px; padding: 2px 7px;
+  font-size: 10px; font-weight: 800; border: 1px solid #ddd; background: #fff;
+}
+.seg-chip.verde { background: #e9f4ef; color: var(--sener-esmeralda); border-color: #b7d8cb; }
+.seg-chip.dorado { background: #f8f0df; color: #7c5c1c; border-color: #dfc889; }
+.seg-chip.guinda { background: #f7e7ed; color: var(--sener-guinda); border-color: #e4b6c6; }
+.deck > .slide:not(.active):not(.skip-export) { display: none !important; }
 
 @media print {
   @page { size: 13.333in 7.5in; margin: 0; }
   html, body { padding: 0; margin: 0; background: white; width: 13.333in; }
   body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .toolbar, .highcharts-contextbutton, .highcharts-exporting-group, .preloader { display: none !important; }
-  .deck { gap: 0; max-width: none; margin: 0; }
+  .deck {
+    gap: 0;
+    max-width: none;
+    margin: 0;
+    position: static;
+    width: 13.333in;
+    height: auto;
+    transform: none !important;
+  }
   .slide {
     width: 13.333in;
     height: 7.5in;
@@ -664,7 +1008,12 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     page-break-after: always;
     break-after: page;
     overflow: hidden;
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    pointer-events: auto;
   }
+  .slide.cover:not(.skip-export), .slide.content:not(.skip-export) { display: grid !important; }
   .slide:last-child { page-break-after: auto; break-after: auto; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
@@ -679,20 +1028,65 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 </div>
 
 <div class="toolbar">
-  <h1 style="line-height:1.2"><span style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">GAT-Mixto · Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</h1>
-  <a href="index.html" style="font-size:12px;text-decoration:none;color:var(--guinda);font-weight:700;border:1px solid var(--guinda);padding:6px 10px;border-radius:4px">← PVIRCE</a>
+  <h1 style="line-height:1.2"><span style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Libre Franklin',sans-serif;letter-spacing:.04em">GAT-Mixto · Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</h1>
+  <a href="index.html" style="font-size:12px;text-decoration:none;color:var(--sener-guinda);font-weight:700;border:1px solid var(--sener-guinda);padding:6px 10px;border-radius:4px">← PVIRCE</a>
+  <button class="nav-btn" type="button" onclick="prevSlide()" title="Anterior">‹</button>
+  <span class="slide-counter" id="slideCounter">1 / 1</span>
+  <button class="nav-btn" type="button" onclick="nextSlide()" title="Siguiente">›</button>
   <label style="font-size:13px;">EF:
     <select id="efSelect"><option>Cargando…</option></select>
   </label>
+  <button class="secondary" onclick="goFullscreen()">Presentar</button>
   <button class="secondary" onclick="window.open(SHEET_EDIT_URL,'_blank')">Modificar datos</button>
   <button class="secondary" onclick="loadData()">Recargar</button>
+  <button class="secondary" onclick="Seguimiento.openCapture()">Seguimiento</button>
+  <button class="secondary" onclick="Seguimiento.openReport()">Reporte seg.</button>
   <button class="secondary" onclick="window.print()">Vista PDF</button>
   <button class="primary" id="btnPpt">Descargar PPT</button>
 </div>
 
 <div class="deck">
 
-  <!-- ============ SLIDE 1: PORTADA ============ -->
+  <!-- ============ SLIDE 1: NUMERALIA ============ -->
+  <section class="slide content numeralia-slide active">
+    <div class="numeralia-top">
+      <div class="numeralia-brand">GAT-Mixto 2026<small>Proyectos en seguimiento</small></div>
+      <div class="numeralia-title">Numeralia de proyectos</div>
+      <div class="numeralia-logo"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+    </div>
+    <div class="numeralia-body">
+      <div class="summary-hero">
+        <div class="label">Registros en cartera</div>
+        <div class="big" id="summaryTotalProjects">—</div>
+        <div class="copy" id="summaryHeroCopy">Cargando proyectos, capacidad e inversión reportada…</div>
+      </div>
+      <div class="summary-panel">
+        <h3>Gerencias nacionales / regiones</h3>
+        <div class="summary-panel-body" id="summaryGcrTable"></div>
+      </div>
+      <div class="summary-panel">
+        <div class="summary-map-proxy">
+          <div class="summary-map-title">Distribución de proyectos</div>
+          <div class="summary-bubble-grid" id="summaryBubbles"></div>
+        </div>
+      </div>
+      <div class="summary-panel summary-tech">
+        <h3>Tipo de tecnología</h3>
+        <div class="summary-panel-body" id="summaryTechList"></div>
+      </div>
+      <div class="summary-panel">
+        <h3>Proyectos por grupo económico (MW)</h3>
+        <div class="summary-panel-body"><div class="summary-chart" id="chartSummaryCompanies"></div></div>
+      </div>
+      <div class="summary-panel">
+        <h3>Avance en trámites y estudios</h3>
+        <div class="summary-tramites" id="summaryProcedures"></div>
+      </div>
+    </div>
+    <div class="footer"></div>
+  </section>
+
+  <!-- ============ SLIDE 2: PORTADA ============ -->
   <section class="slide cover">
     <img class="cover-bg" src="https://cdn.sassoapps.com/dgmesnie/portada_ppt.png" alt="">
     <div class="cover-overlay"></div>
@@ -707,7 +1101,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
       <div class="eyebrow">Reporte GAT-Mixto</div>
       <h1>Proyectos en desarrollo · GAT-Mixto</h1>
       <div class="unidad">Dirección General de Metodologías y Estadísticas del Sistema Nacional de Información Energética</div>
-      <div class="subtitle" id="coverEf">Entidad Federativa: <strong>Yucatán</strong></div>
+      <div class="subtitle" id="coverEf">Ámbito: <strong>Nacional</strong></div>
       <div class="meta">
         <div><strong>Versión</strong>2026 · v1.0</div>
         <div><strong>Fecha</strong>Mayo 2026</div>
@@ -767,7 +1161,42 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
     <div class="footer"></div>
   </section>
 
-  <!-- ============ SLIDE 3: MAPA NACIONAL ============ -->
+  <!-- ============ SLIDE 3: REPORTE POR GCR ============ -->
+  <section class="slide content gcr-slide">
+    <div class="header">
+      <div class="brand-left">GAT-Mixto</div>
+      <div class="ef-title">Reporte por GCR</div>
+      <div class="logo-right"><img src="https://cdn.sassoapps.com/dgmesnie/logo_sener.png" alt="SENER"></div>
+    </div>
+
+    <div class="narrative" id="gcrNarrative">Cargando resumen por Gerencia de Control Regional…</div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="value" id="gcrKpiCount">—</div><div class="label">Gerencias<br>con proyectos</div></div>
+      <div class="kpi"><div class="value" id="gcrKpiMW">—</div><div class="label">MW bajo<br>seguimiento</div></div>
+      <div class="kpi"><div class="value" id="gcrKpiTop">—</div><div class="label">GCR con mayor<br>capacidad</div></div>
+      <div class="kpi"><div class="value" id="gcrKpiRisk">—</div><div class="label">Focos rojos<br>identificados</div></div>
+    </div>
+
+    <div class="body">
+      <div class="panel">
+        <h3>Capacidad y proyectos por GCR</h3>
+        <div class="chart" id="chartGcrMW"></div>
+      </div>
+      <div class="panel accent-verde">
+        <h3>Distribución tecnológica por GCR</h3>
+        <div class="chart" id="chartGcrTech"></div>
+      </div>
+      <div class="panel accent-dorado">
+        <h3>Resumen ejecutivo por GCR</h3>
+        <div id="gcrTable" class="gcr-table-wrap"></div>
+      </div>
+    </div>
+
+    <div class="footer"></div>
+  </section>
+
+  <!-- ============ SLIDE 4: MAPA NACIONAL ============ -->
   <section class="slide content map-slide">
     <div class="header">
       <div class="brand-left">GAT-Mixto</div>
@@ -788,7 +1217,7 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
         <select id="mapTipo"><option value="__ALL__">Todas</option></select>
         <label for="mapProjectSelect" style="margin-left:14px">Proyecto:</label>
         <select id="mapProjectSelect" style="min-width:260px;max-width:340px"><option value="">Seleccionar proyecto</option></select>
-        <button id="mapResetBtn" type="button" style="display:none;padding:5px 10px;background:transparent;border:1px solid var(--guinda);color:var(--guinda);border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">Restablecer mapa nacional</button>
+        <button id="mapResetBtn" type="button" style="display:none;padding:5px 10px;background:transparent;border:1px solid var(--sener-guinda);color:var(--sener-guinda);border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">Restablecer mapa nacional</button>
         <div class="legend">
           <span>Bajo</span>
           <span class="ramp"></span>
@@ -796,10 +1225,10 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
         </div>
       </div>
       <div id="mapToolbarEf" style="display:none;flex:1;align-items:center;gap:10px;font-size:12px;color:var(--text)">
-        <span style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle EF</span>
-        <span id="mapEfBadge" style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
-        <button id="mapKmzBtn" style="padding:4px 10px;background:var(--verde);color:white;border:0;border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">📍 Cargar puntos</button>
-        <button id="mapClearEf" style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">← Volver a Nacional</button>
+        <span style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sener-guinda)">Detalle EF</span>
+        <span id="mapEfBadge" style="background:var(--sener-guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
+        <button id="mapKmzBtn" style="padding:4px 10px;background:var(--sener-esmeralda);color:white;border:0;border-radius:4px;font-size:11px;cursor:pointer;font-weight:700">📍 Cargar puntos</button>
+        <button id="mapClearEf" style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--sener-gris);border-radius:4px;font-size:11px;cursor:pointer">← Volver a Nacional</button>
       </div>
     </div>
 
@@ -854,7 +1283,8 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
         <select id="fichaSelect"><option>Cargando…</option></select>
       </label>
       <span id="fichaStatusBadge" class="ficha-badge"></span>
-      <span id="fichaFolio" style="font-size:11px;color:var(--gris);margin-left:auto"></span>
+      <button class="secondary" type="button" onclick="Seguimiento.openCapture()" style="padding:5px 9px;font-size:11px">Seguimiento</button>
+      <span id="fichaFolio" style="font-size:11px;color:var(--sener-gris);margin-left:auto"></span>
     </div>
 
     <div class="ficha-body" id="fichaBody"></div>
@@ -867,9 +1297,9 @@ table.tech tfoot td { border-top: 2px solid var(--guinda); border-bottom: 0; bac
 <script>
 if (typeof Highcharts !== 'undefined') {
   Highcharts.setOptions({
-  colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
+  colors: ['#9B2247', '#0E8A6E', '#E0A12E', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
   chart: {
-    style: { fontFamily: "'Noto Sans', sans-serif" },
+    style: { fontFamily: "'Libre Franklin', sans-serif" },
     events: {
       fullscreenOpen: function() { this.update({ chart: { backgroundColor: '#ffffff' } }, false); this.redraw(); },
       fullscreenClose: function() { this.update({ chart: { backgroundColor: 'transparent' } }, false); this.redraw(); }
@@ -905,11 +1335,52 @@ if (typeof Highcharts !== 'undefined') {
   });
 }
 
+if (typeof Highcharts === 'undefined') {
+  window.Highcharts = {
+    charts: [],
+    numberFormat(value, decimals = 0) {
+      const n = Number(value) || 0;
+      return n.toLocaleString('es-MX', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    },
+    chart(renderTo, options = {}) {
+      const el = typeof renderTo === 'string' ? document.getElementById(renderTo) : renderTo;
+      const chartRef = { reflow(){}, redraw(){}, update(){}, fullscreen: { toggle(){} } };
+      this.charts.push(chartRef);
+      if (!el) return chartRef;
+      const cats = Array.isArray(options.xAxis?.categories) ? options.xAxis.categories : [];
+      const series = Array.isArray(options.series) ? options.series : [];
+      let rows = [];
+      series.forEach(s => {
+        const data = Array.isArray(s.data) ? s.data : [];
+        data.forEach((point, idx) => {
+          const name = point && typeof point === 'object'
+            ? (point.name || cats[idx] || s.name || 'Dato')
+            : (cats[idx] || s.name || 'Dato');
+          const value = point && typeof point === 'object' ? point.y : point;
+          rows.push({ serie: s.name || 'Serie', name, value: Number(value) || 0 });
+        });
+      });
+      rows = rows
+        .filter(r => Number.isFinite(r.value))
+        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+        .slice(0, 12);
+      el.innerHTML = rows.length
+        ? `<div class="chart-fallback"><table><thead><tr><th>Concepto</th><th>Serie</th><th class="num">Valor</th></tr></thead><tbody>${rows.map(r => `<tr><td>${safeHtml(r.name)}</td><td>${safeHtml(r.serie)}</td><td class="num">${this.numberFormat(r.value, 1)}</td></tr>`).join('')}</tbody></table></div>`
+        : '<div class="chart-fallback" style="display:flex;align-items:center;justify-content:center;color:var(--sener-gris);font-weight:800">Gráfica no disponible</div>';
+      return chartRef;
+    }
+  };
+}
+
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1612312561&single=true&output=csv';
 const SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pubhtml?gid=1612312561&single=true';
 const DATA_ENDPOINT = '/data-gat';
 const CNE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/pub?gid=1589427724&single=true&output=csv';
 const CNE_ENDPOINT = '/data-cne';
+window.SEGUIMIENTO_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyrwo0TX23J05qOkGVGtWyS4t02I69dGV2QHHHBrdBqvfxSc25EqBjy72WW3nWaTjGdeg/exec';
+const CORS_PROXY = url => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(url);
+const ALL_ORIGINS_PROXY = url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+const CORS_PROXY_IO = url => 'https://corsproxy.io/?' + encodeURIComponent(url);
 let CNE_INDEX = {};  // folio -> objeto CNE
 const MIXTOS_GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Mixtos/mixtos.geojson';
 let MIXTOS_INDEX = {}; // folio normalizado -> feature geojson (coordenada/punto)
@@ -930,7 +1401,7 @@ function mixtosClusterIcon(cluster) {
   const n = cluster.getChildCount();
   const size = n < 10 ? 32 : n < 50 ? 38 : 46;
   return L.divIcon({
-    html: `<div style="background:rgba(155,34,71,.92);color:white;border:2px solid #fff;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Noto Sans',sans-serif;font-size:${n<10?12:13}px;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,
+    html: `<div style="background:rgba(155,34,71,.92);color:white;border:2px solid #fff;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Libre Franklin',sans-serif;font-size:${n<10?12:13}px;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,
     className: '',
     iconSize: [size, size]
   });
@@ -938,7 +1409,7 @@ function mixtosClusterIcon(cluster) {
 function createMixtosPointLayer(features) {
   return L.geoJSON({ type: 'FeatureCollection', features }, {
     pane: 'mixtosPane',
-    style: () => ({ pane: 'mixtosPane', color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.45 }),
+    style: () => ({ pane: 'mixtosPane', color: '#E0A12E', weight: 2, fillColor: '#E0A12E', fillOpacity: 0.45 }),
     pointToLayer: (f, latlng) => L.marker(latlng, {
       pane: 'mixtosPane',
       zIndexOffset: 1000,
@@ -983,8 +1454,9 @@ async function loadData() {
   const proxies = [
     DATA_ENDPOINT + cb,
     CSV_URL,
-    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(CSV_URL),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(CSV_URL)
+    CORS_PROXY(CSV_URL),
+    ALL_ORIGINS_PROXY(CSV_URL),
+    CORS_PROXY_IO(CSV_URL)
   ];
   let lastErr;
   for (let i=0; i<proxies.length; i++) {
@@ -995,6 +1467,10 @@ async function loadData() {
       setStatus(`Datos recibidos (${text.length} bytes). Procesando…`);
       break;
     } catch (e) { lastErr = e; console.warn('Fail', i, e.message); }
+  }
+  if (!text && window.GAT_MIXTO_FALLBACK_CSV) {
+    text = window.GAT_MIXTO_FALLBACK_CSV;
+    setStatus(`Usando respaldo local (${text.length} bytes). Procesando…`);
   }
   if (!text) throw lastErr || new Error('No data — todas las fuentes fallaron');
   // First row is title; second row headers
@@ -1018,6 +1494,16 @@ async function loadData() {
     activosGestion: r['Activos bajo gestión, y en su caso capitalización bursátil'] || '',
     fuenteFondos: r['Fuente de los fondos'] || '',
     region: r['Región ok'] || r['Región'] || '',
+    gcr: (
+      r['Gerencia de Control Regional'] ||
+      r['GCR'] ||
+      r['Gerencia CENACE'] ||
+      r['Gerencia regional'] ||
+      r['¿A qué gerencia de control regional del CENACE estará interconectado?'] ||
+      r['Región ok'] ||
+      r['Región'] ||
+      'Sin GCR'
+    ).trim(),
     ef: (r['Estado'] || '').trim(),
     municipio: r['Municipio/Alcaldía'] || '',
     domicilio: r['Domicilio'] || '',
@@ -1104,8 +1590,9 @@ async function loadCneData() {
   const sources = [
     CNE_ENDPOINT + cb,
     CNE_CSV_URL,
-    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(CNE_CSV_URL),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(CNE_CSV_URL)
+    CORS_PROXY(CNE_CSV_URL),
+    ALL_ORIGINS_PROXY(CNE_CSV_URL),
+    CORS_PROXY_IO(CNE_CSV_URL)
   ];
   let text;
   for (const url of sources) {
@@ -1218,6 +1705,210 @@ function selectProjectForFicha(folioKey) {
   focusSelectedProjectOnMap();
 }
 
+function safeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+function shortGcrName(name) {
+  return String(name || 'Sin GCR')
+    .replace(/^Gerencia\s+de\s+Control\s+Regional\s+/i, '')
+    .replace(/^GCR\s+/i, '')
+    .trim() || 'Sin GCR';
+}
+
+function renderGcrReport() {
+  const groups = {};
+  DATA.forEach(r => {
+    const key = shortGcrName(r.gcr || r.region || 'Sin GCR');
+    if (!groups[key]) groups[key] = {
+      name: key,
+      projects: 0,
+      mw: 0,
+      inv: 0,
+      avanceSum: 0,
+      risk: 0,
+      tech: {}
+    };
+    const g = groups[key];
+    g.projects += 1;
+    g.mw += r.capacidadMW || 0;
+    g.inv += r.invMMUSD || 0;
+    g.avanceSum += r.avancePct || 0;
+    if (/si|alto|rojo/i.test(r.focoGeneral || '')) g.risk += 1;
+    const tech = r.tipo || 'Sin tecnología';
+    g.tech[tech] = (g.tech[tech] || 0) + (r.capacidadMW || 0);
+  });
+
+  const rows = Object.values(groups).sort((a, b) => b.mw - a.mw);
+  const totalMW = rows.reduce((s, g) => s + g.mw, 0);
+  const totalRisk = rows.reduce((s, g) => s + g.risk, 0);
+  const top = rows[0] || null;
+
+  document.getElementById('gcrKpiCount').textContent = rows.length || '—';
+  document.getElementById('gcrKpiMW').textContent = fmt(totalMW, 0);
+  document.getElementById('gcrKpiTop').textContent = top ? shortGcrName(top.name).slice(0, 14) : '—';
+  document.getElementById('gcrKpiRisk').textContent = totalRisk;
+  document.getElementById('gcrNarrative').innerHTML = top
+    ? `El portafolio nacional se agrupa en <strong>${rows.length} gerencias/regiones</strong>. La mayor concentración por capacidad se ubica en <strong>${safeHtml(top.name)}</strong>, con <strong>${fmt(top.mw, 0)} MW</strong> y <strong>${top.projects} proyectos</strong>. Este corte permite dar seguimiento por Gerencia de Control Regional antes de bajar al detalle por entidad federativa.`
+    : 'Sin datos suficientes para construir el resumen por Gerencia de Control Regional.';
+
+  const tableRows = rows.map(g => {
+    const avg = g.projects ? g.avanceSum / g.projects : 0;
+    const leadTech = Object.entries(g.tech).sort((a, b) => b[1] - a[1])[0];
+    return `<tr>
+      <td>${safeHtml(g.name)}</td>
+      <td class="mw">${g.projects}</td>
+      <td class="mw">${fmt(g.mw, 1)}</td>
+      <td class="mw">${fmt(g.inv, 1)}</td>
+      <td class="mw">${fmt(avg, 1)}%</td>
+      <td>${safeHtml(leadTech ? leadTech[0] : '—')}</td>
+      <td class="mw">${g.risk}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('gcrTable').innerHTML = `
+    <table class="tech">
+      <thead><tr><th>GCR / región</th><th class="mw">Proy.</th><th class="mw">MW</th><th class="mw">MMUSD</th><th class="mw">Avance</th><th>Tecnología líder</th><th class="mw">Focos</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>`;
+
+  const cats = rows.map(g => g.name);
+  Highcharts.chart('chartGcrMW', {
+    chart: { backgroundColor: 'transparent', zoomType: 'xy' },
+    xAxis: { categories: cats, labels: { style: { fontSize: '9px' } } },
+    yAxis: [
+      { title: { text: 'MW' }, gridLineColor: '#f0f0f0' },
+      { title: { text: 'Proyectos' }, opposite: true, gridLineWidth: 0 }
+    ],
+    tooltip: { shared: true },
+    plotOptions: {
+      column: { borderWidth: 0, dataLabels: { enabled: true, format: '{y:,.0f}', style: { fontSize: '9px', textOutline: 'none' } } },
+      spline: { dataLabels: { enabled: true, format: '{y}', style: { fontSize: '9px', textOutline: 'none' } } }
+    },
+    series: [
+      { type: 'column', name: 'MW', data: rows.map(g => +g.mw.toFixed(1)), color: '#9B2247' },
+      { type: 'spline', name: 'Proyectos', yAxis: 1, data: rows.map(g => g.projects), color: '#0E8A6E' }
+    ]
+  });
+
+  const allTechs = [...new Set(DATA.map(r => r.tipo).filter(Boolean))].sort();
+  Highcharts.chart('chartGcrTech', {
+    chart: { type: 'bar', backgroundColor: 'transparent' },
+    xAxis: { categories: cats, labels: { style: { fontSize: '9px' } } },
+    yAxis: { min: 0, title: { text: 'MW' }, gridLineColor: '#f0f0f0' },
+    plotOptions: { series: { stacking: 'normal', dataLabels: { enabled: false } } },
+    tooltip: { pointFormat: '<b>{series.name}</b>: {point.y:,.1f} MW<br/>' },
+    series: allTechs.map((t, i) => ({
+      name: t,
+      data: rows.map(g => +(g.tech[t] || 0).toFixed(1)),
+      color: ['#9B2247', '#0E8A6E', '#E0A12E', '#98989A', '#5d2a3f', '#3a7a6c'][i % 6]
+    }))
+  });
+}
+
+function renderSummarySlide() {
+  const rows = DATA;
+  const totalProjects = rows.length;
+  const totalMW = rows.reduce((s, r) => s + (r.capacidadMW || 0), 0);
+  const totalInv = rows.reduce((s, r) => s + (r.invMMUSD || 0), 0);
+  const storageProjects = rows.filter(r => /sae|almacen/i.test([r.descripcion, r.tipo, r.cronoDesarrollo].join(' '))).length;
+  const storageMW = rows
+    .filter(r => /sae|almacen/i.test([r.descripcion, r.tipo, r.cronoDesarrollo].join(' ')))
+    .reduce((s, r) => s + (r.capacidadMW || 0), 0);
+
+  document.getElementById('summaryTotalProjects').textContent = totalProjects || '—';
+  document.getElementById('summaryHeroCopy').innerHTML = `
+    ${totalProjects} proyectos · ${fmt(totalMW, 1)} MW<br>
+    inversión reportada: ${fmt(totalInv, 1)} MMUSD<br>
+    ${storageProjects} proyectos con referencia SAE / almacenamiento · ${fmt(storageMW, 1)} MW`;
+
+  const byGcr = {};
+  rows.forEach(r => {
+    const key = shortGcrName(r.gcr || r.region || 'Sin GCR');
+    if (!byGcr[key]) byGcr[key] = { name: key, projects: 0, mw: 0 };
+    byGcr[key].projects += 1;
+    byGcr[key].mw += r.capacidadMW || 0;
+  });
+  const gcrRows = Object.values(byGcr).sort((a, b) => b.mw - a.mw);
+  document.getElementById('summaryGcrTable').innerHTML = `
+    <table class="tech">
+      <thead><tr><th>GCR / región</th><th class="mw">Proyectos</th><th class="mw">MW</th><th class="mw">%</th></tr></thead>
+      <tbody>${gcrRows.map(g => `<tr><td>${safeHtml(g.name)}</td><td class="mw">${g.projects}</td><td class="mw">${fmt(g.mw, 1)}</td><td class="mw">${totalMW ? fmt(g.mw / totalMW * 100, 0) : '0'}%</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td>Totales</td><td class="mw">${totalProjects}</td><td class="mw">${fmt(totalMW, 1)}</td><td class="mw">100%</td></tr></tfoot>
+    </table>`;
+
+  document.getElementById('summaryBubbles').innerHTML = gcrRows.slice(0, 12)
+    .map(g => `<div class="summary-bubble" title="${safeHtml(g.name)}">${g.projects}</div>`)
+    .join('');
+
+  const byTech = {};
+  rows.forEach(r => {
+    const key = r.tipo || 'Sin tecnología';
+    if (!byTech[key]) byTech[key] = { name: key, projects: 0, mw: 0 };
+    byTech[key].projects += 1;
+    byTech[key].mw += r.capacidadMW || 0;
+  });
+  const techRows = Object.values(byTech).sort((a, b) => b.mw - a.mw);
+  document.getElementById('summaryTechList').innerHTML = `
+    <table class="tech">
+      <thead><tr><th>Tecnología</th><th class="mw">Proy.</th><th class="mw">MW</th><th class="mw">%</th></tr></thead>
+      <tbody>${techRows.map(t => `<tr><td>${safeHtml(t.name)}</td><td class="mw">${t.projects}</td><td class="mw">${fmt(t.mw, 1)}</td><td class="mw">${totalMW ? fmt(t.mw / totalMW * 100, 0) : '0'}%</td></tr>`).join('')}</tbody>
+    </table>`;
+
+  const byCompany = {};
+  rows.forEach(r => {
+    const key = r.gieLimpio || r.gie || 'Sin grupo';
+    if (!byCompany[key]) byCompany[key] = { name: key, projects: 0, mw: 0 };
+    byCompany[key].projects += 1;
+    byCompany[key].mw += r.capacidadMW || 0;
+  });
+  const companyRows = Object.values(byCompany).sort((a, b) => b.mw - a.mw).slice(0, 10);
+  Highcharts.chart('chartSummaryCompanies', {
+    chart: { type: 'bar', backgroundColor: 'transparent' },
+    xAxis: { categories: companyRows.map(c => c.name.length > 24 ? c.name.slice(0, 24) + '…' : c.name), labels: { style: { fontSize: '9px' } } },
+    yAxis: { title: { text: 'MW' }, gridLineColor: '#eee' },
+    legend: { enabled: false },
+    tooltip: { formatter: function () { const c = companyRows[this.point.index]; return `<b>${safeHtml(c.name)}</b><br>${c.projects} proy. · ${fmt(c.mw, 1)} MW`; } },
+    plotOptions: {
+      bar: {
+        color: '#9B2247',
+        borderRadius: 3,
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            const c = companyRows[this.point.index];
+            return `${c.projects} proy. · ${fmt(c.mw, 0)} MW`;
+          },
+          style: { fontSize: '9px', textOutline: 'none' }
+        }
+      }
+    },
+    series: [{ name: 'MW', data: companyRows.map(c => +c.mw.toFixed(1)) }]
+  });
+
+  const proc = [
+    {
+      label: 'MIA en trámite',
+      rows: rows.filter(r => /tramite|trámite|evaluaci|ingres/i.test(r.estatusMia || ''))
+    },
+    {
+      label: 'EVIS / MISSE aprobada',
+      rows: rows.filter(r => /aprob|autoriz|cumple/i.test(r.estatusEvis || ''))
+    },
+    {
+      label: 'Estudios CENACE',
+      rows: rows.filter(r => /present|valid|estudio|pago|termin/i.test([r.estatusValCenace, r.hasInter].join(' ')))
+    },
+    {
+      label: 'Foco rojo general',
+      rows: rows.filter(r => /si|alto|rojo/i.test(r.focoGeneral || ''))
+    }
+  ];
+  document.getElementById('summaryProcedures').innerHTML = proc.map(p => {
+    const mw = p.rows.reduce((s, r) => s + (r.capacidadMW || 0), 0);
+    return `<div class="summary-procedure"><div class="lbl">${safeHtml(p.label)}</div><div class="num">${p.rows.length}</div><div class="mw">${fmt(mw, 1)} MW</div></div>`;
+  }).join('');
+}
+
 function render() {
   const efVal = document.getElementById('efSelect').value;
   const isAll = efVal === '__ALL__';
@@ -1226,6 +1917,8 @@ function render() {
   document.getElementById('contEf').textContent = ef;
   CURRENT_FOCUS_EF = isAll ? null : ef;
   if (geoData && mapInstance) drawMap();
+  renderSummarySlide();
+  renderGcrReport();
 
   const all = DATA;
   const rows = isAll ? DATA : DATA.filter(r => r.ef === efVal);
@@ -1281,7 +1974,7 @@ function render() {
   document.getElementById('techTable').innerHTML = `<table class="tech">
     <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% ${isAll?'Nal':'EF'}</th></tr></thead>
     <tbody>${techRows}</tbody>
-    <tfoot><tr style="border-top:2px solid var(--guinda);font-weight:700;background:#faf3f5">
+    <tfoot><tr style="border-top:2px solid var(--sener-guinda);font-weight:700;background:#faf3f5">
       <td>TOTAL</td><td class="mw">${fmt(totalMW,1)}</td><td class="mw">100.0%</td>
     </tr></tfoot>
   </table>`;
@@ -1482,7 +2175,7 @@ function drawMap() {
   if (geoLayer) mapInstance.removeLayer(geoLayer);
   if (kmzLayer) { mapInstance.removeLayer(kmzLayer); kmzLayer = null; }
   const kmzBtn = document.getElementById('mapKmzBtn');
-  if (kmzBtn) { kmzBtn.textContent = '📍 Cargar puntos'; kmzBtn.style.background = 'var(--verde)'; kmzBtn.disabled = false; }
+  if (kmzBtn) { kmzBtn.textContent = '📍 Cargar puntos'; kmzBtn.style.background = 'var(--sener-esmeralda)'; kmzBtn.disabled = false; }
   geoLayer = L.geoJSON(geoData, {
     style: f => {
       const geoName = getEfNameFromFeature(f);
@@ -1639,7 +2332,7 @@ function showEfDetail(ef) {
     ${statsSorted.map(([s,m]) => `
       <div class="ef-bar-row">
         <span class="name" style="width:auto;flex:0 0 auto;font-size:9.5px;letter-spacing:0">${s}</span>
-        <span class="bar"><span style="width:${(m/totalMW*100).toFixed(1)}%;background:var(--verde)"></span></span>
+        <span class="bar"><span style="width:${(m/totalMW*100).toFixed(1)}%;background:var(--sener-esmeralda)"></span></span>
         <span class="num">${fmt(m/totalMW*100,1)}%</span>
       </div>`).join('')}
 
@@ -1647,7 +2340,7 @@ function showEfDetail(ef) {
     ${yearsSorted.map(y => `
       <div class="ef-bar-row">
         <span class="name">${y}</span>
-        <span class="bar"><span style="width:${(byYear[y]/maxYearMW*100).toFixed(1)}%;background:var(--dorado)"></span></span>
+        <span class="bar"><span style="width:${(byYear[y]/maxYearMW*100).toFixed(1)}%;background:var(--sener-dorado)"></span></span>
         <span class="num">${fmt(byYear[y],0)} MW</span>
       </div>`).join('')}
 
@@ -1854,7 +2547,7 @@ async function loadKmzsForCurrentEf(silent=false) {
   if (kmzLayer) {
     mapInstance.removeLayer(kmzLayer);
     kmzLayer = null;
-    if (btn) { btn.textContent = '📍 Cargar puntos'; btn.style.background = 'var(--verde)'; }
+    if (btn) { btn.textContent = '📍 Cargar puntos'; btn.style.background = 'var(--sener-esmeralda)'; }
     return;
   }
   const efVal = document.getElementById('efSelect').value;
@@ -1903,7 +2596,7 @@ async function loadKmzsForCurrentEf(silent=false) {
       }
       mapInstance.addLayer(kmzLayer);
       if (kmzLayer.bringToFront) kmzLayer.bringToFront();
-      if (btn) { btn.textContent = `✓ ${feats.length} puntos — click para ocultar`; btn.style.background = 'var(--guinda)'; }
+      if (btn) { btn.textContent = `✓ ${feats.length} puntos — click para ocultar`; btn.style.background = 'var(--sener-guinda)'; }
       try { mapInstance.fitBounds(boundsLayer.getBounds().pad(0.2)); } catch(e) {}
       return;
     }
@@ -1947,15 +2640,15 @@ async function loadKmzsForCurrentEf(silent=false) {
     return;
   }
   kmzLayer = L.geoJSON({ type: 'FeatureCollection', features }, {
-    style: () => ({ color: '#A57F2C', weight: 2, fillColor: '#A57F2C', fillOpacity: 0.35 }),
-    pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#A57F2C', fillColor: '#A57F2C', fillOpacity: 0.85, weight: 1.5, pane: 'mixtosPane' }),
+    style: () => ({ color: '#E0A12E', weight: 2, fillColor: '#E0A12E', fillOpacity: 0.35 }),
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, color: '#E0A12E', fillColor: '#E0A12E', fillOpacity: 0.85, weight: 1.5, pane: 'mixtosPane' }),
     onEachFeature: (f, lyr) => {
       const p = f.properties || {};
       lyr.bindPopup(`<strong>${p._proj||'Proyecto'}</strong><br>Folio: ${p._folio||'—'}<br>Tipo: ${p._tipo||'—'}<br>Estado: ${p._ef||'—'}`);
     }
   }).addTo(mapInstance);
   btn.textContent = `✓ KMZs cargados (${features.length}) — click para ocultar`;
-  btn.style.background = 'var(--guinda)';
+  btn.style.background = 'var(--sener-guinda)';
   btn.disabled = false;
   try { mapInstance.fitBounds(kmzLayer.getBounds().pad(0.2)); } catch(e) {}
 }
@@ -1985,7 +2678,7 @@ async function initOneMiniMap(div) {
   div.dataset.init = '1';
   const folio = div.dataset.folio;
   const url = div.dataset.kmzUrl;
-  div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--guinda);font-weight:700;gap:6px"><span class="mini-spin"></span>Cargando…</div>';
+  div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--sener-guinda);font-weight:700;gap:6px"><span class="mini-spin"></span>Cargando…</div>';
   try {
     let gj;
     const mixtosFeature = getMixtosFeatureByFolio(folio);
@@ -2040,7 +2733,7 @@ async function initOneMiniMap(div) {
     }
     if (!center) { div.dataset.loaded='1'; return; }
     const coordTag = document.createElement('div');
-    coordTag.style.cssText = 'position:absolute;bottom:2px;right:4px;background:rgba(255,255,255,.85);font-size:9px;padding:1px 4px;border-radius:2px;color:var(--guinda);font-weight:700;font-variant-numeric:tabular-nums;z-index:1000;pointer-events:none';
+    coordTag.style.cssText = 'position:absolute;bottom:2px;right:4px;background:rgba(255,255,255,.85);font-size:9px;padding:1px 4px;border-radius:2px;color:var(--sener-guinda);font-weight:700;font-variant-numeric:tabular-nums;z-index:1000;pointer-events:none';
     coordTag.textContent = `${center.lat.toFixed(3)}, ${center.lng.toFixed(3)}`;
     div.appendChild(coordTag);
     div.dataset.loaded = '1';
@@ -2095,7 +2788,7 @@ const _miniObserver = ('IntersectionObserver' in window) ? new IntersectionObser
 function initMiniMaps() {
   const divs = document.querySelectorAll('.ficha-minimap[data-folio]:not([data-init]), .ficha-minimap[data-kmz-url]:not([data-init])');
   divs.forEach(div => {
-    div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gris);font-style:italic">Esperando…</div>';
+    div.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--sener-gris);font-style:italic">Esperando…</div>';
     if (_miniObserver) _miniObserver.observe(div);
     else enqueueMiniMap(div);
   });
@@ -2133,7 +2826,7 @@ function appendProjectFichaSlides(projects, label) {
       <div class="ficha-toolbar">
         <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 1 de 2</span>
         <span class="ficha-badge">${p.status||'—'}</span>
-        <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}${p.rfc?' · RFC: '+p.rfc:''}</span>
+        <span style="font-size:11px;color:var(--sener-gris);margin-left:auto">Folio: ${p.folio||'—'}${p.rfc?' · RFC: '+p.rfc:''}</span>
       </div>
       <div class="ficha-body">${buildFichaCardsPart1(p)}</div>
       <div class="footer"></div>
@@ -2152,7 +2845,7 @@ function appendProjectFichaSlides(projects, label) {
       <div class="ficha-toolbar">
         <span style="font-size:11px;color:var(--text);font-weight:700">Proyecto ${i+1} / ${projects.length} · página 2 de 2</span>
         <span class="ficha-badge">${p.status||'—'}</span>
-        <span style="font-size:11px;color:var(--gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
+        <span style="font-size:11px;color:var(--sener-gris);margin-left:auto">Folio: ${p.folio||'—'}</span>
       </div>
       <div class="ficha-body" style="grid-template-columns:1fr;align-content:start">
         ${buildFichaCardsPart2(p)}
@@ -2247,8 +2940,8 @@ function buildFichaCardsPart1(p) {
     return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(v && String(v).trim() && v !== '-') ? trunc(v, 50) : '—'}</span></div>`;
   };
   const cneCard = cne ? `
-    <div class="ficha-card span4" style="border-left:3px solid var(--verde)">
-      <h5 style="color:var(--verde);border-bottom-color:var(--verde)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
+    <div class="ficha-card span4" style="border-left:3px solid var(--sener-esmeralda)">
+      <h5 style="color:var(--sener-esmeralda);border-bottom-color:var(--sener-esmeralda)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--sener-gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 14px">
         <div>
           ${cneRow('Permiso Generación', 'Permiso Generación')}
@@ -2279,7 +2972,7 @@ function buildFichaCardsPart1(p) {
           ${cneRow('Sentido resolución', 'Sentido de la resolución')}
         </div>
       </div>
-      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:9px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--verde);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
+      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:9px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--sener-esmeralda);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
     </div>` : '';
   return `
     <div class="ficha-card">
@@ -2368,14 +3061,14 @@ function buildFichaCardsPart1(p) {
           ${row('Oír', trunc(p.oir, 30))}
         </div>
       </div>
-      ${p.domicilioFiscal ? `<div style="margin-top:4px;font-size:9.5px;color:var(--text)"><span style="color:var(--gris);font-weight:700">Dom. fiscal:</span> ${trunc(p.domicilioFiscal, 90)}</div>` : ''}
+      ${p.domicilioFiscal ? `<div style="margin-top:4px;font-size:9.5px;color:var(--text)"><span style="color:var(--sener-gris);font-weight:700">Dom. fiscal:</span> ${trunc(p.domicilioFiscal, 90)}</div>` : ''}
     </div>
     <div class="ficha-card accent-verde span2">
       <h5>CENACE / Interconexión</h5>
       ${row('Estatus Validación CENACE', p.estatusValCenace)}
       ${row('Capacidad permiso', p.capacidadPermiso)}
       ${row('Refuerzos MMUSD', p.refuerzosMMUSD ? fmt(p.refuerzosMMUSD,2) : '—')}
-      ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 100)}</div>` : ''}
+      ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--sener-gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 100)}</div>` : ''}
     </div>
   `;
 }
@@ -2389,8 +3082,8 @@ function buildCneCard(p) {
     return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(v && String(v).trim() && v !== '-') ? trunc(v, 50) : '—'}</span></div>`;
   };
   return `
-    <div class="ficha-card span4" style="border-left:3px solid var(--verde)">
-      <h5 style="color:var(--verde);border-bottom-color:var(--verde)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
+    <div class="ficha-card span4" style="border-left:3px solid var(--sener-esmeralda)">
+      <h5 style="color:var(--sener-esmeralda);border-bottom-color:var(--sener-esmeralda)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--sener-gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 14px">
         <div>
           ${cneRow('Permiso Generación', 'Permiso Generación')}
@@ -2421,7 +3114,7 @@ function buildCneCard(p) {
           ${cneRow('Sentido resolución', 'Sentido de la resolución')}
         </div>
       </div>
-      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:10px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--verde);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
+      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:10px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--sener-esmeralda);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
     </div>
   `;
 }
@@ -2432,12 +3125,12 @@ function buildFichaCardsPart2(p) {
     <div class="ficha-card span4">
       <h5>Foco rojo y priorización</h5>
       <div class="ficha-foco" style="font-size:11px">
-        <span style="color:var(--gris);font-weight:700;margin-right:4px">Social:</span> ${pillForFoco(p.focoSocial)}
-        <span style="color:var(--gris);font-weight:700;margin:0 4px">Territorial:</span> ${pillForFoco(p.focoTerritorial)}
-        <span style="color:var(--gris);font-weight:700;margin:0 4px">Ambiental:</span> ${pillForFoco(p.focoAmbiental)}
-        <span style="color:var(--gris);font-weight:700;margin:0 4px">General:</span> ${pillForFoco(p.focoGeneral)}
-        <span style="color:var(--gris);font-weight:700;margin:0 4px">TSA:</span> ${pillForFoco(p.focoTSA)}
-        <span style="color:var(--gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
+        <span style="color:var(--sener-gris);font-weight:700;margin-right:4px">Social:</span> ${pillForFoco(p.focoSocial)}
+        <span style="color:var(--sener-gris);font-weight:700;margin:0 4px">Territorial:</span> ${pillForFoco(p.focoTerritorial)}
+        <span style="color:var(--sener-gris);font-weight:700;margin:0 4px">Ambiental:</span> ${pillForFoco(p.focoAmbiental)}
+        <span style="color:var(--sener-gris);font-weight:700;margin:0 4px">General:</span> ${pillForFoco(p.focoGeneral)}
+        <span style="color:var(--sener-gris);font-weight:700;margin:0 4px">TSA:</span> ${pillForFoco(p.focoTSA)}
+        <span style="color:var(--sener-gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
       </div>
     </div>
     <div class="ficha-card span4">
@@ -2464,8 +3157,8 @@ function buildFichaCards(p) {
     return `<div class="ficha-row"><span class="lbl">${lbl}</span><span class="val">${(v && String(v).trim() && v !== '-') ? trunc(v, 50) : '—'}</span></div>`;
   };
   const cneCard = cne ? `
-    <div class="ficha-card span4" style="border-left:3px solid var(--verde)">
-      <h5 style="color:var(--verde);border-bottom-color:var(--verde)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
+    <div class="ficha-card span4" style="border-left:3px solid var(--sener-esmeralda)">
+      <h5 style="color:var(--sener-esmeralda);border-bottom-color:var(--sener-esmeralda)">⚡ Datos CNE · Trámites e Interconexión <span style="color:var(--sener-gris);font-weight:400;letter-spacing:0;text-transform:none;font-size:9px;margin-left:auto">cruce por Folio Proyecto</span></h5>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0 14px">
         <div>
           ${cneRow('Permiso Generación', 'Permiso Generación')}
@@ -2496,7 +3189,7 @@ function buildFichaCards(p) {
           ${cneRow('Sentido resolución', 'Sentido de la resolución')}
         </div>
       </div>
-      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:9px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--verde);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
+      ${cne['Archivo KMZ'] && cne['Archivo KMZ'].startsWith('http') ? `<div style="margin-top:5px;font-size:9px"><a href="${cne['Archivo KMZ']}" target="_blank" style="color:var(--sener-esmeralda);text-decoration:none;font-weight:700">📍 Ver KMZ del proyecto →</a></div>` : ''}
     </div>` : '';
   return `
     <div class="ficha-card">
@@ -2591,8 +3284,8 @@ function buildFichaCards(p) {
           ${row('Oír', p.oir)}
         </div>
       </div>
-      ${p.domicilioFiscal ? `<div style="margin-top:4px;font-size:9.5px;color:var(--text)"><span style="color:var(--gris);font-weight:700">Dom. fiscal:</span> ${trunc(p.domicilioFiscal, 90)}</div>` : ''}
-      ${p.domicilioNotif ? `<div style="font-size:9.5px;color:var(--text)"><span style="color:var(--gris);font-weight:700">Dom. notif:</span> ${trunc(p.domicilioNotif, 90)}</div>` : ''}
+      ${p.domicilioFiscal ? `<div style="margin-top:4px;font-size:9.5px;color:var(--text)"><span style="color:var(--sener-gris);font-weight:700">Dom. fiscal:</span> ${trunc(p.domicilioFiscal, 90)}</div>` : ''}
+      ${p.domicilioNotif ? `<div style="font-size:9.5px;color:var(--text)"><span style="color:var(--sener-gris);font-weight:700">Dom. notif:</span> ${trunc(p.domicilioNotif, 90)}</div>` : ''}
     </div>
 
     <div class="ficha-card accent-verde span2">
@@ -2600,7 +3293,7 @@ function buildFichaCards(p) {
       ${row('Estatus Validación CENACE', p.estatusValCenace)}
       ${row('Capacidad permiso', p.capacidadPermiso)}
       ${row('Refuerzos MMUSD', p.refuerzosMMUSD ? fmt(p.refuerzosMMUSD,2) : '—')}
-      ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 120)}</div>` : ''}
+      ${p.obraInterconexion ? `<div style="font-size:9.5px;color:var(--text);margin-top:3px"><span style="color:var(--sener-gris);font-weight:700">Obras:</span> ${trunc(p.obraInterconexion, 120)}</div>` : ''}
       ${p.motivosRechazo ? `<div style="font-size:9.5px;color:#9B2247;margin-top:3px"><span style="font-weight:700">Motivos rechazo:</span> ${trunc(p.motivosRechazo, 120)}</div>` : ''}
     </div>
 
@@ -2609,22 +3302,313 @@ function buildFichaCards(p) {
     <div class="ficha-card span4">
       <h5>Foco rojo y priorización</h5>
       <div class="ficha-foco">
-        <span style="font-size:9px;color:var(--gris);font-weight:700;margin-right:4px">Social:</span> ${pillForFoco(p.focoSocial)}
-        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Territorial:</span> ${pillForFoco(p.focoTerritorial)}
-        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Ambiental:</span> ${pillForFoco(p.focoAmbiental)}
-        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">General:</span> ${pillForFoco(p.focoGeneral)}
-        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">TSA:</span> ${pillForFoco(p.focoTSA)}
-        <span style="font-size:9px;color:var(--gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
+        <span style="font-size:9px;color:var(--sener-gris);font-weight:700;margin-right:4px">Social:</span> ${pillForFoco(p.focoSocial)}
+        <span style="font-size:9px;color:var(--sener-gris);font-weight:700;margin:0 4px">Territorial:</span> ${pillForFoco(p.focoTerritorial)}
+        <span style="font-size:9px;color:var(--sener-gris);font-weight:700;margin:0 4px">Ambiental:</span> ${pillForFoco(p.focoAmbiental)}
+        <span style="font-size:9px;color:var(--sener-gris);font-weight:700;margin:0 4px">General:</span> ${pillForFoco(p.focoGeneral)}
+        <span style="font-size:9px;color:var(--sener-gris);font-weight:700;margin:0 4px">TSA:</span> ${pillForFoco(p.focoTSA)}
+        <span style="font-size:9px;color:var(--sener-gris);font-weight:700;margin:0 4px">Priorización:</span> ${pillForFoco(p.priorizacion)}
       </div>
     </div>
 
     ${p.descripcion || p.cronoDesarrollo ? `<div class="ficha-card accent-dorado span4">
       <h5>Descripción y observaciones</h5>
-      ${p.descripcion ? `<div style="font-size:10px;line-height:1.4;color:var(--text);margin-bottom:4px"><strong style="color:var(--guinda)">Descripción:</strong> ${trunc(p.descripcion, 400)}</div>` : ''}
-      ${p.cronoDesarrollo ? `<div style="font-size:10px;line-height:1.4;color:var(--text)"><strong style="color:var(--guinda)">Cronograma:</strong> ${trunc(p.cronoDesarrollo, 280)}</div>` : ''}
+      ${p.descripcion ? `<div style="font-size:10px;line-height:1.4;color:var(--text);margin-bottom:4px"><strong style="color:var(--sener-guinda)">Descripción:</strong> ${trunc(p.descripcion, 400)}</div>` : ''}
+      ${p.cronoDesarrollo ? `<div style="font-size:10px;line-height:1.4;color:var(--text)"><strong style="color:var(--sener-guinda)">Cronograma:</strong> ${trunc(p.cronoDesarrollo, 280)}</div>` : ''}
     </div>` : ''}
   `;
 }
+
+// =================== SEGUIMIENTO OPERATIVO ===================
+window.Seguimiento = (function () {
+  'use strict';
+
+  const WEBAPP_URL = (window.SEGUIMIENTO_WEBAPP_URL || '').trim();
+  const LS = {
+    log: 'gatmixto.seguimiento.log',
+    index: 'gatmixto.seguimiento.index',
+    row: folio => 'gatmixto.seguimiento.row.' + folio
+  };
+  const DEFAULT_COLS = [
+    'timestamp', 'folio', 'proyecto', 'empresa', 'estado', 'tecnologia', 'mw',
+    'fuente', 'fecha_reunion', 'estatus_general', 'semaforo', 'ruta_critica',
+    'mia_dtu', 'etj', 'misse_evis', 'inah', 'pemex', 'conagua', 'dgac',
+    'contrato_interconexion', 'licencia_construccion', 'mano_obra',
+    'proximo_hito', 'responsable', 'observaciones', 'capturado_por'
+  ];
+
+  function jload(k, def) { try { const v = localStorage.getItem(k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } }
+  function jsave(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.warn('seguimiento save', e); } }
+  function nowISO() { return new Date().toISOString(); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function setVal(id, value) { const el = document.getElementById(id); if (el) el.value = value || ''; }
+  function toast(msg, err) {
+    let el = document.getElementById('segToast');
+    if (!el) { el = document.createElement('div'); el.id = 'segToast'; el.className = 'seg-toast'; document.body.appendChild(el); }
+    el.textContent = msg; el.className = 'seg-toast show' + (err ? ' err' : '');
+    clearTimeout(el._t); el._t = setTimeout(() => el.className = 'seg-toast' + (err ? ' err' : ''), 2600);
+  }
+  function projectByFolioKey(key) {
+    if (key) {
+      const hit = DATA.find(p => normFolio(p.folio) === key);
+      if (hit) return hit;
+    }
+    const sel = document.getElementById('fichaSelect');
+    const efVal = document.getElementById('efSelect')?.value;
+    const rows = efVal === '__ALL__' ? DATA : DATA.filter(p => p.ef === efVal);
+    return rows[parseInt(sel?.value || '0', 10) || 0] || DATA[0] || null;
+  }
+  function selectedProject() {
+    return projectByFolioKey(SELECTED_PROJECT_FOLIO);
+  }
+  function allRows() { return jload(LS.log, []); }
+  function latestRows(rows = allRows()) {
+    const by = {};
+    rows.forEach(r => {
+      const k = r.folio || r.proyecto;
+      if (!k) return;
+      if (!by[k] || String(r.timestamp || '') > String(by[k].timestamp || '')) by[k] = r;
+    });
+    return Object.values(by);
+  }
+  function latestFor(folio) {
+    return latestRows().find(r => r.folio === folio) || null;
+  }
+  function semClass(s) {
+    const n = String(s || '').toLowerCase();
+    if (/verde|sin riesgo|en tiempo/.test(n)) return 'verde';
+    if (/amarillo|atenci|riesgo medio/.test(n)) return 'dorado';
+    if (/rojo|critico|crítico|bloque/.test(n)) return 'guinda';
+    return '';
+  }
+  function persist(row) {
+    const log = allRows();
+    log.push(row);
+    jsave(LS.log, log);
+    jsave(LS.row(row.folio), row);
+    const idx = jload(LS.index, []);
+    if (row.folio && !idx.includes(row.folio)) idx.push(row.folio);
+    jsave(LS.index, idx);
+  }
+  async function sync(row) {
+    if (!WEBAPP_URL) return 'local';
+    try {
+      await fetch(WEBAPP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(row)
+      });
+      return 'ok';
+    } catch (e) {
+      return 'pendiente';
+    }
+  }
+  async function loadFromSheet() {
+    if (!WEBAPP_URL) return false;
+    const res = await fetch(WEBAPP_URL, { method: 'GET' });
+    const rows = await res.json();
+    if (!Array.isArray(rows)) return false;
+    const clean = rows.filter(r => r && r.folio && r.folio !== 'folio' && r.timestamp !== 'timestamp');
+    jsave(LS.log, clean);
+    Object.keys(localStorage).filter(k => k.indexOf('gatmixto.seguimiento.row.') === 0).forEach(k => localStorage.removeItem(k));
+    latestRows(clean).forEach(r => jsave(LS.row(r.folio), r));
+    jsave(LS.index, latestRows(clean).map(r => r.folio).filter(Boolean));
+    return true;
+  }
+  function ensureCaptureModal() {
+    if (document.getElementById('segCaptureModal')) return;
+    const o = document.createElement('div');
+    o.className = 'seg-overlay';
+    o.id = 'segCaptureModal';
+    o.innerHTML = `
+      <div class="seg-panel">
+        <div class="seg-head">
+          <div><h2>Seguimiento operativo</h2><div class="seg-sub" id="segCapSub"></div></div>
+          <button class="seg-btn ghost" onclick="Seguimiento.close('segCaptureModal')">Cerrar</button>
+        </div>
+        <div class="seg-body">
+          <div class="seg-grid">
+            <div class="seg-field"><label>Fecha reunión / corte</label><input id="segFecha" type="date"></div>
+            <div class="seg-field"><label>Estatus general</label><select id="segEstatus"><option>En seguimiento</option><option>Realizada</option><option>Programada</option><option>Pendiente información</option><option>Bloqueado</option></select></div>
+            <div class="seg-field"><label>Semáforo</label><select id="segSemaforo"><option>Verde</option><option>Amarillo</option><option>Rojo</option></select></div>
+            <div class="seg-field"><label>Fuente</label><input id="segFuente" value="PDF seguimiento 24-25 junio 2026"></div>
+            <div class="seg-field span2"><label>Ruta crítica</label><input id="segRuta" placeholder="Ej. ETJ de línea, consulta indígena, PEMEX..."></div>
+            <div class="seg-field"><label>MIA / DTU</label><input id="segMia" placeholder="Autorizada, en evaluación, por ingresar..."></div>
+            <div class="seg-field"><label>ETJ</label><input id="segEtj"></div>
+            <div class="seg-field"><label>MISSE / EVIS</label><input id="segMisse"></div>
+            <div class="seg-field"><label>INAH</label><input id="segInah"></div>
+            <div class="seg-field"><label>PEMEX</label><input id="segPemex"></div>
+            <div class="seg-field"><label>CONAGUA</label><input id="segConagua"></div>
+            <div class="seg-field"><label>DGAC</label><input id="segDgac"></div>
+            <div class="seg-field"><label>Contrato interconexión</label><input id="segContrato"></div>
+            <div class="seg-field"><label>Licencia construcción</label><input id="segLicencia"></div>
+            <div class="seg-field"><label>Mano de obra</label><input id="segManoObra" placeholder="Ej. 350 plazas"></div>
+            <div class="seg-field span2"><label>Próximo hito</label><input id="segHito"></div>
+            <div class="seg-field"><label>Responsable</label><input id="segResponsable"></div>
+            <div class="seg-field"><label>Capturado por</label><input id="segCapturado"></div>
+            <div class="seg-field span4"><label>Observaciones</label><textarea id="segObs"></textarea></div>
+          </div>
+          <div class="seg-actions">
+            <button class="seg-btn ghost" onclick="Seguimiento.close('segCaptureModal')">Cancelar</button>
+            <button class="seg-btn verde" onclick="Seguimiento.save()">Guardar seguimiento</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(o);
+  }
+  function ensureReportModal() {
+    if (document.getElementById('segReportModal')) return;
+    const o = document.createElement('div');
+    o.className = 'seg-overlay';
+    o.id = 'segReportModal';
+    o.innerHTML = `
+      <div class="seg-panel">
+        <div class="seg-head">
+          <div><h2>Reporte de seguimiento GAT-Mixto</h2><div class="seg-sub">Estado vigente e historial de ruta crítica</div></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="seg-btn ghost" onclick="Seguimiento.refresh()">Actualizar Sheet</button>
+            <button class="seg-btn dorado" onclick="Seguimiento.exportTSV()">TSV</button>
+            <button class="seg-btn ghost" onclick="Seguimiento.close('segReportModal')">Cerrar</button>
+          </div>
+        </div>
+        <div class="seg-body" id="segReportBody"></div>
+      </div>`;
+    document.body.appendChild(o);
+  }
+  function openCapture() {
+    ensureCaptureModal();
+    const p = selectedProject();
+    if (!p) { toast('No hay proyecto seleccionado.', true); return; }
+    const latest = latestFor(p.folio) || {};
+    document.getElementById('segCapSub').innerHTML = `<strong>${esc(p.nombre)}</strong> · ${esc(p.folio || 's/folio')} · ${esc(p.ef || '')} · ${p.capacidadMW ? fmt(p.capacidadMW, 1) + ' MW' : '—'}`;
+    setVal('segFecha', (latest.fecha_reunion || '').slice(0, 10) || new Date().toISOString().slice(0, 10));
+    setVal('segEstatus', latest.estatus_general || 'En seguimiento');
+    setVal('segSemaforo', latest.semaforo || 'Amarillo');
+    setVal('segFuente', latest.fuente || 'PDF seguimiento 24-25 junio 2026');
+    setVal('segRuta', latest.ruta_critica || '');
+    setVal('segMia', latest.mia_dtu || '');
+    setVal('segEtj', latest.etj || '');
+    setVal('segMisse', latest.misse_evis || '');
+    setVal('segInah', latest.inah || '');
+    setVal('segPemex', latest.pemex || '');
+    setVal('segConagua', latest.conagua || '');
+    setVal('segDgac', latest.dgac || '');
+    setVal('segContrato', latest.contrato_interconexion || '');
+    setVal('segLicencia', latest.licencia_construccion || '');
+    setVal('segManoObra', latest.mano_obra || '');
+    setVal('segHito', latest.proximo_hito || '');
+    setVal('segResponsable', latest.responsable || '');
+    setVal('segCapturado', latest.capturado_por || '');
+    setVal('segObs', latest.observaciones || '');
+    document.getElementById('segCaptureModal').classList.add('show');
+  }
+  function save() {
+    const p = selectedProject();
+    if (!p) { toast('No hay proyecto seleccionado.', true); return; }
+    const row = {
+      timestamp: nowISO(),
+      folio: p.folio || '',
+      proyecto: p.nombre || '',
+      empresa: p.gie || p.gieLimpio || '',
+      estado: p.ef || '',
+      tecnologia: p.tipo || '',
+      mw: p.capacidadMW || '',
+      fuente: val('segFuente'),
+      fecha_reunion: val('segFecha'),
+      estatus_general: val('segEstatus'),
+      semaforo: val('segSemaforo'),
+      ruta_critica: val('segRuta'),
+      mia_dtu: val('segMia'),
+      etj: val('segEtj'),
+      misse_evis: val('segMisse'),
+      inah: val('segInah'),
+      pemex: val('segPemex'),
+      conagua: val('segConagua'),
+      dgac: val('segDgac'),
+      contrato_interconexion: val('segContrato'),
+      licencia_construccion: val('segLicencia'),
+      mano_obra: val('segManoObra'),
+      proximo_hito: val('segHito'),
+      responsable: val('segResponsable'),
+      observaciones: val('segObs'),
+      capturado_por: val('segCapturado')
+    };
+    persist(row);
+    close('segCaptureModal');
+    sync(row).then(st => toast(st === 'ok' ? 'Seguimiento guardado y sincronizado.' : (st === 'local' ? 'Seguimiento guardado localmente.' : 'Seguimiento guardado; sincronización pendiente.'), st === 'pendiente'));
+  }
+  function renderReport() {
+    const body = document.getElementById('segReportBody');
+    const rows = latestRows();
+    const total = rows.length;
+    const rojo = rows.filter(r => semClass(r.semaforo) === 'guinda').length;
+    const amarillo = rows.filter(r => semClass(r.semaforo) === 'dorado').length;
+    const verde = rows.filter(r => semClass(r.semaforo) === 'verde').length;
+    const mw = rows.reduce((s, r) => s + (Number(r.mw) || 0), 0);
+    const tableRows = rows
+      .sort((a, b) => String(a.proyecto).localeCompare(String(b.proyecto), 'es'))
+      .map(r => `<tr>
+        <td><b>${esc(r.proyecto)}</b><br><span style="color:var(--sener-gris);font-size:10px">${esc(r.folio || '')}</span></td>
+        <td>${esc(r.empresa || '')}</td>
+        <td>${esc(r.estado || '')}</td>
+        <td style="text-align:right">${r.mw ? fmt(Number(r.mw), 1) : '—'}</td>
+        <td><span class="seg-chip ${semClass(r.semaforo)}">${esc(r.semaforo || '—')}</span><br>${esc(r.estatus_general || '')}</td>
+        <td>${esc(r.ruta_critica || '')}</td>
+        <td>${esc(r.proximo_hito || '')}<br><span style="color:var(--sener-gris);font-size:10px">${esc(r.responsable || '')}</span></td>
+        <td>${esc(r.fecha_reunion || '')}<br><span style="color:var(--sener-gris);font-size:10px">${esc(r.timestamp || '')}</span></td>
+      </tr>`).join('');
+    body.innerHTML = `
+      <div class="seg-kpis">
+        <div class="seg-kpi"><div class="v">${total}</div><div class="l">Proyectos con seguimiento</div></div>
+        <div class="seg-kpi"><div class="v">${fmt(mw, 0)}</div><div class="l">MW bajo seguimiento</div></div>
+        <div class="seg-kpi"><div class="v">${verde}</div><div class="l">Verde</div></div>
+        <div class="seg-kpi"><div class="v">${amarillo}</div><div class="l">Amarillo</div></div>
+        <div class="seg-kpi"><div class="v">${rojo}</div><div class="l">Rojo</div></div>
+      </div>
+      ${rows.length ? `<table class="seg-table"><thead><tr><th>Proyecto</th><th>Empresa</th><th>Estado</th><th>MW</th><th>Estatus</th><th>Ruta crítica</th><th>Próximo hito</th><th>Corte</th></tr></thead><tbody>${tableRows}</tbody></table>` : '<div style="padding:24px;text-align:center;color:var(--sener-gris);font-weight:700">Aún no hay registros de seguimiento.</div>'}`;
+  }
+  function openReport() {
+    ensureReportModal();
+    renderReport();
+    document.getElementById('segReportModal').classList.add('show');
+  }
+  async function refresh() {
+    if (!WEBAPP_URL) { toast('Falta configurar window.SEGUIMIENTO_WEBAPP_URL.', true); return; }
+    try {
+      const ok = await loadFromSheet();
+      renderReport();
+      toast(ok ? 'Seguimiento actualizado desde Sheet.' : 'No se recibieron filas.', !ok);
+    } catch (e) {
+      toast('No se pudo actualizar: ' + e.message, true);
+    }
+  }
+  function exportTSV() {
+    const rows = allRows();
+    const lines = [DEFAULT_COLS.join('\t')].concat(rows.map(r => DEFAULT_COLS.map(c => String(r[c] == null ? '' : r[c]).replace(/[\t\r\n]+/g, ' ')).join('\t')));
+    const blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/tab-separated-values;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Seguimiento_GAT_Mixto.tsv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast(rows.length + ' fila(s) exportadas.');
+  }
+  function close(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  }
+  async function init() {
+    ensureCaptureModal();
+    ensureReportModal();
+    if (WEBAPP_URL) {
+      try { await loadFromSheet(); } catch (e) { console.warn('Seguimiento sheet no cargo:', e); }
+    }
+  }
+
+  return { init, openCapture, save, openReport, refresh, exportTSV, close };
+})();
 
 // =================== EXPORT PPT ===================
 const _imgCache = {};
@@ -2665,6 +3649,60 @@ async function inlineRemoteAssets() {
   }
 }
 
+let CURRENT_SLIDE_INDEX = 0;
+
+function visibleSlides() {
+  return Array.from(document.querySelectorAll('.deck > .slide:not(.skip-export)'));
+}
+
+function fitDeck() {
+  const deck = document.querySelector('.deck');
+  if (!deck) return;
+  const scale = window.innerWidth / 1280;
+  deck.style.transform = `translate(-50%, -50%) scale(${Math.max(scale, 0.35)})`;
+}
+
+function updateSlideCounter() {
+  const counter = document.getElementById('slideCounter');
+  const slides = visibleSlides();
+  if (counter) counter.textContent = `${Math.min(CURRENT_SLIDE_INDEX + 1, slides.length || 1)} / ${slides.length || 1}`;
+}
+
+function showSlide(index) {
+  const slides = visibleSlides();
+  if (!slides.length) return;
+  CURRENT_SLIDE_INDEX = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === CURRENT_SLIDE_INDEX));
+  updateSlideCounter();
+  const active = slides[CURRENT_SLIDE_INDEX];
+  if (active && active.querySelector('#mapa') && mapInstance) {
+    setTimeout(() => mapInstance.invalidateSize(), 160);
+  }
+  setTimeout(() => {
+    if (window.Highcharts && Highcharts.charts) {
+      Highcharts.charts.filter(Boolean).forEach(ch => { try { ch.reflow(); } catch (e) {} });
+    }
+  }, 120);
+}
+
+function nextSlide() { showSlide(CURRENT_SLIDE_INDEX + 1); }
+function prevSlide() { showSlide(CURRENT_SLIDE_INDEX - 1); }
+
+function goFullscreen() {
+  const el = document.documentElement;
+  if (!document.fullscreenElement && el.requestFullscreen) el.requestFullscreen().catch(() => {});
+}
+
+window.addEventListener('resize', fitDeck);
+document.addEventListener('keydown', e => {
+  const tag = (e.target && e.target.tagName || '').toLowerCase();
+  if (['input', 'textarea', 'select'].includes(tag)) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+  if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+  if (e.key === 'End') { e.preventDefault(); showSlide(visibleSlides().length - 1); }
+});
+
 async function captureSlide(slideEl) {
   if (slideEl.querySelector('#mapa') && mapInstance) {
     mapInstance.invalidateSize();
@@ -2699,14 +3737,18 @@ async function exportPPT() {
     pptx.company = 'Secretaría de Energía';
     pptx.title = 'PVIRCE 2026-2040';
 
-    const slides = document.querySelectorAll('.deck > .slide:not(.skip-export)');
+    const slides = Array.from(document.querySelectorAll('.deck > .slide:not(.skip-export)'));
+    const previousSlideIndex = CURRENT_SLIDE_INDEX;
     for (let i = 0; i < slides.length; i++) {
       btn.textContent = `Slide ${i+1}/${slides.length}…`;
+      showSlide(i);
+      await new Promise(r => setTimeout(r, 180));
       const dataUrl = await captureSlide(slides[i]);
       const slide = pptx.addSlide();
       slide.background = { color: 'FFFFFF' };
       slide.addImage({ data: dataUrl, x: 0, y: 0, w: 13.333, h: 7.5 });
     }
+    showSlide(previousSlideIndex);
 
     const ef = document.getElementById('efSelect').value;
     const fname = `PVIRCE-2026-2040_${ef === '__ALL__' ? 'Nacional' : ef.replace(/\s+/g,'-')}.pptx`;
@@ -2722,11 +3764,19 @@ async function exportPPT() {
 }
 
 document.getElementById('btnPpt').addEventListener('click', exportPPT);
+fitDeck();
+showSlide(0);
 setStatus('Iniciando…');
 if (typeof Papa === 'undefined') {
   setStatus('ERROR: PapaParse no cargó (sandbox iframe bloquea CDN). Abre el HTML directo en navegador.');
 } else {
-  loadData().catch(e => setStatus('Error cargando datos: ' + e.message));
+  loadData()
+    .then(() => {
+      if (window.Seguimiento) window.Seguimiento.init();
+      fitDeck();
+      showSlide(0);
+    })
+    .catch(e => setStatus('Error cargando datos: ' + e.message));
 }
 </script>
 

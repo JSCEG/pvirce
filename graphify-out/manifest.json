@@ -275,8 +275,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\settings.local.json": {
-    "mtime": 1781976612.0269346,
-    "ast_hash": "f7b17c7a995918067618e476de0139b0",
+    "mtime": 1782158745.9270744,
+    "ast_hash": "2681f5669bc40dfd2c2088c21555784f",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\canvas-capture.js": {
@@ -420,8 +420,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\GAT-MIXTO-DGMESNIE.html": {
-    "mtime": 1781756560.5091183,
-    "ast_hash": "74bfa2ec48611d1a056cafc82e35a26a",
+    "mtime": 1782498065.1102035,
+    "ast_hash": "7e6fb25f66a23bde7de6cb9000f48ef7",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\google-sheets-columnas.md": {
@@ -535,8 +535,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_build.py": {
-    "mtime": 1781921616.412658,
-    "ast_hash": "60494ddd57f0768d194cdca99d26e3d6",
+    "mtime": 1782063190.6691558,
+    "ast_hash": "1d978839747b85c1cb7bc07b85ca87bd",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_proj_dump.json": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ALMACENAMIENTO-SAEE-REGIONES.html": {
-    "mtime": 1781920007.5743146,
-    "ast_hash": "c59ff59d1cb530c4cb15281c64a1aaa5",
+    "mtime": 1781984639.3657823,
+    "ast_hash": "30bc2ab85d9348aafaadbaa7f38b36be",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ENERGIA-LIMPIA-SENER.html": {
@@ -595,8 +595,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\EXPANSION-RENOVABLES.html": {
-    "mtime": 1781921621.6698143,
-    "ast_hash": "b94e594a616430ac74b0d27715e5fcc8",
+    "mtime": 1782063196.9666114,
+    "ast_hash": "3b572c1aa9aa6505d0062e2eb1e03f3e",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\GENERACION-GWH.html": {
@@ -640,8 +640,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTAS-SEGUNDA-CONVOCATORIA-PARTICULARES.html": {
-    "mtime": 1781813221.6503613,
-    "ast_hash": "2669f651c4998b1a3eca954d4a61d802",
+    "mtime": 1782492910.0620522,
+    "ast_hash": "86a863dc70b951166159c88c83187772",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\NOTA-TECNICA-CRITERIO-COMPETENCIAS.html": {
@@ -685,8 +685,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_template.html": {
-    "mtime": 1781921527.9586773,
-    "ast_hash": "b3f274ca93c1da5352c3e1e7fcf8ebed",
+    "mtime": 1782062917.7201755,
+    "ast_hash": "13d1eb575b07fb541381976faa434558",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener\\SKILL.md": {
@@ -795,8 +795,8 @@
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_map.svg": {
-    "mtime": 1781919784.7165184,
-    "ast_hash": "5f0742941b706f7cc65b27c3bec0cba5",
+    "mtime": 1781984622.8365698,
+    "ast_hash": "250730605f7aa952ea82a8bbce17b047",
     "semantic_hash": ""
   },
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_sankey.svg": {
@@ -807,6 +807,106 @@
   "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.codex-remote-attachments\\019ed2fe-1035-7801-8941-1cdfe85b83b2\\097ce8e6-a5bd-49e8-87e3-0df5abe2906d\\1-Photo-1.jpg": {
     "mtime": 1781713361.0196552,
     "ast_hash": "92557f9c42b867cd17fc870fe09224fb",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\GAT-MIXTO-DGMESNIE.data.js": {
+    "mtime": 1782497080.4939024,
+    "ast_hash": "27bb67dee928541f198b436b6e6607a2",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\tmp_minutas_current.json": {
+    "mtime": 1782492798.8232536,
+    "ast_hash": "39710ab9fcf0828ac181383b144e2d5b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\tools_compare_gat_mixtos_pdfs.py": {
+    "mtime": 1782493789.3452425,
+    "ast_hash": "f621b8d97b75484f6f8af2b6151f49fe",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\tools_compare_minuta_20260617.py": {
+    "mtime": 1782492918.8870711,
+    "ast_hash": "51f22e0bf82b4d68dda0739b9bb667db",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\mapa-gcr\\assets\\datos-ejemplo.json": {
+    "mtime": 1782147790.3126745,
+    "ast_hash": "5a8d2b6e7512f97d2ff364d4e803918e",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ADICIONES-CAPACIDAD-GCR.html": {
+    "mtime": 1782159416.8216374,
+    "ast_hash": "66368af8ce578c173951f0260c0a6a4a",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ENERGIA-LIMPIA-SENER.sd75.html": {
+    "mtime": 1782433614.3636305,
+    "ast_hash": "174c225266675619429beecac42c242b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\GAT-MIXTO-BASE.html": {
+    "mtime": 1782501212.5059361,
+    "ast_hash": "cc8f3704fa2c6998837bd99e11367de3",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\gerencias-azul.html": {
+    "mtime": 1782148527.7345798,
+    "ast_hash": "f9bb24a41537862a5c789da390cc7f64",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\REVISION_GAT_MIXTO_PDFS_2026-06-24.md": {
+    "mtime": 1782493799.686098,
+    "ast_hash": "f065c872bf15b77f5b23659a99739a9a",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\REVISION_MINUTA_2026-06-17.md": {
+    "mtime": 1782492928.5777397,
+    "ast_hash": "d762b72763897a81b9f277422d0bd0ed",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\SEGUIMIENTO-GAT-MIXTO-SETUP.md": {
+    "mtime": 1782494256.6527438,
+    "ast_hash": "a5f648d9a1efe070afb236a2f0e60fd1",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\tmp_insumo_reporte.txt": {
+    "mtime": 1782499919.497143,
+    "ast_hash": "dfbc28b7e11945446fbb411fc21e57e8",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\tmp_mixtos_avances_20260625.txt": {
+    "mtime": 1782493650.573377,
+    "ast_hash": "72cb9f10e2f6d326895c4c8f7b569e81",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\tmp_mixtos_resumen_20260624.txt": {
+    "mtime": 1782493649.9435296,
+    "ast_hash": "251d4ba38455f4ac7ff2ad83f6fb8585",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\graphify-out\\converted\\_pvirce_bee96029.md": {
+    "mtime": 1782593456.0606022,
+    "ast_hash": "8222c1faf1545b3e511d7aeda1d538a6",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\mapa-gcr\\SKILL.md": {
+    "mtime": 1782147790.311682,
+    "ast_hash": "c27485d9d21906e6be6bc9b8db4bb738",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\mapa-gcr\\assets\\plantilla-mapa-gcr.html": {
+    "mtime": 1782158746.4041188,
+    "ast_hash": "ee1cd774714e85fbe4e72b0449d2b5ec",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ADICIONES-CAPACIDAD-GCR.png": {
+    "mtime": 1782092103.3148189,
+    "ast_hash": "8fcd212e3fbd32bdfc2174deb8c2e152",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\gat-mixto-portada.png": {
+    "mtime": 1782500548.3083177,
+    "ast_hash": "7667d23beb2955a15568111581538923",
     "semantic_hash": ""
   }
 }

@@ -5,27 +5,27 @@
 /* CSS Variables from institutional style guide */
 :root {
   /* --- Paleta de Colores Institucional (GobMX) --- */
-  --color-gobmx-guinda: #9B2247;
-  --color-gobmx-verde: #1E5B4F;
-  --color-gobmx-dorado: #A57F2C;
-  --color-gobmx-gris: #98989A;
-  --color-gobmx-gris-claro: #E5E5E5;
+  --sener-guinda: #9B2247;
+  --sener-esmeralda: #0E8A6E;
+  --sener-dorado: #E0A12E;
+  --sener-gris: #98989A;
+  --sener-linea: #E5E5E5;
   
   /* Variantes de Opacidad (para fondos) */
-  --color-gobmx-guinda-light: rgba(155, 34, 71, 0.05);
-  --color-gobmx-verde-light: rgba(30, 91, 79, 0.05);
-  --color-gobmx-dorado-light: rgba(165, 127, 44, 0.05);
+  --sener-guinda-dark: rgba(155, 34, 71, 0.05);
+  --sener-esmeralda-light: rgba(30, 91, 79, 0.05);
+  --sener-dorado-light: rgba(165, 127, 44, 0.05);
 
   /* Colores Funcionales */
-  --color-text-primary: #333333;
-  --color-text-secondary: var(--color-gobmx-gris);
-  --color-background: #FFFFFF;
-  --color-surface: #F8F9FA;
-  --color-border: #DDDDDD;
+  --sener-tinta: #333333;
+  --sener-gris: var(--sener-gris);
+  --sener-blanco: #FFFFFF;
+  --sener-papel: #F8F9FA;
+  --sener-linea: #DDDDDD;
   
   /* --- Tipografía --- */
-  --font-family-headings: 'Noto Sans', sans-serif;
-  --font-family-body: 'Noto Sans', sans-serif;
+  --font-display: 'Noto Sans', sans-serif;
+  --font-text: 'Noto Sans', sans-serif;
 
   --font-size-base: 16px;
   --font-size-h1: 2.5rem;   /* ~40px */
@@ -56,11 +56,11 @@
 }
 
 body {
-  font-family: var(--font-family-body);
+  font-family: var(--font-text);
   font-size: var(--font-size-base);
   line-height: 1.6;
-  color: var(--color-text-primary);
-  background-color: var(--color-surface);
+  color: var(--sener-tinta);
+  background-color: var(--sener-papel);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -76,8 +76,8 @@ body {
 
 /* Header */
 .header {
-  background-color: var(--color-background);
-  border-bottom: 4px solid var(--color-gobmx-dorado);
+  background-color: var(--sener-blanco);
+  border-bottom: 4px solid var(--sener-dorado);
   padding: var(--spacing-md) 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -117,17 +117,17 @@ body {
 
 .user-info span:first-child {
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--sener-tinta);
 }
 
 .user-role {
-  color: var(--color-text-secondary);
+  color: var(--sener-gris);
 }
 
 .btn-logout {
   background-color: transparent;
-  border: 2px solid var(--color-gobmx-guinda);
-  color: var(--color-gobmx-guinda);
+  border: 2px solid var(--sener-guinda);
+  color: var(--sener-guinda);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--border-radius-sm);
   cursor: pointer;
@@ -135,7 +135,7 @@ body {
 }
 
 .btn-logout:hover {
-  background-color: var(--color-gobmx-guinda);
+  background-color: var(--sener-guinda);
   color: white;
 }
 
@@ -151,14 +151,14 @@ body {
 }
 
 .dashboard-header h1 {
-  font-family: var(--font-family-headings);
-  color: var(--color-gobmx-guinda);
+  font-family: var(--font-display);
+  color: var(--sener-guinda);
   font-size: 2rem;
   margin-bottom: var(--spacing-xs);
 }
 
 .dashboard-header p {
-  color: var(--color-text-secondary);
+  color: var(--sener-gris);
   font-size: var(--font-size-small);
 }
 
@@ -171,13 +171,13 @@ body {
 }
 
 .dashboard-card {
-  background-color: var(--color-background);
+  background-color: var(--sener-blanco);
   border-radius: var(--border-radius-md);
   box-shadow: var(--box-shadow-card);
   padding: var(--spacing-lg);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-left: 5px solid var(--color-gobmx-guinda);
+  border-left: 5px solid var(--sener-guinda);
 }
 
 .dashboard-card:hover {
@@ -187,19 +187,19 @@ body {
 
 .card-icon {
   font-size: 3rem;
-  color: var(--color-gobmx-guinda);
+  color: var(--sener-guinda);
   margin-bottom: var(--spacing-md);
 }
 
 .dashboard-card h3 {
-  font-family: var(--font-family-headings);
-  color: var(--color-gobmx-guinda);
+  font-family: var(--font-display);
+  color: var(--sener-guinda);
   font-size: 1.25rem;
   margin-bottom: var(--spacing-sm);
 }
 
 .dashboard-card p {
-  color: var(--color-text-secondary);
+  color: var(--sener-gris);
   font-size: var(--font-size-small);
   margin-bottom: var(--spacing-md);
 }
@@ -208,7 +208,7 @@ body {
 .btn {
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-sm);
-  font-family: var(--font-family-body);
+  font-family: var(--font-text);
   font-weight: 600;
   cursor: pointer;
   border: none;
@@ -222,7 +222,7 @@ body {
 }
 
 .btn-primary {
-  background-color: var(--color-gobmx-guinda);
+  background-color: var(--sener-guinda);
   color: white;
   width: 100%;
 }
@@ -235,7 +235,7 @@ body {
 
 /* Footer */
 .footer {
-  background-color: var(--color-gobmx-guinda);
+  background-color: var(--sener-guinda);
   color: white;
   padding: var(--spacing-md) 0;
   margin-top: auto;
@@ -250,7 +250,7 @@ body {
 }
 
 .footer-section h4 {
-  font-family: var(--font-family-headings);
+  font-family: var(--font-display);
   font-size: 1rem;
   margin-bottom: var(--spacing-xs);
 }
@@ -350,14 +350,14 @@ body {
 /* Focus styles for keyboard navigation */
 .btn:focus,
 .btn-logout:focus {
-  outline: 2px solid var(--color-gobmx-guinda);
+  outline: 2px solid var(--sener-guinda);
   outline-offset: 2px;
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
-    --color-border: #000000;
-    --color-text-secondary: #000000;
+    --sener-linea: #000000;
+    --sener-gris: #000000;
   }
 }

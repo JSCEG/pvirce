@@ -33,9 +33,9 @@
     :root {
       --color-guinda: #9B2247;
       --color-guinda-light: #B24C6C;
-      --color-verde: #1E5B4F;
+      --color-verde: #0E8A6E;
       --color-verde-light: #4F8A7C;
-      --color-dorado: #A57F2C;
+      --color-dorado: #E0A12E;
       --color-dorado-light: #D6B46A;
       --color-gris: #98989A;
       --color-gris-claro: #E5E5E5;
@@ -671,7 +671,7 @@
     const GRIS='#C9CCD1';
     // Colores fijos por GCR — mismos del mapa de EXPANSION-RENOVABLES.html
     const COLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C',
-      occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247',
+      occidental:'#E0A12E', bcalifornia:'#7E3B52', noroeste:'#0E8A6E', norte:'#9B2247',
       bcsur:'#A9CDC3', mulege:'#E0CA8E' };
     const colOf=r=>(r.mw==null||r.mw<=0)?GRIS:(COLORS[r.id]||GRIS);
     const fmt=n=>n==null?'—':n.toLocaleString('es-MX',{maximumFractionDigits:0});
@@ -909,7 +909,7 @@
       const DISP={'CC/COG_EF':'COG','H2':'H₂'};
       const TECH_BY_GCR=window.GCRD.tech;
       const NAMES=window.GCRD.names;
-      const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C', occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
+      const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C', occidental:'#E0A12E', bcalifornia:'#7E3B52', noroeste:'#0E8A6E', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
       const POS={ noreste:[577.8,250], peninsular:[915,455], oriental:[690,505], central:[583,455], occidental:[505,388], noroeste:[300,178], norte:[423,205], bcalifornia:[150,120], mulege:[150,250], bcsur:[210,320] };
       const LEFT=['bcalifornia','noroeste','bcsur','mulege','occidental'];
       const RIGHT=['norte','noreste','central','oriental','peninsular'];
@@ -1011,7 +1011,7 @@
       const g=document.getElementById('d3glyphs');
 
       const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C',
-        occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
+        occidental:'#E0A12E', bcalifornia:'#7E3B52', noroeste:'#0E8A6E', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
       Object.keys(NAMES).forEach(id=>{ const rp=document.getElementById('d3-rg-'+id); if(rp){ rp.setAttribute('fill',GCRCOLORS[id]); rp.setAttribute('fill-opacity','0.92'); } });
 
       Object.keys(NAMES).forEach(id=>{
@@ -1081,7 +1081,7 @@
       const DISP={'CC/COG_EF':'COG','H2':'H₂'};
       const TECH_BY_GCR=window.GCRD.tech;
       const NAMES=window.GCRD.names;
-      const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C', occidental:'#A57F2C', bcalifornia:'#7E3B52', noroeste:'#1E5B4F', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
+      const GCRCOLORS={ noreste:'#3E8174', peninsular:'#A33052', oriental:'#6FA89A', central:'#B24C6C', occidental:'#E0A12E', bcalifornia:'#7E3B52', noroeste:'#0E8A6E', norte:'#9B2247', bcsur:'#A9CDC3', mulege:'#E0CA8E' };
       const POS={ noreste:[600,250], peninsular:[915,450], oriental:[700,515], central:[583,452], occidental:[495,390], noroeste:[300,175], norte:[430,205], bcalifornia:[150,118], mulege:[150,250], bcsur:[210,320] };
       const meta=Object.fromEntries(TECHS.map(t=>[t.k,t]));
       const disp=k=>DISP[k]||k;

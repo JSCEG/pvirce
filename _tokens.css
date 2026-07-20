@@ -1,0 +1,248 @@
+/* ============================================================
+   SENER · Tokens de Diseño — Sistema de Diseño 75
+   Archivo único de verdad para el Proyecto 71.
+   Reemplaza todos los :root dispersos en cada HTML.
+
+   USO: <link rel="stylesheet" href="_tokens.css">
+   ============================================================ */
+
+/* Importación de webfonts SD75 */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+
+:root {
+
+  /* ================================================================
+     COLORES MARCA
+     ================================================================ */
+  --sener-guinda:        #9B2247;   /* acento institucional principal */
+  --sener-guinda-dark:   #8E1F40;   /* degradados / hover */
+  --sener-dorado:        #E0A12E;   /* acento secundario, filetes, subrayado */
+  --sener-dorado-soft:   #C9A24B;   /* dorado apagado */
+  --sener-esmeralda:     #0E8A6E;   /* energía limpia, positivo */
+  --sener-cian:          #1E9CB8;   /* acento de dato / eólica */
+
+  /* ================================================================
+     NEUTRALES
+     ================================================================ */
+  --sener-tinta:         #1c1b1a;   /* texto principal */
+  --sener-gris:          #6F6B66;   /* texto secundario */
+  --sener-gris-claro:    #9A958E;   /* etiquetas, pies, metadatos */
+  --sener-papel:         #FAF8F5;   /* superficie cálida */
+  --sener-linea:         #ECE8E2;   /* divisores */
+  --sener-linea-suave:   #F0ECE6;   /* divisores internos */
+  --sener-blanco:        #ffffff;
+
+  /* ================================================================
+     SEMÁNTICOS / ESTADO
+     ================================================================ */
+  --sener-positivo:      #0E7C5A;
+  --sener-positivo-bg:   #E4F2EC;
+  --sener-negativo:      #9B2247;
+  --sener-resaltado-bg:  rgba(224, 161, 46, .30);  /* highlight dorado tenue */
+
+  /* ================================================================
+     PALETA POR TECNOLOGÍA
+     ================================================================ */
+  --tec-fv:   #E0A12E;   /* solar fotovoltaica */
+  --tec-cc:   #8A9099;   /* ciclo combinado */
+  --tec-eo:   #1E9CB8;   /* eólica */
+  --tec-cog:  #9AAE3B;   /* cogeneración */
+  --tec-geo:  #C0552E;   /* geotérmica */
+  --tec-hid:  #2E6FB0;   /* hidroeléctrica */
+  --tec-csp:  #D98A2B;   /* solar concentración */
+  --tec-h2:   #3BA98C;   /* hidrógeno */
+
+  /* ================================================================
+     TIPOGRAFÍA
+     ================================================================ */
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-text:    'Libre Franklin', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Pesos */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+  --fw-extrabold: 800;
+
+  /* Escala tipográfica para slides 1920×1080 */
+  --fs-display:  92px;   /* portada */
+  --fs-title:    48px;   /* título de lámina */
+  --fs-subtitle: 36px;   /* subtítulo */
+  --fs-kicker:   24px;   /* antetítulo, mayúsculas */
+  --fs-body:     27px;   /* cuerpo */
+  --fs-caption:  24px;   /* pie / nota */
+  --fs-micro:    20px;   /* etiqueta menor */
+
+  /* Interlínea */
+  --lh-tight:  1.0;
+  --lh-snug:   1.15;
+  --lh-body:   1.4;
+
+  /* Tracking */
+  --tracking-kicker: .14em;
+  --tracking-tight:  -.015em;
+
+  /* ================================================================
+     ESPACIADO (escala de 4px)
+     ================================================================ */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  22px;
+  --space-6:  32px;
+  --space-7:  44px;
+  --space-8:  64px;
+
+  /* Márgenes de lámina */
+  --slide-pad-x: 100px;
+  --slide-pad-y: 62px;
+
+  /* ================================================================
+     RADIOS — esquinas casi rectas
+     ================================================================ */
+  --radius-sm:   3px;     /* chips, resaltados */
+  --radius-md:   8px;     /* tarjetas, imágenes */
+  --radius-pill: 999px;   /* badges */
+
+  /* ================================================================
+     BORDES Y SOMBRAS
+     ================================================================ */
+  --border-hair:   1px solid var(--sener-linea);
+  --rule-brand:    2px solid var(--sener-guinda);
+  --shadow-card:   0 6px 20px rgba(0, 0, 0, .07);
+  --shadow-soft:   0 6px 18px rgba(0, 0, 0, .06);
+
+  /* Separadores */
+  --sep-thickness: 2px;
+  --sep-diamond:   10px;
+  --sep-indent:    38px;
+
+  /* ================================================================
+     ALIASES SEMÁNTICOS (nuevos nombres canónicos)
+     ================================================================ */
+  --color-accent:     var(--sener-guinda);
+  --color-accent-2:   var(--sener-dorado);
+  --text-strong:      var(--sener-tinta);
+  --text-body:        #3a3a3a;
+  --text-muted:       var(--sener-gris);
+  --text-faint:       var(--sener-gris-claro);
+  --surface-page:     var(--sener-blanco);
+  --surface-card:     var(--sener-papel);
+  --border-hairline:  var(--sener-linea);
+
+  /* ================================================================
+     ALIASES RETROCOMPATIBLES — Proyecto 71 (nombres antiguos)
+     Permiten enlazar este archivo sin romper HTML existente.
+     Eliminar gradualmente al renombrar cada archivo.
+     ================================================================ */
+
+  /* -- Prefijo --color-* (usado en _template.html y grupo Outfit) -- */
+  --color-guinda:       var(--sener-guinda);
+  --color-guinda-light: var(--sener-guinda-dark);
+  --color-guinda-dark:  var(--sener-guinda-dark);
+  --color-dorado:       var(--sener-dorado);
+  --color-dorado-light: var(--sener-dorado-soft);
+  --color-verde:        var(--sener-esmeralda);
+  --color-verde-light:  rgba(14, 138, 110, .15);
+  --color-gris:         var(--sener-gris);
+  --color-gris-claro:   var(--sener-linea);
+  --color-text-dark:    var(--sener-tinta);
+  --color-text-light:   var(--sener-gris);
+  --color-bg-light:     var(--sener-papel);
+  /* Nota: --color-bg-dark (#1E1E1E) se mantiene intacto — es el fondo oscuro de deck */
+  --color-bg-dark:      #1E1E1E;
+
+  /* -- Prefijo --gobmx-* (usado en base-theme.css y PVIRCE) -- */
+  --gobmx-guinda:       var(--sener-guinda);
+  --gobmx-guinda-dark:  var(--sener-guinda-dark);
+  --gobmx-verde:        var(--sener-esmeralda);
+  --gobmx-verde-dark:   #0a6554;
+  --gobmx-dorado:       var(--sener-dorado);
+  --gobmx-dorado-dark:  #c2891e;
+  --gobmx-gris:         var(--sener-gris);
+  --gobmx-gris-claro:   var(--sener-linea);
+
+  /* -- Sin prefijo (usado en ENERGIA-LIMPIA y otros) -- */
+  --guinda:             var(--sener-guinda);
+  --guinda-dark:        var(--sener-guinda-dark);
+  --guinda-light:       var(--sener-guinda-dark);
+  --dorado:             var(--sener-dorado);
+  --dorado-light:       var(--sener-dorado-soft);
+  --verde:              var(--sener-esmeralda);
+  --verde-light:        rgba(14, 138, 110, .15);
+  --esmeralda:          var(--sener-esmeralda);
+  --cian:               var(--sener-cian);
+  --gris:               var(--sener-gris);
+  --gris-claro:         var(--sener-linea);
+  --texto:              var(--sener-tinta);
+
+  /* -- Prefijo --color-gobmx-* (usado en GUIA_ESTILOS_WEB) -- */
+  --color-gobmx-guinda:       var(--sener-guinda);
+  --color-gobmx-verde:        var(--sener-esmeralda);
+  --color-gobmx-dorado:       var(--sener-dorado);
+  --color-gobmx-gris:         var(--sener-gris);
+  --color-gobmx-gris-claro:   var(--sener-linea);
+  --color-gobmx-guinda-light: rgba(155, 34, 71, .05);
+  --color-gobmx-verde-light:  rgba(14, 138, 110, .05);
+  --color-gobmx-dorado-light: rgba(224, 161, 46, .05);
+
+  /* -- Fuentes (aliases de nombres viejos) -- */
+  --font-sans:     var(--font-text);
+  --font-serif:    var(--font-display);
+  --font-heading:  var(--font-display);
+  --font-b:        var(--font-text);
+  --font-h:        var(--font-display);
+  --body:          var(--font-text);
+  --display:       var(--font-display);
+
+  /* -- Colores funcionales genéricos (base-theme.css) -- */
+  --color-text-primary:   var(--sener-tinta);
+  --color-text-secondary: var(--sener-gris);
+  --color-text-muted:     var(--sener-gris-claro);
+  --color-bg:             var(--sener-blanco);
+  --color-bg-gray:        #F3F4F6;
+  --color-background:     var(--sener-blanco);
+  --color-surface:        var(--sener-papel);
+  --color-border:         var(--sener-linea);
+  --color-border-light:   var(--sener-linea-suave);
+
+  /* -- Espaciado viejo (rem-based de base-theme.css) -- */
+  --spacing-xs: var(--space-2);   /* 8px */
+  --spacing-sm: var(--space-4);   /* 16px */
+  --spacing-md: var(--space-6);   /* 32px aprox → 32px */
+  --spacing-lg: var(--space-7);   /* 44px aprox */
+  --spacing-xl: var(--space-8);   /* 64px */
+
+  /* -- Radios viejos (de base-theme.css) -- */
+  --radius-lg:   var(--radius-md);
+  --radius-xl:   12px;
+  --radius-2xl:  var(--radius-pill);
+
+  /* -- Sombras viejas -- */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, .05);
+  --shadow-md:  var(--shadow-soft);
+  --shadow-lg:  0 10px 15px rgba(0, 0, 0, .10);
+  --shadow-xl:  0 20px 25px rgba(0, 0, 0, .10);
+  --box-shadow-card: var(--shadow-card);
+
+  /* -- Font sizes (rem-based de base-theme.css) -- */
+  --font-size-base:  16px;
+  --font-size-h1:    2.5rem;
+  --font-size-h2:    2rem;
+  --font-size-h3:    1.75rem;
+  --font-size-h4:    1.5rem;
+  --font-size-small: 0.875rem;
+
+  /* -- Nombres de font-family de base-theme.css -- */
+  --font-family-headings: var(--font-display);
+  --font-family-body:     var(--font-text);
+
+  /* -- Colores de status / deck -- */
+  --azul:       var(--sener-cian);
+  --fondo:      #1E1E1E;  /* fondo oscuro del deck — se mantiene intencional */
+  --bg:         var(--sener-papel);
+  --scale:      1.0;      /* scale del deck */
+}

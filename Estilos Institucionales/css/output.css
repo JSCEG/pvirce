@@ -786,7 +786,7 @@ video {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity, 1));
   --tw-ring-offset-width: 2px;
-  --tw-ring-offset-color: #1E5B4F;
+  --tw-ring-offset-color: #0E8A6E;
 }
 
 .filter-item.\!active .filter-color {
@@ -796,7 +796,7 @@ video {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity, 1));
   --tw-ring-offset-width: 2px;
-  --tw-ring-offset-color: #1E5B4F;
+  --tw-ring-offset-color: #0E8A6E;
 }
 
 .filters-overlay.\!active {
@@ -939,7 +939,7 @@ video {
   --tw-gradient-from: #9B2247 var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(155 34 71 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-  --tw-gradient-to: #1E5B4F var(--tw-gradient-to-position);
+  --tw-gradient-to: #0E8A6E var(--tw-gradient-to-position);
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
@@ -1572,7 +1572,7 @@ video {
 }
 
 .to-gobmx-verde {
-  --tw-gradient-to: #1E5B4F var(--tw-gradient-to-position);
+  --tw-gradient-to: #0E8A6E var(--tw-gradient-to-position);
 }
 
 .to-white {

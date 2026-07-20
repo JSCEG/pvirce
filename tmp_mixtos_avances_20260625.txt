@@ -1,0 +1,834 @@
+AVANCES
+
+Proyectos de Colaboración Mixta
+Datos generales, avance en gestiones de permisos y plazos de construcción estimados
+
+
+
+
+25 de junio de 2026
+Tema 1
+
+Programa de Reuniones con Socios
+
+
+Corte 24 de junio de 2026
+PROYECTOS PARA INICIO CONSTRUCCIÓN
+ Reuniones inmediatas con proyectos Posible inicio de construcción 2026
+
+No.          Empresa           Tecnología            Nombre del proyecto             Capacidad (MW)   Reunión                    Estatus
+
+
+ 1                                EO        Energeo Los Molinos                          171.1        19 jun 2026    realizada             √
+ 2
+            Thermion
+                                  EO        Delaro                                       175.0        19 jun 2026    realizada             √
+ 3                                EO        Montecristo                                  510.0        19 jun 2026    realizada             √
+ 4                                 FV       Sol de Sonora                                 70.0        19 jun 2026    realizada             √
+ 5                                 FV       Concepción Mendizábal Mendoza Fase I         339.0        19 jun 2026    realizada             √
+ 6    Atlas Renewable Energy       FV       Concepción Mendizábal Mendoza Fase II        180.0        19 jun 2026    realizada             √
+ 7                                 FV       Concepción Mendizábal Mendoza Fase III       339.0        19 jun 2026    realizada             √
+ 8        Fisterra Energy          FV       San Simón Solar                               80.0        19 jun 2026    realizada             √
+ 9            Selka                FV       Selka Power Plant I                          131.0        22 jun 2026    realizada             √
+10         CSQB Energy             FV       Cimarrón Solar                               300.0        22 jun 2026    realizada             √
+                                                                                                                                           √
+                                            Parque FV Energías Renovables de
+11            Cubico               FV                                                     78.0        24 jun 2026    realizada
+                                            Tamaulipas (Altamira)
+
+12         CSQB Energy             FV       Sunora                                       300.0        26 jun 2026   Programada
+
+       Atlantica Renewable
+13                                 FV       Dalia 3 (PV Castamay)                        100.0        29 jun 2026   programada
+          Power México
+PROYECTOS PARA INICIO CONSTRUCCIÓN
+ Reuniones todos los socios restantes (programa susceptible a cambios por motivo de agendas de socios)
+
+No.      Empresa         Tecnología               Nombre del proyecto           Capacidad (MW)         Reunión                         Estatus
+
+
+ 1                          EO        Energía Limpia El Mezquite                    300.0        Miércoles, 24 jun 2026    realizada             √
+ 2                           FV
+                                      Parque FV Energías Renovables SAAS
+                                      (Peto)
+                                                                                     72.0        Miércoles, 24 jun 2026    realizada             √
+          Cúbico
+ 3                           FV       Energías Renovables KIIN (Tekax)               56.0        Miércoles, 24 jun 2026    realizada             √
+ 4                           FV
+                                      Parque FV Energías Renovables de México
+                                      tres (Hecelchakan)
+                                                                                     72.0        Miércoles, 24 jun 2026    realizada             √
+ 5                           FV       El Palmar                                     120.0         Jueves, 25 jun 2026     programada
+
+ 6    Eléctrica Aselco       FV       La Pasión                                      66.0         Jueves, 25 jun 2026     programada
+
+ 7                           FV       Tikinimul                                     170.0         Jueves, 25 jun 2026     programada
+
+ 8                          EO        El Guajillo                                   468.0         Jueves, 25 jun 2026     programada
+        Thermion
+ 9                          EO        Santa Gertrudis                               503.0         Jueves, 25 jun 2026     programada
+
+10                           FV       Planta Solar Cerro Colorado                   455.7         Viernes, 26 jun 2026    programada
+      Fisterra Energy
+11                           FV       Planta Solar Haab Kiin                        123.2         Viernes, 26 jun 2026    programada
+
+12       Sukarne             FV       CFV Quasara                                   150.0         Viernes, 26 jun 2026    programada
+
+13     CSQB Energy           FV       La Poza Solar                                 300.0         Viernes, 26 jun 2026    programada
+PROYECTOS PARA INICIO CONSTRUCCIÓN
+ Reuniones todos los socios restantes (programa susceptible a cambios por motivo de agendas de socios)
+No.         Empresa            Tecnología               Nombre del proyecto             Capacidad (MW)        Reunión                         Estatus
+
+       Atlantica Renewable
+14                                 Fv       Fresnillo (PV Atocha)                           100.0        Lunes, 29 jun 2026      programada
+              Power
+
+15                                 FV       Vientos de la Bella Unión                       120.0        Lunes, 29 jun 2026      programada
+
+16            ACTIS                FV       PV Moquel Solar                                  75.0        Lunes, 29 jun 2026      programada
+
+17                                 FV       PV Sandom Solar                                  54.0        Lunes, 29 jun 2026      programada
+
+18                                 FV       Azura Solar – Solar Energía Tres Hermanos        75.0        Miércoles, 1 jul 2026   programada
+           Libienergy
+19                                 FV       Los Girasoles                                   110.0        Miércoles, 1 jul 2026   programada
+
+20     ZML Desarrolladora          FV       Álvaro Obregón                                   90.0        Miércoles, 1 jul 2026   programada
+
+21                                 FV       Solitario                                       200.0        Miércoles, 1 jul 2026   programada
+          Grupo Pantera
+22                                EO        Ranchos La Crisis y La Noria                    301.5        Miércoles, 1 jul 2026   programada
+
+23           Terralia             EO        El Chorro                                       700.0         Jueves, 2 jul 2026     programada
+
+24           Polaris               FV       Don Humberto                                     19.2         Jueves, 2 jul 2026     programada
+
+25    MIP Freeman Energuy          FV       CFV Las Grazas                                  270.0         Jueves, 2 jul 2026     programada
+
+26    Elawan Wind México III       FV       San Pedro Solar                                  98.2         Jueves, 2 jul 2026     programada
+
+27     Global Solar America        FV       Global Solar 3 Campeche                         133.0         Jueves, 2 jul 2026     programada
+Tema 2
+
+Resumen de reuniones ya efectuadas
+Proyectos posible inicio 2026
+Corte 24 de junio de 2026
+PROYECTOS PARA INICIO CONSTRUCCIÓN
+ Proyectos potenciales que pudieran iniciar construcción en 2026
+                                                                                                     Capacidad    MIA/                  MISSE/                  Fecha estimada
+No.      Región               Empresa                   Nombre del proyecto             Tecnología                            ETJ                      INAH
+                                                                                                       (MW)       DTU                    EVIS                 Inicio de Inversión
+
+ 1                                             Energeo Los Molinos                          EO         171.1                                                        nov-26
+
+ 2       Noreste                               Delaro                                       EO         175.0                No aplica                               nov-26
+                              Thermion
+ 3                                             Montecristo                                  EO         510.0                                                        nov-26
+
+ 4      Noroeste                               Sol de Sonora 70                              FV            70.0             No aplica                               nov-26
+
+ 5                                             Concepción Mendizábal Mendoza Fase I          FV        339.0                No aplica                               dic-26
+
+ 6       Noreste        Atlas Renewable Energy Concepción Mendizábal Mendoza Fase II         FV        180.0                No aplica                               dic-26
+
+ 7                                             Concepción Mendizábal Mendoza Fase III        FV        339.0                                                        dic-26
+
+ 8    Baja California       Fisterra Energy    San Simón Solar                               FV            80.0             No aplica                               nov-26
+
+ 9      Occidente               Selka          Selka Power Plant I                           FV        171.1                No aplica                               dic-26
+
+10      Noroeste            Cimarrón Solar     Cimarron Solar                                FV        300.0                No aplica                               abr-27
+
+                                               Parque FV Energías Renovables de
+11       Noreste                Cubico                                                       FV            78.0                                                     dic-26
+                                               Tamaulipas (Altamira)
+
+12      Noroeste             CSQB Energy       Sunora                                        FV        300.0             Pendiente reunión con socio
+
+                         Atlantica Renewable
+13      Peninsular                             Dalia 3 (PV Castamay)                         FV        100.0             Pendiente reunión con socio
+                            Power México
+
+      Autorizado                   En evaluación                     Autorizado – requiere actualización                 Sin ingresar
+                                                                                                                                                 TOTAL = 2,813.2 MW
+PFV ENERGEO LOS MOLINOS (eólico)
+                             Avances
+                             Gestión de permisos
+
+                                                   Entidad que
+    Ubicación   Capacidad         Gestión                                       Permiso                        Estatus                 Observaciones
+                                                     autoriza
+   Matamoros,                                                                                           Autorizada requiere    Requiere actualización
+                171.1 MW                                               MIA
+    Tamps.                                                                                              actualización          reducción de equipos
+                               Ambiental            SEMARNAT
+                                                                                                        Parque – Ingresada     Pendiente por SEMARNAT
+                                                                       ETJ
+                  Inicio/                                                                               Línea - Por ingresar   Pendiente por Socio
+      Socio
+                 término                                                                                Autorizada requiere    Requiere actualización
+                               Social                  SENER           MISSE / EVIS
+                01-nov-26/                                                                              actualización          reducción de equipos
+    Thermion
+                 01-dic-28                                             Salvamento                       Parque – Ok
+                               Arqueológico             INAH
+                                                                       arqueológico                     Línea - Ok
+                                                                                                        Parque – Ok
+                               Predios                    -            Tenencia de la tierra
+                                                                                                        Línea - Ok
+                                                                                                        Autorizada requiere    Requiere actualización separar
+                                                    CONAGUA
+                                                                                                        actualización          parque y línea
+
+                                                       PEMEX                                                                   Confirmar no interferencias
+
+                                                   Aeronáutica
+                                                                                                        Por ingresar           Pendiente por Socio
+                                                      Civil
+
+
+                                                                                                   Inicio                                       Término
+                              Línea del tiempo                                                        nov-26                                  dic-28
+
+
+
+                                                                                                                         25 meses
+                                   DGAC        ETJ línea          MIA            EViS                                    350 a 400 Plazas
+                                  Ingreso        Ingreso      Actualizar Actualizar
+                               Ruta
+                                              El Estudio Técnico Justificativo (ETJ) de la Línea                                                                8
+                               crítica
+PEO DELARO (eólico)
+                               Avances
+                               Gestión de permisos
+
+                                                         Entidad que
+    Ubicación    Capacidad            Gestión                                  Permiso                            Estatus                   Observaciones
+                                                           autoriza
+     Reynosa,                                                                                              Autorizada requiere      Requiere actualización por
+                 175.0 MW                                                MIA/DTU
+    Tamaulipas                                                                                             actualización            incremento de capacidad
+                                  Ambiental              SEMARNAT
+                                                                         ETJ                       N/A     N/A
+                   Inicio/
+      Socio
+                  término                                                                                  Autorizada requiere      Requiere actualización por
+                                  Social                   SENER         MISSE / EVIS
+                                                                                                           actualización            incremento de capacidad
+                 01-nov-26/
+    Thermion
+                  01-dic-28                                              Salvamento
+                                  Arqueológico              INAH                                           Autorizado
+                                                                         arqueológico
+
+                                  .                  -                   Tenencia de la tierra             Autorizado
+
+                                                                                                           Autorizada requiere      Requiere actualización por
+                                                         CONAGUA
+                                                                                                           actualización            cambio en el cronograma
+                                                                                                                                    Autorización para cruce de
+                                                           PEMEX                                           Por ingresar
+                                                                                                                                    ductos
+                                                         Aeronáutica                                       Autorizada requiere      Requiere actualizar por cambio
+                                                            Civil                                          actualización            en tecnología
+
+
+                               Línea del tiempo                                                       Inicio                                            Término
+                                                                                                          01-nov-26                                      01-dic-28
+
+
+
+                                                                                                                              25 meses
+                              MIA/DTU         MISSE        CONAGUA PEMEX                DGAC
+                                                                                                                      350 a 400 Plazas
+                              Actualizar    Actualizar      Actualizar   Ingresar Actualizar
+                                  Ruta           Actualizaciones de la Manifestación de Impacto Ambiental (MIA) y de la Manifestación de Impacto Social del Sector
+                                                                                                                                                                     9
+                                  crítica        Energético (MISSE)
+PEO MONTECRISTO (eólico)
+                              Avances
+                              Gestión de permisos
+
+                                                    Entidad que
+    Ubicación   Capacidad           Gestión                                  Permiso                      Estatus                Observaciones
+                                                      autoriza
+    Méndez,                                                                                        Parque – Por ingresar Pendiente por el Socio
+                510.0 MW                                              MIA
+   Tamaulipas                                                                                      Línea – Por ingresar  Pendiente por el Socio
+                                .                   SEMARNAT
+                                                                                                   Parque – Por ingresar Pendiente por el Socio
+                                                                      ETJ
+                  Inicio/                                                                          Línea – Por ingresar  Pendiente por el Socio
+      Socio
+                 término                                                                           Parque – Por ingresar Pendiente por el Socio
+                                Social                 SENER          MISSE / EVIS
+                01-nov-26/                                                                         Línea – Por ingresar  Pendiente por el Socio
+    Thermion
+                 01-dic-28                                            Salvamento
+                                Arqueológico            INAH                                       Por ingresar          Pendiente por el Socio
+                                                                      arqueológico
+                                                                                                   Parque – Ok           Son 180 kilómetros de línea
+                                Predios                   -           Tenencia de la tierra
+                                                                                                   Línea – 60%           256 propietarios
+
+                                                     CONAGUA                                       Sin información
+
+
+
+
+                                                                                               Inicio                                      Término
+                              Línea del tiempo                                                    01-nov-26                              01-dic--28
+
+
+
+                                                                                                                                          25 meses
+                              MIA        ETJ   MISSE INAH                                                        Inicio
+                                                                                                ETJ línea
+                             Ingreso Ingreso Ingreso Ingreso                                  Ingreso (último
+                                                                                                              construcción
+                                                                                               tramo) mar-27 línea 60 Días           700 a 800 Plazas
+                                                                                                              después de ETJ
+
+                                 Ruta
+                                               Derechos inmobiliarios Línea de Transmisión                                                              10
+                                 crítica
+PFV SOL DE SONORA 70 (fotovoltaico)
+                                    Avances
+                                    Gestión de permisos
+
+                                                          Entidad que
+      Ubicación        Capacidad         Gestión                                    Permiso                               Estatus                  Observaciones
+                                                            autoriza
+
+  Hermosillo, Sonora    70.0 MW                                             MIA                                   Autorizada             Vigente
+                                      Ambiental           SEMARNAT
+                                                                            ETJ                                   N/A
+                         Inicio/
+        Socio
+                        término       Social                  SENER         MISSE / EVIS                          En evaluación          Pendiente por SENER
+                       01-nov-26/
+    Sol de Sonora                                                           Salvamento
+                        01-abr-28     Arqueológico            INAH                                                Autorizada             No es necesario
+                                                                            arqueológico
+
+                                      Predios                   -           Tenencia de la tierra                 Autorizada
+
+                                                           CONAGUA                                                N/A
+
+
+
+                                    Línea del tiempo
+
+                                                                                                              Inicio                                        Término
+                                                                                                                 01-nov-26                                  01-abr-28
+                                         MIA                            INAH
+                                      Autorizada                      Autorizada
+
+                                                                                                                                      17 meses
+                                                       EViS
+                                                       En
+                                                   evaluación
+                                                                                                                              350 a 400 Plazas
+
+                                      Ruta
+                                                     Resolutivo de la Manifestación de impacto Social del Sector Energético (MISSE)                                     11
+                                      crítica
+PFV CONCEPCIÓN MENDIZABAL MENDOZA FASE I
+(fotovoltaico)                  Avances
+                                Gestión de permisos
+
+                                                         Entidad que
+     Ubicación      Capacidad        Gestión                                    Permiso                            Estatus               Observaciones
+                                                           autoriza
+
+   Nava, Coahuila   339.0 MW      Ambiental              SEMARNAT        DTU                               En evaluación         Pendiente por SEMARNAT
+
+
+                                  Social                   SENER         MISSE / EVIS                      Autorizada            Ok
+                     Inicio/
+       Socio
+                    término                                              Salvamento
+                                  Arqueológico              INAH                                           Autorizada            Ok
+                     dic-26 /                                            arqueológico
+   Cazadero Solar
+                     abr-29
+                                                         CONAGUA                                           Autorizada            Ok
+
+
+                                  Predios                     -          Tenencia de la tierra             Autorizada            Propiedad de CFE
+
+
+
+
+                                Línea del tiempo
+
+                                                                                                       Inicio                                         Término
+                                             DTU                       INAH                               dic-26                                    abr-29
+                                           Evaluación              Autorizada
+
+                                                                                                                             28 meses
+
+                                                          EVIS                CONAGUA
+                                                        Autorizada            Autorizada
+                                                                                                                        1,250 Plazas
+
+
+                                  Ruta
+                                                  Resolutivo de del Dictamen Técnico Unificado (DTU)                                                            12
+                                  crítica
+PFV CONCEPCIÓN MENDIZABAL MENDOZA FASE II
+(fotovoltaico)                  Avances
+                                Gestión de permisos
+
+                                                         Entidad que
+     Ubicación      Capacidad        Gestión                                    Permiso                            Estatus                  Observaciones
+                                                           autoriza
+
+   Nava, Coahuila   180.0 MW      Ambiental              SEMARNAT        DTU                               En evaluación            Pendiente por SEMARNAT
+
+                                  Social                   SENER         MISSE / EVIS                      Autorizada               Ok
+                     Inicio/
+       Socio                                                             Salvamento
+                    término       Arqueológico              INAH                                           Autorizada               Ok
+                                                                         arqueológico
+                     dic-26 /
+   Cazadero Solar
+                     abr-29                              CONAGUA                                           Autorizada               Ok
+
+                                  Predios                     -          Tenencia de la tierra             Autorizada               Propiedad de CFE
+
+
+
+
+                                Línea del tiempo
+
+                                                                                                       Inicio                                            Término
+                                             DTU                       INAH                               ago-26                                       ago-28
+                                           Evaluación              Autorizada
+
+                                                                                                                             24 meses
+
+                                                          EVIS                CONAGUA
+                                                        Autorizada            Autorizada
+                                                                                                                       750 Plazas
+
+
+                                  Ruta
+                                                  Resolutivo de del Dictamen Técnico Unificado (DTU)                                                               13
+                                  crítica
+PFV CONCEPCIÓN MENDIZABAL MENDOZA FASE III
+(fotovoltaico)                  Avances
+                                Gestión de permisos
+
+                                                          Entidad que
+     Ubicación      Capacidad        Gestión                                         Permiso                                Estatus               Observaciones
+                                                            autoriza
+                                                                                                                                          Ingreso programado para el 26-
+   Nava, Coahuila   339.0 MW                                                MIA                                     Por ingresar
+                                                                                                                                          jun-2026
+                                  Ambiental               SEMARNAT
+                                                                                                                                          Ingreso programado para la
+                                                                            ETJ                                     Por ingresar
+                                                                                                                                          segunda quincena de agosto
+                     Inicio/
+       Socio
+                    término       Social                    SENER           MISSE / EVIS                            En evaluación         Pendiente por SENER
+                     dic-26 /
+   Cazadero Solar                                                           Salvamento
+                     abr-29       Arqueológico               INAH                                                   Autorizada            Ok
+                                                                            arqueológico
+
+                                                          CONAGUA                                                   Autorizada            Ok
+
+                                  Predios                       -           Tenencia de la tierra                   Autorizada            Propiedad de CFE
+
+
+
+
+                                Línea del tiempo
+
+                                                                                                               Inicio                                          Término
+                                              ETJ                       EVIS                                       dic-26                                    01-dic-28
+                                           Evaluación               Evaluación
+                                            04-jun-26 →               21-ago-26 →
+
+                                                                                                                                      24 meses
+                                                           MIA
+                                                       Evaluación
+                                                        26-jun-26 →
+                                                                                                                                1,250 Plazas
+
+
+                                  Ruta
+                                                    Elaboración y autorización del Estudio Técnico Justificativo (ETJ)                                                     14
+                                  crítica
+PFV SAN SIMÓN SOLAR (fotovoltaico)
+                                     Avances
+                                     Gestión de permisos
+
+                                                             Entidad que
+     Ubicación      Capacidad (AC)        Gestión                                     Permiso                             Estatus                  Observaciones
+                                                               autoriza
+
+   Ensenada, B.C.      80 MW                                                   MIA / DTU                          En evaluación            En firma de la DGIRA
+                                       Ambiental             SEMARNAT
+                                                                               ETJ                        -       No aplica
+                        Inicio/
+       Socio
+                       término         Social                   SENER          MISSE / EVIS                       Autorizada               Sin consulta indígena
+                     15/nov-26/
+      Fisterra                                                                 Salvamento
+                      31-dic-28        Arqueológica              INAH                                             Autorizada
+                                                                               arqueológico
+                                                                                                                                            13/13 predios con contrato.
+                                       Predios                     -           Tenencia de la tierra              Autorizado
+                                                                                                                                            DDVs liberados.
+
+                                                              CONAGUA                                             Autorizada
+
+
+
+
+                                                                                                              Inicio                                          Término
+                                                  MIA                      INAH                                  nov-26                                     dic-28
+                                                Evaluación              Autorizada
+
+                                                                                                                                    26 meses
+                                                              EVIS                   CONAGUA
+                                                           Autorizada                Autorizada
+                                                                                                                              250 Plazas
+
+
+                                       Ruta
+                                                        Sin pendientes que pongan en riesgo el proyecto                                                                   15
+                                       crítica
+PFV SELKA POWER PLANT (fotovoltaico)
+                              Avances
+                              Gestión de permisos
+
+                                                       Entidad que
+    Ubicación    Capacidad         Gestión                                   Permiso                        Estatus                   Observaciones
+                                                         autoriza
+     Romita.                                                                                        Autorizada requiere       Requiere separar predio de
+                 131.1 MW                                             MIA
+    Guanajuato                                                                                      actualización             línea
+                                                       SEMARNAT
+                                                                      ETJ                           N/A
+                   Inicio/
+      Socio
+                  término                                                                           Parque – Autorizada       Ok
+                                Social                   SENER        MISSE / EVIS
+                                                                                                    Línea – Por ingresar      Pendiente por el socio
+                 01-dic-26/
+      Selka
+                 01-jun-28                                            Salvamento                    Parque – Por ingresar Pendiente por el socio
+                                Arqueológico              INAH
+                                                                      arqueológico                  Línea – Por ingresar  Pendiente por el socio
+                                                                                                    Parque – Ok               OK
+                                Predios            -                  Tenencia de la tierra
+                                                                                                    Línea – En proceso        Pendiente por el socio 11.2 km
+
+                                                       CONAGUA                                      Autorizada                Ok
+
+
+
+                              Línea del tiempo
+
+                                                                                                Inicio                                          Término
+                                                                                                   dic-26                                     jun-28
+
+
+
+                                                                                                                      19 meses
+                                               Derechos MIA                   EViS
+                                    INAH
+                                                                  Ingresar
+                                   Ingreso       línea Actualizar   línea
+                                                gestionar
+                                                                                                                 300 Plazas
+
+                                Ruta
+                                               Derechos inmobiliarios de Línea de Transmisión                                                                  16
+                                crítica
+PFV CIMARRÓN (fotovoltaico)
+                                    Avances
+                                    Gestión de permisos
+
+                                                            Entidad que
+      Ubicación        Capacidad         Gestión                                      Permiso                              Estatus                  Observaciones
+                                                              autoriza
+                                                                                                                   Autorizada requiere Requiere separar predio de
+  Hermosillo, Sonora   300.0 MW                                               MIA
+                                                                                                                   actualización       línea
+                                      Ambiental             SEMARNAT
+                                                                              ETJ                                  NA
+                         Inicio/
+        Socio
+                        término                                                                                    Parque – Autorizada Parque – Requiere actualización
+                                      Social                   SENER          MISSE / EVIS
+                                                                                                                   Línea – Por ingresar Línea – Pendiente por el socio
+                       30-abr-27/
+   Cimarrón Solar
+                       30-abr-29                                              Salvamento
+                                      Arqueológico              INAH                                               Autorizado                  Ok
+                                                                              arqueológico
+
+                                      Predios                     -           Tenencia de la tierra                Autorizado                  Ok
+
+                                                             CONAGUA                                               Autorizada                  Ok
+
+
+
+                                    Línea del tiempo
+
+                                                                                                               Inicio                                        Término
+                                                 MIA                      INAH                                    abr-27                                     abr-29
+                                               Autorizada              Autorizada
+                                                separar
+                                                                                                                                       24 meses
+                                                            MISSE                   CONAGUA
+                                                              Línea                 Autorizada
+                                                            ingresar
+                                                                                                                               600 Plazas
+
+                                      Ruta
+                                                       Manifestación de Impacto Social del Sector Energético (MISSE) de Línea de Transmisión                             17
+                                      crítica
+PARQUE FV ENERGÍAS RENOVABLES DE TAMAULIPAS
+(ALTAMIRA) (fotovoltaico)
+                            Avances
+                            Gestión de permisos
+
+                                                  Entidad que
+    Ubicación   Capacidad         Gestión                                    Permiso                             Estatus                Observaciones
+                                                    autoriza
+    Altamira,                                                        MIA                                  Autorizada             Requiere actualización (BES)
+                78.0 MW
+   Tamaulipas
+                              Ambiental            SEMARNAT
+                                                                                                                                 Requiere ingresar
+                                                                     ETJ                                  En evaluación
+                                                                                                                                 información adicional
+                 Inicio/
+      Socio
+                término       Social                 SENER           MISSE / EVIS                         Autorizada             Requiere actualización (BES)
+                 dic-26/
+     Cubico                                                          Salvamento
+                  jul-28      Arqueológico            INAH                                                Autorizado             Ok
+                                                                     arqueológico
+
+                                                                                                          Parque – Autorizado    Ok
+                              Predios                    -           Tenencia de la tierra
+                                                                                                          Línea – En trámite     Pendiente por el socio
+
+                                                   CONAGUA                                                Autorizado             Ok
+
+
+
+                            Línea del tiempo
+
+                                                                                                      Inicio                                      Término
+                                                                                                        dic-26                                   jul-28
+
+
+
+                                                                                                                           20 meses
+                               MIA             ETJ             MISSE
+                               Ingreso       Ingreso     Ingreso
+                            actualización información actualización
+                                            adicional                                                               350 Plazas
+
+                               Ruta
+                                             Licencia de construcción municipal, costo del trámite.                                                             18
+                               crítica
+Tema 3
+
+Resumen de reuniones ya efectuadas
+Proyectos inicio 2027
+Corte 24 de junio de 2026
+ENERGÍA LIMPIA EL MEZQUITE (eólico)
+                                 Avances
+                                 Gestión de permisos
+
+                                                       Entidad que
+     Ubicación       Capacidad        Gestión                                   Permiso                               Estatus                  Observaciones
+                                                         autoriza
+                                                                                                              Parque – Por ingresar     Pendiente por el socio
+  Mina, Nuevo León   300.0 MW                                            MIA
+                                                                                                              Línea – Por ingresar      Pendiente por el socio
+                                   Ambiental           SEMARNAT
+                                                                                                              Parque – Por ingresar     Pendiente por el socio
+                                                                         ETJ
+                      Inicio/                                                                                 Línea – Por ingresar      Pendiente por el socio
+       Socio
+                     término                                                                                  Parque – Por ingresar     Pendiente por el socio
+                                   Social                 SENER          MISSE / EVIS
+                     mar-27/                                                                                  Línea – Por ingresar      Pendiente por el socio
+      Cubico
+                      jul-29                                             Salvamento                           Parque – Por ingresar     Pendiente por el socio
+                                   Arqueológico           INAH
+                                                                         arqueológico                         Línea – Por ingresar      Pendiente por el socio
+
+                                                                                                              Parque – Autorizado       Ok
+                                   Predios                   -           Tenencia de la tierra
+                                                                                                              Línea – En trámite        En proceso de formalización
+
+                                                        CONAGUA                                       c       Por ingresar              Pendiente por el socio
+
+                                                       Aeronáutica
+                                                                                                              Por ingresar              Pendiente por el socio
+                                                          Civil
+
+
+
+                                 Línea del tiempo
+                                                                                                          Inicio                                         Término
+                                                                                                             mar-27                                     jul-29
+
+
+
+                                                                                                                                 29 meses
+                                    MIA        ETJ   MISSE CONAGUA                INAH
+                                   Ingreso Ingreso Ingreso        Ingreso        Ingreso                                   650 Plazas
+
+                                   Ruta
+                                                  Manifestación de Impacto Ambiental (MIA) estudio de aves y quirópteros                                              20
+                                   crítica
+PARQUE FV ENERGIAS RENOVABLES SAAS (PETO)
+(fotovoltaico)
+                               Avances
+                               Gestión de permisos
+
+                                                   Entidad que
+    Ubicación      Capacidad         Gestión                                 Permiso                      Estatus               Observaciones
+                                                     autoriza
+
+   Peto, Yucatán   72.0 MW                                            MIA                         Autorizada             Requiere actualización (BES)
+                                  Ambiental            SEMARNAT
+                                                                                                                         Se espera respuesta a finales
+                                                                      ETJ                         En evaluación
+                                                                                                                         de julio
+                    Inicio/
+       Socio                                                                                                             Requiere actualización (BES)
+                   término        Social                SENER         MISSE / EVIS                En evaluación
+                                                                                                                         Requiere Consulta Indígena
+                    abr-27/
+      Cubico                                                          Salvamento                                         Se procederá con campaña
+                    nov-28                               INAH                                     En evaluación
+                                  Arqueológico                        arqueológico                                       de campo por parte del INAH
+
+                                                                                                  Parque – Autorizado    Ok
+                                  Predios                 -           Tenencia de la tierra
+                                                                                                  Línea – En trámite     En proceso de formalización
+
+                                                       CONAGUA                                    Autorizada             Ok
+
+
+
+
+                               Línea del tiempo
+                                                                                              Inicio                                      Término
+                                                                                                 abr-27                                  nov-28
+
+
+
+                                                                                                                    20 meses
+                                   MIA           ETJ          MISSE           INAH
+                                  Ingreso En evaluación Ingreso             Campaña de                      350 Plazas
+                               actualización            actualización         campo
+                                   Ruta
+                                              Consulta Indígena                                                                                          21
+                                   crítica
+ENERGIAS RENOVABLES KIIN (TEKAX) (fotovoltaico)
+                                Avances
+                                Gestión de permisos
+
+                                                    Entidad que
+     Ubicación      Capacidad         Gestión                                 Permiso                      Estatus               Observaciones
+                                                      autoriza
+
+   Tekax, Yucatán   56.0 MW                                            MIA                         En evaluación          Requiere actualización (BES)
+                                   Ambiental            SEMARNAT
+                                                                                                                          Se espera respuesta a finales
+                                                                       ETJ                         En evaluación
+                                                                                                                          de agosto
+                     Inicio/
+       Socio                                                                                                              Requiere actualización (BES)
+                    término        Social                SENER         MISSE / EVIS                En evaluación
+                                                                                                                          Requiere Consulta Indígena
+                     abr-27/
+      Cubico                                                           Salvamento                                         Se procederá con campaña
+                     nov-28        Arqueológico           INAH                                     En evaluación
+                                                                       arqueológico                                       de campo por parte del INAH
+
+                                                                                                   Parque – Autorizado    Ok
+                                   Predios                 -           Tenencia de la tierra
+                                                                                                   Línea – En trámite     En proceso de formalización
+
+                                                        CONAGUA                                    Autorizada             Ok
+
+
+
+
+                                Línea del tiempo
+                                                                                               Inicio                                      Término
+                                                                                                  abr-27                                  nov-28
+
+
+
+                                                                                                                     20 meses
+                                    MIA           ETJ          MISSE           INAH
+                                   Ingreso En evaluación Ingreso             Campaña de                      350 Plazas
+                                actualización            actualización         campo
+                                    Ruta
+                                               Consulta Indígena                                                                                          22
+                                    crítica
+PARQUE FV ENERGIAS RENOVABLES DE MEXICO TRES
+(HECELCHAKAN) (fotovoltaico)
+                              Avances
+                              Gestión de permisos
+
+                                                  Entidad que
+    Ubicación     Capacidad         Gestión                                 Permiso                      Estatus               Observaciones
+                                                    autoriza
+   Hecelchakan,                                                      MIA                         En evaluación          Requiere actualización (BES)
+                  72.0 MW
+    Campeche
+                                 Ambiental            SEMARNAT
+                                                                                                                        Se espera respuesta a finales
+                                                                     ETJ                         En evaluación
+                                                                                                                        de agosto
+                   Inicio/
+      Socio                                                                                                             Requiere actualización (BES)
+                  término        Social                SENER         MISSE / EVIS                En evaluación
+                                                                                                                        Requiere Consulta Indígena
+                   abr-27/
+     Cubico                                                          Salvamento                                         Se procederá con campaña
+                    dic-28       Arqueológico           INAH                                     En evaluación
+                                                                     arqueológico                                       de campo por parte del INAH
+
+                                                                                                 Parque – Autorizado    Ok
+                                 Predios                 -           Tenencia de la tierra
+                                                                                                 Línea – En trámite     En proceso de formalización
+
+                                                      CONAGUA                                    Autorizada             Ok
+
+
+
+
+                              Línea del tiempo
+                                                                                             Inicio                                      Término
+                                                                                                abr-27                                  dic-28
+
+
+
+                                                                                                                   21 meses
+                                  MIA           ETJ          MISSE           INAH
+                                 Ingreso En evaluación Ingreso             Campaña de                      350 Plazas
+                              actualización            actualización         campo
+                                  Ruta
+                                             Consulta Indígena                                                                                          23
+                                  crítica
+   Iluminando vidas,
+iluminando México      GRACIAS
+

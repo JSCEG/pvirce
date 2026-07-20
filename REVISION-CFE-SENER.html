@@ -3,47 +3,27 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="_tokens.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Revisión de información CFE y SENER — Segunda Convocatoria 2026</title>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
   <style>
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
-      font-weight: 400;
-    }
-
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
-      font-weight: 700;
-    }
-
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
-      font-weight: 300;
-    }
 
     /* IDENTIDAD SENER: Guinda / Verde / Dorado */
     :root {
-      --color-guinda: #9B2247;
-      --color-guinda-light: #B24C6C;
-      --color-verde: #1E5B4F;
-      --color-dorado: #A57F2C;
-      --color-dorado-light: #D6B46A;
-      --color-gris: #98989A;
-      --color-gris-claro: #E5E5E5;
+      --sener-guinda: #9B2247;
+      --sener-guinda-dark: #B24C6C;
+      --sener-esmeralda: #0E8A6E;
+      --sener-dorado: #E0A12E;
+      --sener-dorado-soft: #D6B46A;
+      --sener-gris: #98989A;
+      --sener-linea: #E5E5E5;
       --color-bg-dark: #1E1E1E;
-      --color-text-dark: #2b2b2b;
-      --color-text-light: #666666;
-      --color-bg-light: #F4F6F8;
-      --color-cfe: #1E5B4F;
+      --sener-tinta: #2b2b2b;
+      --sener-gris: #666666;
+      --sener-papel: #F4F6F8;
+      --color-cfe: #0E8A6E;
       --color-sener: #9B2247;
       --scale: 1.0;
     }
@@ -55,9 +35,9 @@
     }
 
     body {
-      font-family: 'Patria', 'Outfit', sans-serif;
+      font-family: 'Newsreader', 'Newsreader', sans-serif;
       background-color: var(--color-bg-dark);
-      color: var(--color-text-dark);
+      color: var(--sener-tinta);
       overflow: hidden;
       width: 100vw;
       height: 100vh;
@@ -84,7 +64,7 @@
       align-items: center;
       z-index: 9999;
       color: #fff;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       transition: opacity 0.5s ease;
     }
 
@@ -92,7 +72,7 @@
       width: 50px;
       height: 50px;
       border: 5px solid rgba(255, 255, 255, 0.1);
-      border-top-color: var(--color-dorado);
+      border-top-color: var(--sener-dorado);
       border-radius: 50%;
       animation: spin 1s infinite linear;
       margin-bottom: 20px;
@@ -152,7 +132,7 @@
       display: grid;
       grid-template-columns: 1fr 2fr 1fr;
       align-items: center;
-      border-bottom: 2px solid var(--color-guinda);
+      border-bottom: 2px solid var(--sener-guinda);
       margin: -35px -45px 15px;
       width: calc(100% + 90px);
     }
@@ -160,7 +140,7 @@
     .slide-header .brand-left {
       font-size: 19px;
       font-weight: 700;
-      color: var(--color-guinda);
+      color: var(--sener-guinda);
       letter-spacing: .02em;
       display: flex;
       flex-direction: column;
@@ -171,13 +151,13 @@
     .slide-header .brand-left .brand-line-2 {
       font-size: 13px;
       font-weight: 600;
-      color: var(--color-dorado);
+      color: var(--sener-dorado);
     }
 
     .slide-header .ef-title {
       font-size: 23px;
       font-weight: 700;
-      color: var(--color-text-dark);
+      color: var(--sener-tinta);
       text-align: center;
       text-transform: uppercase;
       letter-spacing: .02em;
@@ -186,7 +166,7 @@
     .slide-header .ef-title::before,
     .slide-header .ef-title::after {
       content: '·';
-      color: var(--color-dorado);
+      color: var(--sener-dorado);
       margin: 0 12px;
       font-size: 23px;
     }
@@ -208,7 +188,7 @@
       width: calc(100% + 90px);
       margin-left: -45px;
       margin-bottom: -35px;
-      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 60%, var(--color-dorado) 60%, var(--color-dorado) 100%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-guinda) 60%, var(--sener-dorado) 60%, var(--sener-dorado) 100%);
       flex-shrink: 0;
     }
 
@@ -229,7 +209,7 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       gap: 15px;
       color: #fff;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 14px;
     }
 
@@ -288,7 +268,7 @@
       display: flex;
       align-items: center;
       gap: 24px;
-      border-bottom: 4px solid var(--color-dorado);
+      border-bottom: 4px solid var(--sener-dorado);
       width: 100%;
     }
 
@@ -298,12 +278,12 @@
     .slide.cover .top-band .divider {
       width: 1px;
       height: 48px;
-      background: var(--color-gris);
+      background: var(--sener-gris);
     }
 
     .slide.cover .top-band .unit {
       font-size: 11px;
-      color: var(--color-text-dark);
+      color: var(--sener-tinta);
       letter-spacing: .04em;
       text-transform: uppercase;
       font-weight: 600;
@@ -325,7 +305,7 @@
       font-size: 14px;
       letter-spacing: .25em;
       text-transform: uppercase;
-      color: var(--color-dorado);
+      color: var(--sener-dorado);
       font-weight: 700;
     }
 
@@ -365,12 +345,12 @@
       font-size: 18px;
       line-height: 1.45;
       background: rgba(0, 0, 0, 0.28);
-      border-left: 4px solid var(--color-dorado);
+      border-left: 4px solid var(--sener-dorado);
       border-radius: 0 8px 8px 0;
     }
 
     .slide.cover .unidad-sub-destacada .acronym {
-      color: var(--color-dorado);
+      color: var(--sener-dorado);
       font-weight: 700;
       letter-spacing: .04em;
     }
@@ -417,7 +397,7 @@
       margin-top: auto;
       flex: 0 0 14px;
       width: 100%;
-      background: linear-gradient(90deg, var(--color-guinda) 0%, var(--color-guinda) 33%, var(--color-verde) 33%, var(--color-verde) 66%, var(--color-dorado) 66%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-guinda) 33%, var(--sener-esmeralda) 33%, var(--sener-esmeralda) 66%, var(--sener-dorado) 66%);
     }
 
     /* COMPONENTES DE CONTENIDO */
@@ -436,7 +416,7 @@
     }
 
     .kpi-card-main {
-      background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%);
+      background: linear-gradient(135deg, var(--sener-guinda) 0%, #4D1222 100%);
       color: #fff;
       border-radius: 14px;
       padding: 20px 22px;
@@ -451,7 +431,7 @@
       font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: var(--color-dorado-light);
+      color: var(--sener-dorado-soft);
     }
 
     .kpi-card-main .val-main {
@@ -469,7 +449,7 @@
 
     .panel-card {
       background: #fff;
-      border: 1px solid var(--color-gris-claro);
+      border: 1px solid var(--sener-linea);
       border-radius: 14px;
       padding: 16px 18px;
       display: flex;
@@ -483,8 +463,8 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .04em;
-      color: var(--color-guinda);
-      border-bottom: 2px solid var(--color-dorado);
+      color: var(--sener-guinda);
+      border-bottom: 2px solid var(--sener-dorado);
       padding-bottom: 6px;
       margin-bottom: 10px;
     }
@@ -492,7 +472,7 @@
     .panel-card .chart-host { flex: 1 1 auto; min-height: 0; }
 
     .kpi-box {
-      background: var(--color-bg-light);
+      background: var(--sener-papel);
       border-radius: 10px;
       padding: 14px 16px;
       display: flex;
@@ -510,32 +490,32 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .05em;
-      color: var(--color-text-light);
+      color: var(--sener-gris);
     }
 
     .kpi-box .s-val {
       font-size: 34px;
       font-weight: 700;
-      color: var(--color-guinda);
+      color: var(--sener-guinda);
       line-height: 1.1;
     }
 
     .kpi-box .s-sub {
       font-size: 14px;
       font-weight: 600;
-      color: var(--color-text-dark);
+      color: var(--sener-tinta);
     }
 
     /* TABLAS */
     .report-table {
       width: 100%;
       border-collapse: collapse;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 12px;
     }
 
     .report-table thead th {
-      background: var(--color-guinda);
+      background: var(--sener-guinda);
       color: #fff;
       padding: 8px 10px;
       text-transform: uppercase;
@@ -546,7 +526,7 @@
 
     .report-table tbody td {
       padding: 7px 10px;
-      border-bottom: 1px solid var(--color-gris-claro);
+      border-bottom: 1px solid var(--sener-linea);
       vertical-align: middle;
     }
 
@@ -557,13 +537,13 @@
     .report-table tfoot td {
       padding: 8px 10px;
       font-weight: 700;
-      border-top: 2px solid var(--color-guinda);
-      color: var(--color-guinda);
+      border-top: 2px solid var(--sener-guinda);
+      color: var(--sener-guinda);
     }
 
     /* NOTAS Y CALLOUTS */
     .note-body {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 15px;
       line-height: 1.5;
       color: #3a3a3a;
@@ -574,7 +554,7 @@
       justify-content: center;
     }
 
-    .note-body p strong { color: var(--color-guinda); }
+    .note-body p strong { color: var(--sener-guinda); }
 
     .note-body .src-cfe { color: var(--color-cfe); font-weight: 700; }
     .note-body .src-sener { color: var(--color-sener); font-weight: 700; }
@@ -585,7 +565,7 @@
       border-radius: 999px;
       font-weight: 700;
       font-size: 13px;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       letter-spacing: .01em;
     }
 
@@ -594,10 +574,10 @@
     .diff-pill.neu { background: #EEEEEE; color: #666; }
 
     .note-strip {
-      background: var(--color-bg-light);
+      background: var(--sener-papel);
       border-radius: 10px;
       padding: 12px 18px;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 14px;
       color: #444;
       display: flex;
@@ -608,7 +588,7 @@
     }
 
     .note-strip span { display: inline-flex; align-items: center; gap: 8px; }
-    .note-strip b { color: var(--color-guinda); }
+    .note-strip b { color: var(--sener-guinda); }
 
     /* HALLAZGOS */
     .hallazgo-grid {
@@ -622,8 +602,8 @@
 
     .hallazgo-card {
       background: #fff;
-      border: 1px solid var(--color-gris-claro);
-      border-left: 5px solid var(--color-guinda);
+      border: 1px solid var(--sener-linea);
+      border-left: 5px solid var(--sener-guinda);
       border-radius: 12px;
       padding: 15px 17px;
       display: flex;
@@ -640,27 +620,27 @@
 
     .hallazgo-card .h-icon {
       font-size: 22px;
-      color: var(--color-dorado);
+      color: var(--sener-dorado);
       flex: 0 0 auto;
     }
 
     .hallazgo-card .h-title {
       font-weight: 700;
       font-size: 14px;
-      color: var(--color-guinda);
+      color: var(--sener-guinda);
       text-transform: uppercase;
       letter-spacing: .03em;
       line-height: 1.15;
     }
 
     .hallazgo-card .h-text {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 13.5px;
       line-height: 1.4;
       color: #444;
     }
 
-    .hallazgo-card .h-text b { color: var(--color-text-dark); }
+    .hallazgo-card .h-text b { color: var(--sener-tinta); }
 
     /* CIERRE */
     .cierre-wrap {
@@ -673,18 +653,18 @@
     }
 
     .cierre-quote {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 21px;
       line-height: 1.55;
       color: #2b2b2b;
-      border-left: 6px solid var(--color-dorado);
+      border-left: 6px solid var(--sener-dorado);
       padding: 8px 0 8px 26px;
     }
 
-    .cierre-quote strong { color: var(--color-guinda); }
+    .cierre-quote strong { color: var(--sener-guinda); }
 
     .cierre-reco {
-      background: linear-gradient(135deg, var(--color-guinda) 0%, #4D1222 100%);
+      background: linear-gradient(135deg, var(--sener-guinda) 0%, #4D1222 100%);
       color: #fff;
       border-radius: 14px;
       padding: 22px 28px;
@@ -692,14 +672,14 @@
     }
 
     .cierre-reco h4 {
-      color: var(--color-dorado-light);
+      color: var(--sener-dorado-soft);
       text-transform: uppercase;
       font-size: 14px;
       letter-spacing: .08em;
       margin-bottom: 8px;
     }
 
-    .cierre-reco p { font-family: 'Outfit', sans-serif; font-size: 18px; line-height: 1.5; }
+    .cierre-reco p { font-family: 'Newsreader', sans-serif; font-size: 18px; line-height: 1.5; }
 
     /* LOADER PDF */
     #pdfLoader {
@@ -713,7 +693,7 @@
       gap: 16px;
       z-index: 10000;
       color: #fff;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
       font-size: 16px;
     }
 
@@ -736,7 +716,7 @@
       min-width: 26px;
       border: 0;
       border-radius: 999px;
-      background: var(--color-guinda);
+      background: var(--sener-guinda);
       color: #fff;
       cursor: pointer;
       font-size: 12px;
@@ -770,7 +750,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border-bottom: 8px solid var(--color-guinda);
+      border-bottom: 8px solid var(--sener-guinda);
     }
 
     .chart-fullscreen-head {
@@ -780,11 +760,11 @@
       justify-content: space-between;
       gap: 20px;
       padding: 0 24px;
-      border-bottom: 4px solid var(--color-dorado);
+      border-bottom: 4px solid var(--sener-dorado);
       background: linear-gradient(180deg, #fff, #f7f7f7);
       font-weight: 700;
       font-size: 20px;
-      color: var(--color-guinda);
+      color: var(--sener-guinda);
       text-transform: uppercase;
       letter-spacing: .04em;
     }
@@ -794,7 +774,7 @@
       min-width: 34px;
       border: 0;
       border-radius: 999px;
-      background: var(--color-guinda);
+      background: var(--sener-guinda);
       color: #fff;
       cursor: pointer;
       font-weight: 800;
@@ -996,7 +976,7 @@
             <span><b>Solar / FV:</b> +1 proyecto · −69 MW</span>
             <span><b>Eólica:</b> −1 proyecto · +4 MW</span>
             <span><b>Hidroeléctrica:</b> −3 proyectos · −22 MW</span>
-            <span style="color:var(--color-text-light);">(SENER respecto de CFE)</span>
+            <span style="color:var(--sener-gris);">(SENER respecto de CFE)</span>
           </div>
         </div>
 
@@ -1214,7 +1194,7 @@
     <span id="slideCounter">1 / 1</span>
     <button class="control-btn" id="btnNext" onclick="nextSlide()"><i class="bi bi-chevron-right"></i></button>
     <button class="control-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)"><i class="bi bi-arrows-fullscreen"></i></button>
-    <button class="control-btn" onclick="exportPDF()" title="Exportar a PDF" style="background:var(--color-guinda);color:#fff;"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+    <button class="control-btn" onclick="exportPDF()" title="Exportar a PDF" style="background:var(--sener-guinda);color:#fff;"><i class="bi bi-file-earmark-pdf-fill"></i></button>
   </div>
 
   <!-- CDN -->
@@ -1235,7 +1215,7 @@
     let currentSlideIndex = 0;
     let slidesCount = 1;
 
-    const C = { cfe: '#1E5B4F', sener: '#9B2247', dorado: '#A57F2C', verde: '#1E5B4F' };
+    const C = { cfe: '#0E8A6E', sener: '#9B2247', dorado: '#E0A12E', verde: '#0E8A6E' };
 
     // ==========================================
     // DATOS (Reporte de diferencias CFE vs SENER)
@@ -1277,8 +1257,8 @@
     // TEMA HIGHCHARTS INSTITUCIONAL
     // ==========================================
     Highcharts.setOptions({
-      colors: ['#9B2247', '#A57F2C', '#1E5B4F', '#B24C6C', '#D6B46A', '#98989A', '#611232', '#2D3748'],
-      chart: { backgroundColor: 'transparent', style: { fontFamily: 'Montserrat, sans-serif' } },
+      colors: ['#9B2247', '#E0A12E', '#0E8A6E', '#B24C6C', '#D6B46A', '#98989A', '#611232', '#2D3748'],
+      chart: { backgroundColor: 'transparent', style: { fontFamily: 'Libre Franklin, sans-serif' } },
       title: { text: '' },
       credits: { enabled: false },
       legend: { itemStyle: { fontSize: '11px' } },

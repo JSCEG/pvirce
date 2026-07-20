@@ -27,8 +27,8 @@
         :root {
             --gobmx-guinda:      #9B2247;
             --gobmx-guinda-dark: #7a1b38;
-            --gobmx-verde:       #1E5B4F;
-            --gobmx-dorado:      #A57F2C;
+            --gobmx-verde:       #0E8A6E;
+            --gobmx-dorado:      #E0A12E;
             --gobmx-gris:        #98989A;
             --color-text-primary:   #1F2937;
             --color-text-secondary: #6B7280;
@@ -113,8 +113,8 @@
             font-size: 1.4rem; flex-shrink: 0;
         }
         .kpi-icon.c-guinda { background: rgba(155,34,71,0.1);  color: #9B2247; }
-        .kpi-icon.c-verde  { background: rgba(30,91,79,0.1);   color: #1E5B4F; }
-        .kpi-icon.c-dorado { background: rgba(165,127,44,0.1); color: #A57F2C; }
+        .kpi-icon.c-verde  { background: rgba(30,91,79,0.1);   color: #0E8A6E; }
+        .kpi-icon.c-dorado { background: rgba(165,127,44,0.1); color: #E0A12E; }
         .kpi-icon.c-azul   { background: rgba(59,130,246,0.1); color: #3B82F6; }
         .kpi-num  { font-size: 1.65rem; font-weight: 800; color: var(--color-text-primary); line-height: 1; }
         .kpi-lbl  { font-size: 0.78rem; color: var(--color-text-secondary); margin-top: 2px; }
@@ -497,7 +497,7 @@ const SEMAFOROS = [
     { label:'Proyectos con retraso',  valor:'4',      color:'#F59E0B', glow:'rgba(245,158,11,0.2)',  nota:'Requieren atención' },
     { label:'Proyectos suspendidos',  valor:'1',      color:'#EF4444', glow:'rgba(239,68,68,0.2)',   nota:'En revisión técnica' },
     { label:'Avance promedio global', valor:'68%',    color:'#3B82F6', glow:'rgba(59,130,246,0.2)',  nota:'Todos los proyectos' },
-    { label:'Inversión comprometida', valor:'$14.2B', color:'#A57F2C', glow:'rgba(165,127,44,0.2)', nota:'MXN · Ejercicio 2025' },
+    { label:'Inversión comprometida', valor:'$14.2B', color:'#E0A12E', glow:'rgba(165,127,44,0.2)', nota:'MXN · Ejercicio 2025' },
 ];
 
 // ─────────────────────────────────────────────────────────
@@ -653,8 +653,8 @@ PROYECTOS.forEach(p => { tiposMW[p.tipo] = (tiposMW[p.tipo] || 0) + p.cap; });
 
 const BRAND_COLORS = {   // Ref: dashboard-toolkit.md · brandColors
     'Solar':           '#9B2247',
-    'Eólica':          '#A57F2C',
-    'Ciclo combinado': '#1E5B4F',
+    'Eólica':          '#E0A12E',
+    'Ciclo combinado': '#0E8A6E',
     'Hidroeléctrica':  '#3B82F6',
     'Geotérmica':      '#7C3AED',
 };

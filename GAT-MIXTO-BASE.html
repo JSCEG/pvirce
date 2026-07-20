@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GAT-Mixto · Seguimiento de proyectos</title>
+<link rel="stylesheet" href="_tokens.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="GAT-MIXTO-DGMESNIE.data.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --sener-guinda: #9B2247;
+  --sener-guinda-dark: #6E1733;
+  --sener-dorado: #E0A12E;
+  --sener-esmeralda: #0E8A6E;
+  --sener-cian: #0E7C90;
+  --ink: #1C1B1A;
+  --muted: #6F6B66;
+  --line: #ECE8E2;
+  --paper: #FAF8F5;
+  --slide-w: 1333px;
+  --slide-h: 750px;
+  --display: "Newsreader", Georgia, serif;
+  --body: "Libre Franklin", "Segoe UI", Arial, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #1E1E1E;
+  color: var(--ink);
+  font-family: var(--body);
+}
+.deck {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: var(--slide-w);
+  height: var(--slide-h);
+  transform-origin: center center;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  width: var(--slide-w);
+  height: var(--slide-h);
+  overflow: hidden;
+  display: none;
+  background: var(--paper);
+  box-shadow: 0 18px 50px rgba(0,0,0,.34);
+}
+.slide.active { display: grid; }
+.gold-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  background: var(--sener-dorado);
+  z-index: 4;
+}
+.footer-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  background: linear-gradient(90deg, var(--sener-guinda) 0 62%, var(--sener-dorado) 62% 100%);
+  z-index: 4;
+}
+
+/* Portada y contraportada */
+.cover {
+  color: var(--ink);
+  background: #fff;
+  grid-template-rows: 388px 278px 84px;
+}
+.back-cover {
+  color: #fff;
+  background: var(--sener-guinda-dark);
+  grid-template-rows: auto 1fr auto;
+}
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.back-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(155,34,71,.44) 0%, rgba(14,138,110,.22) 58%, rgba(28,27,26,.62) 100%);
+  z-index: 1;
+}
+.cover-photo {
+  grid-row: 2;
+  position: relative;
+  z-index: 2;
+  border-top: 4px solid var(--sener-dorado);
+  overflow: hidden;
+}
+.cover-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 54%;
+  display: block;
+}
+.cover-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,0) 46%, rgba(224,161,46,.12));
+}
+.brand-strip,
+.cover-main,
+.cover-meta,
+.back-main { position: relative; z-index: 2; }
+.cover .brand-strip,
+.cover .cover-main,
+.cover .cover-photo,
+.cover .cover-meta {
+  grid-column: 1 / -1;
+}
+.brand-strip {
+  grid-row: 1;
+  align-self: start;
+  height: 64px;
+  background: transparent;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  justify-content: start;
+  gap: 18px;
+  padding: 42px 60px 0;
+  border-bottom: 0;
+}
+.brand-strip img.gob { height: 38px; width: auto; }
+.brand-strip img.sener { height: 36px; width: auto; }
+.brand-sep { width: 1px; height: 38px; background: #D8D2C8; }
+.brand-unit {
+  display: none;
+}
+.cover-main {
+  grid-row: 1;
+  align-self: end;
+  padding: 0 60px 24px;
+  max-width: 1000px;
+}
+.eyebrow {
+  display: block;
+  color: var(--sener-guinda);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 21px;
+  line-height: 1.24;
+  letter-spacing: .20em;
+  text-transform: uppercase;
+  font-weight: 800;
+  max-width: 520px;
+}
+.eyebrow::before { content: none; }
+.cover h1 {
+  margin: 12px 0 0;
+  font-family: var(--display);
+  font-size: 62px;
+  line-height: .92;
+  font-weight: 600;
+  letter-spacing: 0;
+  max-width: 760px;
+  text-shadow: none;
+}
+.cover .subtitle {
+  display: grid;
+  grid-template-columns: auto 90px 1fr;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+  max-width: 830px;
+  color: #6F6B68;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+.cover .subtitle strong {
+  color: var(--sener-guinda);
+  font-family: var(--display);
+  font-size: 35px;
+  line-height: 1;
+  font-weight: 600;
+}
+.cover .subtitle i {
+  display: block;
+  height: 2px;
+  background: var(--sener-dorado);
+}
+.cover-meta {
+  grid-row: 3;
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: 160px 240px 1fr;
+  align-items: start;
+  gap: 70px;
+  width: auto;
+  margin: 0;
+  padding: 18px 60px 0;
+  background: #fff;
+}
+.meta-item {
+  background: transparent;
+  border: 0;
+  border-left: 0;
+  padding: 0;
+  backdrop-filter: none;
+}
+.meta-item strong {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #9B9894;
+  font-size: 16px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+.meta-item strong::before {
+  content: "◇";
+  color: var(--sener-guinda);
+  font-size: 16px;
+  line-height: 1;
+}
+.meta-item span {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+}
+.back-main {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 120px 80px;
+}
+.back-main img { height: 92px; margin-bottom: 34px; }
+.back-main h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 58px;
+  line-height: 1;
+  font-weight: 600;
+}
+.back-main p {
+  margin: 18px 0 0;
+  font-size: 20px;
+  color: rgba(255,255,255,.86);
+}
+
+/* Láminas de contenido */
+.content {
+  grid-template-rows: 84px 1fr 10px;
+}
+.slide-header {
+  background: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  align-items: center;
+  padding: 17px 42px;
+  border-top: 4px solid var(--sener-dorado);
+  border-bottom: 2px solid var(--sener-guinda);
+}
+.section-mark {
+  border-left: 4px solid var(--sener-guinda);
+  padding-left: 12px;
+  color: var(--sener-guinda);
+  font-size: 14px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.section-mark span {
+  display: block;
+  color: var(--muted);
+  letter-spacing: .06em;
+  font-weight: 700;
+}
+.slide-title {
+  text-align: center;
+  font-family: var(--display);
+  font-size: 31px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.slide-title::after {
+  content: "";
+  display: block;
+  width: 86px;
+  height: 3px;
+  background: var(--sener-dorado);
+  margin: 8px auto 0;
+}
+.header-logo { justify-self: end; height: 44px; width: auto; }
+.content-body {
+  padding: 26px 42px 30px;
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 22px;
+  min-height: 0;
+}
+.national-body {
+  grid-template-columns: 292px minmax(0, 1fr) 338px;
+  grid-template-rows: minmax(0, 1fr) 138px;
+  padding-top: 20px;
+  gap: 16px;
+}
+.hero-card {
+  background: linear-gradient(180deg, var(--sener-guinda) 0%, #871A3F 100%);
+  color: #fff;
+  border-top: 5px solid var(--sener-dorado);
+  padding: 22px 20px;
+  min-height: 0;
+}
+.hero-card .label {
+  font-size: 15px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.hero-card .value {
+  font-family: var(--display);
+  font-size: 78px;
+  line-height: .95;
+  font-weight: 600;
+  margin: 8px 0 16px;
+}
+.hero-card .note {
+  color: #F5D783;
+  font-size: 21px;
+  line-height: 1.18;
+  font-weight: 800;
+}
+.side-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+  margin-top: 18px;
+}
+.side-kpi {
+  border-top: 1px solid rgba(255,255,255,.35);
+  padding-top: 10px;
+}
+.side-kpi strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 600;
+}
+.side-kpi span {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255,255,255,.78);
+  font-size: 9px;
+  line-height: 1.2;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.hero-status {
+  margin-top: 17px;
+  color: rgba(255,255,255,.78);
+  font-size: 11px;
+  line-height: 1.35;
+}
+.grid-stack {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  min-height: 0;
+}
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.kpi {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--sener-guinda);
+  padding: 13px 14px;
+}
+.kpi strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--sener-guinda);
+}
+.kpi span {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  min-height: 0;
+  overflow: hidden;
+}
+.panel h3 {
+  margin: 0;
+  padding: 15px 18px 8px;
+  color: var(--sener-guinda);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.panel h3::before {
+  content: "◆";
+  color: var(--sener-dorado);
+  margin-right: 9px;
+  font-size: 13px;
+}
+.panel h3::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background: var(--sener-guinda);
+  margin-top: 9px;
+}
+.panel-body {
+  padding: 9px 18px 16px;
+  min-height: 0;
+  overflow: auto;
+}
+.map-panel {
+  grid-column: 2;
+  grid-row: 1;
+}
+.map-panel .panel-body {
+  padding: 12px 14px 14px;
+  overflow: hidden;
+}
+.gie-panel {
+  grid-column: 3;
+  grid-row: 1;
+}
+.tech-panel {
+  grid-column: 2 / 4;
+  grid-row: 2;
+}
+.tech-panel .panel-body {
+  padding-top: 7px;
+  overflow: hidden;
+}
+.project-map {
+  position: relative;
+  height: 392px;
+  background: #F7F4EF;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.project-map::after { content: none; }
+.project-map .leaflet-container {
+  font-family: var(--body);
+  background: #F7F4EF;
+}
+.project-map .leaflet-control-attribution {
+  display: none;
+}
+.map-point {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--point-color);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 800;
+  z-index: 2;
+}
+.leaflet-marker-icon.map-point {
+  margin: 0 !important;
+}
+.map-point .count {
+  position: absolute;
+  right: -7px;
+  top: -8px;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  background: var(--sener-guinda);
+  color: #fff;
+  border: 1px solid #fff;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+}
+.map-legend {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  width: 310px;
+  z-index: 420;
+  background: rgba(255,255,255,.88);
+  border: 1px solid rgba(236,232,226,.9);
+  padding: 7px 8px;
+}
+.map-loading,
+.map-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: #F7F4EF;
+  z-index: 2;
+}
+.map-fallback {
+  padding: 24px;
+  text-align: center;
+  line-height: 1.4;
+}
+.region-tip {
+  background: rgba(255,255,255,.96);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--sener-guinda);
+  color: var(--text);
+  box-shadow: 0 8px 22px rgba(0,0,0,.18);
+  padding: 7px 9px;
+  font-family: var(--body);
+}
+.region-tip strong {
+  display: block;
+  color: var(--sener-guinda);
+  margin-bottom: 3px;
+}
+.legend-chip,
+.tech-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.legend-dot,
+.tech-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dot-color);
+}
+.gie-list {
+  display: grid;
+  gap: 8px;
+}
+.gie-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+  padding: 7px 0;
+}
+.flag {
+  width: 31px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: #F6F1EA;
+  border: 1px solid #E7DDD0;
+  border-radius: 2px;
+  font-size: 17px;
+}
+.gie-name {
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.gie-country {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.gie-metric {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--sener-guinda);
+}
+.tech-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.tech-card {
+  border-left: 4px solid var(--tech-color);
+  background: #FAF8F5;
+  padding: 10px 11px;
+  min-width: 0;
+}
+.tech-card strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--sener-guinda);
+  font-weight: 600;
+}
+.tech-card .tech-name {
+  margin-top: 6px;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tech-card .tech-mw {
+  margin-top: 4px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sener-dorado);
+  box-shadow: 0 0 0 4px rgba(224,161,46,.16);
+}
+.status-line.ok .status-dot { background: var(--sener-esmeralda); box-shadow: 0 0 0 4px rgba(14,138,110,.16); }
+.status-line.err .status-dot { background: var(--sener-guinda); box-shadow: 0 0 0 4px rgba(155,34,71,.16); }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  color: var(--sener-guinda);
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 2px solid var(--sener-guinda);
+  padding: 8px 7px;
+}
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 8px 7px;
+}
+td.num, th.num {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.controls {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.95);
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 999px;
+  padding: 8px 10px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.28);
+}
+.controls button {
+  border: 1px solid var(--sener-guinda);
+  background: #fff;
+  color: var(--sener-guinda);
+  border-radius: 999px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.controls button.primary { background: var(--sener-guinda); color: #fff; }
+.counter {
+  color: var(--sener-guinda);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 54px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+  <section class="slide cover active">
+    <div class="brand-strip">
+      <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México">
+      <div class="brand-sep"></div>
+      <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
+      <div class="brand-unit">Subsecretaría de Planeación y Transición Energética<br>Dirección General de Metodologías y Estadísticas del SNIE</div>
+    </div>
+    <div class="cover-main">
+      <div class="eyebrow">Subsecretaría de Planeación y Transición Energética</div>
+      <h1>Seguimiento de proyectos mixtos</h1>
+      <div class="subtitle"><strong>2026</strong><i></i><span>Base ejecutiva para el seguimiento de proyectos en desarrollo.</span></div>
+    </div>
+    <div class="cover-photo">
+      <img src="reno_portada.png" alt="">
+    </div>
+    <div class="cover-meta">
+      <div class="meta-item"><strong>Versión</strong><span>Base 0.2</span></div>
+      <div class="meta-item"><strong>Fecha</strong><span>26 de junio de 2026</span></div>
+      <div class="meta-item"><strong>Fuente</strong><span>DGMESNIE</span></div>
+    </div>
+  </section>
+
+  <section class="slide content">
+    <div class="slide-header">
+      <div class="section-mark">GAT-Mixto<span>Base de seguimiento</span></div>
+      <div class="slide-title">Panorama nacional</div>
+      <img class="header-logo" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
+    </div>
+    <div class="content-body national-body">
+      <aside class="hero-card">
+        <div class="label">Registros cargados</div>
+        <div class="value" id="kTotal">—</div>
+        <div class="note" id="heroCopy">Solicitando fuente publicada.</div>
+        <div class="side-kpis">
+          <div class="side-kpi"><strong id="kMw">—</strong><span>MW identificados</span></div>
+          <div class="side-kpi"><strong id="kTech">—</strong><span>Tecnologías</span></div>
+          <div class="side-kpi"><strong id="kGcr">—</strong><span>GCR / regiones</span></div>
+          <div class="side-kpi"><strong id="kHeaders">—</strong><span>Columnas</span></div>
+        </div>
+        <div class="hero-status" id="statusText">Iniciando carga de datos.</div>
+      </aside>
+      <section class="panel map-panel">
+        <h3>Mapa nacional de proyectos</h3>
+        <div class="panel-body">
+          <div class="project-map" id="projectMap"></div>
+        </div>
+      </section>
+      <section class="panel gie-panel">
+        <h3>Principales GIE</h3>
+        <div class="panel-body">
+          <div class="gie-list" id="gieList"></div>
+        </div>
+      </section>
+      <section class="panel tech-panel">
+        <h3>Proyectos por tecnología</h3>
+        <div class="panel-body">
+          <div class="tech-summary" id="techSummary"></div>
+        </div>
+      </section>
+    </div>
+    <div class="footer-band"></div>
+  </section>
+
+  <section class="slide back-cover">
+    <div class="gold-edge"></div>
+    <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt="">
+    <div class="back-main">
+      <div>
+        <img src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
+        <h2>Secretaría de Energía</h2>
+        <p>Subsecretaría de Planeación y Transición Energética · DGMESNIE</p>
+      </div>
+    </div>
+    <div class="footer-band"></div>
+  </section>
+</main>
+
+<div class="controls">
+  <button type="button" onclick="prevSlide()" title="Anterior">‹</button>
+  <span class="counter" id="counter">1 / 3</span>
+  <button type="button" onclick="nextSlide()" title="Siguiente">›</button>
+  <button type="button" onclick="reloadSheet()">Recargar</button>
+  <button class="primary" type="button" onclick="present()">Presentar</button>
+</div>
+
+<script>
+const SHEET_GVIZ_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJDiNlfszmpzvZBqBOK1W1U2eC4x8Q3nYfJ_SnGg_h1RqbHdLG6XO34HhDadPNlKvnvB-WUjFOCFwm/gviz/tq?gid=1612312561&tqx=out:json;responseHandler:handleGatSheet';
+const STATES_GEOJSON_URL = 'https://cdn.sassoapps.com/Mapas/Electricidad/estados.geojson';
+const REGION_GEOJSON_URLS = [
+  'https://cdn.sassoapps.com/Mapas/Electricidad/regiones.geojson',
+  'https://cdn.sassoapps.com/Mapas/Electricidad/regiones_gcr.geojson',
+  'https://cdn.sassoapps.com/Mapas/Electricidad/gcr.geojson'
+];
+let sheetScript = null;
+let currentSlide = 0;
+let nationalMap = null;
+let nationalGeoLayer = null;
+let nationalPointLayer = null;
+let nationalRegionLayer = null;
+let cachedStatesGeo = null;
+let cachedRegionsGeo = null;
+
+function slides() {
+  return Array.from(document.querySelectorAll('.slide'));
+}
+
+function fitDeck() {
+  const deck = document.getElementById('deck');
+  const scale = Math.min((window.innerWidth - 18) / 1333, (window.innerHeight - 76) / 750);
+  deck.style.transform = `translate(-50%, -50%) scale(${Math.max(scale, 0.35)})`;
+}
+
+function showSlide(index) {
+  const all = slides();
+  currentSlide = Math.max(0, Math.min(index, all.length - 1));
+  all.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+  document.getElementById('counter').textContent = `${currentSlide + 1} / ${all.length}`;
+  if (nationalMap) setTimeout(() => nationalMap.invalidateSize(), 80);
+}
+
+function nextSlide() { showSlide(currentSlide + 1); }
+function prevSlide() { showSlide(currentSlide - 1); }
+
+function status(msg, kind) {
+  const target = document.getElementById('statusText');
+  if (target) {
+    target.textContent = msg;
+    target.className = 'hero-status' + (kind ? ' ' + kind : '');
+  }
+  console.log('[GAT-MIXTO-BASE]', msg);
+}
+
+function fmt(n, d = 0) {
+  return (Number(n) || 0).toLocaleString('es-MX', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+function norm(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function cellText(cell) {
+  if (!cell) return '';
+  if (cell.f != null) return String(cell.f);
+  if (cell.v != null) return String(cell.v);
+  return '';
+}
+
+function num(v) {
+  const n = parseFloat(String(v || '').replace(/,/g, '').replace(/[^\d.-]/g, ''));
+  return Number.isFinite(n) ? n : 0;
+}
+
+function matrixFromGviz(table) {
+  const labels = (table.cols || []).map(c => c.label || c.id || '');
+  const rows = (table.rows || []).map(r => (r.c || []).map(cellText));
+  return [labels].concat(rows);
+}
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], next = text[i + 1];
+    if (q) {
+      if (ch === '"' && next === '"') { cur += '"'; i++; }
+      else if (ch === '"') q = false;
+      else cur += ch;
+    } else {
+      if (ch === '"') q = true;
+      else if (ch === ',') { row.push(cur); cur = ''; }
+      else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+      else if (ch !== '\r') cur += ch;
+    }
+  }
+  row.push(cur);
+  rows.push(row);
+  return rows;
+}
+
+function findHeaderRow(matrix) {
+  return matrix.findIndex(row => {
+    const joined = norm(row.join(' | '));
+    return joined.includes('nombre del proyecto') && joined.includes('capacidad neta mw');
+  });
+}
+
+function rowsFromMatrix(matrix, headerIndex) {
+  const headers = matrix[headerIndex].map(h => String(h || '').trim());
+  const out = [];
+  for (let i = headerIndex + 1; i < matrix.length; i++) {
+    const item = {};
+    headers.forEach((h, idx) => {
+      if (h) item[h] = matrix[i][idx] || '';
+    });
+    if (item['Nombre del proyecto'] || item['Nombre']) out.push(item);
+  }
+  return { headers, rows: out };
+}
+
+function pick(row, names) {
+  for (const n of names) if (row[n] != null && row[n] !== '') return row[n];
+  return '';
+}
+
+const STATE_COORDS = {
+  'aguascalientes': [-102.30, 21.88],
+  'baja california': [-115.20, 30.80],
+  'baja california sur': [-111.70, 25.60],
+  'campeche': [-90.30, 19.00],
+  'chiapas': [-92.60, 16.60],
+  'chihuahua': [-106.10, 28.60],
+  'ciudad de mexico': [-99.13, 19.43],
+  'cdmx': [-99.13, 19.43],
+  'coahuila': [-102.00, 27.30],
+  'coahuila de zaragoza': [-102.00, 27.30],
+  'colima': [-103.70, 19.10],
+  'durango': [-104.90, 24.60],
+  'guanajuato': [-101.30, 20.90],
+  'guerrero': [-99.90, 17.60],
+  'hidalgo': [-98.80, 20.10],
+  'jalisco': [-103.60, 20.70],
+  'mexico': [-99.70, 19.40],
+  'estado de mexico': [-99.70, 19.40],
+  'michoacan': [-101.90, 19.10],
+  'michoacan de ocampo': [-101.90, 19.10],
+  'morelos': [-99.00, 18.70],
+  'nayarit': [-104.90, 21.80],
+  'nuevo leon': [-100.30, 25.70],
+  'oaxaca': [-96.70, 17.10],
+  'puebla': [-98.20, 19.00],
+  'queretaro': [-100.40, 20.60],
+  'quintana roo': [-88.30, 19.60],
+  'san luis potosi': [-100.90, 22.20],
+  'sinaloa': [-107.50, 25.00],
+  'sonora': [-110.70, 29.20],
+  'tabasco': [-92.60, 17.90],
+  'tamaulipas': [-98.90, 24.00],
+  'tlaxcala': [-98.20, 19.40],
+  'veracruz': [-96.40, 19.50],
+  'veracruz de ignacio de la llave': [-96.40, 19.50],
+  'yucatan': [-89.00, 20.90],
+  'zacatecas': [-102.60, 23.00]
+};
+
+function esc(s) {
+  return String(s || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+function techMeta(value) {
+  const key = norm(value);
+  if (key.includes('eolica')) return { label: 'Eólica', abbr: 'EO', color: '#2C7FB8' };
+  if (key.includes('hidro') || key.includes('bombeo')) return { label: 'Hidro / bombeo', abbr: 'HB', color: '#0E8A6E' };
+  if (key.includes('termica') || key.includes('solar term')) return { label: 'Solar térmica', abbr: 'ST', color: '#C46A1A' };
+  if (key.includes('almacen') || key.includes('sae')) return { label: 'Almacenamiento', abbr: 'SA', color: '#6F4AA8' };
+  if (key.includes('fotovoltaica') || key.includes('solar')) return { label: 'Fotovoltaica', abbr: 'FV', color: '#E0A12E' };
+  return { label: value || 'Sin tecnología', abbr: 'OT', color: '#9B2247' };
+}
+
+function countryFlag(value) {
+  const key = norm(value);
+  if (!key || key.includes('#ref')) return '◇';
+  if (key.includes('mexic')) return '🇲🇽';
+  if (key.includes('estado') || key.includes('usa') || key.includes('united states')) return '🇺🇸';
+  if (key.includes('espana') || key.includes('spain')) return '🇪🇸';
+  if (key.includes('reino unido') || key.includes('uk') || key.includes('united kingdom')) return '🇬🇧';
+  if (key.includes('canad')) return '🇨🇦';
+  if (key.includes('china')) return '🇨🇳';
+  if (key.includes('francia') || key.includes('france')) return '🇫🇷';
+  if (key.includes('alemania') || key.includes('germany')) return '🇩🇪';
+  if (key.includes('italia') || key.includes('italy')) return '🇮🇹';
+  if (key.includes('japon') || key.includes('japan')) return '🇯🇵';
+  if (key.includes('corea') || key.includes('korea')) return '🇰🇷';
+  if (key.includes('chile')) return '🇨🇱';
+  if (key.includes('brasil') || key.includes('brazil')) return '🇧🇷';
+  if (key.includes('colombia')) return '🇨🇴';
+  if (key.includes('portugal')) return '🇵🇹';
+  if (key.includes('australia')) return '🇦🇺';
+  if (key.includes('paises bajos') || key.includes('netherlands') || key.includes('holanda')) return '🇳🇱';
+  if (key.includes('noruega') || key.includes('norway')) return '🇳🇴';
+  if (key.includes('suecia') || key.includes('sweden')) return '🇸🇪';
+  if (key.includes('dinamarca') || key.includes('denmark')) return '🇩🇰';
+  if (key.includes('extranjero')) return '◇';
+  return '◇';
+}
+
+function projectMw(row) {
+  return num(pick(row, ['Capacidad neta MW', 'Capacidad original MW', 'Capacidad Generación Permiso']));
+}
+
+const GCR_COLORS = {
+  'noreste': '#3E8174',
+  'peninsular': '#A33052',
+  'oriental': '#6FA89A',
+  'central': '#B24C6C',
+  'occidental': '#E0A12E',
+  'baja california': '#7E3B52',
+  'bcalifornia': '#7E3B52',
+  'noroeste': '#0E8A6E',
+  'norte': '#9B2247',
+  'baja california sur': '#A9CDC3',
+  'bc sur': '#A9CDC3',
+  'mulege': '#E0CA8E'
+};
+
+function normState(s) {
+  return norm(s)
+    .replace(/^estado de /, '')
+    .replace(/ de zaragoza| de ignacio de la llave| de la llave| de ocampo| de arteaga| de hidalgo/g, '')
+    .replace(/[^a-z]/g, '');
+}
+
+function getFeatureStateName(feature) {
+  const p = feature.properties || {};
+  return p.NOM_ENT || p.NOMGEO || p.ENTIDAD || p.nom_ent || p.estado || p.name || p.NAME || '';
+}
+
+function getFeatureRegionName(feature) {
+  const p = feature.properties || {};
+  return p.region || p.REGION || p.gcr || p.GCR || p.NOMBRE || p.nombre || p.name || p.NAME || '';
+}
+
+function getStateCoords(state) {
+  const direct = STATE_COORDS[norm(state)] || STATE_COORDS[normState(state)];
+  if (direct) return direct;
+  const key = normState(state);
+  const found = Object.entries(STATE_COORDS).find(([name]) => normState(name) === key);
+  return found ? found[1] : null;
+}
+
+function buildStateMetrics(rows) {
+  const states = {};
+  rows.forEach(r => {
+    const state = pick(r, ['Estado', 'Entidad', 'Entidad federativa']);
+    if (!state) return;
+    const key = normState(state);
+    const region = pick(r, ['Región ok', 'Región', 'GCR', 'Gerencia de Control Regional']) || 'Sin región';
+    const meta = techMeta(pick(r, ['Tipo Tecnología', 'Tecnología']));
+    if (!states[key]) states[key] = { state, region, projects: 0, mw: 0, techs: {} };
+    states[key].projects += 1;
+    states[key].mw += projectMw(r);
+    states[key].region = region;
+    if (!states[key].techs[meta.abbr]) states[key].techs[meta.abbr] = { ...meta, count: 0, mw: 0 };
+    states[key].techs[meta.abbr].count += 1;
+    states[key].techs[meta.abbr].mw += projectMw(r);
+  });
+  return states;
+}
+
+function regionColor(region) {
+  return GCR_COLORS[norm(region)] || '#9B2247';
+}
+
+async function fetchJson(url, ms = 4500) {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  try {
+    const r = await fetch(url, { mode: 'cors', signal: ctl.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function loadStatesGeoJson() {
+  if (!cachedStatesGeo) cachedStatesGeo = await fetchJson(STATES_GEOJSON_URL);
+  return cachedStatesGeo;
+}
+
+async function loadRegionsGeoJson() {
+  if (cachedRegionsGeo !== null) return cachedRegionsGeo;
+  cachedRegionsGeo = false;
+  for (const url of REGION_GEOJSON_URLS) {
+    try {
+      cachedRegionsGeo = await fetchJson(url);
+      console.log('[GAT-MIXTO-BASE] Regiones:', url);
+      return cachedRegionsGeo;
+    } catch (err) {
+      console.warn('[GAT-MIXTO-BASE] Región no disponible:', url, err.message);
+    }
+  }
+  return false;
+}
+
+function ensureNationalMap() {
+  if (!window.L) throw new Error('Leaflet no está disponible.');
+  if (!nationalMap) {
+    nationalMap = L.map('projectMap', {
+      zoomControl: false,
+      attributionControl: false,
+      dragging: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      tap: false
+    });
+  }
+  return nationalMap;
+}
+
+function renderGies(rows) {
+  const groups = {};
+  rows.forEach(r => {
+    const name = pick(r, ['GIE limpio', 'GIE general', 'GIE']) || 'Sin GIE';
+    const country = pick(r, ['País de origen del capital', 'Pais de origen del capital', 'Origen Cap', 'País donde se constituyó']);
+    const key = norm(name);
+    if (!groups[key]) groups[key] = { name, country, projects: 0, mw: 0 };
+    groups[key].projects += 1;
+    groups[key].mw += projectMw(r);
+    if (!groups[key].country || norm(groups[key].country).includes('#ref')) groups[key].country = country;
+  });
+  const html = Object.values(groups)
+    .sort((a, b) => b.mw - a.mw)
+    .slice(0, 8)
+    .map(g => `<div class="gie-row">
+      <div class="flag">${countryFlag(g.country)}</div>
+      <div><div class="gie-name">${esc(g.name)}</div><div class="gie-country">${esc(g.country || 'Origen no disponible')}</div></div>
+      <div class="gie-metric">${g.projects} proy.<br>${fmt(g.mw, 0)} MW</div>
+    </div>`)
+    .join('');
+  document.getElementById('gieList').innerHTML = html || '<div class="gie-country">Sin datos de GIE.</div>';
+}
+
+function renderProjectMapFallback(rows, reason) {
+  const points = {};
+  rows.forEach(r => {
+    const state = pick(r, ['Estado', 'Entidad', 'Entidad federativa']);
+    const coords = STATE_COORDS[norm(state)];
+    if (!coords) return;
+    const meta = techMeta(pick(r, ['Tipo Tecnología', 'Tecnología']));
+    const key = `${norm(state)}|${meta.abbr}`;
+    if (!points[key]) points[key] = { state, meta, coords, count: 0, mw: 0 };
+    points[key].count += 1;
+    points[key].mw += projectMw(r);
+  });
+  const lonMin = -118, lonMax = -86, latMin = 14, latMax = 33;
+  const pointHtml = Object.values(points).map((p, i) => {
+    const x = ((p.coords[0] - lonMin) / (lonMax - lonMin) * 100) + ((i % 3) - 1) * 1.1;
+    const y = (100 - ((p.coords[1] - latMin) / (latMax - latMin) * 100)) + ((i % 2) ? .9 : -.9);
+    const size = Math.min(46, 24 + p.count * 2.4);
+    return `<div class="map-point" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--size:${size}px;--point-color:${p.meta.color}" title="${esc(p.state)} · ${p.meta.label} · ${p.count} proyectos · ${fmt(p.mw, 0)} MW">${p.meta.abbr}<span class="count">${p.count}</span></div>`;
+  }).join('');
+  const legend = Array.from(new Map(rows.map(r => {
+    const meta = techMeta(pick(r, ['Tipo Tecnología', 'Tecnología']));
+    return [meta.abbr, meta];
+  })).values()).slice(0, 6).map(meta => `<span class="legend-chip"><span class="legend-dot" style="--dot-color:${meta.color}"></span>${meta.abbr}</span>`).join('');
+  document.getElementById('projectMap').innerHTML = `<div class="map-fallback">${esc(reason || 'Vista nacional referencial.')}</div>` + pointHtml + `<div class="map-legend">${legend}</div>`;
+}
+
+async function renderProjectMap(rows) {
+  const mapEl = document.getElementById('projectMap');
+  if (!nationalMap) {
+    mapEl.innerHTML = '<div class="map-loading">Cargando mapa nacional.</div>';
+  } else {
+    mapEl.querySelectorAll('.map-legend').forEach(el => el.remove());
+  }
+  const stateMetrics = buildStateMetrics(rows);
+  const allTechMeta = Array.from(new Map(rows.map(r => {
+    const meta = techMeta(pick(r, ['Tipo Tecnología', 'Tecnología']));
+    return [meta.abbr, meta];
+  })).values()).slice(0, 6);
+
+  try {
+    const geo = await loadStatesGeoJson();
+    if (!nationalMap) mapEl.innerHTML = '';
+    const map = ensureNationalMap();
+    if (nationalGeoLayer) map.removeLayer(nationalGeoLayer);
+    if (nationalPointLayer) map.removeLayer(nationalPointLayer);
+    if (nationalRegionLayer) map.removeLayer(nationalRegionLayer);
+
+    nationalGeoLayer = L.geoJSON(geo, {
+      style: feature => {
+        const metric = stateMetrics[normState(getFeatureStateName(feature))];
+        return {
+          fillColor: metric ? regionColor(metric.region) : '#EFEAE3',
+          fillOpacity: metric ? 0.66 : 0.32,
+          color: metric ? '#ffffff' : '#D8D0C4',
+          weight: metric ? 0.85 : 0.55,
+          opacity: 1
+        };
+      },
+      onEachFeature: (feature, layer) => {
+        const stateName = getFeatureStateName(feature);
+        const metric = stateMetrics[normState(stateName)];
+        const body = metric
+          ? `<strong>${esc(metric.state)}</strong>${esc(metric.region)}<br>${metric.projects} proyectos · ${fmt(metric.mw, 0)} MW`
+          : `<strong>${esc(stateName)}</strong>Sin proyectos registrados`;
+        layer.bindTooltip(body, { className: 'region-tip', sticky: true });
+      }
+    }).addTo(map);
+
+    const regionGeo = await loadRegionsGeoJson();
+    if (regionGeo) {
+      nationalRegionLayer = L.geoJSON(regionGeo, {
+        interactive: false,
+        style: feature => ({
+          fillOpacity: 0,
+          color: regionColor(getFeatureRegionName(feature)),
+          weight: 2,
+          opacity: 0.7,
+          dashArray: '5 4'
+        })
+      }).addTo(map);
+    }
+
+    const markerGroup = L.layerGroup();
+    Object.values(stateMetrics).forEach((metric, index) => {
+      const coords = getStateCoords(metric.state);
+      if (!coords) return;
+      const topTech = Object.values(metric.techs).sort((a, b) => b.count - a.count)[0] || techMeta('');
+      const size = Math.min(42, 22 + metric.projects * 1.7);
+      const icon = L.divIcon({
+        className: 'map-point',
+        html: `${topTech.abbr}<span class="count">${metric.projects}</span>`,
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2]
+      });
+      const jitterLat = ((index % 3) - 1) * 0.08;
+      const jitterLng = ((index % 2) ? 0.08 : -0.08);
+      const marker = L.marker([coords[1] + jitterLat, coords[0] + jitterLng], { icon });
+      marker.getElement && marker.getElement();
+      marker.bindTooltip(`<strong>${esc(metric.state)}</strong>${esc(metric.region)}<br>${metric.projects} proyectos · ${fmt(metric.mw, 0)} MW`, { className: 'region-tip', sticky: true });
+      marker.on('add', () => {
+        const el = marker.getElement();
+        if (el) {
+          el.style.setProperty('--size', `${size}px`);
+          el.style.setProperty('--point-color', topTech.color);
+        }
+      });
+      marker.addTo(markerGroup);
+    });
+    nationalPointLayer = markerGroup.addTo(map);
+
+    map.fitBounds(nationalGeoLayer.getBounds(), { padding: [10, 10] });
+    setTimeout(() => map.invalidateSize(), 120);
+    const legend = allTechMeta.map(meta => `<span class="legend-chip"><span class="legend-dot" style="--dot-color:${meta.color}"></span>${meta.abbr}</span>`).join('');
+    const legendEl = document.createElement('div');
+    legendEl.className = 'map-legend';
+    legendEl.innerHTML = legend;
+    mapEl.appendChild(legendEl);
+  } catch (err) {
+    console.warn('[GAT-MIXTO-BASE] Mapa no disponible:', err);
+    renderProjectMapFallback(rows, 'Vista nacional referencial.');
+  }
+}
+
+function renderTechSummary(rows) {
+  const techs = {};
+  rows.forEach(r => {
+    const meta = techMeta(pick(r, ['Tipo Tecnología', 'Tecnología']));
+    if (!techs[meta.label]) techs[meta.label] = { ...meta, projects: 0, mw: 0 };
+    techs[meta.label].projects += 1;
+    techs[meta.label].mw += projectMw(r);
+  });
+  const html = Object.values(techs)
+    .sort((a, b) => b.projects - a.projects)
+    .slice(0, 5)
+    .map(t => `<div class="tech-card" style="--tech-color:${t.color}">
+      <strong>${t.projects}</strong>
+      <div class="tech-name">${esc(t.label)}</div>
+      <div class="tech-mw">${fmt(t.mw, 0)} MW</div>
+    </div>`)
+    .join('');
+  document.getElementById('techSummary').innerHTML = html || '<div class="gie-country">Sin tecnologías detectadas.</div>';
+}
+
+function render(rows, headers, sourceLabel) {
+  const total = rows.length;
+  const mw = rows.reduce((s, r) => s + projectMw(r), 0);
+  const regions = new Set(rows.map(r => pick(r, ['Región ok', 'Región', 'GCR', 'Gerencia de Control Regional'])).filter(Boolean));
+  const techs = new Set(rows.map(r => pick(r, ['Tipo Tecnología', 'Tecnología'])).filter(Boolean));
+
+  document.getElementById('kTotal').textContent = total || '—';
+  document.getElementById('kMw').textContent = fmt(mw, 0);
+  document.getElementById('kHeaders').textContent = headers.length || '—';
+  document.getElementById('kGcr').textContent = regions.size || '—';
+  document.getElementById('kTech').textContent = techs.size || '—';
+  document.getElementById('heroCopy').innerHTML = `${total} proyectos cargados<br>${fmt(mw, 1)} MW identificados<br>Seguimiento DGMESNIE`;
+
+  renderProjectMap(rows);
+  renderGies(rows);
+  renderTechSummary(rows);
+  status(`${total} proyectos, ${headers.length} columnas.`, 'ok');
+}
+
+function handleGatSheet(payload) {
+  try {
+    const matrix = matrixFromGviz(payload.table || {});
+    const headerIndex = findHeaderRow(matrix);
+    if (headerIndex < 0) throw new Error('No encontré la fila de encabezados esperada.');
+    const parsed = rowsFromMatrix(matrix, headerIndex);
+    render(parsed.rows, parsed.headers, 'Fuente principal');
+  } catch (err) {
+    status('La respuesta del Sheet llegó, pero no se pudo interpretar: ' + err.message, 'err');
+  }
+}
+
+function loadFallbackData(reason) {
+  if (!window.GAT_MIXTO_FALLBACK_CSV) {
+    status(reason + ' No hay datos disponibles.', 'err');
+    return;
+  }
+  try {
+    status(reason);
+    const matrix = parseCsv(window.GAT_MIXTO_FALLBACK_CSV);
+    const headerIndex = findHeaderRow(matrix);
+    if (headerIndex < 0) throw new Error('No encontré encabezados en los datos disponibles.');
+    const parsed = rowsFromMatrix(matrix, headerIndex);
+    render(parsed.rows, parsed.headers, 'Datos disponibles');
+  } catch (err) {
+    status('No se pudieron interpretar los datos disponibles: ' + err.message, 'err');
+  }
+}
+
+function reloadSheet() {
+  status('Solicitando datos.');
+  if (sheetScript) sheetScript.remove();
+  sheetScript = document.createElement('script');
+  sheetScript.src = SHEET_GVIZ_URL + ';reqId=' + Date.now();
+  sheetScript.onerror = () => loadFallbackData('Usando datos disponibles.');
+  document.head.appendChild(sheetScript);
+  clearTimeout(reloadSheet._timer);
+  reloadSheet._timer = setTimeout(() => {
+    if (document.getElementById('kTotal').textContent === '—') {
+      loadFallbackData('Usando datos disponibles.');
+    }
+  }, 4500);
+}
+
+function present() {
+  if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+}
+
+window.addEventListener('resize', fitDeck);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+});
+fitDeck();
+showSlide(0);
+reloadSheet();
+</script>
+</body>
+</html>

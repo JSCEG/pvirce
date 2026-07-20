@@ -1,0 +1,323 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1231 496" role="img" aria-labelledby="title desc">
+  <title id="title">Linea de tiempo animada 2024 a 2030</title>
+  <desc id="desc">Linea de tiempo de metas de energia limpia con hitos de 2024 a 2030.</desc>
+  <defs>
+    <style>
+      :root {
+        --wine: #6f0f35;
+        --wine-dark: #5f0a2b;
+        --cream: #f8f5f1;
+        --sand: #ded3c6;
+        --ink: #24151a;
+      }
+
+      .bg {
+        fill: #fff;
+      }
+
+      .base-line {
+        stroke: var(--sand);
+        stroke-width: 1.5;
+        stroke-linecap: round;
+      }
+
+      .draw-line {
+        stroke: var(--wine);
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-dasharray: 845;
+        stroke-dashoffset: 845;
+        animation: drawLine 1.8s ease-out .25s forwards;
+      }
+
+      .card {
+        opacity: 0;
+        animation: cardIn .62s cubic-bezier(.2, .8, .2, 1) forwards;
+      }
+
+      .card rect {
+        fill: var(--cream);
+      }
+
+      .card.highlight rect {
+        fill: var(--wine);
+      }
+
+      .node {
+        opacity: 0;
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: nodeIn .48s cubic-bezier(.2, .9, .2, 1) forwards;
+      }
+
+      .node circle:first-child {
+        fill: var(--wine);
+        filter: url(#glow);
+      }
+
+      .node circle:last-child {
+        fill: var(--wine);
+        stroke: #fff;
+        stroke-width: 3.5;
+      }
+
+      .node.final circle:last-child {
+        fill: #fff;
+        stroke: var(--wine);
+        stroke-width: 4;
+      }
+
+      .pulse {
+        fill: none;
+        stroke: var(--wine);
+        stroke-width: 2;
+        opacity: 0;
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: pulse 2.2s ease-out infinite;
+      }
+
+      .year {
+        fill: var(--wine);
+        font: 800 13px/1 Montserrat, Avenir, Arial, sans-serif;
+        letter-spacing: .8px;
+      }
+
+      .label {
+        fill: var(--ink);
+        font: 700 8px/1 Montserrat, Avenir, Arial, sans-serif;
+      }
+
+      .copy {
+        fill: #4b3f3b;
+        font: 500 7px/1.15 Montserrat, Avenir, Arial, sans-serif;
+      }
+
+      .highlight .year,
+      .highlight .label,
+      .highlight .copy {
+        fill: #fff;
+      }
+
+      .d1 { animation-delay: .60s; }
+      .d2 { animation-delay: .82s; }
+      .d3 { animation-delay: 1.04s; }
+      .d4 { animation-delay: 1.26s; }
+      .d5 { animation-delay: 1.48s; }
+      .d6 { animation-delay: 1.70s; }
+      .d7 { animation-delay: 1.92s; }
+      .d8 { animation-delay: 2.14s; }
+
+      .pulse.d1 { animation-delay: 1.05s; }
+      .pulse.d2 { animation-delay: 1.27s; }
+      .pulse.d3 { animation-delay: 1.49s; }
+      .pulse.d4 { animation-delay: 1.71s; }
+      .pulse.d5 { animation-delay: 1.93s; }
+      .pulse.d6 { animation-delay: 2.15s; }
+      .pulse.d7 { animation-delay: 2.37s; }
+      .pulse.d8 { animation-delay: 2.59s; }
+
+      @keyframes drawLine {
+        to { stroke-dashoffset: 0; }
+      }
+
+      @keyframes nodeIn {
+        0% { opacity: 0; transform: scale(.35); }
+        70% { opacity: 1; transform: scale(1.16); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+
+      @keyframes cardIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      @keyframes pulse {
+        0%, 35% { opacity: 0; transform: scale(.72); }
+        45% { opacity: .35; }
+        100% { opacity: 0; transform: scale(1.9); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .draw-line,
+        .card {
+          animation: none;
+          opacity: 1;
+          stroke-dashoffset: 0;
+        }
+
+        .node,
+        .pulse {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+
+        .pulse {
+          opacity: 0;
+        }
+      }
+    </style>
+
+    <filter id="glow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0.44 0 0 0 0.22  0 0.06 0 0 0.03  0 0 0.20 0 0.11  0 0 0 .70 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect class="bg" width="1231" height="496"/>
+
+  <metadata>
+    {
+      "timeline": [
+        {
+          "year": "2024",
+          "title": "Arranca el plan",
+          "detail": "Primeras centrales CFE inauguradas",
+          "value": "2,050 MW"
+        },
+        {
+          "year": "2025",
+          "title": "Sociedades con CFE",
+          "detail": "Se asignan los primeros proyectos mixtos",
+          "value": "Proyectos mixtos"
+        },
+        {
+          "year": "2026",
+          "title": "1a convocatoria",
+          "detail": "Primera ronda de proyectos mixtos abiertos",
+          "value": "Convocatoria inicial"
+        },
+        {
+          "year": "2027",
+          "title": "Entran los privados",
+          "detail": "Arrancan las primeras licitaciones",
+          "value": "Primeras licitaciones"
+        },
+        {
+          "year": "2028",
+          "title": "Llegan las baterias",
+          "detail": "Primer almacenamiento en operacion",
+          "value": "610 MW CFE"
+        },
+        {
+          "year": "2029",
+          "title": "2a convocatoria",
+          "detail": "Nueva geotermia y termosolar entran a la red",
+          "value": "Geotermia y termosolar"
+        },
+        {
+          "year": "2030",
+          "title": "Meta cumplida",
+          "detail": "38% limpia - 122,298 MW - Estado 58%",
+          "value": "122,298 MW"
+        }
+      ]
+    }
+  </metadata>
+
+  <line class="base-line" x1="31" y1="263.5" x2="1214" y2="263.5"/>
+  <line class="draw-line" x1="31" y1="263.5" x2="876" y2="263.5"/>
+
+  <g class="card top d1" data-year="2024" data-title="Arranca el plan" data-detail="Primeras centrales CFE inauguradas" data-value="2,050 MW" style="--offset: -12px" transform="translate(38 180)">
+    <rect width="155" height="73" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="77.5" y="22">2024</tspan>
+      <tspan class="label" x="77.5" y="38">Arranca el plan</tspan>
+      <tspan class="copy" x="77.5" y="53">Primeras centrales CFE inauguradas</tspan>
+      <tspan class="copy" x="77.5" y="62">(2,050 MW)</tspan>
+    </text>
+  </g>
+
+  <g class="card bottom d2" data-year="2025" data-title="Sociedades con CFE" data-detail="Se asignan los primeros proyectos mixtos" data-value="Proyectos mixtos" style="--offset: 12px" transform="translate(207 272)">
+    <rect width="155" height="73" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="77.5" y="22">2025</tspan>
+      <tspan class="label" x="77.5" y="38">Sociedades con CFE</tspan>
+      <tspan class="copy" x="77.5" y="53">Se asignan los primeros proyectos</tspan>
+      <tspan class="copy" x="77.5" y="62">mixtos</tspan>
+    </text>
+  </g>
+
+  <g class="card top d3" data-year="2026" data-title="1a convocatoria" data-detail="Primera ronda de proyectos mixtos abiertos" data-value="Convocatoria inicial" style="--offset: -12px" transform="translate(376 180)">
+    <rect width="155" height="73" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="77.5" y="22">2026</tspan>
+      <tspan class="label" x="77.5" y="38">1a convocatoria</tspan>
+      <tspan class="copy" x="77.5" y="53">Primera ronda de proyectos mixtos</tspan>
+      <tspan class="copy" x="77.5" y="62">abiertos</tspan>
+    </text>
+  </g>
+
+  <g class="card bottom d4" data-year="2027" data-title="Entran los privados" data-detail="Arrancan las primeras licitaciones" data-value="Primeras licitaciones" style="--offset: 12px" transform="translate(547 272)">
+    <rect width="152" height="63" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="76" y="22">2027</tspan>
+      <tspan class="label" x="76" y="38">Entran los privados</tspan>
+      <tspan class="copy" x="76" y="53">Arrancan las primeras licitaciones</tspan>
+    </text>
+  </g>
+
+  <g class="card top d5" data-year="2028" data-title="Llegan las baterias" data-detail="Primer almacenamiento en operacion" data-value="610 MW CFE" style="--offset: -12px" transform="translate(715 180)">
+    <rect width="155" height="73" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="77.5" y="22">2028</tspan>
+      <tspan class="label" x="77.5" y="38">Llegan las baterias</tspan>
+      <tspan class="copy" x="77.5" y="53">Primer almacenamiento en operacion</tspan>
+      <tspan class="copy" x="77.5" y="62">(610 MW CFE)</tspan>
+    </text>
+  </g>
+
+  <g class="card bottom d6" data-year="2029" data-title="2a convocatoria" data-detail="Nueva geotermia y termosolar entran a la red" data-value="Geotermia y termosolar" style="--offset: 12px" transform="translate(884 272)">
+    <rect width="155" height="73" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="77.5" y="22">2029</tspan>
+      <tspan class="label" x="77.5" y="38">2a convocatoria</tspan>
+      <tspan class="copy" x="77.5" y="53">Nueva geotermia y termosolar</tspan>
+      <tspan class="copy" x="77.5" y="62">entran a la red</tspan>
+    </text>
+  </g>
+
+  <g class="card highlight top d7" data-year="2030" data-title="Meta cumplida" data-detail="38% limpia - 122,298 MW - Estado 58%" data-value="122,298 MW" style="--offset: -12px" transform="translate(1051 180)">
+    <rect width="159" height="73" rx="8"/>
+    <text text-anchor="middle">
+      <tspan class="year" x="79.5" y="22">2030</tspan>
+      <tspan class="label" x="79.5" y="39">Meta cumplida</tspan>
+      <tspan class="copy" x="79.5" y="54">38% limpia - 122,298 MW - Estado</tspan>
+      <tspan class="copy" x="79.5" y="63">58%</tspan>
+    </text>
+  </g>
+
+  <g transform="translate(116 263)">
+    <circle class="pulse d1" r="10"/>
+    <g class="node d1"><circle r="11"/><circle r="9"/></g>
+  </g>
+  <g transform="translate(285 263)">
+    <circle class="pulse d2" r="10"/>
+    <g class="node d2"><circle r="11"/><circle r="9"/></g>
+  </g>
+  <g transform="translate(454 263)">
+    <circle class="pulse d3" r="10"/>
+    <g class="node d3"><circle r="11"/><circle r="9"/></g>
+  </g>
+  <g transform="translate(623 263)">
+    <circle class="pulse d4" r="10"/>
+    <g class="node d4"><circle r="11"/><circle r="9"/></g>
+  </g>
+  <g transform="translate(792 263)">
+    <circle class="pulse d5" r="10"/>
+    <g class="node d5"><circle r="11"/><circle r="9"/></g>
+  </g>
+  <g transform="translate(962 263)">
+    <circle class="pulse d6" r="10"/>
+    <g class="node d6"><circle r="11"/><circle r="9"/></g>
+  </g>
+  <g transform="translate(1131 263)">
+    <circle class="pulse d7" r="12"/>
+    <g class="node final d7"><circle r="13"/><circle r="11"/></g>
+  </g>
+</svg>

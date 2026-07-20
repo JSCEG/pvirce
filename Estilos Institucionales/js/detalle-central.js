@@ -678,7 +678,7 @@ function renderAnalysisChart(counts) {
                     {
                         label: `Conteo en buffer (${state.currentRadiusKm} km)`,
                         data,
-                        backgroundColor: ['#9B2247', '#1E5B4F', '#A57F2C', '#8D6E63', '#66BB6A', '#AB47BC']
+                        backgroundColor: ['#9B2247', '#0E8A6E', '#E0A12E', '#8D6E63', '#66BB6A', '#AB47BC']
                     }
                 ]
             },
@@ -798,7 +798,7 @@ function initializeExternalViews(feature) {
                 <select id="timeline-period-select" style="height:30px;border:1px solid #ccc;border-radius:4px;padding:0 8px;font-size:12px;flex:1;min-width:120px;">
                     ${optionsHtml}
                 </select>
-                <button id="timeline-play-btn" type="button" style="background:#1E5B4F;color:#fff;padding:6px 10px;border:0;border-radius:4px;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;">
+                <button id="timeline-play-btn" type="button" style="background:#0E8A6E;color:#fff;padding:6px 10px;border:0;border-radius:4px;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;">
                     <i class="bi bi-play-fill"></i> Play
                 </button>
                 <button id="timeline-fullscreen-btn" type="button" style="background:#444;color:#fff;padding:6px 10px;border:0;border-radius:4px;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;">

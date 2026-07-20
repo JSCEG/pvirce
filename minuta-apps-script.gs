@@ -51,12 +51,28 @@ function getSheet_() {
   return sh;
 }
 
+function appendRowObject_(sh, data) {
+  var row = COLUMNS.map(function (c) { return data[c] != null ? data[c] : ''; });
+  sh.appendRow(row);
+}
+
+function appendRows_(sh, rows) {
+  for (var i = 0; i < rows.length; i++) {
+    appendRowObject_(sh, rows[i] || {});
+  }
+}
+
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var sh = getSheet_();
-    var row = COLUMNS.map(function (c) { return data[c] != null ? data[c] : ''; });
-    sh.appendRow(row);
+    if (data && Array.isArray(data.rows)) {
+      appendRows_(sh, data.rows);
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: true, inserted: data.rows.length, mode: 'batch' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    appendRowObject_(sh, data || {});
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))
       .setMimeType(ContentService.MimeType.JSON);

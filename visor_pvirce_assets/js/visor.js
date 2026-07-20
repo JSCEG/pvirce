@@ -48,14 +48,14 @@ const TECH_COLORS = {
   GEO: "#EB5757",
   CSP: "#F2994A",
   H2: "#2F80ED",
-  HIBRIDOS: "#1E5B4F",
+  HIBRIDOS: "#0E8A6E",
   "Sin dato": "#98989A",
 };
 
 const PARTICIPATION_COLORS = {
-  CFE: "#1E5B4F",
+  CFE: "#0E8A6E",
   Particulares: "#9B2247",
-  "Por Definir": "#A57F2C",
+  "Por Definir": "#E0A12E",
   "Privada / GAT": "#6F2B45",
   "Sin dato": "#98989A",
 };
@@ -211,7 +211,7 @@ function chartDataByMode(items, categoryKey, sourceLabel, limit = null, sortByTo
     if (limit) rows = rows.slice(0, limit);
     return {
       categories: rows.map((x) => x.name),
-      series: [{ name: sourceLabel, data: rows.map((x) => Number(x.y.toFixed(2))), color: sourceLabel.includes("GAT") ? "#1E5B4F" : "#9B2247" }],
+      series: [{ name: sourceLabel, data: rows.map((x) => Number(x.y.toFixed(2))), color: sourceLabel.includes("GAT") ? "#0E8A6E" : "#9B2247" }],
       stacking: false,
       suffix: "total",
     };
@@ -421,7 +421,7 @@ function chartBase(id, options) {
     credits: { enabled: false },
     accessibility: { enabled: false },
     legend: { enabled: options.legend || false },
-    colors: ["#9B2247", "#1E5B4F", "#A57F2C", "#6C757D", "#C8B273", "#4E6E81"],
+    colors: ["#9B2247", "#0E8A6E", "#E0A12E", "#6C757D", "#C8B273", "#4E6E81"],
     exporting: { enabled: false, fallbackToExportServer: false },
     plotOptions: mergePlotOptions(basePlotOptions, customPlotOptions),
     ...optionConfig,
@@ -564,7 +564,7 @@ function openFullscreen(id) {
       credits: { enabled: false },
       accessibility: { enabled: false },
       legend: { enabled: options.legend || false },
-      colors: ["#9B2247", "#1E5B4F", "#A57F2C", "#6C757D", "#C8B273", "#4E6E81"],
+      colors: ["#9B2247", "#0E8A6E", "#E0A12E", "#6C757D", "#C8B273", "#4E6E81"],
       exporting: { enabled: false, fallbackToExportServer: false },
       plotOptions: mergePlotOptions(getBasePlotOptions(), customPlotOptions),
       ...optionConfig,

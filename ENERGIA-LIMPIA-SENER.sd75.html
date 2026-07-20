@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="_tokens.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energía Limpia | SENER</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Sistema de Diseño SENER (tokens + chrome de deck) -->
+  <link rel="stylesheet" href="sistema-diseno/styles.css">
+  <link rel="stylesheet" href="sistema-diseno/sener-deck.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root{ --scale:1; }
+    /* Layout específico de este informe — el chrome viene de sistema-diseno/ */
+    .kpi-grid{ grid-template-columns:repeat(4,1fr); margin-bottom:16px; }
+    .two-col{ grid-template-columns:1.38fr .82fr; height:492px; }
+    .chart{ height:395px; }
+    #trendChart{ height:510px; }
+    .story-callout{ min-height:415px; }
+    .tech-panel{ grid-template-columns:repeat(5,1fr); }
+    .mix-grid{ grid-template-columns:1fr 1fr; height:548px; }
+    .table-wrap{ height:484px; }
+    .method-grid{ grid-template-columns:1fr; height:548px; }
+    .method-grid .chart-card{ min-width:0; }
+    #dataTable th, #dataTable td{ padding:7px 5px; font-size:9.2px; line-height:1.14; white-space:normal; }
+    #dataTable th:first-child, #dataTable td:first-child{ width:45px; min-width:45px; }
+    #dataTable th:nth-child(7), #dataTable td:nth-child(7),
+    #dataTable th:nth-child(10), #dataTable td:nth-child(10){ width:56px; }
+  </style>
+</head>
+<body>
+  <div id="deck">
+    <section class="slide cover active" id="slide-0">
+      <div class="slide-container">
+        <img class="cover-bg" src="Estilos Institucionales/img/portada_ppt.png" alt="">
+        <div class="cover-overlay"></div>
+
+        <div class="top-band animate-item-scale">
+          <img class="gob" src="Estilos Institucionales/img/logo_gob.png" alt="Gobierno de México">
+          <div class="divider"></div>
+          <img class="sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER">
+          <div class="unit">DGMESNIE · Subsecretaría de Planeación</div>
+        </div>
+
+        <div class="body">
+          <div class="eyebrow animate-item">Seguimiento de Energía Limpia</div>
+          <h1 class="animate-item">Evolución de energía limpia</h1>
+          <div class="unidad animate-item">Subsecretaría de Planeación y Transición Energética</div>
+          <div class="unidad-sub animate-item">Unidad del Sistema Nacional de Información Energética</div>
+          <div class="unidad-sub unidad-sub-dgmesnie animate-item">Dirección General de Metodologías y Estadísticas del Sistema
+            Nacional de Información Energética - <span class="acronym">DGMESNIE</span></div>
+          <div class="subtitle animate-item" id="coverPeriod">Periodo: cargando</div>
+          <div class="meta animate-item">
+            <div class="meta-item">
+              <span class="meta-label">Unidad</span>
+              <span class="meta-value">GWh</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fecha</span>
+              <span class="meta-value" id="coverUpdated">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Fuente</span>
+              <span class="meta-value">SNIE - DGMESNIE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-band animate-item-scale"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-1">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Numeralia energética</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="status" id="statusBox"></div>
+        <div class="grid kpi-grid">
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Energía limpia final</div><div class="kpi-value" id="kpiClean">--</div><div class="kpi-note" id="kpiCleanNote">GWh</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Participación limpia</div><div class="kpi-value" id="kpiPercent">--</div><div class="kpi-note" id="kpiPercentNote">del total</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Generación total</div><div class="kpi-value" id="kpiTotal">--</div><div class="kpi-note">GWh</div></div>
+          <div class="card kpi animate-item-scale"><div class="kpi-label">Distancia vs meta</div><div class="kpi-value" id="kpiGap">--</div><div class="kpi-note" id="kpiGapNote">GWh</div></div>
+        </div>
+        <div class="grid two-col">
+          <div class="card chart-card animate-item-left">
+            <div class="card-title">
+              <span>Energía limpia, fósil y total <span id="rangeLabel"></span></span>
+              <span class="chart-actions">
+                <button class="chart-action-btn green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
+                <button class="chart-action-btn" onclick="openChartFullscreen('summary','Energía limpia, fósil y total')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+              </span>
+            </div>
+            <div class="chart" id="summaryChart"></div>
+          </div>
+          <div class="side-panel animate-item-right">
+            <h3>Evolución anual</h3>
+            <div class="story-callout" id="storyCallout">
+              <div class="story-year" id="storyYear">--</div>
+              <div class="story-copy" id="storyCopy">Activa la animación para revisar la evolución anual.</div>
+              <div class="story-metrics">
+                <div class="story-metric"><span>Limpia</span><strong id="storyClean">--</strong></div>
+                <div class="story-metric"><span>Meta</span><strong id="storyTarget">--</strong></div>
+                <div class="story-metric"><span>Fósil</span><strong id="storyFossil">--</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-2">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Filtro por tecnología</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="toolbar-line animate-item">
+          <div class="card-title" style="margin:0;">Selección de tecnologías limpias</div>
+          <div>
+            <button class="small-btn" onclick="setAllTech(true)">Todas</button>
+            <button class="small-btn secondary" onclick="setAllTech(false)">Limpiar</button>
+          </div>
+        </div>
+        <div class="tech-panel animate-item" id="techPanel"></div>
+        <div class="card chart-card animate-item-scale">
+          <div class="card-title">
+            <span>Generación por tecnología seleccionada <span id="selectedTechLabel"></span></span>
+            <span class="chart-actions">
+              <button class="chart-action-btn" onclick="openChartFullscreen('trend','Generación por tecnología seleccionada')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+            </span>
+          </div>
+          <div class="chart" id="trendChart"></div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-3">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Mezcla y porcentaje limpio</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="grid mix-grid">
+          <div class="card chart-card animate-item-left">
+            <div class="card-title">
+              <span>Mezcla por tecnología limpia</span>
+              <span class="chart-actions">
+                <button class="chart-action-btn" onclick="openChartFullscreen('stack','Mezcla por tecnología limpia')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+              </span>
+            </div>
+            <div class="chart" id="stackChart"></div>
+          </div>
+          <div class="card chart-card animate-item-right">
+            <div class="card-title">
+              <span>Porcentaje limpio y meta limpia</span>
+              <span class="chart-actions">
+                <button class="chart-action-btn" onclick="openChartFullscreen('percent','Porcentaje limpio y meta limpia')" title="Ver gráfico en pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+              </span>
+            </div>
+            <div class="chart" id="percentChart"></div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-4">
+      <div class="slide-container">
+        <div class="slide-header">
+          <div class="brand-left">SENER<br>DGMESNIE</div>
+          <div class="ef-title">Tabla fuente y método</div>
+          <div class="logo-right"><img class="logo-sener" src="Estilos Institucionales/img/logo_sener.png" alt="SENER"></div>
+        </div>
+        <div class="grid method-grid">
+          <div class="card chart-card animate-item-left">
+            <div class="card-title">Serie anual en GWh</div>
+            <div class="table-wrap">
+              <table id="dataTable"></table>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="presentationControls">
+    <button class="control-btn" id="btnPrev" onclick="prevSlide()" title="Anterior"><i class="bi bi-chevron-left"></i></button>
+    <span id="slideCounter">1 / 5</span>
+    <button class="control-btn" id="btnNext" onclick="nextSlide()" title="Siguiente"><i class="bi bi-chevron-right"></i></button>
+    <button class="control-btn" id="btnFs" onclick="toggleFullscreen()" title="Pantalla completa"><i class="bi bi-arrows-fullscreen"></i></button>
+    <button class="control-btn green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
+    <button class="control-btn gold" onclick="exportFullReportPDF()" title="Bajar PDF"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+    <button class="control-btn green" onclick="openDataEditor()" title="Editar datos"><i class="bi bi-pencil-square"></i></button>
+  </div>
+  <div id="pdfLoader" class="pdf-loader">
+    <div class="spinner-ring"></div>
+    <div class="pl-title">Generando PDF</div>
+    <div class="pl-step" id="pdfLoaderStep">Capturando contenido...</div>
+  </div>
+  <div id="chartFullscreenModal" class="chart-fullscreen-modal" onclick="if(event.target === this) closeChartFullscreen();">
+    <div class="chart-fullscreen-shell">
+      <div class="chart-fullscreen-head">
+        <span id="fullscreenChartTitle">Gráfico</span>
+        <div class="chart-fullscreen-tools">
+          <button class="green" onclick="playEvolutionStory()" title="Animar evolución"><i class="bi bi-play-fill"></i></button>
+          <button onclick="closeChartFullscreen()" title="Cerrar"><i class="bi bi-x-lg"></i></button>
+        </div>
+      </div>
+      <div id="fullscreenChart"></div>
+    </div>
+  </div>
+
+  <script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2UP85ZA-LGDtqPac8wIvkmTmhiUHVALbnOL7ffEpy8DDXQNDB8kVFMGvS3p_YvQ/pub?gid=256552368&single=true&output=csv';
+    const DATA_EDITOR_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2UP85ZA-LGDtqPac8wIvkmTmhiUHVALbnOL7ffEpy8DDXQNDB8kVFMGvS3p_YvQ/pubhtml?gid=256552368&single=true';
+    const CLEAN_TECHS = ['Hidroeléctrica', 'Nuclear', 'Geotérmica', 'Bioenergía', 'Cogeneración Eficiente', 'Hidrógeno', 'Eólica', 'Solar', 'GD-FV'];
+    const COLORS = {
+      'Hidroeléctrica': '#2E6FB0',
+      'Nuclear': '#8A9099',
+      'Geotérmica': '#C0552E',
+      'Bioenergía': '#5B9A43',
+      'Cogeneración Eficiente': '#9AAE3B',
+      'Hidrógeno': '#3BA98C',
+      'Eólica': '#1E9CB8',
+      'Solar': '#E0A12E',
+      'GD-FV': '#D98A2B',
+      'Energía limpia': '#0E8A6E',
+      'Energía Fósil': '#8A9099',
+      'Generación total': '#9B2247',
+      'Meta de Energía Limpia': '#E0A12E'
+    };
+    const TABLE_HEADER_COLORS = {
+      'Año': '#7A1B38',
+      'Hidroeléctrica': '#2E6FB0',
+      'Nuclear': '#6F757D',
+      'Geotérmica': '#B14E2A',
+      'Bioenergía': '#4E7D2F',
+      'Cogeneración Eficiente': '#7E8F2C',
+      'Hidrógeno': '#2E8A72',
+      'Eólica': '#1B8AA3',
+      'Solar': '#B9821F',
+      'GD-FV': '#B96E22',
+      'Meta de energía limpia': '#B9821F',
+      'Energía limpia': '#0E7C5A',
+      'Energía fósil': '#6F757D',
+      'Generación total': '#9B2247',
+      'Participación de energía limpia': '#0E7C5A'
+    };
+    let currentSlideIndex = 0;
+    let rows = [];
+    let selectedTechs = new Set(CLEAN_TECHS);
+    let charts = {};
+    let fullscreenChart = null;
+    let fullscreenChartKey = null;
+    let storyTimer = null;
+    window.isExportingPdf = false;
+    document.body.classList.add('animations-ready');
+
+    function normalize(value) {
+      return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase().replace(/\s+/g, ' ');
+    }
+    function parseNum(value) {
+      const raw = String(value ?? '').trim();
+      if (!raw) return null;
+      const cleaned = raw.replace(/,/g, '').replace(/\s+/g, '').replace(/%/g, '');
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
+    }
+    function fmt(value, suffix = '') {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'S/D';
+      return new Intl.NumberFormat('es-MX', { maximumFractionDigits: 0 }).format(value) + suffix;
+    }
+    function fmtPct(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'S/D';
+      return new Intl.NumberFormat('es-MX', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value) + '%';
+    }
+    function showStatus(message) {
+      const box = document.getElementById('statusBox');
+      box.textContent = message;
+      box.style.display = message ? 'block' : 'none';
+    }
+    function findHeaderRow(allRows) {
+      return allRows.findIndex(row => row.some(c => normalize(c) === 'ANO') && row.some(c => normalize(c).includes('ENERGIA LIMPIA')));
+    }
+    function parseRows(csvText) {
+      const parsed = Papa.parse(csvText, { header: false, skipEmptyLines: false });
+      const allRows = parsed.data.filter(row => row.some(cell => String(cell || '').trim() !== ''));
+      const headerIdx = findHeaderRow(allRows);
+      if (headerIdx < 0) throw new Error('No se encontró la fila de encabezados con año y energía limpia.');
+      const headers = allRows[headerIdx].map(h => String(h || '').trim());
+      const idx = {};
+      headers.forEach((h, i) => { idx[normalize(h)] = i; });
+      return allRows.slice(headerIdx + 1).map(row => {
+        const item = { raw: row };
+        headers.forEach((h, i) => {
+          if (!h) return;
+          item[h.trim()] = row[i] ?? '';
+        });
+        item.anio = parseNum(row[idx.ANO]);
+        item.clean = parseNum(row[idx['ENERGIA LIMPIA']]);
+        item.fossil = parseNum(row[idx['ENERGIA FOSIL']]);
+        item.total = parseNum(row[idx['GENERACION TOTAL']]);
+        item.target = parseNum(row[idx['META DE ENERGIA LIMPIA']]);
+        item.cleanPct = parseNum(row[idx['ENERGIA LIMPIA (%)']]);
+        item.targetPct = item.total ? (item.target / item.total) * 100 : null;
+        CLEAN_TECHS.forEach(t => { item[t] = parseNum(row[idx[normalize(t)]]); });
+        return item;
+      }).filter(r => r.anio);
+    }
+    async function loadData() {
+      try {
+        showStatus('Cargando datos...');
+        const response = await fetch(CSV_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error('No se pudo leer la fuente.');
+        const text = await response.text();
+        rows = parseRows(text);
+        if (!rows.length) throw new Error('La fuente no contiene filas anuales válidas.');
+        showStatus('');
+        renderAll();
+        requestAnimationFrame(() => animateSlide(currentSlideIndex));
+      } catch (error) {
+        showStatus('ERROR: ' + error.message);
+      }
+    }
+    function latestRow() { return rows[rows.length - 1] || {}; }
+    function firstRow() { return rows[0] || {}; }
+    function getYears() { return rows.map(r => String(r.anio)); }
+    function selectedSeries() {
+      return CLEAN_TECHS.filter(t => selectedTechs.has(t)).map(t => ({
+        name: t,
+        data: rows.map(r => r[t]),
+        color: COLORS[t]
+      }));
+    }
+    function renderAll() {
+      renderMeta();
+      renderKpis();
+      renderTechPanel();
+      renderCharts();
+      renderTable();
+      updateStory(0, false);
+      updateSlideCounter();
+    }
+    function renderMeta() {
+      const first = firstRow();
+      const last = latestRow();
+      document.getElementById('coverPeriod').textContent = `Periodo: ${first.anio || '--'}-${last.anio || '--'}`;
+      document.getElementById('coverUpdated').textContent = `Actualización: ${new Date().toLocaleDateString('es-MX')}`;
+      document.getElementById('rangeLabel').textContent = `${first.anio || ''}-${last.anio || ''}`;
+    }
+    function renderKpis() {
+      const first = firstRow();
+      const last = latestRow();
+      const gap = (last.clean ?? 0) - (last.target ?? 0);
+      const cleanGrowth = first.clean ? ((last.clean - first.clean) / first.clean) * 100 : null;
+      const fossilChange = first.fossil ? ((last.fossil - first.fossil) / first.fossil) * 100 : null;
+      document.getElementById('kpiClean').textContent = fmt(last.clean);
+      document.getElementById('kpiCleanNote').textContent = `GWh en ${last.anio || '--'} | ${fmtPct(cleanGrowth)} vs ${first.anio || '--'}`;
+      document.getElementById('kpiPercent').textContent = fmtPct(last.cleanPct);
+      document.getElementById('kpiPercentNote').textContent = `Meta limpia: ${fmtPct(last.targetPct)}`;
+      document.getElementById('kpiTotal').textContent = fmt(last.total);
+      document.getElementById('kpiGap').textContent = (gap >= 0 ? '+' : '') + fmt(gap);
+      document.getElementById('kpiGapNote').textContent = 'energía limpia menos meta';
+    }
+    function renderTechPanel() {
+      const panel = document.getElementById('techPanel');
+      panel.innerHTML = CLEAN_TECHS.map(t => `
+        <label class="tech-chip">
+          <input type="checkbox" ${selectedTechs.has(t) ? 'checked' : ''} onchange="toggleTech('${t.replace(/'/g, "\\'")}', this.checked)">
+          <span>${t}</span>
+        </label>
+      `).join('');
+      document.getElementById('selectedTechLabel').textContent = `${selectedTechs.size} seleccionadas`;
+    }
+    function baseChartOptions() {
+      return {
+        chart: { style: { fontFamily: 'Libre Franklin, system-ui, sans-serif' }, backgroundColor: 'transparent', animation: { duration: 900 } },
+        title: { text: null },
+        credits: { enabled: false },
+        exporting: { enabled: false },
+        legend: { itemStyle: { fontWeight: 700, color: '#1c1b1a' } },
+        xAxis: { categories: getYears(), lineColor: '#d8d8d8', tickColor: '#d8d8d8' },
+        yAxis: { title: { text: 'GWh' }, gridLineColor: '#eeeeee' },
+        plotOptions: {
+          series: {
+            animation: { duration: 1100 },
+            marker: { enabled: true, radius: 3 },
+            dataLabels: {
+              enabled: true,
+              allowOverlap: false,
+              crop: false,
+              overflow: 'allow',
+              style: {
+                color: '#1c1b1a',
+                fontSize: '9px',
+                fontWeight: '700',
+                textOutline: '2px contrast'
+              },
+              formatter: function () {
+                if (this.y === null || this.y === undefined) return '';
+                return Highcharts.numberFormat(this.y, 0, '.', ',');
+              }
+            }
+          }
+        },
+        tooltip: { shared: true, valueSuffix: ' GWh' }
+      };
+    }
+    function chartFullscreenOptions(key, title) {
+      const source = charts[key];
+      if (!source) return null;
+      const options = Highcharts.merge({}, source.userOptions, {
+        chart: {
+          backgroundColor: '#ffffff',
+          height: null,
+          animation: { duration: 900 },
+          spacing: [28, 26, 24, 24]
+        },
+        title: {
+          text: title,
+          align: 'left',
+          style: {
+            color: '#9B2247',
+            fontFamily: 'Newsreader, Georgia, serif',
+            fontWeight: '700',
+            textTransform: 'uppercase'
+          }
+        },
+        subtitle: {
+          text: 'Fuente: SNIE - DGMESNIE | Unidad: GWh',
+          align: 'left',
+          style: { color: '#6F6B66', fontFamily: 'Libre Franklin, system-ui, sans-serif' }
+        },
+        exporting: { enabled: false },
+        credits: { enabled: false }
+      });
+      return options;
+    }
+    function openChartFullscreen(key, title) {
+      const options = chartFullscreenOptions(key, title);
+      if (!options) return;
+      fullscreenChartKey = key;
+      document.getElementById('fullscreenChartTitle').textContent = title;
+      const modal = document.getElementById('chartFullscreenModal');
+      modal.classList.add('show');
+      if (fullscreenChart) {
+        fullscreenChart.destroy();
+        fullscreenChart = null;
+      }
+      fullscreenChart = Highcharts.chart('fullscreenChart', options);
+      setTimeout(() => fullscreenChart && fullscreenChart.reflow(), 80);
+    }
+    function closeChartFullscreen() {
+      const modal = document.getElementById('chartFullscreenModal');
+      modal.classList.remove('show');
+      if (fullscreenChart) {
+        fullscreenChart.destroy();
+        fullscreenChart = null;
+      }
+      fullscreenChartKey = null;
+    }
+    function renderCharts() {
+      const years = getYears();
+      charts.summary = Highcharts.chart('summaryChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'line' },
+        yAxis: { title: { text: 'GWh' }, gridLineColor: '#eeeeee' },
+        series: [
+          { name: 'Energía limpia', data: rows.map(r => r.clean), color: COLORS['Energía limpia'], lineWidth: 4 },
+          { name: 'Energía fósil', data: rows.map(r => r.fossil), color: COLORS['Energía Fósil'], lineWidth: 3 },
+          { name: 'Generación total', data: rows.map(r => r.total), color: COLORS['Generación total'], lineWidth: 3 },
+          { name: 'Meta de energía limpia', data: rows.map(r => r.target), color: COLORS['Meta de Energía Limpia'], dashStyle: 'ShortDash', lineWidth: 3 }
+        ]
+      });
+      charts.trend = Highcharts.chart('trendChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'column' },
+        plotOptions: {
+          ...baseChartOptions().plotOptions,
+          column: { borderRadius: 3, groupPadding: .10, pointPadding: .05 }
+        },
+        series: selectedSeries()
+      });
+      charts.stack = Highcharts.chart('stackChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'column' },
+        plotOptions: {
+          ...baseChartOptions().plotOptions,
+          column: { stacking: 'normal', borderWidth: 0 },
+          series: {
+            ...baseChartOptions().plotOptions.series,
+            dataLabels: {
+              ...baseChartOptions().plotOptions.series.dataLabels,
+              formatter: function () {
+                if (!this.y) return '';
+                return Highcharts.numberFormat(this.y, 0, '.', ',');
+              }
+            }
+          }
+        },
+        tooltip: { shared: true, valueSuffix: ' GWh' },
+        series: CLEAN_TECHS.map(t => ({ name: t, data: rows.map(r => r[t]), color: COLORS[t] }))
+      });
+      charts.percent = Highcharts.chart('percentChart', {
+        ...baseChartOptions(),
+        chart: { ...baseChartOptions().chart, type: 'line' },
+        yAxis: { title: { text: '%' }, labels: { format: '{value}%' }, gridLineColor: '#eeeeee' },
+        plotOptions: {
+          ...baseChartOptions().plotOptions,
+          series: {
+            ...baseChartOptions().plotOptions.series,
+            dataLabels: {
+              ...baseChartOptions().plotOptions.series.dataLabels,
+              formatter: function () {
+                if (this.y === null || this.y === undefined) return '';
+                return Highcharts.numberFormat(this.y, 1) + '%';
+              }
+            }
+          }
+        },
+        tooltip: { shared: true, valueSuffix: '%' },
+        series: [
+          { name: 'Energía limpia (%)', data: rows.map(r => r.cleanPct), color: COLORS['Energía limpia'], lineWidth: 4 },
+          { name: 'Meta limpia (%)', data: rows.map(r => r.targetPct), color: COLORS['Meta de Energía Limpia'], dashStyle: 'ShortDash', lineWidth: 3 }
+        ]
+      });
+      Object.values(charts).forEach(c => c && c.reflow());
+    }
+    function clearStoryMarkers(chart) {
+      if (!chart || !chart.xAxis || !chart.xAxis[0]) return;
+      const axis = chart.xAxis[0];
+      ['story-line', 'story-band'].forEach(id => {
+        try { axis.removePlotLine(id); } catch (e) {}
+        try { axis.removePlotBand(id); } catch (e) {}
+      });
+    }
+    function markStoryYear(chart, index) {
+      if (!chart || !chart.xAxis || !chart.xAxis[0]) return;
+      const axis = chart.xAxis[0];
+      clearStoryMarkers(chart);
+      axis.addPlotBand({
+        id: 'story-band',
+        from: index - 0.45,
+        to: index + 0.45,
+        color: 'rgba(224,161,46,.12)',
+        zIndex: 2
+      });
+      axis.addPlotLine({
+        id: 'story-line',
+        value: index,
+        color: '#9B2247',
+        width: 3,
+        zIndex: 5,
+        label: {
+          text: String(rows[index]?.anio || ''),
+          rotation: 0,
+          y: 18,
+          style: { color: '#9B2247', fontWeight: '800' }
+        }
+      });
+      chart.series.forEach(series => {
+        if (series.points && series.points[index]) {
+          series.points[index].setState('hover');
+        }
+      });
+    }
+    function updateStory(index, animate = true) {
+      if (!rows.length) return;
+      const row = rows[Math.max(0, Math.min(index, rows.length - 1))];
+      const gap = (row.clean ?? 0) - (row.target ?? 0);
+      const fossilShare = row.total ? (row.fossil / row.total) * 100 : null;
+      const cleanShare = row.cleanPct ?? (row.total ? (row.clean / row.total) * 100 : null);
+      const status = gap >= 0 ? 'cumple o supera la meta' : 'permanece por debajo de la meta';
+      const prevalence = fossilShare !== null && fossilShare > cleanShare ? 'la generación fósil aún prevalece en la matriz' : 'la energía limpia gana prevalencia frente a la fósil';
+      document.getElementById('storyYear').textContent = row.anio;
+      document.getElementById('storyCopy').textContent = `En ${row.anio}, la energía limpia representa ${fmtPct(cleanShare)} y ${status}; ${prevalence}.`;
+      document.getElementById('storyClean').textContent = fmt(row.clean);
+      document.getElementById('storyTarget').textContent = fmt(row.target);
+      document.getElementById('storyFossil').textContent = fmt(row.fossil);
+      [charts.summary, charts.percent, fullscreenChart].forEach(chart => {
+        if (chart) markStoryYear(chart, index);
+      });
+      if (animate && typeof anime !== 'undefined') {
+        anime({
+          targets: '#storyCallout',
+          scale: [0.98, 1],
+          opacity: [0.75, 1],
+          duration: 300,
+          easing: 'easeOutQuad'
+        });
+      }
+    }
+    function stopEvolutionStory() {
+      if (storyTimer) {
+        clearInterval(storyTimer);
+        storyTimer = null;
+      }
+    }
+    function playEvolutionStory() {
+      if (!rows.length || window.isExportingPdf) return;
+      stopEvolutionStory();
+      showSlide(1);
+      let index = 0;
+      updateStory(index);
+      storyTimer = setInterval(() => {
+        index += 1;
+        if (index >= rows.length) {
+          stopEvolutionStory();
+          return;
+        }
+        updateStory(index);
+      }, 1250);
+    }
+    function renderTable() {
+      const table = document.getElementById('dataTable');
+      const compactTechHeaders = {
+        'Hidroeléctrica': 'Hidro.',
+        'Nuclear': 'Nuclear',
+        'Geotérmica': 'Geot.',
+        'Bioenergía': 'Bio.',
+        'Cogeneración Eficiente': 'Cog. ef.',
+        'Hidrógeno': 'H2',
+        'Eólica': 'Eólica',
+        'Solar': 'Solar',
+        'GD-FV': 'GD-FV'
+      };
+      const headers = [
+        { label: 'Año', title: 'Año' },
+        ...CLEAN_TECHS.map(t => ({ label: compactTechHeaders[t] || t, title: t })),
+        { label: 'Meta', title: 'Meta de energía limpia' },
+        { label: 'Limpia', title: 'Energía limpia' },
+        { label: 'Fósil', title: 'Energía fósil' },
+        { label: 'Total', title: 'Generación total' },
+        { label: 'Limpia %', title: 'Participación de energía limpia' }
+      ];
+      table.innerHTML = `
+        <thead><tr>${headers.map(h => `<th title="${h.title}" style="background:${TABLE_HEADER_COLORS[h.title] || TABLE_HEADER_COLORS[h.label] || '#9B2247'}">${h.label}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td><strong>${r.anio}</strong></td>
+              ${CLEAN_TECHS.map(t => `<td>${fmt(r[t])}</td>`).join('')}
+              <td>${fmt(r.target)}</td>
+              <td>${fmt(r.clean)}</td>
+              <td>${fmt(r.fossil)}</td>
+              <td>${fmt(r.total)}</td>
+              <td>${fmtPct(r.cleanPct)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+    }
+    function toggleTech(name, checked) {
+      if (checked) selectedTechs.add(name);
+      else selectedTechs.delete(name);
+      if (selectedTechs.size === 0) selectedTechs.add(name);
+      renderTechPanel();
+      if (charts.trend) {
+        while (charts.trend.series.length) charts.trend.series[0].remove(false);
+        selectedSeries().forEach(s => charts.trend.addSeries(s, false));
+        charts.trend.redraw();
+      }
+      renderKpis();
+    }
+    function setAllTech(flag) {
+      selectedTechs = new Set(flag ? CLEAN_TECHS : [CLEAN_TECHS[0]]);
+      renderTechPanel();
+      if (charts.trend) {
+        while (charts.trend.series.length) charts.trend.series[0].remove(false);
+        selectedSeries().forEach(s => charts.trend.addSeries(s, false));
+        charts.trend.redraw();
+      }
+      renderKpis();
+    }
+    function showSlide(index) {
+      stopEvolutionStory();
+      const slides = [...document.querySelectorAll('.slide')];
+      currentSlideIndex = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlideIndex));
+      updateSlideCounter();
+      setTimeout(() => Object.values(charts).forEach(c => c && c.reflow()), 80);
+      animateSlide(currentSlideIndex);
+    }
+    function resetAnimatedItems(slide) {
+      slide.querySelectorAll('.animate-item, .animate-item-left, .animate-item-right, .animate-item-scale').forEach(el => {
+        el.style.opacity = '';
+        el.style.transform = '';
+      });
+    }
+    function animateSlide(index) {
+      if (window.isExportingPdf) return;
+      const slides = document.querySelectorAll('.slide');
+      const activeSlide = slides[index];
+      if (!activeSlide) return;
+      resetAnimatedItems(activeSlide);
+      if (typeof anime === 'undefined') {
+        activeSlide.querySelectorAll('.animate-item, .animate-item-left, .animate-item-right, .animate-item-scale').forEach(el => {
+          el.style.opacity = 1;
+          el.style.transform = 'none';
+        });
+        return;
+      }
+
+      const container = activeSlide.querySelector('.slide-container');
+      if (container) {
+        const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+        anime({
+          targets: container,
+          opacity: [0.45, 1],
+          scale: [scale * 0.985, scale],
+          duration: 350,
+          easing: 'easeOutQuad'
+        });
+      }
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item'),
+        opacity: [0, 1],
+        translateY: [24, 0],
+        delay: anime.stagger(55),
+        duration: 560,
+        easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item-left'),
+        opacity: [0, 1],
+        translateX: [-28, 0],
+        delay: anime.stagger(70),
+        duration: 560,
+        easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item-right'),
+        opacity: [0, 1],
+        translateX: [28, 0],
+        delay: anime.stagger(70),
+        duration: 560,
+        easing: 'easeOutQuad'
+      });
+      anime({
+        targets: activeSlide.querySelectorAll('.animate-item-scale'),
+        opacity: [0, 1],
+        scale: [0.92, 1],
+        delay: anime.stagger(65),
+        duration: 520,
+        easing: 'easeOutBack'
+      });
+      if (index === 1) {
+        anime({
+          targets: activeSlide.querySelectorAll('.kpi-value'),
+          opacity: [0, 1],
+          translateY: [10, 0],
+          delay: anime.stagger(80, { start: 180 }),
+          duration: 420,
+          easing: 'easeOutQuad'
+        });
+      }
+    }
+    function nextSlide() { showSlide(currentSlideIndex + 1); }
+    function prevSlide() { showSlide(currentSlideIndex - 1); }
+    function updateSlideCounter() {
+      const count = document.querySelectorAll('.slide').length;
+      document.getElementById('slideCounter').textContent = `${currentSlideIndex + 1} / ${count}`;
+      document.getElementById('btnPrev').disabled = currentSlideIndex === 0;
+      document.getElementById('btnNext').disabled = currentSlideIndex === count - 1;
+    }
+    function fitSlides() {
+      const scale = Math.min(window.innerWidth / 1333, window.innerHeight / 750);
+      document.documentElement.style.setProperty('--scale', scale);
+      setTimeout(() => Object.values(charts).forEach(c => c && c.reflow()), 50);
+    }
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+    function openDataEditor() {
+      window.open(DATA_EDITOR_URL, '_blank', 'noopener,noreferrer');
+    }
+    function showPdfLoader(step) {
+      const loader = document.getElementById('pdfLoader');
+      const stepEl = document.getElementById('pdfLoaderStep');
+      if (stepEl && step) stepEl.textContent = step;
+      if (loader) loader.classList.add('show');
+    }
+    function hidePdfLoader() {
+      const loader = document.getElementById('pdfLoader');
+      if (loader) loader.classList.remove('show');
+    }
+    async function captureReportSlideForPdf(slide) {
+      const slideClone = slide.cloneNode(true);
+      const clone = slideClone.querySelector('.slide-container') || slideClone;
+      const stage = document.createElement('div');
+      stage.setAttribute('aria-hidden', 'true');
+      stage.style.position = 'fixed';
+      stage.style.left = '-10000px';
+      stage.style.top = '0';
+      stage.style.width = '1333px';
+      stage.style.height = '750px';
+      stage.style.overflow = 'hidden';
+      stage.style.background = '#ffffff';
+      stage.style.zIndex = '14001';
+      stage.style.opacity = '1';
+      stage.style.pointerEvents = 'none';
+      slideClone.classList.add('active');
+      slideClone.style.position = 'relative';
+      slideClone.style.inset = 'auto';
+      slideClone.style.display = 'flex';
+      slideClone.style.alignItems = 'center';
+      slideClone.style.justifyContent = 'center';
+      slideClone.style.width = '1333px';
+      slideClone.style.height = '750px';
+      clone.style.position = 'relative';
+      clone.style.left = '0';
+      clone.style.top = '0';
+      clone.style.margin = '0';
+      clone.style.transform = 'none';
+      clone.style.transition = 'none';
+      clone.style.width = '1333px';
+      clone.style.height = '750px';
+      clone.style.boxShadow = 'none';
+      stage.appendChild(slideClone);
+      document.body.appendChild(stage);
+      try {
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return await html2canvas(clone, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 1333,
+          height: 750,
+          windowWidth: 1333,
+          windowHeight: 750,
+          scrollX: 0,
+          scrollY: 0
+        });
+      } finally {
+        stage.remove();
+      }
+    }
+    async function exportFullReportPDF() {
+      const { jsPDF } = window.jspdf || {};
+      if (!jsPDF || !window.html2canvas) {
+        alert('No se cargaron las librerías de exportación.');
+        return;
+      }
+      const deck = document.getElementById('deck');
+      const slides = [...deck.querySelectorAll('.slide')];
+      if (!slides.length) {
+        alert('Sin diapositivas para exportar.');
+        return;
+      }
+      const original = currentSlideIndex;
+      const previousSlideState = slides.map(slide => ({ slide, display: slide.style.display }));
+      const prevActive = deck.querySelector('.slide.active');
+      document.body.classList.add('exporting');
+      document.body.classList.remove('animations-ready');
+      window.isExportingPdf = true;
+      showPdfLoader(`Preparando ${slides.length} diapositivas...`);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      try {
+        const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [338.6582, 190.5] });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < slides.length; i++) {
+          showPdfLoader(`Capturando diapositiva ${i + 1} de ${slides.length}...`);
+          slides.forEach(slide => {
+            slide.classList.remove('active');
+            slide.style.display = '';
+          });
+          slides[i].classList.add('active');
+          slides[i].style.display = 'flex';
+          currentSlideIndex = i;
+          updateSlideCounter();
+          await new Promise(resolve => setTimeout(resolve, 650));
+          Object.values(charts).forEach(chart => chart && chart.reflow());
+          await new Promise(resolve => setTimeout(resolve, 180));
+
+          const canvas = await captureReportSlideForPdf(slides[i]);
+          const img = canvas.toDataURL('image/jpeg', 0.92);
+          if (i > 0) pdf.addPage([338.6582, 190.5], 'l');
+          pdf.addImage(img, 'JPEG', 0, 0, pageW, pageH);
+        }
+
+        showPdfLoader('Guardando archivo...');
+        pdf.save('SENER_Energia_Limpia_GWh.pdf');
+      } catch (error) {
+        console.error('Error PDF reporte:', error);
+        alert('Error generando PDF: ' + error.message);
+      } finally {
+        window.isExportingPdf = false;
+        document.body.classList.add('animations-ready');
+        slides.forEach(slide => slide.classList.remove('active'));
+        previousSlideState.forEach(({ slide, display }) => {
+          slide.style.display = display;
+        });
+        if (prevActive) prevActive.classList.add('active');
+        currentSlideIndex = original;
+        showSlide(original);
+        hidePdfLoader();
+        document.body.classList.remove('exporting');
+      }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeChartFullscreen();
+        stopEvolutionStory();
+      }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+    window.addEventListener('resize', fitSlides);
+    fitSlides();
+    loadData();
+  </script>
+</body>
+</html>

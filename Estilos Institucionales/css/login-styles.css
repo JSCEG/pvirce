@@ -58,7 +58,7 @@ body::after {
 .bg-decoration-2 {
     width: 400px;
     height: 400px;
-    background: linear-gradient(135deg, #A57F2C 0%, #8B6A24 100%);
+    background: linear-gradient(135deg, #E0A12E 0%, #8B6A24 100%);
     bottom: -200px;
     left: -200px;
     filter: blur(60px);

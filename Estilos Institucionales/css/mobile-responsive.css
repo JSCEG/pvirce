@@ -276,7 +276,7 @@ html {
 }
 
 .mobile-action-btn.primary {
-    background: var(--color-gobmx-verde);
+    background: var(--sener-esmeralda);
     color: white;
 }
 
@@ -368,8 +368,8 @@ html {
 }
 
 .bottom-sheet-tab.active {
-    color: var(--color-gobmx-guinda);
-    border-bottom-color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
+    border-bottom-color: var(--sener-guinda);
 }
 
 .bottom-sheet-content {
@@ -456,7 +456,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, var(--color-gobmx-guinda) 0%, #7a1b38 100%);
+    background: linear-gradient(135deg, var(--sener-guinda) 0%, #7a1b38 100%);
 }
 
 .mobile-drawer-title {
@@ -487,7 +487,7 @@ html {
 .mobile-drawer-section-title {
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 1rem;
@@ -509,7 +509,7 @@ html {
 
 .bottom-sheet-list-item i {
     font-size: 1.2rem;
-    color: var(--color-gobmx-verde);
+    color: var(--sener-esmeralda);
     margin-right: 1rem;
     width: 24px;
     text-align: center;
@@ -564,8 +564,8 @@ html {
 
 /* Resaltar tab activo más claramente */
 .bottom-sheet-tab.active {
-    color: var(--color-gobmx-guinda);
-    border-bottom-color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
+    border-bottom-color: var(--sener-guinda);
     border-bottom-width: 3px;
     font-weight: 700;
 }
@@ -625,7 +625,7 @@ html {
     right: auto;
     transform: none;
     z-index: 1100 !important;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border: none;
     border-radius: 28px;
@@ -700,7 +700,7 @@ html {
 
 .mobile-floating-menu-item i {
     font-size: 1.1rem;
-    color: var(--color-gobmx-verde);
+    color: var(--sener-esmeralda);
     width: 24px;
     text-align: center;
 }
@@ -760,8 +760,8 @@ html {
 
 /* Resaltar tab activo más claramente */
 .bottom-sheet-tab.active {
-    color: var(--color-gobmx-guinda);
-    border-bottom-color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
+    border-bottom-color: var(--sener-guinda);
     border-bottom-width: 3px;
     font-weight: 700;
 }
@@ -821,7 +821,7 @@ html {
     right: auto;
     transform: none;
     z-index: 1100 !important;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border: none;
     border-radius: 28px;
@@ -896,7 +896,7 @@ html {
 
 .mobile-floating-menu-item i {
     font-size: 1.1rem;
-    color: var(--color-gobmx-verde);
+    color: var(--sener-esmeralda);
     width: 24px;
     text-align: center;
 }

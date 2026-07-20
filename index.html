@@ -3,12 +3,9 @@
 
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="_tokens.css">
   <title>PVIRCE 2026-2040 · DGMESNIE</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Merriweather:wght@400;700;900&display=swap"
-    rel="stylesheet">
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/full-screen.js"></script>
@@ -18,36 +15,19 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@v3.12.0/dist/pptxgen.bundle.js"></script>
   <style>
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
-      font-weight: 400;
-    }
-
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
-      font-weight: 700;
-    }
-
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Light.otf') format('opentype');
-      font-weight: 300;
-    }
 
     :root {
-      --guinda: #9B2247;
-      --verde: #1E5B4F;
-      --dorado: #A57F2C;
-      --gris: #98989A;
-      --gris-claro: #E5E5E5;
+      --sener-guinda: #9B2247;
+      --sener-esmeralda: #0E8A6E;
+      --sener-dorado: #E0A12E;
+      --sener-gris: #98989A;
+      --sener-linea: #E5E5E5;
       --text: #2b2b2b;
       --bg: #f3f4f6;
       --slide-w: 1280px;
       --slide-h: 720px;
-      --font-h: 'Patria', 'Merriweather', serif;
-      --font-b: 'Noto Sans', sans-serif;
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-text: 'Libre Franklin', sans-serif;
     }
 
     * {
@@ -57,7 +37,7 @@
     }
 
     body {
-      font-family: var(--font-b);
+      font-family: var(--font-text);
       background: var(--bg);
       color: var(--text);
       padding: 40px 20px;
@@ -90,9 +70,9 @@
     }
 
     .toolbar h1 {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-size: 22px;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       margin: 0;
       text-align: center;
     }
@@ -111,11 +91,11 @@
 
     .toolbar select,
     .toolbar button {
-      font-family: var(--font-b);
+      font-family: var(--font-text);
       font-size: 12px;
       padding: 6px 10px;
       border-radius: 4px;
-      border: 1px solid var(--gris);
+      border: 1px solid var(--sener-gris);
       background: white;
       cursor: pointer;
     }
@@ -150,7 +130,7 @@
     .toolbar button.year-chip {
       background: #fff;
       color: var(--text);
-      border: 1px solid var(--gris-claro);
+      border: 1px solid var(--sener-linea);
       padding: 4px 8px;
       font-size: 11px;
       font-weight: 600;
@@ -185,28 +165,28 @@
 
     .toolbar button.filter-chip.active,
     .toolbar button.year-chip.active {
-      background: var(--guinda);
+      background: var(--sener-guinda);
       color: #fff;
-      border-color: var(--guinda);
+      border-color: var(--sener-guinda);
     }
 
     .toolbar button.primary {
-      background: var(--guinda);
+      background: var(--sener-guinda);
       color: white;
-      border-color: var(--guinda);
+      border-color: var(--sener-guinda);
       font-weight: 700;
     }
 
     .toolbar button.secondary {
-      background: var(--verde);
+      background: var(--sener-esmeralda);
       color: white;
-      border-color: var(--verde);
+      border-color: var(--sener-esmeralda);
       font-weight: 700;
     }
 
     #btnPresent {
-      background: var(--dorado);
-      border-color: var(--dorado);
+      background: var(--sener-dorado);
+      border-color: var(--sener-dorado);
       color: #fff;
       animation: presentPulse 2.6s ease-in-out infinite;
     }
@@ -292,7 +272,7 @@
       background: rgba(20, 6, 12, .82);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid rgba(255, 255, 255, .12);
-      font-family: 'Noto Sans', sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
     }
 
     body.presentation-mode .command-bar {
@@ -304,7 +284,7 @@
     }
 
     .command-bar .cb-brand {
-      font-family: 'Patria', 'Merriweather', serif;
+      font-family: 'Newsreader', Georgia, serif;
       font-size: 12px;
       font-weight: 700;
       color: #fff;
@@ -371,7 +351,7 @@
 
     .command-bar .cb-btn:hover {
       background: rgba(165, 127, 44, .5);
-      border-color: var(--dorado);
+      border-color: var(--sener-dorado);
     }
 
     /* ===== Spotlight ===== */
@@ -402,10 +382,10 @@
     .spotlight-box>input {
       width: 100%;
       border: 0;
-      border-bottom: 2px solid var(--guinda);
+      border-bottom: 2px solid var(--sener-guinda);
       padding: 18px 22px;
       font-size: 18px;
-      font-family: 'Noto Sans', sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       color: var(--text);
       outline: none;
     }
@@ -435,16 +415,16 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       color: #fff;
-      background: var(--guinda);
+      background: var(--sener-guinda);
       padding: 3px 8px;
       border-radius: 999px;
       min-width: 58px;
       text-align: center;
     }
 
-    .spotlight-results .sr .badge.ef { background: var(--verde); }
-    .spotlight-results .sr .badge.ger { background: var(--dorado); }
-    .spotlight-results .sr .badge.tec { background: var(--gris); }
+    .spotlight-results .sr .badge.ef { background: var(--sener-esmeralda); }
+    .spotlight-results .sr .badge.ger { background: var(--sener-dorado); }
+    .spotlight-results .sr .badge.tec { background: var(--sener-gris); }
 
     .spotlight-results .sr .txt {
       display: flex;
@@ -551,7 +531,7 @@
       display: flex;
       align-items: center;
       gap: 24px;
-      border-bottom: 4px solid var(--dorado);
+      border-bottom: 4px solid var(--sener-dorado);
     }
 
     .cover .top-band img {
@@ -562,7 +542,7 @@
     .cover .top-band .divider {
       width: 1px;
       height: 48px;
-      background: var(--gris);
+      background: var(--sener-gris);
     }
 
     .cover .top-band .unit {
@@ -584,16 +564,16 @@
     }
 
     .cover .eyebrow {
-      font-family: var(--font-b);
+      font-family: var(--font-text);
       font-size: 14px;
       letter-spacing: .25em;
       text-transform: uppercase;
-      color: var(--dorado);
+      color: var(--sener-dorado);
       font-weight: 700;
     }
 
     .cover h1 {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-weight: 700;
       font-size: 56px;
       line-height: 1.05;
@@ -602,19 +582,19 @@
     }
 
     .cover .unidad {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-weight: 700;
       font-size: 20px;
       line-height: 1.3;
       color: white;
       max-width: 720px;
-      border-left: 3px solid var(--dorado);
+      border-left: 3px solid var(--sener-dorado);
       padding-left: 14px;
       text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
     }
 
     .cover .subtitle {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-weight: 300;
       font-size: 26px;
       color: rgba(255, 255, 255, .92);
@@ -622,7 +602,7 @@
     }
 
     .cover .subtitle-status {
-      font-family: var(--font-b);
+      font-family: var(--font-text);
       font-size: 16px;
       font-weight: 600;
       color: rgba(255, 255, 255, .88);
@@ -638,7 +618,7 @@
     }
 
     .cover .meta strong {
-      color: var(--dorado);
+      color: var(--sener-dorado);
       display: block;
       font-size: 12px;
       letter-spacing: .15em;
@@ -650,7 +630,7 @@
       margin-top: auto;
       flex: 0 0 14px;
       height: 14px;
-      background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 33%, var(--verde) 33%, var(--verde) 66%, var(--dorado) 66%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-guinda) 33%, var(--sener-esmeralda) 33%, var(--sener-esmeralda) 66%, var(--sener-dorado) 66%);
     }
 
     /* ============ CONTENIDO ============ */
@@ -667,14 +647,14 @@
       display: grid;
       grid-template-columns: 1fr 2fr 1fr;
       align-items: center;
-      border-bottom: 2px solid var(--guinda);
+      border-bottom: 2px solid var(--sener-guinda);
     }
 
     .content .header .brand-left {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-size: 20px;
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       letter-spacing: .02em;
       display: flex;
       align-items: center;
@@ -685,12 +665,12 @@
       content: '';
       width: 4px;
       height: 24px;
-      background: var(--guinda);
+      background: var(--sener-guinda);
       border-radius: 2px;
     }
 
     .content .header .ef-title {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-size: 26px;
       font-weight: 700;
       color: var(--text);
@@ -702,7 +682,7 @@
     .content .header .ef-title::before,
     .content .header .ef-title::after {
       content: '·';
-      color: var(--dorado);
+      color: var(--sener-dorado);
       margin: 0 14px;
       font-size: 24px;
     }
@@ -725,7 +705,7 @@
     }
 
     .content .narrative strong {
-      color: var(--guinda);
+      color: var(--sener-guinda);
       font-weight: 700;
     }
 
@@ -740,7 +720,7 @@
       padding: 8px 14px;
       border-radius: 6px;
       background: white;
-      border: 1px solid var(--gris-claro);
+      border: 1px solid var(--sener-linea);
       box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
       display: flex;
       align-items: center;
@@ -756,41 +736,41 @@
       top: 0;
       bottom: 0;
       width: 4px;
-      background: var(--guinda);
+      background: var(--sener-guinda);
     }
 
     .kpi:nth-child(2)::before {
-      background: var(--verde);
+      background: var(--sener-esmeralda);
     }
 
     .kpi:nth-child(3)::before {
-      background: var(--dorado);
+      background: var(--sener-dorado);
     }
 
     .kpi:nth-child(4)::before {
-      background: var(--gris);
+      background: var(--sener-gris);
     }
 
     .kpi:nth-child(5)::before {
-      background: var(--verde);
+      background: var(--sener-esmeralda);
     }
 
     .kpi .value {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-size: 26px;
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       line-height: 1;
       letter-spacing: -.01em;
       white-space: nowrap;
     }
 
     .kpi:nth-child(2) .value {
-      color: var(--verde);
+      color: var(--sener-esmeralda);
     }
 
     .kpi:nth-child(3) .value {
-      color: var(--dorado);
+      color: var(--sener-dorado);
     }
 
     .kpi:nth-child(4) .value {
@@ -798,7 +778,7 @@
     }
 
     .kpi:nth-child(5) .value {
-      color: var(--verde);
+      color: var(--sener-esmeralda);
       font-size: 18px;
     }
 
@@ -815,7 +795,7 @@
     .kpi .label small {
       display: block;
       font-weight: 400;
-      color: var(--gris);
+      color: var(--sener-gris);
       letter-spacing: .08em;
       margin-top: 2px;
       font-size: 9px;
@@ -836,21 +816,21 @@
       min-height: 0;
       gap: 0;
       background: white;
-      border: 1px solid var(--gris-claro);
+      border: 1px solid var(--sener-linea);
       border-radius: 8px;
       overflow: hidden;
     }
 
     .panel h3 {
       background: linear-gradient(180deg, #fbfbfb 0%, #f3f3f3 100%);
-      color: var(--guinda);
-      font-family: var(--font-b);
+      color: var(--sener-guinda);
+      font-family: var(--font-text);
       font-size: 10px;
       font-weight: 700;
       letter-spacing: .14em;
       text-transform: uppercase;
       padding: 8px 12px;
-      border-bottom: 2px solid var(--guinda);
+      border-bottom: 2px solid var(--sener-guinda);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -861,26 +841,26 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--guinda);
+      background: var(--sener-guinda);
       display: inline-block;
     }
 
     .panel.accent-verde h3 {
-      color: var(--verde);
-      border-bottom-color: var(--verde);
+      color: var(--sener-esmeralda);
+      border-bottom-color: var(--sener-esmeralda);
     }
 
     .panel.accent-verde h3::before {
-      background: var(--verde);
+      background: var(--sener-esmeralda);
     }
 
     .panel.accent-dorado h3 {
-      color: var(--dorado);
-      border-bottom-color: var(--dorado);
+      color: var(--sener-dorado);
+      border-bottom-color: var(--sener-dorado);
     }
 
     .panel.accent-dorado h3::before {
-      background: var(--dorado);
+      background: var(--sener-dorado);
     }
 
     .panel .chart {
@@ -923,7 +903,7 @@
       font-size: 9px;
       letter-spacing: .08em;
       text-transform: uppercase;
-      border-bottom: 1.5px solid var(--gris);
+      border-bottom: 1.5px solid var(--sener-gris);
     }
 
     table.proyectos td,
@@ -971,25 +951,25 @@
     table.proyectos td.mw,
     table.tech td.mw {
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
     }
 
     table.tech tbody td:first-child {
       font-weight: 600;
-      color: var(--verde);
+      color: var(--sener-esmeralda);
     }
 
     table.tech tfoot td {
-      border-top: 2px solid var(--guinda);
+      border-top: 2px solid var(--sener-guinda);
       border-bottom: 0;
       background: #faf3f5;
       font-weight: 700;
     }
 
     .content .footer {
-      background: var(--guinda);
+      background: var(--sener-guinda);
       height: 8px;
-      background: linear-gradient(90deg, var(--guinda) 0%, var(--guinda) 60%, var(--dorado) 60%, var(--dorado) 100%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-guinda) 60%, var(--sener-dorado) 60%, var(--sener-dorado) 100%);
     }
 
     /* ============ SLIDE MAPA ============ */
@@ -1011,7 +991,7 @@
       align-items: center;
       gap: 14px;
       background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
-      border-bottom: 1px solid var(--gris-claro);
+      border-bottom: 1px solid var(--sener-linea);
     }
 
     .map-slide .map-toolbar label {
@@ -1024,9 +1004,9 @@
 
     .map-slide .map-toolbar select {
       padding: 6px 12px;
-      border: 1px solid var(--gris);
+      border: 1px solid var(--sener-gris);
       border-radius: 4px;
-      font-family: var(--font-b);
+      font-family: var(--font-text);
       font-size: 13px;
       background: white;
     }
@@ -1079,7 +1059,7 @@
 
     .map-slide .ef-mini-card {
       background: white;
-      border: 1px solid var(--gris-claro);
+      border: 1px solid var(--sener-linea);
       border-radius: 4px;
       padding: 5px 7px;
     }
@@ -1088,16 +1068,16 @@
       font-size: 7.5px;
       letter-spacing: .1em;
       text-transform: uppercase;
-      color: var(--gris);
+      color: var(--sener-gris);
       font-weight: 700;
       line-height: 1.1;
     }
 
     .map-slide .ef-mini-card .val {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-size: 14px;
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       margin-top: 1px;
       line-height: 1;
     }
@@ -1113,11 +1093,11 @@
       font-size: 9px;
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       font-weight: 700;
       margin-top: 2px;
       padding-bottom: 2px;
-      border-bottom: 1px solid var(--guinda);
+      border-bottom: 1px solid var(--sener-guinda);
     }
 
     .map-slide .ef-bar-row {
@@ -1145,13 +1125,13 @@
     .map-slide .ef-bar-row .bar>span {
       display: block;
       height: 100%;
-      background: var(--guinda);
+      background: var(--sener-guinda);
     }
 
     .map-slide .ef-bar-row .num {
       font-variant-numeric: tabular-nums;
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       width: 58px;
       text-align: right;
       font-size: 9px;
@@ -1185,7 +1165,7 @@
     }
 
     .map-slide .kv-v {
-      color: var(--guinda);
+      color: var(--sener-guinda);
       font-weight: 700;
       word-break: break-word;
       min-width: 0;
@@ -1201,7 +1181,7 @@
 
     .map-slide .side-panel {
       background: #fafafa;
-      border-left: 1px solid var(--gris-claro);
+      border-left: 1px solid var(--sener-linea);
       padding: 10px 12px;
       display: flex;
       flex-direction: column;
@@ -1211,8 +1191,8 @@
     }
 
     .map-slide .side-panel h4 {
-      font-family: var(--font-h);
-      color: var(--guinda);
+      font-family: var(--font-display);
+      color: var(--sener-guinda);
       font-size: 14px;
       font-weight: 700;
     }
@@ -1222,20 +1202,20 @@
       justify-content: space-between;
       align-items: baseline;
       padding: 3px 0;
-      border-bottom: 1px dashed var(--gris-claro);
+      border-bottom: 1px dashed var(--sener-linea);
       font-size: 11px;
     }
 
     .map-slide .side-panel .stat strong {
-      font-family: var(--font-h);
-      color: var(--guinda);
+      font-family: var(--font-display);
+      color: var(--sener-guinda);
       font-size: 13px;
       font-variant-numeric: tabular-nums;
     }
 
     .map-slide .side-panel .hint {
       font-size: 10px;
-      color: var(--gris);
+      color: var(--sener-gris);
       font-style: italic;
     }
 
@@ -1244,7 +1224,7 @@
       color: white;
       border: none;
       box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
-      font-family: 'Noto Sans', sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       font-size: 11px;
       padding: 6px 10px;
       border-radius: 4px;
@@ -1284,7 +1264,7 @@
       width: 44px;
       height: 44px;
       border: 3px solid rgba(255, 255, 255, .2);
-      border-top-color: var(--dorado);
+      border-top-color: var(--sener-dorado);
       border-radius: 50%;
       animation: spin 0.9s linear infinite;
     }
@@ -1296,7 +1276,7 @@
     }
 
     .preloader h2 {
-      font-family: var(--font-h);
+      font-family: var(--font-display);
       font-size: 20px;
       font-weight: 700;
     }
@@ -1372,12 +1352,12 @@
   <div class="toolbar">
     <div class="toolbar-row top">
       <h1 class="toolbar-title" style="line-height:1.2"><span
-          style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Noto Sans',sans-serif;letter-spacing:.04em">PVIRCE
+          style="font-size:13px;font-weight:400;color:#666;display:block;font-family:'Libre Franklin',sans-serif;letter-spacing:.04em">PVIRCE
           · Subsecretaría de Planeación y Transición Energética</span>Dirección General de Metodologías y Estadísticas
         del
         Sistema Nacional de Información Energética</h1>
       <a class="top-link" href="GAT-MIXTO-DGMESNIE.html"
-        style="font-size:12px;text-decoration:none;color:var(--guinda);font-weight:700;border:1px solid var(--guinda);padding:6px 10px;border-radius:4px">GAT-Mixto
+        style="font-size:12px;text-decoration:none;color:var(--sener-guinda);font-weight:700;border:1px solid var(--sener-guinda);padding:6px 10px;border-radius:4px">GAT-Mixto
         →</a>
     </div>
     <div class="toolbar-row bottom">
@@ -1407,9 +1387,9 @@
         <div class="filter-title">Años:</div>
         <div class="chip-group">
           <input id="yearFrom" type="number" step="1" value="2026"
-            style="width:78px;padding:6px 8px;border:1px solid var(--gris);border-radius:4px;"> -
+            style="width:78px;padding:6px 8px;border:1px solid var(--sener-gris);border-radius:4px;"> -
           <input id="yearTo" type="number" step="1" value="2030"
-            style="width:78px;padding:6px 8px;border:1px solid var(--gris);border-radius:4px;">
+            style="width:78px;padding:6px 8px;border:1px solid var(--sener-gris);border-radius:4px;">
         </div>
         <div class="chip-group" id="yearPresetButtons">
           <button type="button" class="year-chip" data-from="2026" data-to="2030">2026-2030</button>
@@ -1594,17 +1574,17 @@
         </div>
         <div id="mapToolbarEf" style="display:none;flex:1;align-items:center;gap:10px;font-size:12px;color:var(--text)">
           <span id="mapFocusModeLabel"
-            style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--guinda)">Detalle
+            style="font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sener-guinda)">Detalle
             EF</span>
           <span id="mapEfBadge"
-            style="background:var(--guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
+            style="background:var(--sener-guinda);color:white;padding:3px 10px;border-radius:12px;font-weight:700"></span>
           <label for="mapProjectSelect"
             style="margin-left:8px;font-size:11px;color:var(--text);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Cartera:</label>
           <select id="mapProjectSelect" style="min-width:260px;max-width:420px">
             <option value="__ALL__">Todos los proyectos</option>
           </select>
           <button id="mapClearEf"
-            style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--gris);border-radius:4px;font-size:11px;cursor:pointer">←
+            style="margin-left:auto;padding:4px 10px;background:transparent;border:1px solid var(--sener-gris);border-radius:4px;font-size:11px;cursor:pointer">←
             Volver a Nacional</button>
         </div>
       </div>
@@ -1627,9 +1607,9 @@
   <script>
     if (typeof Highcharts !== 'undefined') {
       Highcharts.setOptions({
-        colors: ['#9B2247', '#1E5B4F', '#A57F2C', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
+        colors: ['#9B2247', '#0E8A6E', '#E0A12E', '#98989A', '#5d2a3f', '#3a7a6c', '#c79b3f', '#6b6b6d'],
         chart: {
-          style: { fontFamily: "'Noto Sans', sans-serif" },
+          style: { fontFamily: "'Libre Franklin', sans-serif" },
           events: {
             fullscreenOpen: function () { this.update({ chart: { backgroundColor: '#ffffff' } }, false); this.redraw(); },
             fullscreenClose: function () { this.update({ chart: { backgroundColor: 'transparent' } }, false); this.redraw(); }
@@ -2167,7 +2147,7 @@
         document.getElementById('techTable').innerHTML = `<table class="tech">
     <thead><tr><th>Tecnología</th><th class="mw">MW</th><th class="mw">% EF</th><th class="mw">Acumulado MW</th><th class="mw">Acumulado %</th></tr></thead>
     <tbody>${techRows}</tbody>
-    <tfoot><tr style="border-top:2px solid var(--guinda);font-weight:700;background:#faf3f5">
+    <tfoot><tr style="border-top:2px solid var(--sener-guinda);font-weight:700;background:#faf3f5">
       <td>TOTAL sin SAEE</td><td class="mw">${fmt(techTotalMW, 1)}</td><td class="mw">${fmt(techTotalPct, 1)}%</td><td class="mw">${fmt(techTotalMW, 1)}</td><td class="mw">${fmt(techTotalPct, 1)}%</td>
     </tr></tfoot>
   </table>`;
@@ -2274,7 +2254,7 @@
               type: 'line',
               name: 'Acumulado neto',
               data: cumulativeMW,
-              color: '#1E5B4F',
+              color: '#0E8A6E',
               lineWidth: 2.5,
               yAxis: 0
             },
@@ -2761,7 +2741,7 @@
     ${statsSorted.map(([s, m]) => `
       <div class="ef-bar-row">
         <span class="name" style="width:auto;flex:0 0 auto;font-size:9.5px;letter-spacing:0">${s}</span>
-        <span class="bar"><span style="width:${(m / totalMW * 100).toFixed(1)}%;background:var(--verde)"></span></span>
+        <span class="bar"><span style="width:${(m / totalMW * 100).toFixed(1)}%;background:var(--sener-esmeralda)"></span></span>
         <span class="num">${fmt(m / totalMW * 100, 1)}%</span>
       </div>`).join('')}
 
@@ -2769,7 +2749,7 @@
     ${yearsSorted.map(y => `
       <div class="ef-bar-row">
         <span class="name">${y}</span>
-        <span class="bar"><span style="width:${(byYear[y] / maxYearMW * 100).toFixed(1)}%;background:var(--dorado)"></span></span>
+        <span class="bar"><span style="width:${(byYear[y] / maxYearMW * 100).toFixed(1)}%;background:var(--sener-dorado)"></span></span>
         <span class="num">${fmt(byYear[y], 0)} MW</span>
       </div>`).join('')}
 
@@ -2977,7 +2957,7 @@
       const cap = data.filter(r => techLabel(r.tipo) !== saeeLabel);
       const mw = cap.reduce((s, r) => s + r.mw, 0);
       el.innerHTML = parts.map((p, i) => i === parts.length - 1
-        ? `<strong style="color:var(--dorado)">${p}</strong>` : p)
+        ? `<strong style="color:var(--sener-dorado)">${p}</strong>` : p)
         .join(' <span style="opacity:.45">›</span> ') +
         ` <span style="opacity:.6;font-weight:400">· ${fmt(mw, 0)} MW · ${cap.length} proy</span>`;
     }

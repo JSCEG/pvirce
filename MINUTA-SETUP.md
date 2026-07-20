@@ -53,17 +53,20 @@ Para que los votos lleguen solos a una pestaña **"Minutas"** del Sheet:
    - *Quién tiene acceso:* **Cualquier usuario**.
    - **Implementar** y autoriza los permisos.
 4. Copia la **URL de la app web** (termina en `/exec`).
-5. En **REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html** busca la línea:
-   ```js
-   const WEBAPP_URL = (window.MINUTA_WEBAPP_URL || '').trim();
-   ```
-   y justo arriba define la URL, por ejemplo:
+5. En **REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html** puedes definir también la URL del CSV publicado si cambió el Sheet:
    ```html
-   <script>window.MINUTA_WEBAPP_URL = 'https://script.google.com/macros/s/XXXXX/exec';</script>
+   <script>
+     window.MINUTA_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/XXXXX/pub?output=csv';
+     window.MINUTA_WEBAPP_URL = 'https://script.google.com/macros/s/XXXXX/exec';
+   </script>
    ```
-   (o reemplaza el valor por defecto de la constante por tu URL).
+   Si solo cambió el archivo fuente de Google Sheets, basta con actualizar `window.MINUTA_CSV_URL`.
 6. Listo. Cada voto se agrega como fila en la pestaña **"Minutas"** (el script crea la pestaña y el
    encabezado la primera vez). Al cargar el HTML, lee esa pestaña y repinta el estatus vigente.
+
+> Importante: la vista de **seleccionados** se construye desde la minuta vigente por folio; no hay una lista
+> manual separada que debas mantener a mano. Si llega un nuevo Excel/Sheet, actualiza el CSV publicado o la
+> hoja origen y la selección se recalcula al recargar.
 
 > No hace falta crear la pestaña a mano: el script la genera. Si la creas tú, usa exactamente estos
 > encabezados en la fila 1:
@@ -72,6 +75,25 @@ Para que los votos lleguen solos a una pestaña **"Minutas"** del Sheet:
 
 Si la red falla al guardar, el voto queda local con marca *pendiente*; usa **Reportes → Reintentar sync**
 cuando vuelva la conexión.
+
+### Carga masiva desde el Excel local de 70
+
+Si ya tienes la actualización local con la selección final de 70 proyectos, puedes generar un lote listo para
+subir a la pestaña **Minutas** sin capturarlo a mano:
+
+1. Ejecuta `tools_build_minuta_70py.py` desde la raíz del proyecto.
+2. El script cruza `Insumos/Actualizaciones 2Convoctaoria/Actualizacion17072026.xlsx` (hoja `70Py`) contra
+   `tmp_sheet_current.csv` y genera:
+   - `output/minuta_70py_payload.json`
+   - `output/minuta_70py_rows.csv`
+3. Publica de nuevo la web app de Apps Script si todavía no está desplegada.
+4. Envía el JSON generado al `doPost` de la web app como un lote con `rows`.
+
+El importador agrega una fila por proyecto con `Continúa` para los 70 folios de la hoja `70Py` y
+`No continúa` para el resto de proyectos con folio final en el snapshot local.
+
+Si quieres ajustar el nombre o la fecha de la reunión antes de cargar el lote, el script acepta
+`--reunion-id`, `--reunion-nombre`, `--fecha-reunion`, `--capturado-por` y `--asistentes`.
 
 ---
 

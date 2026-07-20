@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-06-20)
+# Graph Report - 71.-Automatización_PPT  (2026-06-27)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 70 files · ~990,348 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1132 nodes · 1831 edges · 75 communities (49 shown, 26 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.77)
+- 1264 nodes · 2004 edges · 95 communities (68 shown, 27 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8b9fc08a`
+- Built from commit: `e5c2e81c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -85,6 +86,24 @@
 - [[_COMMUNITY_Community 72|Community 72]]
 - [[_COMMUNITY_Community 73|Community 73]]
 - [[_COMMUNITY_Community 74|Community 74]]
+- [[_COMMUNITY_Community 75|Community 75]]
+- [[_COMMUNITY_Community 76|Community 76]]
+- [[_COMMUNITY_Community 77|Community 77]]
+- [[_COMMUNITY_Community 78|Community 78]]
+- [[_COMMUNITY_Community 79|Community 79]]
+- [[_COMMUNITY_Community 80|Community 80]]
+- [[_COMMUNITY_Community 81|Community 81]]
+- [[_COMMUNITY_Community 82|Community 82]]
+- [[_COMMUNITY_Community 83|Community 83]]
+- [[_COMMUNITY_Community 84|Community 84]]
+- [[_COMMUNITY_Community 85|Community 85]]
+- [[_COMMUNITY_Community 86|Community 86]]
+- [[_COMMUNITY_Community 87|Community 87]]
+- [[_COMMUNITY_Community 88|Community 88]]
+- [[_COMMUNITY_Community 89|Community 89]]
+- [[_COMMUNITY_Community 90|Community 90]]
+- [[_COMMUNITY_Community 91|Community 91]]
+- [[_COMMUNITY_Community 92|Community 92]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `MobileInterface` - 32 edges
@@ -113,7 +132,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (75 total, 26 thin omitted)
+## Communities (95 total, 27 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.11
@@ -260,7 +279,7 @@ Cohesion: 0.18
 Nodes (10): Alcance funcional, Arquitectura recomendada, Criterios de aceptación, Datos del Mundial, Despliegue, Modelo de datos, Plan completo: Tanda Mundialista mobile-first, Reglas de puntos (+2 more)
 
 ### Community 62 - "Community 62"
-Cohesion: 0.28
+Cohesion: 0.14
 Nodes (3): anexslide(), cslide(), header()
 
 ### Community 63 - "Community 63"
@@ -295,24 +314,92 @@ Nodes (3): expectations, notes, run_id
 Cohesion: 0.50
 Nodes (3): expectations, notes, run_id
 
+### Community 75 - "Community 75"
+Cohesion: 0.23
+Nodes (13): tec, tec, tec, tec, tec, CC, CC/COG_EF, CI (+5 more)
+
+### Community 76 - "Community 76"
+Cohesion: 0.17
+Nodes (11): A7 final: detalle contra historial, excluyentes, excluyentes_no_count, Proyectos con historial vigente que no estan en A7 final, Proyectos finales sin historial vigente, Resumen, Revision contra minuta del 17 de junio de 2026, selected_final (+3 more)
+
+### Community 77 - "Community 77"
+Cohesion: 0.36
+Nodes (11): find_header(), latest_by_folio(), main(), norm(), parse_num(), read_doc_tables(), read_minuta_projects(), read_minutas_history() (+3 more)
+
+### Community 78 - "Community 78"
+Cohesion: 0.56
+Nodes (8): clean_name(), extract_avances_table_projects(), extract_resumen_projects(), match(), norm(), parse_num(), read_gat_sheet(), write_report()
+
+### Community 79 - "Community 79"
+Cohesion: 0.22
+Nodes (8): estados, mw, nombre, _comentario, regiones, bcsur, totalOficial, unidad
+
+### Community 80 - "Community 80"
+Cohesion: 0.22
+Nodes (8): Alcance y portabilidad, Entrada: SÓLO los datos, Flujo de trabajo, Mapa de adiciones/capacidad por Gerencia de Control Regional (GCR), Personalizaciones frecuentes que puede pedir el usuario, Qué produce (5 láminas), Reglas de diseño (no romper), Verificación (render headless con Playwright)
+
+### Community 81 - "Community 81"
+Cohesion: 0.25
+Nodes (7): Archivos, Columnas de Seguimiento_Mixtos, Configuración en Google Sheets, Objetivo, Pendientes del cruce contra PDFs, Seguimiento operativo GAT-Mixto, Uso
+
+### Community 82 - "Community 82"
+Cohesion: 0.29
+Nodes (8): tec, estados, mw, nombre, tec, peninsular, BIO, EO
+
+### Community 83 - "Community 83"
+Cohesion: 0.33
+Nodes (5): Coincidencias detectadas, Diferencias de capacidad, No encontrados en el Sheet GAT actual, Resumen, Revision GAT-Mixto contra PDFs 24-25 de junio de 2026
+
+### Community 84 - "Community 84"
+Cohesion: 0.40
+Nodes (5): estados, mw, nombre, tec, central
+
+### Community 85 - "Community 85"
+Cohesion: 0.40
+Nodes (5): estados, mw, nombre, tec, noroeste
+
+### Community 86 - "Community 86"
+Cohesion: 0.40
+Nodes (5): estados, mw, nombre, tec, norte
+
+### Community 87 - "Community 87"
+Cohesion: 0.50
+Nodes (4): estados, mw, nombre, bcalifornia
+
+### Community 88 - "Community 88"
+Cohesion: 0.50
+Nodes (4): estados, mw, nombre, mulege
+
+### Community 89 - "Community 89"
+Cohesion: 0.50
+Nodes (4): estados, mw, nombre, noreste
+
+### Community 90 - "Community 90"
+Cohesion: 0.50
+Nodes (4): estados, mw, nombre, occidental
+
+### Community 91 - "Community 91"
+Cohesion: 0.50
+Nodes (4): estados, mw, nombre, oriental
+
 ## Knowledge Gaps
-- **476 isolated node(s):** `360 ENERGY SOLAR MEXICO`, `ACCIONA`, `AES MÉXICO`, `AGROINDUSTRIAS UNIDAS DE MÉXICO`, `AGRORENOVABLES` (+471 more)
+- **539 isolated node(s):** `360 ENERGY SOLAR MEXICO`, `ACCIONA`, `AES MÉXICO`, `AGROINDUSTRIAS UNIDAS DE MÉXICO`, `AGRORENOVABLES` (+534 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **26 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `loadGeoJSON()` connect `Community 8` to `Community 42`, `Community 7`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Why does `loadTotalCapacityAdditionsMap()` connect `Community 8` to `Community 7`?**
   _High betweenness centrality (0.004) - this node is a cross-community bridge._
+- **Why does `Google Sheets — 2DA CONVOCATORIA PARTICULARES` connect `Community 9` to `Community 4`?**
+  _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `SENER Project Tracking Dashboard` (e.g. with `PVIRCE 2026-2040 Energy Projects Program` and `SENER UI Kit Institutional Guide`) actually correct?**
   _`SENER Project Tracking Dashboard` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `loadGeoJSON()` (e.g. with `.showNotification()` and `createStandardPopup()`) actually correct?**
   _`loadGeoJSON()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `360 ENERGY SOLAR MEXICO`, `ACCIONA`, `AES MÉXICO` to the rest of the system?**
-  _476 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _539 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.10884353741496598 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

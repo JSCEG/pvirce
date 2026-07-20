@@ -1,0 +1,367 @@
+                                                                   24 de junio de 2026
+
+                                PROYECTOS MIXTOS
+
+PROYECTO SAN SIMON SOLAR
+Empresa: Fisterra Energy
+Tipo: Fotovoltaico
+Ubicación: Ensenada, Baja California
+Capacidad: 80 MW
+Inicio de construcción: noviembre 2026
+Fecha de Operación Comercial: diciembre de 2028
+Ruta crítica: no tiene
+
+   -   Derechos inmobiliarios: Central se tiene, LT pendiente firmar contratos de
+       arrendamientos.
+   -   Permiso de Generación: trámite ingresado.
+   -   Punto de Interconexión: SE San Quintín, LT (4.2 km) a 115 kV, los estudios de
+       interconexión ya están realizados y en proceso de revisión. Se tiene un contrato
+       con CPTT/CFE para la ingeniería y supervisión de la construcción del punto de
+       interconexión.
+   -   Contrato de Interconexión: gestión pendiente.
+   -   MIA/DTU: ingresado y se encuentra en evaluación por la autoridad.
+   -   ETJ: no aplica.
+   -   EVIS: liberado en noviembre de 2025, falta la notificación.
+   -   INAH: liberado.
+   -   PEMEX: no aplica.
+   -   CONAGUA: liberado.
+   -   Licencia de Construcción: su gestión requiere la MIA liberada. En proceso el
+       trámite de la licencia de protección civil.
+   -   Mano de Obra: 250 plazas
+
+PROYECTO DELARO
+Empresa: Thermion Energy
+Tipo: Eólico
+Ubicación: Reynosa, Tamaulipas
+Capacidad: 175 MW
+Fecha de inicio de construcción: noviembre 2026
+Fecha de inicio de operación: diciembre 2028
+Ruta Crítica: ETJ para la línea
+
+   -   Derechos inmobiliarios: Central y LT firmados y registrados.
+   -   Permiso de Generación: Se requiere un cambio en el permiso de generación de
+       117 MW a 175 MW. El actual permiso de generación debe desistirse y se
+       solicitará un nuevo permiso.
+   -   Punto de Interconexión: SE Ventikas, es de maniobras. LT (36 km) a 230 kV.
+       CFE/CPTT comenta que en la SE del Punto de Interconexión hay disponibilidad
+       de espacio para un probable incremento en los refuerzos.
+   -   Contrato de Interconexión: gestión pendiente.
+   -   MIA/DTU: ingresado y se encuentra en evaluación por la autoridad.
+   -   ETJ: central ingresado y LT por ingresar.
+   -   EVIS: se actualizará por cambio de tecnología.
+   -   INAH: liberado, solo se notificaría el inicio de la construcción.
+   -   PEMEX: el socio solicita apoyo con PEMEX para la autorización del cruce de
+       ductos identificados.
+   -   CONAGUA: se reiniciará el trámite de permiso.
+   -   DGAC: se realizarán modificaciones por cambio de tecnología.
+   -   Licencia de Construcción: se solicitará 3 meses antes de construir.
+   -   Mano de Obra: 300 plazas
+   -   Tecnología: 29 aerogeneradores de 7 MW.
+
+
+PROYECTO LOS MOLINOS
+Empresa: Thermion Energy
+Tipo: Eólico
+Ubicación: Matamoros, Tamaulipas
+Capacidad: 171 MW
+Fecha de inicio de construcción: noviembre 2026
+Fecha de inicio de operación: diciembre 2028
+Ruta Crítica: ETJ para la línea
+
+   -   Derechos inmobiliarios: Central y LT firmados y registrados.
+   -   Permiso de Generación: Se requiere firmar un nuevo permiso de generación por
+       cambio de fecha de operación comercial.
+   -   Punto de Interconexión: SE Llano Grande (17 km). Proyecto original con línea de
+       transmisión en 230 kV, fue modificado a 138 kV y capacidad 171 MW. Ya están
+       definidos los refuerzos para la nueva línea solo falta la firma del contrato de
+       interconexión.
+   -   Contrato de Interconexión: pendiente la firma del Contrato, ya se tienen
+       validado el estudio de interconexión en LIE.
+   -   MIA/DTU: central liberada y la línea requiere actualización por cambio en la
+       tecnología (reducción de equipos).
+   -   ETJ: central en evaluación y LT por ingresar.
+   -   EVIS: el EVIS que se tiene incluye parque y línea aprobado en 2016, por lo que
+       se requiere actualizar por el cambio de tecnología y fechas.
+   -   INAH: liberado, solamente se notificaría el inicio de la construcción.
+   -   PEMEX: no hay interferencia con líneas, pero se hará un nuevo estudio para
+       verificar si actualmente sigue el mismo estado en la trayectoria de la línea de
+       transmisión.
+   -   CONAGUA: se presentará una nueva confirmación para actualizar el estado de
+       los escurrimientos en la zona.
+   -   DGAC: se presentará notificación a la dirección de aeronáutica civil sobre el
+       cambio en la reducción de altura en los equipos que se encuentran en el cono
+       de aproximación del aeropuerto de Matamoros, Tamaulipas para obtener el
+       permiso correspondiente
+   -   Licencia de Construcción: se solicitará a partir de la firma del contrato de
+       inversión.
+   -   Mano de Obra: 350-400 plazas
+
+PROYECTO MONTECRISTO
+Empresa: Thermion Energy
+Tipo: Eólico
+Ubicación: Méndez, Tamaulipas
+Capacidad: 510 MW
+Fecha de inicio de construcción: noviembre 2026
+Fecha de inicio de operación: diciembre 2028
+Ruta Crítica: la LT depende de 2 proyectos más: El Guajillo y Santa Gertrudis. Falta
+definir entrada y salida de la LT, derechos inmobiliarios, ETJ de la LT.
+
+   -   Derechos inmobiliarios: Central se tiene y LT pendiente.
+   -   Permiso de Generación: en proceso (se debe cambiar esquema)
+   -   Punto de Interconexión: SE Regiomantano. LT (180 km) a 400 kV. No se tiene el
+       punto exacto de llegada a la subestación.
+   -   Contrato de Interconexión: gestión pendiente.
+   -   MIA/DTU: por ingresar (se hará por separado central y LT).
+   -   ETJ: central se ingresarán en agosto de 2026 y de la LT depende de la
+       adquisición de los derechos inmobiliarios (al principio y al final de la línea de
+       transmisión), SENER solicita entrega en económico para revisión.
+   -   MISSE/EVIS: la línea tendrá su propia MISSE, la cual está en proceso.
+   -   INAH: se tiene una prospección arqueológica pero falta iniciar el trámite de
+       solicitud de permiso.
+   -   PEMEX: pendiente.
+   -   CONAGUA: pendiente.
+   -   DGAC: pendiente.
+   -   Licencia de Construcción: pendiente.
+   -   Mano de Obra: 350-400 plazas
+   -   Tecnología: 75 aerogeneradores de 7 MW.
+PROYECTO SOL DE SONORA
+Empresa: Thermion Energy
+Tipo: Fotovoltaico
+Ubicación: Hermosillo, Sonora
+Capacidad: 70 MW
+Fecha de inicio de construcción: noviembre 2026
+Fecha de inicio de operación: abril 2028
+Ruta Crítica: el socio menciona que al entregar a CFE el predio quiere arrendarlo
+
+   -   Derechos inmobiliarios: Central y LT adquiridos.
+   -   Permiso de Generación: en proceso.
+   -   Punto de Interconexión: SE Costa Dos. LT (2.4 km) a 115 kV.
+   -   Contrato de Interconexión: gestión pendiente.
+   -   MIA/DTU: liberada (central y LT)
+   -   ETJ: se tiene oficio de exención para no presentarla.
+   -   MISSE/EVIS: en evaluación.
+   -   INAH: comunicó que no se requiere prospección arqueológica.
+   -   Licencia de Construcción: se solicitará previo inicio de obra.
+   -   Mano de Obra: 200-250 plazas.
+
+
+PROYECTO CONCEPCIÓN MENDIZABAL (LAS CONCHITAS)
+Empresa: Atlas Renewable Energy
+Tipo: Fotovoltaico
+Ubicación: Nava, Coahuila
+Capacidad: 858 MW en tres fases
+Fecha de inicio de construcción: diciembre 2026
+Fecha de inicio de operación: abril de 2029
+Ruta Crítica: Fase 3. Tal parece que existe un litigio.
+
+   -   Derechos inmobiliarios: el socio solicita se defina como se considerará el uso
+       de los predios propiedad de CFE dentro del contrato de inversión, durante las
+       fases de construcción y operación. Revisar la Fase 3.
+   -   Permiso de Generación: se obtendrá después de tener los estudios de impacto
+       ambiental.
+   -   Punto de Interconexión: SE CT Carbón II Para Fase I y III y SE Río Escondido para
+       Fase II a 400 kV.
+   -   Contrato de Interconexión: gestión pendiente. Faltan los tipos de refuerzos.
+   -   MIA/DTU: Fase I y Fase II. Se ingresaron los DTU con aclaraciones resueltas el
+       12 de junio de 2026. En evaluación por la autoridad. Fase III. Aplica MIA y ETJ. El
+       MIA se ingresará el 26 de junio de 2026. Se estima la autorización para agosto
+       de 2026.
+   -   ETJ: Fase III. Se están elaborando para ingresarlo en la segunda quincena de
+       agosto y se estima la autorización en la primera quincena de noviembre 2026.
+       El socio tiene un cálculo de 1000 has para reforestar más el área de flora y
+       fauna, por lo que propone que ambas áreas se unifiquen. Una vez que se tenga
+       la autorización, CFE convocará a reunión para tratar el procedimiento.
+   -   MISSE/EVIS: Fase I. Autorizado el EVIS Fase II. Autorizado el EVIS Fase III. Se
+       ingreso el MISSE el 4 de junio a la autoridad. Se encuentra en revisión.
+   -   INAH: liberadas las tres fases.
+   -   PEMEX: no aplica.
+   -   CONAGUA: no aplica.
+   -   Licencia de Construcción: no se han gestionado.
+   -   Mano de Obra: 3,000 personas para las 3 fases.
+
+
+PROYECTO SELKA POWER
+Empresa: Selka Power
+Tipo: Fotovoltaico
+Ubicación: Romita, Guanajuato
+Capacidad: 131.1 MW
+Fecha de inicio de construcción: diciembre 2026
+Fecha de inicio de operación: junio 2028
+Ruta Crítica: permisos de titularidad, temas de la línea (definición y liberaciones de
+derecho de vía).
+
+   -   Derechos inmobiliarios: central se tiene y LT falta liberación de derecho de vía.
+   -   Permiso de Generación: gestión pendiente.
+   -   Punto de Interconexión: SE Silao Potencia. LT (11.2 km) a 115 kV.
+   -   Contrato de Interconexión: por ingresar.
+   -   MIA/DTU: liberado para central y línea (se gestionó para ambos).
+   -   ETJ: No aplica, no hay cambio de uso de suelo.
+   -   MISSE/EVIS: Pendiente ingresar la MISSE para la línea y actualización para la
+       central.
+   -   INAH: central se ingresará y para la LT no se ha solicitado, hasta que se
+       determine el trazo definitivo.
+   -   PEMEX: No aplica para la central y según el avance de los estudios de la línea
+       tampoco se requiere (se debe revisar el de LT).
+   -   CONAGUA: No se requiere permiso para la línea ni para la central.
+   -   Licencia de Construcción: se realizará por parte del EPC.
+   -   Mano de Obra: pendiente
+
+
+
+
+PROYECTO CIMARRÓN SOLAR
+Empresa: CSQB Energy
+Tipo: Fotovoltaico
+Ubicación: Hermosillo, Sonora
+Capacidad: 300 MW
+Fecha de inicio de construcción: abril 2027. Se gestionarán los medios con el
+inversionista para alcanzar la fecha diciembre de 2026.
+Fecha de inicio de operación: abril 2029
+Ruta Crítica: Definir aspectos ambientales y contrato de interconexión.
+
+   -   Derechos inmobiliarios: central se tiene y LT parcialmente dentro del predio y
+       el resto va sobre un derecho de vía de SCT. Se tiene el permiso de SCT y un
+       contrato con CAPUFE vigentes.
+   -   Permiso de Generación: requiere actualizar
+   -   Punto de Interconexión: SE Seri. Tiene LT 1 km en 230 kV subterráneo.
+   -   Contrato de Interconexión: requiere actualización.
+   -   MIA/DTU: requiere actualización por cronograma de proyecto.
+   -   ETJ: los terrenos del parque están dentro del fundo legal de la localidad, por
+       tanto, no aplicaría el ETJ.
+   -   MISSE/EVIS: se requiere corregir el alcance ya que hay diferencia en el área
+       declarada.
+   -   INAH: liberado para parque y línea.
+   -   PEMEX: pendiente definir si se requiere realizar cruce de ductos, una vez que se
+       realicen los estudios definitivos de ingeniería.
+   -   CONAGUA: se requiere actualizar los permisos por cambio de cronograma de
+       obra.
+   -   Licencia de Construcción: pendiente.
+   -   Mano de Obra: 600 plazas.
+
+
+PROYECTO EL MEZQUITE
+Empresa: Cúbico
+Tipo: Eólico
+Ubicación: Mina, Nuevo León
+Capacidad: 300 MW
+Fecha de inicio de construcción: marzo 2027.
+Fecha de inicio de operación: julio 2029
+Ruta Crítica: MIA + ETJ
+
+   -   Derechos inmobiliarios: central se tiene y LT pendiente.
+   -   Permiso de Generación: pendiente.
+   -   Punto de Interconexión: LT de evacuación de 22 Km a la LT 400 KV que viene de
+       SE Frontera a la SE Villa. García.
+   -   Contrato de Interconexión: Pendiente.
+   -   MIA/DTU: requiere actualizar.
+   -   ETJ: requiere actualizar.
+  -   MISSE/EVIS: requiere actualizar.
+  -   INAH: en proceso para obtener el dictamen
+  -   PEMEX: El socio comenta que el Proyecto no requiere autorizaciones.
+  -   CONAGUA: en proceso, se solicitaron más estudios.
+  -   Licencia de Construcción: pendiente
+  -   Mano de Obra: 650 personas.
+
+PROYECTO ENERGÍAS RENOVABLES DE TAMAULIPAS (ALTAMIRA)
+Empresa: Cúbico
+Tipo: Fotovoltaico
+Ubicación: Altamira, Tamaulipas
+Capacidad: 78 MW
+Fecha de inicio de construcción: diciembre 2026
+Fecha de inicio de operación: julio 2028
+Ruta Crítica: PEMEX y Licencia de Construcción
+
+  -   Derechos inmobiliarios: central se tiene y LT parcialmente se tiene.
+  -   Permiso de Generación: se tiene, pero se evaluará si se requiere actualizar por
+      cambio de tecnología.
+  -   Punto de Interconexión: LT de 4.3 KM hasta la SE Puerto de Altamira en 115 kV.
+  -   Contrato de Interconexión: por actualizar.
+  -   MIA/DTU: requiere actualizar por tema de BESS.
+  -   ETJ: ingresado.
+  -   MISSE/EVIS: requiere actualizar.
+  -   INAH: liberado.
+  -   PEMEX: Central liberado y LT si presenta varios ductos de PEMEX, se requiere
+      opinión.
+  -   CONAGUA: liberado.
+  -   Licencia de Construcción: se tiene que realizar una reconsideración a la Ley de
+      Ingresos para realizar el Pago al Municipio. En espera que el Municipio se
+      pronuncie al respecto.
+  -   Mano de Obra: 350 personas.
+
+PROYECTO ENERGÍAS RENOVABLES SAAS (PETO)
+Empresa: Cúbico
+Tipo: Fotovoltaico
+Ubicación: Peto, Yucatán
+Capacidad: 72 MW
+Fecha de inicio de construcción: abril 2027
+Fecha de inicio de operación: noviembre 2028
+Ruta Crítica: Consulta indígena
+
+  -   Derechos inmobiliarios: central y LT se tienen.
+  -   Permiso de Generación: en elaboración Estudio de Impacto.
+  -   Punto de Interconexión: sale en 115 KV carretera Estatal 1.5 Km a SE de kambul.
+      El estudio de impacto indica una ampliación de bahía, gestión de la adquisición
+      del predio avanzada.
+  -   Contrato de Interconexión: pendiente.
+  -   MIA/DTU: requiere actualizar por tema de BESS.
+  -   ETJ: ingresado.
+  -   MISSE/EVIS: requiere actualizar por BESS.
+  -   Tiene consulta indígena.
+  -   INAH: en gestión.
+  -   PEMEX: Sin afectación pendiente por formaliza
+  -   CONAGUA: liberado
+  -   Licencia de Construcción: pendiente
+  -   Mano de Obra: 350 personas.
+
+PROYECTO ENERGÍAS RENOVABLES KIIN (TEKAX)
+Empresa: Cúbico
+Tipo: Fotovoltaico
+Ubicación: Tekax, Yucatán
+Capacidad: 56 MW
+Fecha de inicio de construcción: abril 2027
+Fecha de inicio de operación: noviembre 2028
+Ruta Crítica: Consulta indígena
+
+  -   Derechos inmobiliarios: central se tiene y LT se tiene parcialmente.
+  -   Permiso de Generación: en elaboración Estudio de Impacto.
+  -   Punto de Interconexión: SE Kambul – Tekax II. LT de 0.582 km a 115 kV.
+  -   Contrato de Interconexión: pendiente.
+  -   MIA/DTU: no está notificada al promovente y por actualizar por tema de BESS
+  -   ETJ: ingresado.
+  -   MISSE/EVIS: se ingresará la atención a requerimiento.
+  -   Tiene consulta indígena.
+  -   INAH: si hay vestigios, se está iniciando la recuperación y terminar en
+      septiembre.
+  -   PEMEX: falta formalizar.
+  -   CONAGUA: liberado.
+  -   Licencia de Construcción: pendiente.
+  -   Mano de Obra: 350 personas.
+
+
+
+
+PROYECTO ENERGÍAS RENOVABLES DE MÉXICO TRES (HECELCHAKAN)
+Empresa: Cúbico
+Tipo: Fotovoltaico
+Ubicación: Tekax, Yucatán
+Capacidad: 72 MW
+Fecha de inicio de construcción: abril 2027
+Fecha de inicio de operación: diciembre 2028
+Ruta Crítica: Consulta indígena
+
+   -   Derechos inmobiliarios: central se tiene y LT listo contrato con opción a compra
+       Permiso de Generación: en elaboración Estudio de Impacto.
+   -   Punto de Interconexión: Apertura de línea LT (0.2 Km) a 115 kV, entronque SE
+       Maniobras SE Hopelchén a SE Hecelchakan. Adecuaciones a la SE Hopelchén
+       y a la SE Hecelchakan
+   -   Contrato de Interconexión: pendiente.
+   -   MIA/DTU: no está notificada al promovente y se va a actualizar por tema de
+       BESS.
+   -   ETJ: no se requiere, son terrenos agrícolas.
+   -   MISSE/EVIS: solo falta notificar al socio y actualizar por BESS.
+   -   Tiene consulta indígena.
+   -   INAH: firmarán convenio y revisarán zonas específicas (septiembre 2026).
+   -   CONAGUA: liberado
+   -   PEMEX: falta formalizar
+   -   Mano de Obra: 350 personas
+

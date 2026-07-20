@@ -2,11 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="_tokens.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Producción Energética | SENER</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -15,25 +14,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Regular.otf') format('opentype');
-      font-weight: 400;
-    }
-    @font-face {
-      font-family: 'Patria';
-      src: url('Estilos Institucionales/tipografias/Patria_Bold.otf') format('opentype');
-      font-weight: 700;
-    }
     :root {
-      --guinda: #9B2247;
-      --guinda-light: #B24C6C;
-      --verde: #1E5B4F;
-      --dorado: #A57F2C;
-      --dorado-light: #D6B46A;
-      --gris: #98989A;
-      --gris-claro: #E5E5E5;
-      --texto: #2b2b2b;
+      --sener-guinda: #9B2247;
+      --sener-guinda-dark: #B24C6C;
+      --sener-esmeralda: #0E8A6E;
+      --sener-dorado: #E0A12E;
+      --sener-dorado-soft: #D6B46A;
+      --sener-gris: #98989A;
+      --sener-linea: #E5E5E5;
+      --sener-tinta: #2b2b2b;
       --fondo: #1E1E1E;
       --scale: 1;
     }
@@ -44,8 +33,8 @@
       height: 100vh;
       overflow: hidden;
       background: var(--fondo);
-      color: var(--texto);
-      font-family: 'Outfit', Arial, sans-serif;
+      color: var(--sener-tinta);
+      font-family: 'Newsreader', Georgia, serif;
     }
     #deck {
       position: relative;
@@ -79,15 +68,15 @@
       margin: -35px -45px 22px;
       padding: 12px 45px 10px;
       background: linear-gradient(180deg, #fff 0%, #f9f9f9 100%);
-      border-bottom: 5px solid var(--guinda);
+      border-bottom: 5px solid var(--sener-guinda);
     }
     .brand-left {
       position: relative;
       padding-left: 18px;
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-size: 18px;
       line-height: 1.1;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       font-weight: 700;
       text-transform: uppercase;
     }
@@ -98,18 +87,18 @@
       top: 2px;
       width: 6px;
       height: 38px;
-      background: var(--dorado);
+      background: var(--sener-dorado);
     }
     .ef-title {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 13px;
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-size: 20px;
       letter-spacing: .04em;
       text-transform: uppercase;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       text-align: center;
     }
     .ef-title::before,
@@ -118,7 +107,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: var(--dorado);
+      background: var(--sener-dorado);
     }
     .logo-right { text-align: right; }
     .logo-sener { height: 45px; max-width: 230px; object-fit: contain; }
@@ -128,7 +117,7 @@
       right: 0;
       bottom: 0;
       height: 8px;
-      background: linear-gradient(90deg, var(--guinda) 0 60%, var(--dorado) 60% 100%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0 60%, var(--sener-dorado) 60% 100%);
     }
     .slide.cover .slide-container {
       background: #6a172f;
@@ -166,7 +155,7 @@
       display: flex;
       align-items: center;
       gap: 24px;
-      border-bottom: 4px solid var(--dorado);
+      border-bottom: 4px solid var(--sener-dorado);
       width: 100%;
     }
     .slide.cover .top-band img.gob {
@@ -180,12 +169,12 @@
     .slide.cover .top-band .divider {
       width: 1px;
       height: 42px;
-      background: var(--gris);
+      background: var(--sener-gris);
     }
     .slide.cover .top-band .unit {
       margin-left: auto;
       font-size: 11px;
-      color: var(--texto);
+      color: var(--sener-tinta);
       letter-spacing: .04em;
       text-transform: uppercase;
       font-weight: 700;
@@ -204,11 +193,11 @@
       font-size: 13px;
       letter-spacing: .25em;
       text-transform: uppercase;
-      color: var(--dorado-light);
+      color: var(--sener-dorado-soft);
       font-weight: 800;
     }
     .slide.cover h1 {
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-weight: 700;
       font-size: 56px;
       line-height: .98;
@@ -218,7 +207,7 @@
       text-shadow: 0 2px 12px rgba(0,0,0,.3);
     }
     .slide.cover .unidad {
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-weight: 300;
       font-size: 24px;
       line-height: 1.2;
@@ -229,7 +218,7 @@
       margin-bottom: 2px;
     }
     .slide.cover .unidad-sub {
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-weight: 300;
       font-size: 19px;
       line-height: 1.35;
@@ -246,17 +235,17 @@
       font-size: 17px;
       line-height: 1.35;
       background: rgba(0,0,0,.28);
-      border-left: 4px solid var(--dorado);
+      border-left: 4px solid var(--sener-dorado);
       border-radius: 0 8px 8px 0;
       backdrop-filter: blur(1px);
     }
     .slide.cover .unidad-sub-dgmesnie .acronym {
-      color: var(--dorado-light);
+      color: var(--sener-dorado-soft);
       font-weight: 800;
       letter-spacing: .04em;
     }
     .slide.cover .subtitle {
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-weight: 600;
       font-size: 25px;
       line-height: 1.12;
@@ -284,7 +273,7 @@
     }
     .slide.cover .meta-label {
       display: block;
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-size: 14px;
       font-weight: 700;
       letter-spacing: .09em;
@@ -295,7 +284,7 @@
     }
     .slide.cover .meta-value {
       display: block;
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-size: 13px;
       font-weight: 700;
       color: rgba(255,255,255,.95);
@@ -305,14 +294,14 @@
     }
     .cover .slide-footer {
       height: 12px;
-      background: linear-gradient(90deg, var(--guinda) 0 33.333%, var(--verde) 33.333% 66.666%, var(--dorado) 66.666% 100%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0 33.333%, var(--sener-esmeralda) 33.333% 66.666%, var(--sener-dorado) 66.666% 100%);
     }
     .slide.cover .bottom-band {
       margin-top: auto;
       flex: 0 0 14px;
       height: 14px;
       width: 100%;
-      background: linear-gradient(90deg, var(--guinda) 0 33%, var(--verde) 33% 66%, var(--dorado) 66% 100%);
+      background: linear-gradient(90deg, var(--sener-guinda) 0 33%, var(--sener-esmeralda) 33% 66%, var(--sener-dorado) 66% 100%);
     }
     .grid { display: grid; gap: 16px; }
     .kpi-grid {
@@ -328,11 +317,11 @@
     .kpi {
       min-height: 118px;
       padding: 18px 18px 14px;
-      border-top: 5px solid var(--guinda);
+      border-top: 5px solid var(--sener-guinda);
     }
-    .kpi:nth-child(2) { border-top-color: var(--verde); }
-    .kpi:nth-child(3) { border-top-color: var(--dorado); }
-    .kpi:nth-child(4) { border-top-color: var(--gris); }
+    .kpi:nth-child(2) { border-top-color: var(--sener-esmeralda); }
+    .kpi:nth-child(3) { border-top-color: var(--sener-dorado); }
+    .kpi:nth-child(4) { border-top-color: var(--sener-gris); }
     .kpi-label {
       font-size: 12px;
       font-weight: 800;
@@ -344,7 +333,7 @@
       margin-top: 9px;
       font-size: 33px;
       font-weight: 800;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       line-height: 1;
     }
     .kpi-note {
@@ -365,8 +354,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
-      font-family: 'Patria', serif;
-      color: var(--guinda);
+      font-family: 'Newsreader', serif;
+      color: var(--sener-guinda);
       font-size: 19px;
       font-weight: 700;
       text-transform: uppercase;
@@ -385,14 +374,14 @@
       height: 28px;
       border: 0;
       border-radius: 999px;
-      background: var(--guinda);
+      background: var(--sener-guinda);
       color: #fff;
       cursor: pointer;
       font-size: 13px;
       box-shadow: 0 5px 14px rgba(155,34,71,.22);
     }
-    .chart-action-btn.gold { background: var(--dorado); }
-    .chart-action-btn.green { background: var(--verde); }
+    .chart-action-btn.gold { background: var(--sener-dorado); }
+    .chart-action-btn.green { background: var(--sener-esmeralda); }
     .chart-action-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
     .chart {
       width: 100%;
@@ -403,12 +392,12 @@
       padding: 16px;
       background: #f7f7f7;
       border-radius: 8px;
-      border-left: 6px solid var(--dorado);
+      border-left: 6px solid var(--sener-dorado);
     }
     .side-panel h3 {
       margin: 0 0 10px;
-      font-family: 'Patria', serif;
-      color: var(--guinda);
+      font-family: 'Newsreader', serif;
+      color: var(--sener-guinda);
       font-size: 19px;
       text-transform: uppercase;
     }
@@ -420,7 +409,7 @@
       border-bottom: 1px solid #ddd;
       font-size: 14px;
     }
-    .mini-row strong { color: var(--guinda); }
+    .mini-row strong { color: var(--sener-guinda); }
     .story-callout {
       margin-top: 12px;
       padding: 14px 15px;
@@ -433,10 +422,10 @@
       justify-content: center;
     }
     .story-year {
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-size: 30px;
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       line-height: 1;
     }
     .story-copy {
@@ -469,7 +458,7 @@
       display: block;
       margin-top: 3px;
       font-size: 16px;
-      color: var(--guinda);
+      color: var(--sener-guinda);
     }
     .tech-panel {
       display: grid;
@@ -491,7 +480,7 @@
       cursor: pointer;
       user-select: none;
     }
-    .tech-chip input { accent-color: var(--guinda); }
+    .tech-chip input { accent-color: var(--sener-guinda); }
     .toolbar-line {
       display: flex;
       align-items: center;
@@ -504,12 +493,12 @@
       padding: 0 12px;
       border: 0;
       border-radius: 6px;
-      background: var(--guinda);
+      background: var(--sener-guinda);
       color: #fff;
-      font: 700 12px 'Outfit', sans-serif;
+      font: 700 12px 'Newsreader', sans-serif;
       cursor: pointer;
     }
-    .small-btn.secondary { background: var(--verde); }
+    .small-btn.secondary { background: var(--sener-esmeralda); }
     .mix-grid {
       grid-template-columns: 1fr 1fr;
       height: 548px;
@@ -527,7 +516,7 @@
       font-size: 10px;
     }
     thead th {
-      background: var(--guinda);
+      background: var(--sener-guinda);
       color: #fff;
       padding: 9px 7px;
       text-align: right;
@@ -569,7 +558,7 @@
     .note-box {
       padding: 20px;
       background: #f7f7f7;
-      border-left: 6px solid var(--verde);
+      border-left: 6px solid var(--sener-esmeralda);
       border-radius: 8px;
       font-size: 14px;
       line-height: 1.35;
@@ -580,8 +569,8 @@
     }
     .note-box strong {
       display: block;
-      font-family: 'Patria', serif;
-      color: var(--guinda);
+      font-family: 'Newsreader', serif;
+      color: var(--sener-guinda);
       font-size: 22px;
       line-height: 1.08;
       text-transform: uppercase;
@@ -609,13 +598,13 @@
       width: 34px;
       height: 34px;
       border-radius: 999px;
-      background: var(--verde);
+      background: var(--sener-esmeralda);
       color: #fff;
       font-size: 15px;
     }
     .method-note h4 {
       margin: 0 0 3px;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       font-size: 13px;
       line-height: 1.1;
       text-transform: uppercase;
@@ -666,12 +655,12 @@
       border-radius: 999px;
       background: rgba(255,255,255,.10);
       color: #fff;
-      font: 700 13px 'Outfit', sans-serif;
+      font: 700 13px 'Newsreader', sans-serif;
       cursor: pointer;
     }
     .control-btn:hover { background: rgba(255,255,255,.18); }
-    .control-btn.gold { background: var(--dorado); }
-    .control-btn.green { background: var(--verde); }
+    .control-btn.gold { background: var(--sener-dorado); }
+    .control-btn.green { background: var(--sener-esmeralda); }
     .control-btn:disabled { opacity: .35; cursor: default; }
     .control-btn i {
       font-size: 16px;
@@ -719,7 +708,7 @@
       align-items: center;
       justify-content: center;
       gap: 14px;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Newsreader', sans-serif;
     }
     .pdf-loader.show { display: flex; }
     .pdf-loader .spinner-ring {
@@ -769,7 +758,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border-bottom: 8px solid var(--guinda);
+      border-bottom: 8px solid var(--sener-guinda);
     }
     .chart-fullscreen-head {
       height: 66px;
@@ -778,11 +767,11 @@
       justify-content: space-between;
       gap: 20px;
       padding: 0 24px;
-      border-bottom: 4px solid var(--dorado);
+      border-bottom: 4px solid var(--sener-dorado);
       background: linear-gradient(180deg,#fff,#f7f7f7);
-      font-family: 'Patria', serif;
+      font-family: 'Newsreader', serif;
       font-weight: 700;
-      color: var(--guinda);
+      color: var(--sener-guinda);
       text-transform: uppercase;
       letter-spacing: .04em;
     }
@@ -796,12 +785,12 @@
       min-width: 34px;
       border: 0;
       border-radius: 999px;
-      background: var(--guinda);
+      background: var(--sener-guinda);
       color: #fff;
       cursor: pointer;
       font-weight: 800;
     }
-    .chart-fullscreen-tools button.green { background: var(--verde); }
+    .chart-fullscreen-tools button.green { background: var(--sener-esmeralda); }
     #fullscreenChart {
       flex: 1;
       min-height: 0;
@@ -1015,15 +1004,15 @@
       'Nuclear': '#98989A',
       'Geotermoeléctrica': '#B23A48',
       'Bioenergía': '#6F7D45',
-      'Cogeneración': '#A57F2C',
+      'Cogeneración': '#E0A12E',
       'Hidrógeno': '#4C9EBA',
       'Eólica': '#2E7D8F',
       'Nucleoeléctrica': '#6B7280',
       'Generación distribuida': '#C86B2D',
-      'Energía limpia': '#1E5B4F',
+      'Energía limpia': '#0E8A6E',
       'Energía Fósil': '#98989A',
       'Generación total': '#9B2247',
-      'Meta de Energía Limpia': '#A57F2C'
+      'Meta de Energía Limpia': '#E0A12E'
     };
     const TABLE_HEADER_COLORS = {
       'Año': '#7D1734',
@@ -1033,13 +1022,13 @@
       'Nuclear': '#6B7280',
       'Geotermoeléctrica': '#B23A48',
       'Bioenergía': '#4E7D2F',
-      'Cogeneración': '#A57F2C',
+      'Cogeneración': '#E0A12E',
       'Hidrógeno': '#39A9DB',
       'Eólica': '#2E7D8F',
       'Nucleoeléctrica': '#6B7280',
       'Generación distribuida': '#C86B2D',
-      'Meta de energía limpia': '#A57F2C',
-      'Energía limpia': '#1E5B4F',
+      'Meta de energía limpia': '#E0A12E',
+      'Energía limpia': '#0E8A6E',
       'Energía fósil': '#7E7E82',
       'Generación total': '#9B2247',
       'Participación de energía limpia': '#6F7D45'
@@ -1194,7 +1183,7 @@
     }
     function baseChartOptions() {
       return {
-        chart: { style: { fontFamily: 'Outfit, Arial, sans-serif' }, backgroundColor: 'transparent', animation: { duration: 900 } },
+        chart: { style: { fontFamily: 'Libre Franklin, sans-serif' }, backgroundColor: 'transparent', animation: { duration: 900 } },
         title: { text: null },
         credits: { enabled: false },
         exporting: { enabled: false },
@@ -1241,7 +1230,7 @@
           align: 'left',
           style: {
             color: '#9B2247',
-            fontFamily: 'Patria, Outfit, Arial, sans-serif',
+            fontFamily: "'Libre Franklin', sans-serif",
             fontWeight: '700',
             textTransform: 'uppercase'
           }
@@ -1249,7 +1238,7 @@
         subtitle: {
           text: 'Fuente: SNIE - DGMESNIE | Unidad: GWh',
           align: 'left',
-          style: { color: '#666666', fontFamily: 'Outfit, Arial, sans-serif' }
+          style: { color: '#666666', fontFamily: 'Libre Franklin, sans-serif' }
         },
         exporting: { enabled: false },
         credits: { enabled: false }

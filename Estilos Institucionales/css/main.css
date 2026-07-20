@@ -1,39 +1,39 @@
 :root {
     /* --- Paleta de Colores Institucional (GobMX) --- */
-    --color-gobmx-guinda: #9B2247;
-    --color-gobmx-verde: #1E5B4F;
-    --color-gobmx-dorado: #A57F2C;
-    --color-gobmx-gris: #98989A;
-    --color-gobmx-gris-claro: #E5E5E5;
+    --sener-guinda: #9B2247;
+    --sener-esmeralda: #0E8A6E;
+    --sener-dorado: #E0A12E;
+    --sener-gris: #98989A;
+    --sener-linea: #E5E5E5;
 
     /* Variantes de Opacidad (para fondos) */
-    --color-gobmx-guinda-light: rgba(155, 34, 71, 0.05);
-    --color-gobmx-verde-light: rgba(30, 91, 79, 0.05);
-    --color-gobmx-dorado-light: rgba(165, 127, 44, 0.05);
+    --sener-guinda-dark: rgba(155, 34, 71, 0.05);
+    --sener-esmeralda-light: rgba(30, 91, 79, 0.05);
+    --sener-dorado-light: rgba(165, 127, 44, 0.05);
 
     /* Colores Funcionales */
-    --color-text-primary: #333333;
-    --color-text-secondary: var(--color-gobmx-gris);
-    --color-background: #FFFFFF;
-    --color-surface: #F8F9FA;
-    --color-border: #DDDDDD;
+    --sener-tinta: #333333;
+    --sener-gris: var(--sener-gris);
+    --sener-blanco: #FFFFFF;
+    --sener-papel: #F8F9FA;
+    --sener-linea: #DDDDDD;
 
     /* Compatibilidad con código existente */
-    --color-verde-profundo: var(--color-gobmx-verde);
+    --color-verde-profundo: var(--sener-esmeralda);
     --color-verde-claro: #24a47a;
-    --color-text: var(--color-text-primary);
-    --color-muted: var(--color-text-secondary);
-    --color-surface-soft: var(--color-surface);
+    --color-text: var(--sener-tinta);
+    --color-muted: var(--sener-gris);
+    --sener-papel-soft: var(--sener-papel);
     --color-pill-bg: rgba(30, 91, 79, 0.12);
-    --color-pill-text: var(--color-gobmx-verde);
-    --color-button: var(--color-gobmx-guinda);
+    --color-pill-text: var(--sener-esmeralda);
+    --color-button: var(--sener-guinda);
     --color-button-hover: #7a1b38;
-    --color-guinda: var(--color-gobmx-guinda);
+    --color-guinda: var(--sener-guinda);
     --color-guinda-light: rgba(155, 34, 71, 0.2);
 
     /* Gradientes institucionales */
-    --gradient-header: linear-gradient(120deg, var(--color-gobmx-guinda) 0%, #7a1b38 55%, #5a1429 100%);
-    --gradient-verde: linear-gradient(120deg, var(--color-gobmx-verde) 0%, #165845 55%, #0d3a2d 100%);
+    --gradient-header: linear-gradient(120deg, var(--sener-guinda) 0%, #7a1b38 55%, #5a1429 100%);
+    --gradient-verde: linear-gradient(120deg, var(--sener-esmeralda) 0%, #165845 55%, #0d3a2d 100%);
 
     /* Sombras */
     --shadow-elevated: 0 22px 60px -28px rgba(155, 34, 71, 0.25);
@@ -41,8 +41,8 @@
     --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.1);
 
     /* --- Tipografía --- */
-    --font-family-headings: 'Patria', 'Merriweather', serif;
-    --font-family-body: 'Noto Sans', 'Montserrat', sans-serif;
+    --font-display: 'Patria', 'Merriweather', serif;
+    --font-text: 'Noto Sans', 'Montserrat', sans-serif;
 
     --font-size-base: 16px;
     --font-size-h1: 2.5rem;
@@ -79,9 +79,9 @@ html {
 
 body {
     margin: 0;
-    font-family: var(--font-family-body);
-    background: var(--color-surface-soft);
-    color: var(--color-text-primary);
+    font-family: var(--font-text);
+    background: var(--sener-papel-soft);
+    color: var(--sener-tinta);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -108,7 +108,7 @@ button {
 }
 
 .site-header {
-    background: var(--color-surface);
+    background: var(--sener-papel);
     color: var(--color-text);
     padding: 1.35rem 0;
     box-shadow: 0 1px 0 rgba(26, 52, 68, 0.08);
@@ -167,15 +167,15 @@ button {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
 }
 
 .brand-title {
     font-size: clamp(1rem, 2.2vw, 1.35rem);
     font-weight: 700;
     letter-spacing: 0.02em;
-    color: var(--color-gobmx-verde);
-    font-family: var(--font-family-body);
+    color: var(--sener-esmeralda);
+    font-family: var(--font-text);
 }
 
 .header-meta {
@@ -225,7 +225,7 @@ button {
 }
 
 .map-card {
-    background: var(--color-surface);
+    background: var(--sener-papel);
     border-radius: 24px;
     /* Match welcome screen */
     padding: 0;
@@ -246,7 +246,7 @@ button {
     background: #fcfcfa;
     padding: 1rem clamp(1rem, 2.5vw, 1.5rem);
     /* Adjust padding for mobile */
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--sener-linea);
 }
 
 /* Mobile-specific layout for toolbar */
@@ -362,8 +362,8 @@ button {
 
 .control {
     appearance: none;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--sener-papel);
+    border: 1px solid var(--sener-linea);
     border-radius: 8px;
     padding: 0.6rem 0.9rem;
     font-size: 0.9rem;
@@ -395,9 +395,9 @@ button {
     padding: var(--spacing-xs) var(--spacing-md);
     font-size: 0.9rem;
     font-weight: 600;
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     color: #ffffff;
-    background: var(--color-gobmx-verde);
+    background: var(--sener-esmeralda);
     cursor: pointer;
     box-shadow: var(--shadow-soft);
     transition: all var(--transition-base);
@@ -423,7 +423,7 @@ button {
     height: 38px;
     padding: 0;
     border-radius: 8px;
-    background: var(--color-surface-soft);
+    background: var(--sener-papel-soft);
     /* Neutral background */
     color: var(--color-muted);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -431,7 +431,7 @@ button {
 }
 
 .card-toolbar .btn-icon:hover {
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     box-shadow: 0 4px 10px rgba(155, 34, 71, 0.3);
 }
@@ -444,7 +444,7 @@ button {
 /* Export buttons - colores institucionales */
 #export-map-btn,
 #export-word-btn {
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
@@ -466,8 +466,8 @@ button {
     margin: 0 0 1rem 0;
     font-size: clamp(1.1rem, 2vw, 1.4rem);
     font-weight: 700;
-    font-family: var(--font-family-body);
-    color: var(--color-gobmx-verde);
+    font-family: var(--font-text);
+    color: var(--sener-esmeralda);
     letter-spacing: 0.03em;
     text-align: center;
 }
@@ -485,7 +485,7 @@ button {
     font-size: 0.9rem;
     color: var(--color-muted);
     line-height: 1.6;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--sener-linea);
     margin-top: 1rem;
 }
 
@@ -493,8 +493,8 @@ button {
     margin: 0 0 0.5rem 0;
     font-size: 1.1rem;
     font-weight: 700;
-    font-family: var(--font-family-body);
-    color: var(--color-gobmx-verde);
+    font-family: var(--font-text);
+    color: var(--sener-esmeralda);
 }
 
 .map-description p {
@@ -543,7 +543,7 @@ button {
     position: absolute;
     width: 12px;
     height: 12px;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     border: 2px solid white;
     border-radius: 50%;
     opacity: 0.7;
@@ -653,7 +653,7 @@ button {
 }
 
 .info-section {
-    background: var(--color-surface-soft);
+    background: var(--sener-papel-soft);
     padding: 2.8rem 0;
 }
 
@@ -669,7 +669,7 @@ button {
 }
 
 .info-panel {
-    background: var(--color-surface);
+    background: var(--sener-papel);
     border-radius: 20px;
     padding: clamp(1.5rem, 2.5vw, 2rem);
     box-shadow: var(--shadow-soft);
@@ -681,8 +681,8 @@ button {
 .info-panel h2,
 .info-panel h3 {
     margin: 0;
-    font-family: var(--font-family-body);
-    color: var(--color-gobmx-guinda);
+    font-family: var(--font-text);
+    color: var(--sener-guinda);
 }
 
 .info-panel p {
@@ -802,7 +802,7 @@ button {
 }
 
 .preloader-content {
-    background: var(--color-surface);
+    background: var(--sener-papel);
     border-radius: 20px;
     padding: 2rem 2.5rem;
     box-shadow: var(--shadow-card);
@@ -852,14 +852,14 @@ button {
 .progress-bar {
     width: 100%;
     height: 10px;
-    background: var(--color-surface-soft);
+    background: var(--sener-papel-soft);
     border-radius: 999px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--color-gobmx-guinda) 0%, var(--color-gobmx-verde) 100%);
+    background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-esmeralda) 100%);
     width: 0%;
     border-radius: 999px;
     transition: width 0.4s ease-out;
@@ -1050,7 +1050,7 @@ button {
 
 .modal-content {
     position: relative;
-    background: var(--color-surface);
+    background: var(--sener-papel);
     border-radius: 20px;
     box-shadow: var(--shadow-card);
     width: 100%;
@@ -1183,7 +1183,7 @@ button {
 .radio-custom {
     width: 20px;
     height: 20px;
-    border: 2px solid var(--color-border);
+    border: 2px solid var(--sener-linea);
     border-radius: 50%;
     position: relative;
     transition: border-color var(--transition-base);
@@ -1201,7 +1201,7 @@ button {
     transform: translate(-50%, -50%);
     width: 10px;
     height: 10px;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     border-radius: 50%;
 }
 
@@ -1239,7 +1239,7 @@ button {
 .checkbox-custom {
     width: 18px;
     height: 18px;
-    border: 2px solid var(--color-border);
+    border: 2px solid var(--sener-linea);
     border-radius: 4px;
     position: relative;
     transition: border-color var(--transition-base), background-color var(--transition-base);
@@ -1247,7 +1247,7 @@ button {
 
 .checkbox-option input[type="checkbox"]:checked+.checkbox-custom {
     border-color: var(--color-verde-profundo);
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
 }
 
 .checkbox-option input[type="checkbox"]:checked+.checkbox-custom::after {
@@ -1343,7 +1343,7 @@ Notification system */
 }
 
 .notification {
-    background: var(--color-surface);
+    background: var(--sener-papel);
     border-radius: 16px;
     padding: 1rem 1.25rem;
     box-shadow: var(--shadow-card);
@@ -1439,7 +1439,7 @@ Notification system */
 }
 
 .progress-content {
-    background: var(--color-surface);
+    background: var(--sener-papel);
     border-radius: 24px;
     padding: 2.5rem;
     box-shadow: var(--shadow-card);
@@ -1855,7 +1855,7 @@ Notification system */
     margin-bottom: 8px;
     font-size: 13px;
     font-weight: 700;
-    color: var(--color-gobmx-guinda, #9D2449);
+    color: var(--sener-guinda, #9D2449);
     cursor: pointer;
     text-align: left;
     align-items: center;
@@ -2057,7 +2057,7 @@ Notification system */
     gap: 1.5rem;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--sener-linea);
 }
 
 .welcome-logo-sener,
@@ -2083,10 +2083,10 @@ Notification system */
 }
 
 .welcome-title {
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     font-size: clamp(1.5rem, 3.5vw, 2rem);
     font-weight: 700;
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     margin: 0 0 0.25rem 0;
     line-height: 1.1;
 }
@@ -2118,7 +2118,7 @@ Notification system */
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border-radius: 10px;
     display: flex;
@@ -2151,7 +2151,7 @@ Notification system */
     max-width: 300px;
     margin: 0 auto;
     padding: 0.8rem 1.5rem;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border: none;
     border-radius: 50px;
@@ -2183,7 +2183,7 @@ Notification system */
     font-size: 0.8rem;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--sener-linea);
 }
 
 /* Responsive adjustments for welcome screen */
@@ -2313,7 +2313,7 @@ Notification system */
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border-radius: 10px;
     display: flex;
@@ -2346,7 +2346,7 @@ Notification system */
     max-width: 300px;
     margin: 0 auto;
     padding: 0.8rem 1.5rem;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border: none;
     border-radius: 50px;
@@ -2378,7 +2378,7 @@ Notification system */
     font-size: 0.8rem;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--sener-linea);
 }
 
 /* Responsive adjustments for welcome screen */
@@ -2508,7 +2508,7 @@ Notification system */
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border-radius: 10px;
     display: flex;
@@ -2541,7 +2541,7 @@ Notification system */
     max-width: 300px;
     margin: 0 auto;
     padding: 0.8rem 1.5rem;
-    background: var(--color-gobmx-guinda);
+    background: var(--sener-guinda);
     color: white;
     border: none;
     border-radius: 50px;
@@ -2573,7 +2573,7 @@ Notification system */
     font-size: 0.8rem;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--sener-linea);
 }
 
 /* Responsive adjustments for welcome screen */
@@ -2741,38 +2741,38 @@ Notification system */
 
 /* Títulos principales */
 h1 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h1);
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     font-weight: 700;
     margin-bottom: var(--spacing-md);
     line-height: 1.2;
 }
 
 h2 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h2);
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--color-gobmx-guinda);
+    border-bottom: 2px solid var(--sener-guinda);
     padding-bottom: var(--spacing-xs);
     line-height: 1.3;
 }
 
 h3 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h3);
-    color: var(--color-gobmx-verde);
+    color: var(--sener-esmeralda);
     font-weight: 600;
     margin-bottom: var(--spacing-sm);
     line-height: 1.3;
 }
 
 h4 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h4);
-    color: var(--color-gobmx-dorado);
+    color: var(--sener-dorado);
     font-weight: 600;
     margin-bottom: var(--spacing-xs);
     line-height: 1.4;
@@ -2780,8 +2780,8 @@ h4 {
 
 /* Párrafos */
 p {
-    font-family: var(--font-family-body);
-    color: var(--color-text-primary);
+    font-family: var(--font-text);
+    color: var(--sener-tinta);
     line-height: 1.6;
 }
 
@@ -2922,38 +2922,38 @@ a {
 
 /* Títulos principales */
 h1 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h1);
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     font-weight: 700;
     margin-bottom: var(--spacing-md);
     line-height: 1.2;
 }
 
 h2 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h2);
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--color-gobmx-guinda);
+    border-bottom: 2px solid var(--sener-guinda);
     padding-bottom: var(--spacing-xs);
     line-height: 1.3;
 }
 
 h3 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h3);
-    color: var(--color-gobmx-verde);
+    color: var(--sener-esmeralda);
     font-weight: 600;
     margin-bottom: var(--spacing-sm);
     line-height: 1.3;
 }
 
 h4 {
-    font-family: var(--font-family-body);
+    font-family: var(--font-text);
     font-size: var(--font-size-h4);
-    color: var(--color-gobmx-dorado);
+    color: var(--sener-dorado);
     font-weight: 600;
     margin-bottom: var(--spacing-xs);
     line-height: 1.4;
@@ -2961,14 +2961,14 @@ h4 {
 
 /* Párrafos */
 p {
-    font-family: var(--font-family-body);
-    color: var(--color-text-primary);
+    font-family: var(--font-text);
+    color: var(--sener-tinta);
     line-height: 1.6;
 }
 
 /* Enlaces */
 a {
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     text-decoration: none;
     transition: color var(--transition-base);
 }
@@ -3009,7 +3009,7 @@ a:hover {
 .presa-popup-header {
     background: white;
     padding: 18px 24px;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--sener-linea);
     position: relative;
 }
 
@@ -3020,15 +3020,15 @@ a:hover {
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(90deg, var(--color-gobmx-guinda) 0%, var(--color-gobmx-verde) 100%);
+    background: linear-gradient(90deg, var(--sener-guinda) 0%, var(--sener-esmeralda) 100%);
 }
 
 .presa-popup-title {
     margin: 0;
-    font-family: var(--font-family-headings);
+    font-family: var(--font-display);
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: var(--sener-tinta);
     line-height: 1.3;
 }
 
@@ -3059,7 +3059,7 @@ a:hover {
 }
 
 .presa-popup-icon {
-    color: var(--color-gobmx-verde);
+    color: var(--sener-esmeralda);
     font-size: 1.2rem;
     margin-top: -2px;
     width: 24px;
@@ -3084,21 +3084,21 @@ a:hover {
 .presa-popup-value {
     display: block;
     font-size: 0.95rem;
-    color: var(--color-text-primary);
+    color: var(--sener-tinta);
     font-weight: 500;
 }
 
 .presa-popup-footer {
     padding: 16px 24px;
-    background: var(--color-surface-soft);
-    border-top: 1px solid var(--color-border);
+    background: var(--sener-papel-soft);
+    border-top: 1px solid var(--sener-linea);
     font-size: 0.85rem;
-    color: var(--color-text-secondary);
+    color: var(--sener-gris);
     line-height: 1.5;
 }
 
 .presa-popup-footer i {
-    color: var(--color-gobmx-guinda);
+    color: var(--sener-guinda);
     margin-right: 6px;
 }
 

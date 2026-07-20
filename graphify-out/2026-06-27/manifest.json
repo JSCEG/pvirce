@@ -1,0 +1,812 @@
+{
+  ".claude/launch.json": {
+    "mtime": 1780081758.3355403,
+    "ast_hash": "d142b8a028fd5e8b91d284a2a69e5d73",
+    "semantic_hash": "d142b8a028fd5e8b91d284a2a69e5d73"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1780336664.5202668,
+    "ast_hash": "a475a7ae86d2206ed7c2742cf8bddada",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/js/canvas-capture.js": {
+    "mtime": 1763267924.1922371,
+    "ast_hash": "1ebaf1985f4f57097332695b07d04e9b",
+    "semantic_hash": "1ebaf1985f4f57097332695b07d04e9b"
+  },
+  "Estilos Institucionales/js/dashboard-analitico.js": {
+    "mtime": 1772823561.0236287,
+    "ast_hash": "8288552cf72568b34ce249ee6bbb8b73",
+    "semantic_hash": "8288552cf72568b34ce249ee6bbb8b73"
+  },
+  "Estilos Institucionales/js/detalle-central.js": {
+    "mtime": 1771527347.0283618,
+    "ast_hash": "77169d6061774862254fffea88661aad",
+    "semantic_hash": "77169d6061774862254fffea88661aad"
+  },
+  "Estilos Institucionales/js/detalle-nuevo-proyecto.js": {
+    "mtime": 1772815861.817066,
+    "ast_hash": "d11824ebcc3f956cf6d65fa282da33d4",
+    "semantic_hash": "d11824ebcc3f956cf6d65fa282da33d4"
+  },
+  "Estilos Institucionales/js/export-config.js": {
+    "mtime": 1762202581.9376042,
+    "ast_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a",
+    "semantic_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a"
+  },
+  "Estilos Institucionales/js/export-ui.js": {
+    "mtime": 1762218917.8647463,
+    "ast_hash": "6b0a5d34bbe2986e23f6ce9887c01e85",
+    "semantic_hash": "6b0a5d34bbe2986e23f6ce9887c01e85"
+  },
+  "Estilos Institucionales/js/fix-layer-error.js": {
+    "mtime": 1764033291.414186,
+    "ast_hash": "3ff27de11edef2d82f78e858753c9fd9",
+    "semantic_hash": "3ff27de11edef2d82f78e858753c9fd9"
+  },
+  "Estilos Institucionales/js/fullscreen-toolbar.js": {
+    "mtime": 1763063632.4225066,
+    "ast_hash": "ffe9a7884c28d2fe9985173ae67a36a1",
+    "semantic_hash": "ffe9a7884c28d2fe9985173ae67a36a1"
+  },
+  "Estilos Institucionales/js/map-config.js": {
+    "mtime": 1772818876.6728027,
+    "ast_hash": "06f4321ad7911df563faf1dada5da466",
+    "semantic_hash": "06f4321ad7911df563faf1dada5da466"
+  },
+  "Estilos Institucionales/js/map-exporter.js": {
+    "mtime": 1763054975.8162086,
+    "ast_hash": "f8cc03c481b963506b90e961196e8ca6",
+    "semantic_hash": "f8cc03c481b963506b90e961196e8ca6"
+  },
+  "Estilos Institucionales/js/mobile-interface.js": {
+    "mtime": 1772815861.8245852,
+    "ast_hash": "612717d7b36003c34c9440ae66aed9a8",
+    "semantic_hash": "612717d7b36003c34c9440ae66aed9a8"
+  },
+  "Estilos Institucionales/js/municipios-rios-maps.js": {
+    "mtime": 1764175568.7780545,
+    "ast_hash": "d374e539dae7486c04be88adcb965f48",
+    "semantic_hash": "d374e539dae7486c04be88adcb965f48"
+  },
+  "Estilos Institucionales/js/notification-system.js": {
+    "mtime": 1762202586.4439192,
+    "ast_hash": "08af642ffe64212915063fa77795bbb9",
+    "semantic_hash": "08af642ffe64212915063fa77795bbb9"
+  },
+  "Estilos Institucionales/js/pdf-generator.js": {
+    "mtime": 1762219066.1308982,
+    "ast_hash": "75874016fdad3f12629287bb02fc0d1b",
+    "semantic_hash": "75874016fdad3f12629287bb02fc0d1b"
+  },
+  "Estilos Institucionales/js/pladese-maps.js": {
+    "mtime": 1764179862.3819015,
+    "ast_hash": "e18cb9f6761f58beb5addc618641dbb3",
+    "semantic_hash": "e18cb9f6761f58beb5addc618641dbb3"
+  },
+  "Estilos Institucionales/js/png-processor.js": {
+    "mtime": 1763054975.818209,
+    "ast_hash": "4fb9a85cdb33e651a640fd1c894ade98",
+    "semantic_hash": "4fb9a85cdb33e651a640fd1c894ade98"
+  },
+  "Estilos Institucionales/js/presas-maps.js": {
+    "mtime": 1771457951.1090364,
+    "ast_hash": "64b0006156757f9998d8468afeb319c2",
+    "semantic_hash": "64b0006156757f9998d8468afeb319c2"
+  },
+  "Estilos Institucionales/js/progress-system.js": {
+    "mtime": 1762974468.0379298,
+    "ast_hash": "988e7973100d588b1f0a8e0720f8a211",
+    "semantic_hash": "988e7973100d588b1f0a8e0720f8a211"
+  },
+  "Estilos Institucionales/js/seguimiento-proyectos.js": {
+    "mtime": 1772844355.3799353,
+    "ast_hash": "809dfac2950f047df00f4614ca407270",
+    "semantic_hash": "809dfac2950f047df00f4614ca407270"
+  },
+  "Estilos Institucionales/js/simple-export.js": {
+    "mtime": 1764017334.3283217,
+    "ast_hash": "7dde62a6fd53d1ca8b33e4769cee59cb",
+    "semantic_hash": "7dde62a6fd53d1ca8b33e4769cee59cb"
+  },
+  "Estilos Institucionales/js/smart-labels.js": {
+    "mtime": 1763664572.6786892,
+    "ast_hash": "115820506cd5f7366bc3a9277925d5c3",
+    "semantic_hash": "115820506cd5f7366bc3a9277925d5c3"
+  },
+  "Estilos Institucionales/js/tablero-proyectos.js": {
+    "mtime": 1772816636.8637917,
+    "ast_hash": "5b7a3de5d258550143270696d7970f21",
+    "semantic_hash": "5b7a3de5d258550143270696d7970f21"
+  },
+  "functions/data-cne.js": {
+    "mtime": 1778272239.9059734,
+    "ast_hash": "974eeff2f0f617798825e44eae94b330",
+    "semantic_hash": "974eeff2f0f617798825e44eae94b330"
+  },
+  "functions/data-gat.js": {
+    "mtime": 1778270894.409947,
+    "ast_hash": "ad09b1b6770daa521d89a6049aaf644b",
+    "semantic_hash": "ad09b1b6770daa521d89a6049aaf644b"
+  },
+  "functions/data.js": {
+    "mtime": 1778267653.606386,
+    "ast_hash": "ebf6fba28b625487c58eacd565c51f36",
+    "semantic_hash": "ebf6fba28b625487c58eacd565c51f36"
+  },
+  "functions/kmz.js": {
+    "mtime": 1778284120.3032486,
+    "ast_hash": "1986e1f201b58ef4b8553b97ad747313",
+    "semantic_hash": "1986e1f201b58ef4b8553b97ad747313"
+  },
+  "visor_pvirce_assets/data/visor-data.js": {
+    "mtime": 1778043902.0287797,
+    "ast_hash": "09704b417bbd0fc68361ed44cc4b4ccf",
+    "semantic_hash": "09704b417bbd0fc68361ed44cc4b4ccf"
+  },
+  "visor_pvirce_assets/js/visor.js": {
+    "mtime": 1778089473.523241,
+    "ast_hash": "0f189877e0ce5cb8e5950eadcf3f2f09",
+    "semantic_hash": "0f189877e0ce5cb8e5950eadcf3f2f09"
+  },
+  "GAT-MIXTO-DGMESNIE.html": {
+    "mtime": 1780081758.3381758,
+    "ast_hash": "48979e72ec4d440d2a91b2d86d94ce93",
+    "semantic_hash": ""
+  },
+  "google-sheets-columnas.md": {
+    "mtime": 1780294822.8565876,
+    "ast_hash": "b5095d1a98d990c23107581d913ab8b2",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1780082062.3204012,
+    "ast_hash": "8bf79ff3670515dad7e578787ef466e9",
+    "semantic_hash": ""
+  },
+  "PVIRCE-DGMESNIE.html": {
+    "mtime": 1780081758.3395119,
+    "ast_hash": "5c0079d8ee40cd4e89d43da0a0090f7b",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1778260316.8869815,
+    "ast_hash": "5db66dba2b8611ff93c6b7050b3d1312",
+    "semantic_hash": ""
+  },
+  "REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html": {
+    "mtime": 1780682327.3904462,
+    "ast_hash": "23310163dca348a7016b98cd5b847158",
+    "semantic_hash": ""
+  },
+  "REPORTE-SEGUNDA-CONVOCATORIA.html": {
+    "mtime": 1780682211.273142,
+    "ast_hash": "ea5c5903491ca6359b00efb38f3a6672",
+    "semantic_hash": ""
+  },
+  "SEGUNDA-CONVOCATORIA-DGMESNIE.html": {
+    "mtime": 1780682275.3666718,
+    "ast_hash": "1b526f6b4bc508074e615ac964d0539b",
+    "semantic_hash": ""
+  },
+  "test_fetch.html": {
+    "mtime": 1778257955.6044617,
+    "ast_hash": "820ef867756dad36e156b63386b9f8c0",
+    "semantic_hash": ""
+  },
+  "visor_pvirce_2026_2040.html": {
+    "mtime": 1778088994.692846,
+    "ast_hash": "a956948a17a7336b90ace501761dc5ba",
+    "semantic_hash": ""
+  },
+  ".github/copilot-instructions.md": {
+    "mtime": 1780239166.8300471,
+    "ast_hash": "2b23503628bf2ec71d067a85ca8948ab",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/formulario-participantes.html": {
+    "mtime": 1778803878.6013079,
+    "ast_hash": "f9f1684016a22ccd31e5d411df1f7c12",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/GUIA_ESTILOS_WEB.md": {
+    "mtime": 1763772737.0844016,
+    "ast_hash": "4bf9b2256547b2f909488089d15d217c",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/index.html": {
+    "mtime": 1772844875.5368984,
+    "ast_hash": "4ff79296b44abdfe6203a7af935fd4d6",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/index_mapa.html": {
+    "mtime": 1772756048.9296222,
+    "ast_hash": "c02f73e9d70163f93fe94b35e479fbca",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/login.html": {
+    "mtime": 1772736460.5403655,
+    "ast_hash": "6e482ce73624cf61bff8e1c62732d7c0",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/sener_test.html": {
+    "mtime": 1773023978.7110298,
+    "ast_hash": "c07a8d0aa82ef78a1c3645626b54ac25",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/vistas_sener.html": {
+    "mtime": 1772555508.1270566,
+    "ast_hash": "52573539e25784fd3c7fe85745b53e16",
+    "semantic_hash": ""
+  },
+  "Fuentes/PVIRCE2026-2040.md": {
+    "mtime": 1778041032.7894995,
+    "ast_hash": "5241b45ec57a67adcfc585bdd2df4dbf",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/logo_gob.png": {
+    "mtime": 1754928710.9136615,
+    "ast_hash": "dc9f4b8e2af026d307e1e8c404ea2023",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/logo_sener.png": {
+    "mtime": 1767991869.3497143,
+    "ast_hash": "69733a7f3534e135745de0dc59d81063",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/mujer.png": {
+    "mtime": 1754615781.3760042,
+    "ast_hash": "b3163a167aef691f3cf1c04df021bcfe",
+    "semantic_hash": ""
+  },
+  "Estilos Institucionales/img/portada_ppt.png": {
+    "mtime": 1780342247.115183,
+    "ast_hash": "dbac62f6a5d58133bf293fddde0dea50",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\gies.json": {
+    "mtime": 1780796618.8089108,
+    "ast_hash": "07cee33a92fae43ae31c0668c25f5ee6",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\launch.json": {
+    "mtime": 1780081758.3355403,
+    "ast_hash": "d142b8a028fd5e8b91d284a2a69e5d73",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\settings.local.json": {
+    "mtime": 1781976612.0269346,
+    "ast_hash": "f7b17c7a995918067618e476de0139b0",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\canvas-capture.js": {
+    "mtime": 1763267924.1922371,
+    "ast_hash": "1ebaf1985f4f57097332695b07d04e9b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\dashboard-analitico.js": {
+    "mtime": 1772823561.0236287,
+    "ast_hash": "8288552cf72568b34ce249ee6bbb8b73",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\detalle-central.js": {
+    "mtime": 1771527347.0283618,
+    "ast_hash": "77169d6061774862254fffea88661aad",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\detalle-nuevo-proyecto.js": {
+    "mtime": 1772815861.817066,
+    "ast_hash": "d11824ebcc3f956cf6d65fa282da33d4",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\export-config.js": {
+    "mtime": 1762202581.9376042,
+    "ast_hash": "3b6a1fe90434cdaadd6ed556a4d2b93a",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\export-ui.js": {
+    "mtime": 1762218917.8647463,
+    "ast_hash": "6b0a5d34bbe2986e23f6ce9887c01e85",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\fix-layer-error.js": {
+    "mtime": 1764033291.414186,
+    "ast_hash": "3ff27de11edef2d82f78e858753c9fd9",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\fullscreen-toolbar.js": {
+    "mtime": 1763063632.4225066,
+    "ast_hash": "ffe9a7884c28d2fe9985173ae67a36a1",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\map-config.js": {
+    "mtime": 1772818876.6728027,
+    "ast_hash": "06f4321ad7911df563faf1dada5da466",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\map-exporter.js": {
+    "mtime": 1763054975.8162086,
+    "ast_hash": "f8cc03c481b963506b90e961196e8ca6",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\mobile-interface.js": {
+    "mtime": 1772815861.8245852,
+    "ast_hash": "612717d7b36003c34c9440ae66aed9a8",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\municipios-rios-maps.js": {
+    "mtime": 1764175568.7780545,
+    "ast_hash": "d374e539dae7486c04be88adcb965f48",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\notification-system.js": {
+    "mtime": 1762202586.4439192,
+    "ast_hash": "08af642ffe64212915063fa77795bbb9",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\pdf-generator.js": {
+    "mtime": 1762219066.1308982,
+    "ast_hash": "75874016fdad3f12629287bb02fc0d1b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\pladese-maps.js": {
+    "mtime": 1764179862.3819015,
+    "ast_hash": "e18cb9f6761f58beb5addc618641dbb3",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\png-processor.js": {
+    "mtime": 1763054975.818209,
+    "ast_hash": "4fb9a85cdb33e651a640fd1c894ade98",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\presas-maps.js": {
+    "mtime": 1771457951.1090364,
+    "ast_hash": "64b0006156757f9998d8468afeb319c2",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\progress-system.js": {
+    "mtime": 1762974468.0379298,
+    "ast_hash": "988e7973100d588b1f0a8e0720f8a211",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\seguimiento-proyectos.js": {
+    "mtime": 1772844355.3799353,
+    "ast_hash": "809dfac2950f047df00f4614ca407270",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\simple-export.js": {
+    "mtime": 1764017334.3283217,
+    "ast_hash": "7dde62a6fd53d1ca8b33e4769cee59cb",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\smart-labels.js": {
+    "mtime": 1763664572.6786892,
+    "ast_hash": "115820506cd5f7366bc3a9277925d5c3",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\js\\tablero-proyectos.js": {
+    "mtime": 1772816636.8637917,
+    "ast_hash": "5b7a3de5d258550143270696d7970f21",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\data-cne.js": {
+    "mtime": 1778272239.9059734,
+    "ast_hash": "974eeff2f0f617798825e44eae94b330",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\data-gat.js": {
+    "mtime": 1778270894.409947,
+    "ast_hash": "ad09b1b6770daa521d89a6049aaf644b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\data.js": {
+    "mtime": 1778267653.606386,
+    "ast_hash": "ebf6fba28b625487c58eacd565c51f36",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\functions\\kmz.js": {
+    "mtime": 1778284120.3032486,
+    "ast_hash": "1986e1f201b58ef4b8553b97ad747313",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\visor_pvirce_assets\\data\\visor-data.js": {
+    "mtime": 1778043902.0287797,
+    "ast_hash": "09704b417bbd0fc68361ed44cc4b4ccf",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\visor_pvirce_assets\\js\\visor.js": {
+    "mtime": 1778089473.523241,
+    "ast_hash": "0f189877e0ce5cb8e5950eadcf3f2f09",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\GAT-MIXTO-DGMESNIE.html": {
+    "mtime": 1781756560.5091183,
+    "ast_hash": "74bfa2ec48611d1a056cafc82e35a26a",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\google-sheets-columnas.md": {
+    "mtime": 1780294822.8565876,
+    "ast_hash": "b5095d1a98d990c23107581d913ab8b2",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\index.html": {
+    "mtime": 1780082062.3204012,
+    "ast_hash": "8bf79ff3670515dad7e578787ef466e9",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\PVIRCE-DGMESNIE.html": {
+    "mtime": 1780081758.3395119,
+    "ast_hash": "5c0079d8ee40cd4e89d43da0a0090f7b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\README.md": {
+    "mtime": 1778260316.8869815,
+    "ast_hash": "5db66dba2b8611ff93c6b7050b3d1312",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\REPORTE-SEGUNDA-CONVOCATORIA-PARTICULARES.html": {
+    "mtime": 1781813471.6625214,
+    "ast_hash": "076ac584a29fb20051ca75e912b08565",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\REPORTE-SEGUNDA-CONVOCATORIA.html": {
+    "mtime": 1781756138.6514137,
+    "ast_hash": "aec1ed29fe19d8b97ca26ddc92959915",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\SEGUNDA-CONVOCATORIA-DGMESNIE.html": {
+    "mtime": 1781756169.3433194,
+    "ast_hash": "b8749912e2aebbef5ec984849219ff84",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\test_fetch.html": {
+    "mtime": 1778257955.6044617,
+    "ast_hash": "820ef867756dad36e156b63386b9f8c0",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\visor_pvirce_2026_2040.html": {
+    "mtime": 1778088994.692846,
+    "ast_hash": "a956948a17a7336b90ace501761dc5ba",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.github\\copilot-instructions.md": {
+    "mtime": 1780239166.8300471,
+    "ast_hash": "2b23503628bf2ec71d067a85ca8948ab",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\formulario-participantes.html": {
+    "mtime": 1778803878.6013079,
+    "ast_hash": "f9f1684016a22ccd31e5d411df1f7c12",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\GUIA_ESTILOS_WEB.md": {
+    "mtime": 1763772737.0844016,
+    "ast_hash": "4bf9b2256547b2f909488089d15d217c",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\index.html": {
+    "mtime": 1772844875.5368984,
+    "ast_hash": "4ff79296b44abdfe6203a7af935fd4d6",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\index_mapa.html": {
+    "mtime": 1772756048.9296222,
+    "ast_hash": "c02f73e9d70163f93fe94b35e479fbca",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\login.html": {
+    "mtime": 1772736460.5403655,
+    "ast_hash": "6e482ce73624cf61bff8e1c62732d7c0",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\sener_test.html": {
+    "mtime": 1773023978.7110298,
+    "ast_hash": "c07a8d0aa82ef78a1c3645626b54ac25",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\vistas_sener.html": {
+    "mtime": 1772555508.1270566,
+    "ast_hash": "52573539e25784fd3c7fe85745b53e16",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Fuentes\\PVIRCE2026-2040.md": {
+    "mtime": 1778041032.7894995,
+    "ast_hash": "5241b45ec57a67adcfc585bdd2df4dbf",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\img\\logo_gob.png": {
+    "mtime": 1754928710.9136615,
+    "ast_hash": "dc9f4b8e2af026d307e1e8c404ea2023",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\img\\logo_sener.png": {
+    "mtime": 1767991869.3497143,
+    "ast_hash": "69733a7f3534e135745de0dc59d81063",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\img\\mujer.png": {
+    "mtime": 1754615781.3760042,
+    "ast_hash": "b3163a167aef691f3cf1c04df021bcfe",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Estilos Institucionales\\img\\portada_ppt.png": {
+    "mtime": 1780342247.115183,
+    "ast_hash": "dbac62f6a5d58133bf293fddde0dea50",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_build.py": {
+    "mtime": 1781921616.412658,
+    "ast_hash": "60494ddd57f0768d194cdca99d26e3d6",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_proj_dump.json": {
+    "mtime": 1781757551.6007316,
+    "ast_hash": "acfd0a51ffb3fe27946469e8ac60f193",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_tables.json": {
+    "mtime": 1781918591.9880202,
+    "ast_hash": "92f2b0077d61a270f43965effb1cc563",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener-workspace\\evals\\evals.json": {
+    "mtime": 1781232176.065366,
+    "ast_hash": "d28c9e98742484b8fed85d8bdf98e04c",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener-workspace\\iteration-1\\eval-0-generacion-gwh\\eval_metadata.json": {
+    "mtime": 1781233871.6003194,
+    "ast_hash": "d1fdbad650f838d48b0d737355289930",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener-workspace\\iteration-1\\eval-0-generacion-gwh\\with_skill\\grading.json": {
+    "mtime": 1781233884.5622537,
+    "ast_hash": "e504ad376665c4b005e8baa484a307fd",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener-workspace\\evals\\evals.json": {
+    "mtime": 1781232176.065366,
+    "ast_hash": "d28c9e98742484b8fed85d8bdf98e04c",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener-workspace\\iteration-1\\eval-0-generacion-gwh\\eval_metadata.json": {
+    "mtime": 1781233871.6003194,
+    "ast_hash": "d1fdbad650f838d48b0d737355289930",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener-workspace\\iteration-1\\eval-0-generacion-gwh\\with_skill\\grading.json": {
+    "mtime": 1781233884.5622537,
+    "ast_hash": "e504ad376665c4b005e8baa484a307fd",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\mundial-tanda\\app.js": {
+    "mtime": 1780813957.5222037,
+    "ast_hash": "014832e23afcb0f62280699e5fcde591",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ALMACENAMIENTO-SAEE-REGIONES.html": {
+    "mtime": 1781920007.5743146,
+    "ast_hash": "c59ff59d1cb530c4cb15281c64a1aaa5",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\ENERGIA-LIMPIA-SENER.html": {
+    "mtime": 1781233390.9414523,
+    "ast_hash": "38380909dfd8fd864689b772a4516ce3",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\EXPANSION-RENOVABLES.html": {
+    "mtime": 1781921621.6698143,
+    "ast_hash": "b94e594a616430ac74b0d27715e5fcc8",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\GENERACION-GWH.html": {
+    "mtime": 1781234858.0183794,
+    "ast_hash": "77c4ac310afe5f9c558fc8747480be6e",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\gies_paises_online.md": {
+    "mtime": 1781052371.7860434,
+    "ast_hash": "0493834fb26616c1d338ae69a96b6805",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTA-GCR-BCS-2026-06-16.md": {
+    "mtime": 1781644860.3471406,
+    "ast_hash": "d43524262471c90f4ba13c350a31df75",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTA-GCR-CENTRAL-2026-06-16.md": {
+    "mtime": 1781644860.3454301,
+    "ast_hash": "3d30695368555d99b46b26bddf4f46d4",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTA-GCR-NORESTE-2026-06-16.md": {
+    "mtime": 1781647704.704624,
+    "ast_hash": "bede29fb7bc0a81318124aa43d3d9659",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTA-GCR-NORTE-2026-06-16.md": {
+    "mtime": 1781647704.7034173,
+    "ast_hash": "983f08dfc54080647b87c3187669e4b1",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTA-GCR-ORIENTAL-2026-06-16.md": {
+    "mtime": 1781635056.4165132,
+    "ast_hash": "60ed52595fa76f7851d99f6d25c3dffb",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTA-SETUP.md": {
+    "mtime": 1781581101.3367248,
+    "ast_hash": "127d31004f13a577b9b3377a91338f24",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\MINUTAS-SEGUNDA-CONVOCATORIA-PARTICULARES.html": {
+    "mtime": 1781813221.6503613,
+    "ast_hash": "2669f651c4998b1a3eca954d4a61d802",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\NOTA-TECNICA-CRITERIO-COMPETENCIAS.html": {
+    "mtime": 1781320879.4793088,
+    "ast_hash": "6e454bcd973d669541fcf847f6b73b26",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\OBSERVACIONES-LINEAMIENTOS-MIGRACION-SPTE.html": {
+    "mtime": 1781331001.8215292,
+    "ast_hash": "f541147513c74e553b05d87070d058e7",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\PRODUCCION-ENERGETICA-SENER.html": {
+    "mtime": 1781233785.4585445,
+    "ast_hash": "eb9f0e3707964f934d7cd42547bc4ffc",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\QUIEN-GENERA-SANKEY.html": {
+    "mtime": 1781916221.8166783,
+    "ast_hash": "100072c78ce1aa495c41eb78dc4046d4",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\REVISION-CFE-SENER-PROYECTOS.html": {
+    "mtime": 1781722895.4333386,
+    "ast_hash": "321ddb1b01bf4da51c67aef8ada6b235",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\REVISION-CFE-SENER.html": {
+    "mtime": 1781721837.9392781,
+    "ast_hash": "205142ce787823df2674277e5af7e8c5",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\SANKEY-TECNOLOGIAS.html": {
+    "mtime": 1781917411.8569503,
+    "ast_hash": "afc411030a7060cb7084f496263ba50b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_sklegend.html": {
+    "mtime": 1781918505.592113,
+    "ast_hash": "6cccf19bcd5ad02a81fc6f9f6906f594",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_template.html": {
+    "mtime": 1781921527.9586773,
+    "ast_hash": "b3f274ca93c1da5352c3e1e7fcf8ebed",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener\\SKILL.md": {
+    "mtime": 1781656319.3940275,
+    "ast_hash": "8ca3bf44c23fd88049e833bcd16025b3",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener\\assets\\plantilla.html": {
+    "mtime": 1781234855.008124,
+    "ast_hash": "2be44091b2187b9971f232769183c445",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener\\references\\diseno.md": {
+    "mtime": 1781231733.855215,
+    "ast_hash": "3dedfe9cc8336e373ac8a72b78f3ee56",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener\\references\\graficas.md": {
+    "mtime": 1781234377.5186064,
+    "ast_hash": "77309ede5bf4be4cf348368118c28985",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.agents\\skills\\presentacion-sener-workspace\\iteration-1\\eval-0-generacion-gwh\\with_skill\\outputs\\GENERACION-GWH.html": {
+    "mtime": 1781234858.0183794,
+    "ast_hash": "77c4ac310afe5f9c558fc8747480be6e",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener\\SKILL.md": {
+    "mtime": 1781233972.8937323,
+    "ast_hash": "8ca3bf44c23fd88049e833bcd16025b3",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener\\assets\\plantilla.html": {
+    "mtime": 1781234855.008124,
+    "ast_hash": "2be44091b2187b9971f232769183c445",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener\\references\\diseno.md": {
+    "mtime": 1781231733.855215,
+    "ast_hash": "3dedfe9cc8336e373ac8a72b78f3ee56",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener\\references\\graficas.md": {
+    "mtime": 1781234377.5186064,
+    "ast_hash": "77309ede5bf4be4cf348368118c28985",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.claude\\skills\\presentacion-sener-workspace\\iteration-1\\eval-0-generacion-gwh\\with_skill\\outputs\\GENERACION-GWH.html": {
+    "mtime": 1781234858.0183794,
+    "ast_hash": "77c4ac310afe5f9c558fc8747480be6e",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\mundial-tanda\\index.html": {
+    "mtime": 1780814134.2893639,
+    "ast_hash": "ec2abee67aeb5edd2801e50192f0bd77",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\mundial-tanda\\PLAN_DESPLIEGUE.md": {
+    "mtime": 1780813957.7194788,
+    "ast_hash": "1e3922cc526d25a5412652dd4ff0b7ae",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Minuta_GCR_BCS_2026-06-16.pdf": {
+    "mtime": 1781645080.9918027,
+    "ast_hash": "42a2e5adfedf9ec922db7985ca990e50",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Minuta_GCR_Central_2026-06-16.pdf": {
+    "mtime": 1781645077.3720582,
+    "ast_hash": "11d488933f4819e894b2b8b5f4f122fa",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Minuta_GCR_Noreste_2026-06-16.pdf": {
+    "mtime": 1781647866.5351727,
+    "ast_hash": "078883b0dadf41220b8fdf544522e97c",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Minuta_GCR_Norte_2026-06-16.pdf": {
+    "mtime": 1781647863.8205676,
+    "ast_hash": "88bf37abd5bc3300b38f1ed276a5c0e6",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Minuta_GCR_Occidental_2026-06-16.pdf": {
+    "mtime": 1781637026.764975,
+    "ast_hash": "b56468eb94b0a14b51ef06fe9ed88038",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\Minuta_GCR_Oriental_2026-06-16.pdf": {
+    "mtime": 1781635440.7279828,
+    "ast_hash": "378598979b0bae680637e9c5d38966f8",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\reno_anexos.png": {
+    "mtime": 1781918511.057168,
+    "ast_hash": "70ec2171d0a9e577c5ec3b713c20fbff",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\reno_portada.png": {
+    "mtime": 1781918511.0504618,
+    "ast_hash": "1e735fda8b1b6964c1faa3602b891a85",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\timeline-animada.svg": {
+    "mtime": 1781841997.4050105,
+    "ast_hash": "6531d21cfea5373012a78b8867a26cfb",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_map.svg": {
+    "mtime": 1781919784.7165184,
+    "ast_hash": "5f0742941b706f7cc65b27c3bec0cba5",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\_sankey.svg": {
+    "mtime": 1781918505.5911195,
+    "ast_hash": "ea16b462215164878cf219248be06d9b",
+    "semantic_hash": ""
+  },
+  "C:\\Proyectos\\71.-Automatizaci\u00f3n_PPT\\.codex-remote-attachments\\019ed2fe-1035-7801-8941-1cdfe85b83b2\\097ce8e6-a5bd-49e8-87e3-0df5abe2906d\\1-Photo-1.jpg": {
+    "mtime": 1781713361.0196552,
+    "ast_hash": "92557f9c42b867cd17fc870fe09224fb",
+    "semantic_hash": ""
+  }
+}
