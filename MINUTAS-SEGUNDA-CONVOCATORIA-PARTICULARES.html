@@ -3680,12 +3680,12 @@
           <div style="margin-left:auto; font-size:16px; font-weight:600; color:#9A958E; letter-spacing:.08em; text-transform:uppercase;">DGMESNIE · Subsecretaría de Planeación</div>
         </div>
         <div style="padding:16px 80px 0; flex:none; display:flex; flex-direction:column; justify-content:center; font-family:'Noto Sans', sans-serif;">
-          <div style="font-size:20px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:#9B2247; max-width:40ch;">Subsecretaría de Planeación y Transición Energética</div>
-          <h1 style="font-family:'Patria', serif; font-weight:700; font-size:62px; line-height:1.05; letter-spacing:-.015em; margin:10px 0 0; color:#1c1b1a;">Seguimiento de la Segunda Convocatoria</h1>
-          <div style="display:flex; align-items:center; gap:20px; margin-top:14px;">
-            <div style="font-family:'Patria', serif; font-weight:700; font-size:38px; color:#9B2247; letter-spacing:.01em;">Proyectos Privados</div>
-            <div style="width:90px; height:3px; background:#E0A12E;"></div>
-            <div style="font-size:20px; color:#6F6B66; max-width:45ch;">Minutas de votación regional, trazabilidad de decisiones y resolutivos.</div>
+          <div style="font-size:18px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:#9B2247; max-width:40ch;">Subsecretaría de Planeación y Transición Energética</div>
+          <h1 style="font-family:'Patria', serif; font-weight:700; font-size:52px; line-height:1.08; letter-spacing:-.015em; margin:8px 0 0; color:#1c1b1a;">Seguimiento de la Segunda Convocatoria</h1>
+          <div style="display:flex; align-items:center; gap:20px; margin-top:12px;">
+            <div style="font-family:'Patria', serif; font-weight:700; font-size:34px; color:#9B2247; letter-spacing:.01em;">Proyectos Privados</div>
+            <div style="width:80px; height:3px; background:#E0A12E;"></div>
+            <div style="font-size:18px; color:#6F6B66; max-width:45ch;">Minutas de votación regional, trazabilidad de decisiones y resolutivos.</div>
           </div>
         </div>
         
@@ -9801,8 +9801,9 @@
       const baseH = 750;
       const minScale = 0.55;
 
-      const availW = window.innerWidth;
-      const availH = window.innerHeight;
+      // Descontar espacio para barra de controles flotante derecha (130px) y margen de seguridad vertical (24px)
+      const availW = Math.max(300, window.innerWidth - 130);
+      const availH = Math.max(300, window.innerHeight - 24);
 
       // Encontrar la escala que encaje en el espacio disponible
       const rawScale = Math.min(availW / baseW, availH / baseH);
